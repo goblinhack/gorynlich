@@ -163,7 +163,7 @@ static void server_remove (server *s_in)
      */
     server *s;
     TREE_WALK(remote_servers, s) {
-        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT + 1);
         if (sp) {
             socket_disconnect(sp);
             break;
@@ -242,7 +242,7 @@ void wid_server_join_hide (void)
     }
 
     /*
-     * Leave all other sockets other than the joined on.
+     * Leave all other sockets other than the joined one.
      */
     server *s;
 
@@ -250,7 +250,7 @@ void wid_server_join_hide (void)
      * Leave all other sockets.
      */
     TREE_WALK(remote_servers, s) {
-        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT + 1);
         if (sp && (sp != client_joined_server)) {
             socket_disconnect(sp);
             continue;
@@ -348,7 +348,7 @@ uint8_t wid_server_join (char *host, int port)
      */
     server *s;
     TREE_WALK(remote_servers, s) {
-        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT + 1);
         if (sp && (sp != client_joined_server)) {
             socket_disconnect(sp);
             continue;
@@ -395,7 +395,7 @@ static void wid_server_join_display (server *s)
         wid_destroy_nodelay(&wid_server_stats_bars);
     }
 
-    gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
+    gsocketp sp = socket_find(s->ip, SOCKET_CONNECT + 1);
     if (!sp) {
         return;
     }
@@ -796,7 +796,7 @@ static void wid_server_join_menu_create (void)
             continue;
         }
 
-        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT + 1);
         if (!sp) {
             continue;
         }
@@ -836,7 +836,7 @@ static void wid_server_join_menu_create (void)
             continue;
         }
 
-        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT + 1);
         if (!sp) {
             continue;
         }
