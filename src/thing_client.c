@@ -30,6 +30,74 @@
 #include "wid_player_action.h"
 #include "string_ext.h"
 
+/*
+ * This is movement on the client of the player initiated by the player.
+ */
+void thing_client_move (thingp t,
+                        double x,
+                        double y,
+                        const uint8_t up,
+                        const uint8_t down,
+                        const uint8_t left,
+                        const uint8_t right,
+                        const uint8_t fire)
+{
+    if (thing_is_dead_or_dying(t)) {
+        return;
+    }
+
+    widp grid = wid_game_map_client_grid_container;
+
+    if (t->wid) {
+        if (thing_hit_solid_obstacle(grid, t, x, y)) {
+            if (!thing_hit_solid_obstacle(grid, t, x, t->y)) {
+                y = t->y;
+            } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
+                x = t->x;
+            } else {
+                x = t->x;
+                y = t->y;
+            }
+        }
+    }
+
+    thing_move_set_dir(t, &x, &y, up, down, left, right);
+
+    /*
+     * Move the weapon too.
+     */
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_move_set_dir(weapon_carry_anim, &x, &y, up, down, left, right);
+    }
+
+    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
+    if (weapon_swing_anim) {
+        thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
+    }
+
+    /*
+     * If no widget yet then this can be a dummy move during thing creation
+     * just to set the weapon anim correctly.
+     */
+    if (!t->wid) {
+        return;
+    }
+
+    /*
+     * Oddly doing smooth moving makes it more jumpy when scrolling.
+     *
+     * Don't send an update if just firing as it looks like we're moving
+     * and the player will hop up and down.
+     */
+    if (up || down || left || right) {
+        thing_client_wid_update(t, x, y, false, false /* is new */);
+    }
+
+    socket_tx_player_move(client_joined_server, t, up, down, left, right, 
+                          fire);
+}
+
 static void thing_client_wid_move (thingp t, 
                                    double x, 
                                    double y, 
@@ -127,8 +195,6 @@ static void thing_client_wid_move (thingp t,
 
         double ms = (1000.0 / speed) / (1.0 / time_step);
 
-//        ms *= 0.9;
-
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
 
     } else {
@@ -136,13 +202,16 @@ static void thing_client_wid_move (thingp t,
     }
 
     /*
-     * Make the player bounce about as the walk
+     * Make the player bounce about as they walk
      */
     if (thing_is_player(t)) {
         if (!t->wid->bouncing) {
             wid_bounce_to_pct_in(t->wid, 0.1, 0.9, 200, 0);
         }
 
+        /*
+         * And their little weapon too.
+         */
         widp weapon_wid = thing_get_weapon_carry_anim_wid(t);
         if (weapon_wid) {
             wid_bounce_to_pct_in(weapon_wid, 0.15, 0.9, 150, 0);
@@ -150,8 +219,18 @@ static void thing_client_wid_move (thingp t,
     }
 }
 
-void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
+void thing_client_wid_update (thingp t, double x, double y, 
+                              uint8_t smooth,
+                              uint8_t is_new)
 {
+    /*
+     * Things like moving walls need to move from boring to active lists if 
+     * they move after the great creator has made them thus.
+     */
+    if (!is_new) {
+        thing_make_active(t);
+    }
+
     thing_client_wid_move(t, x, y, smooth);
 
     /*

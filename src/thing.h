@@ -178,7 +178,8 @@ void thing_timer_place_and_destroy_destroy_callback(void *context);
 void thing_timer_place_callback(void *context);
 void thing_timer_place_destroy_callback(void *context);
 void thing_server_wid_update(thingp t, double x, double y, uint8_t is_new);
-void thing_client_wid_update(thingp t, double x, double y, uint8_t smooth);
+void thing_client_wid_update(thingp t, double x, double y, 
+                             uint8_t smooth, uint8_t is_new);
 void msg_server_shout_at_player(thingp t, const char *what);
 uint8_t thing_use(thingp t, uint32_t id);
 
@@ -2004,6 +2005,10 @@ void thing_move_set_dir(thingp t,
                         uint8_t down,
                         uint8_t left,
                         uint8_t right);
+
+uint8_t thing_wid_is_inactive(widp w);
+uint8_t thing_wid_is_active(widp w);
+
 /*
  * thing_server.c
  */
@@ -2064,4 +2069,3 @@ void thing_wield_next_weapon(thingp t);
  */
 void 
 thingp_get_interpolated_position(const thingp t, double *x, double *y);
-

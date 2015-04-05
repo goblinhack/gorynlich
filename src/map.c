@@ -2068,17 +2068,26 @@ if (level != server_level)
                     tpp tp;
 
                     if (map_find_wall_at(level, x, y, &w)) {
-                        tp = map_find_wall_at(level, x + dx, y + dy, &w);
-                        if (wid_is_moving(w)) {
+                        if (thing_wid_is_active(w)) {
                             continue;
                         }
+
+                        tp = map_find_wall_at(level, x + dx, y + dy, &w);
+                        if (thing_wid_is_active(w)) {
+                            continue;
+                        }
+
                         nbrs[dx + 1][dy + 1] = tp;
 
                     }
 
                     if (map_find_pipe_at(level, x, y, &w)) {
+                        if (thing_wid_is_active(w)) {
+                            continue;
+                        }
+
                         tp = map_find_pipe_at(level, x + dx, y + dy, &w);
-                        if (wid_is_moving(w)) {
+                        if (thing_wid_is_active(w)) {
                             continue;
                         }
 
@@ -2086,18 +2095,18 @@ if (level != server_level)
                     }
 
                     if (map_find_door_at(level, x, y, &w)) {
+                        if (thing_wid_is_active(w)) {
+                            continue;
+                        }
+
                         tp = map_find_door_at(level, x + dx, y + dy, &w);
-                        if (wid_is_moving(w)) {
+                        if (thing_wid_is_active(w)) {
                             continue;
                         }
 
                         nbrs[dx + 1][dy + 1] = tp;
                     }
                 }
-            }
-
-            if (wid_is_moving(mywid)) {
-                nbrs[0][0] = tp;
             }
 
             tpp a = nbrs[0][0];
