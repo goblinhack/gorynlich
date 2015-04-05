@@ -534,22 +534,18 @@ static void thing_handle_collision (thingp me, thingp it,
         if (thing_is_action_left(it)) {
             me->dx = -speed;
             me->dy = 0;
-            thing_make_active(me);
             thing_set_dir_left(me);
         } else if (thing_is_action_right(it)) {
             me->dx = speed;
             me->dy = 0;
-            thing_make_active(me);
             thing_set_dir_right(me);
         } else if (thing_is_action_up(it)) {
             me->dx = 0;
             me->dy = -speed;
-            thing_make_active(me);
             thing_set_dir_up(me);
         } else if (thing_is_action_down(it)) {
             me->dx = 0;
             me->dy = speed;
-            thing_make_active(me);
             thing_set_dir_down(me);
         }
     }

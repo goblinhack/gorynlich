@@ -1,5 +1,4 @@
 --------------------------------------- plan for apr --------------------------------------
-- stop moving blocks joining onto other blocks
 - implement touch triggers
 - add colored triggers
 - implement spawn trigger
@@ -64,6 +63,9 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sat Apr  4 20:11:15 EDT 2015
+- stop moving blocks joining onto other blocks
 
 Sat Apr  4 12:15:25 EDT 2015
 - need single player global flag
