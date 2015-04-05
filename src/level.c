@@ -918,6 +918,26 @@ void level_server_tick (levelp level)
     if (level_is_ready_to_be_destroyed(level)) {
         level_finished(level);
     }
+
+    /*
+     * Every now and again cause the ghosts to look at the level afresh so 
+     * that if walls move then they now look through the gaps.
+     */
+    {
+        static uint32_t ts;
+
+        if (time_have_x_tenths_passed_since(10, ts)) {
+            ts = time_get_time_ms();
+
+            level_set_walls(level);
+            level_set_monst_map_treat_doors_as_passable(level);
+            level_set_monst_map_treat_doors_as_walls(level);
+            level_set_player_map_treat_doors_as_walls(level);
+            level_set_doors(level);
+            level_set_pipes(level);
+            level_pipe_find_ends(level);
+        }
+    }
 }
 
 void level_client_tick (levelp level)
@@ -926,18 +946,23 @@ void level_client_tick (levelp level)
         return;
     }
 
-    static uint32_t ts;
-
-    if (!time_have_x_tenths_passed_since(5, ts)) {
+    /*
+     * Allow the first fixup to happen immediately and the rest deferred.
+     */
+    if (!level_needs_fixup(level)) {
         return;
     }
 
-    ts = time_get_time_ms();
+    static uint32_t ts;
 
-    if (level_needs_fixup(level)) {
-        map_fixup(level);
-        level_set_needs_fixup(level, false);
+    if (!time_have_x_tenths_passed_since(10, ts)) {
+        return;
     }
+
+    map_fixup(level);
+    level_set_needs_fixup(level, false);
+
+    ts = time_get_time_ms();
 }
 
 level_pos_t level_get_level_pos (levelp level)
