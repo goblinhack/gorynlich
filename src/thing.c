@@ -3563,7 +3563,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             thing_swing(t);
 
             if (!(state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT))) {
-                thing_client_wid_update(t, t->x, t->y, false /* smooth */);
+                thing_client_wid_update(t, t->x, t->y, false /* smooth */,
+                                        false /* is new */);
             }
         }
 
@@ -3586,7 +3587,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
-                        thing_client_wid_update(t, x, y, false /* smooth */);
+                        thing_client_wid_update(t, x, y, false /* smooth */,
+                                                false /* is new */);
 
                         wid_game_map_client_scroll_adjust(1);
                     } else 
@@ -3601,7 +3603,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
-                        thing_client_wid_update(t, x, y, false /* smooth */);
+                        thing_client_wid_update(t, x, y, false /* smooth */,
+                                                false /* is new */);
 
                         wid_game_map_client_scroll_adjust(1);
                     }
@@ -3610,7 +3613,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                      * Move something which is not the local player. Could
                      * be another player or monster etc...
                      */
-                    thing_client_wid_update(t, x, y, true /* smooth */);
+                    thing_client_wid_update(t, x, y, true /* smooth */,
+                                            false /* is new */);
 
                     if (!need_fixup &&
                         (thing_is_wall(t) ||
@@ -3738,71 +3742,6 @@ void thing_move_set_dir (thingp t,
     } else if (right) {
         thing_set_dir_right(t);
     }
-}
-
-void thing_client_move (thingp t,
-                        double x,
-                        double y,
-                        const uint8_t up,
-                        const uint8_t down,
-                        const uint8_t left,
-                        const uint8_t right,
-                        const uint8_t fire)
-{
-    if (thing_is_dead_or_dying(t)) {
-        return;
-    }
-
-    widp grid = wid_game_map_client_grid_container;
-
-    if (t->wid) {
-        if (thing_hit_solid_obstacle(grid, t, x, y)) {
-            if (!thing_hit_solid_obstacle(grid, t, x, t->y)) {
-                y = t->y;
-            } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
-                x = t->x;
-            } else {
-                x = t->x;
-                y = t->y;
-            }
-        }
-    }
-
-    thing_move_set_dir(t, &x, &y, up, down, left, right);
-
-    /*
-     * Move the weapon too.
-     */
-    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
-    if (weapon_carry_anim) {
-        thing_move_set_dir(weapon_carry_anim, &x, &y, up, down, left, right);
-    }
-
-    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
-    if (weapon_swing_anim) {
-        thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
-    }
-
-    /*
-     * If no widget yet then this can be a dummy move during thing creation
-     * just to set the weapon anim correctly.
-     */
-    if (!t->wid) {
-        return;
-    }
-
-    /*
-     * Oddly doing smooth moving makes it more jumpy when scrolling.
-     *
-     * Don't send an update if just firing as it looks like we're moving
-     * and the player will hop up and down.
-     */
-    if (up || down || left || right) {
-        thing_client_wid_update(t, x, y, false);
-    }
-
-    socket_tx_player_move(client_joined_server, t, up, down, left, right, 
-                          fire);
 }
 
 void thing_set_owner_id (thingp t, uint32_t owner_id)
@@ -3969,3 +3908,18 @@ void thing_set_weapon_swing_anim (thingp t, thingp weapon_swing_anim)
         t->weapon_swing_anim_thing_id = 0;
     }
 }
+
+uint8_t thing_wid_is_inactive (widp w)
+{
+    thingp t = wid_get_thing(w);
+
+    return (t->on_active_list ? 0 : 1);
+}
+
+uint8_t thing_wid_is_active (widp w)
+{
+    thingp t = wid_get_thing(w);
+
+    return (t->on_active_list ? 1 : 0);
+}
+
