@@ -468,6 +468,16 @@ static void thing_handle_collision (thingp me, thingp it,
             thing_reached_exit(me, it);
             return;
         }
+
+        /*
+         * An action trigger is only ever used to start an object off as the 
+         * initiator of a collision.
+         */
+        if (thing_is_player(me)) {
+            if (thing_is_action_trigger(it)) {
+                server_level->trigger = 1;
+            }
+        }
     }
 
     if (thing_is_monst(me)                      || 
@@ -509,44 +519,43 @@ static void thing_handle_collision (thingp me, thingp it,
         }
     }
 
-    /*
-     * An action trigger is only ever used to start an object off as the 
-     * initiator of a collision.
-     */
-    if (thing_is_action_left(me)        ||
-        thing_is_action_right(me)       ||
-        thing_is_action_up(me)          ||
-        thing_is_action_down(me)) {
-        if (thing_is_door(it)           ||
-            thing_is_wall(it)) {
-            thing_make_active(it);
+    if (server_level->trigger) {
+        if (thing_is_action_left(me)        ||
+            thing_is_action_right(me)       ||
+            thing_is_action_up(me)          ||
+            thing_is_action_down(me)) {
+            if (thing_is_door(it)           ||
+                thing_is_wall(it)) {
+                thing_make_active(it);
+            }
         }
-    }
 
-    /*
-     * Normally we have a thing bumping into an action and then it does stuff.
-     */
-    if (thing_is_door(me)           ||
-        thing_is_wall(me)) {
+        /*
+         * Normally we have a thing bumping into an action and then it does 
+         * stuff.
+         */
+        if (thing_is_door(me)           ||
+            thing_is_wall(me)) {
 
-        double speed = 1;
+            double speed = 1;
 
-        if (thing_is_action_left(it)) {
-            me->dx = -speed;
-            me->dy = 0;
-            thing_set_dir_left(me);
-        } else if (thing_is_action_right(it)) {
-            me->dx = speed;
-            me->dy = 0;
-            thing_set_dir_right(me);
-        } else if (thing_is_action_up(it)) {
-            me->dx = 0;
-            me->dy = -speed;
-            thing_set_dir_up(me);
-        } else if (thing_is_action_down(it)) {
-            me->dx = 0;
-            me->dy = speed;
-            thing_set_dir_down(me);
+            if (thing_is_action_left(it)) {
+                me->dx = -speed;
+                me->dy = 0;
+                thing_set_dir_left(me);
+            } else if (thing_is_action_right(it)) {
+                me->dx = speed;
+                me->dy = 0;
+                thing_set_dir_right(me);
+            } else if (thing_is_action_up(it)) {
+                me->dx = 0;
+                me->dy = -speed;
+                thing_set_dir_up(me);
+            } else if (thing_is_action_down(it)) {
+                me->dx = 0;
+                me->dy = speed;
+                thing_set_dir_down(me);
+            }
         }
     }
 
