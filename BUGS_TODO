@@ -1,6 +1,5 @@
 --------------------------------------- plan for apr --------------------------------------
 - add colored triggers
-- implement spawn trigger
 - implement explodr trigger?
 - add moving block typ
 - add level edit layer filters
@@ -62,6 +61,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sun Apr  5 07:50:19 EDT 2015
+- implement spawn trigger
+- if no trigger, auto move things
 
 Sat Apr  4 20:11:15 EDT 2015
 - implement touch triggers

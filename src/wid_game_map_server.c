@@ -20,6 +20,7 @@
 #include "file.h"
 #include "thing_template.h"
 #include "wid_editor.h"
+#include "sound.h"
 
 levelp server_level;
 widp wid_game_map_server_window;
@@ -199,6 +200,73 @@ void wid_game_map_server_wid_destroy (uint8_t keep_players)
     }
 }
 
+void level_activate_trigger (levelp level)
+{
+    int x, y, z;
+    int spawned = 0;
+
+    if (server_level->trigger) {
+        return;
+    }
+
+    server_level->trigger = 1;
+
+    /*
+     * Look for any items to be spawned.
+     *
+     * We don't need to activate movement tiles as they will be activated by 
+     * the move tiles themselves during collision testing.
+     */
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+
+            tpp trigger = level->map_grid.tile[x][y][MAP_DEPTH_ACTIONS].tp;
+            if (!trigger) {
+                continue;
+            }
+
+            if (!tp_is_action_spawn(trigger)) {
+                continue;
+            }
+
+            for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
+                tpp it = level->map_grid.tile[x][y][z].tp;
+                if (!it) {
+                    continue;
+                }
+
+                wid_game_map_server_replace_tile(level_get_map(level),
+                                                 x,
+                                                 y,
+                                                 0, /* thing */
+                                                 it,
+                                                 0, /* tpp data */
+                                                 0 /* item */,
+                                                 0 /* stats */);
+                spawned = 1;
+
+                break;
+            }
+        }
+    }
+
+    if (spawned) {
+        sound_play_slime();
+    }
+}
+
+static void level_set_new_tp (levelp level,
+                              int x, int y, int z, 
+                              tpp tp, tpp_data data)
+{
+    memset(&level->map_grid.tile[x][y][z], 0, sizeof(level_map_tile));
+    level->map_grid.tile[x][y][z].tp = tp;
+
+    if (data) {
+        level->map_grid.tile[x][y][z].data = *data;
+    }
+}
+
 /*
  * Replace or place a tile.
  */
@@ -211,21 +279,61 @@ wid_game_map_server_replace_tile (widp w,
                                   itemp item,
                                   thing_statsp stats)
 {
+    verify(w);
+    levelp level = (typeof(level)) wid_get_client_context(w);
+    verify(level);
+
+    int z = tp_get_z_depth(tp);
     tree_rootp thing_tiles;
     const char *tilename;
     tilep tile;
     widp child;
-    levelp level;
+    int ix = x;
+    int iy = y;
+
+    /*
+     * First pass? Only interested in location of triggers.
+     */
+    if (server_level_is_being_loaded == 1) {
+        /*
+         * Record what triggers exist on the level.
+         */
+        if (tp_is_action_trigger(tp)) {
+            level->trigger_exists = 1;
+        }
+
+        level_set_new_tp(level, x, y, z, tp, data);
+
+        return (0);
+    }
+
+    /*
+     * Second pass, do not create things that are to obly be created on 
+     * triggers.
+     */
+    if (server_level_is_being_loaded == 2) {
+        /*
+         * If there is a trigger here 
+         */
+        if (z > MAP_DEPTH_FLOOR) {
+            tpp trigger = level->map_grid.tile[ix][iy][MAP_DEPTH_ACTIONS].tp;
+
+            if (trigger) {
+                if (tp_is_action_spawn(trigger)) {
+                    return (0);
+                }
+            }
+        }
+    }
+
+    /*
+     * Second pass, create the things.
+     */
 
     if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_WIDTH)) {
         DIE("thing template [%s] cannot be placed at %f %f",
             tp_short_name(tp), x, y);
     }
-
-    verify(w);
-
-    level = (typeof(level)) wid_get_client_context(w);
-    verify(level);
 
     /*
      * If we find a player, it is really a placeholder of where to put a 
@@ -353,7 +461,10 @@ wid_game_map_server_replace_tile (widp w,
      */
     wid_update(child);
 
-    if (server_level_is_being_loaded) {
+    /*
+     * Avoid doing the map fixup all the time as it is expensive.
+     */
+    if (server_level_is_being_loaded == 2) {
         return (child);
     }
 
@@ -362,6 +473,10 @@ wid_game_map_server_replace_tile (widp w,
         thing_is_pipe(t)) {
         map_fixup(level);
     }
+
+    /*
+     * STUFF ADDED HERE WILL BE SKIPPED BY THE ABOVE CHECK
+     */
 
     return (child);
 }
