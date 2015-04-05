@@ -1,0 +1,15 @@
+{
+ short_name="action_spawn"
+ raw_name="action_spawn"
+ tooltip="Spawns thing under it when active"
+ is_collision_map_small
+ z_depth=6
+ is_action
+ is_visible_on_debug_only
+ is_action_spawn
+ tiles={
+  tile={
+   tile="action_spawn"
+  }
+ }
+}

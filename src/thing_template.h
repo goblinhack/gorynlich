@@ -251,7 +251,7 @@ typedef struct tp_ {
     uint8_t is_rrr23:1;
     uint8_t is_visible_on_debug_only:1;
     uint8_t is_action:1;
-    uint8_t is_action_bridge:1;
+    uint8_t is_action_spawn:1;
     uint8_t is_action_trigger:1;
     uint8_t is_action_down:1;
     uint8_t is_action_up:1;
@@ -681,9 +681,9 @@ static inline uint8_t tp_is_action (tpp t)
     return (t->is_action);
 }
 
-static inline uint8_t tp_is_action_bridge (tpp t)
+static inline uint8_t tp_is_action_spawn (tpp t)
 {
-    return (t->is_action_bridge);
+    return (t->is_action_spawn);
 }
 
 static inline uint8_t tp_is_action_trigger (tpp t)

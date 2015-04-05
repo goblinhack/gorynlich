@@ -1166,11 +1166,11 @@ static inline uint8_t thing_is_action (thingp t)
     return (tp_is_action(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_action_bridge (thingp t)
+static inline uint8_t thing_is_action_spawn (thingp t)
 {
     verify(t);
 
-    return (tp_is_action_bridge(thing_tp(t)));
+    return (tp_is_action_spawn(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_action_trigger (thingp t)
@@ -1702,9 +1702,9 @@ static inline uint8_t thing_is_visible_on_debug_only_noverify (thingp t)
     return (t->tp->is_visible_on_debug_only);
 }
 
-static inline uint8_t thing_is_action_bridge_noverify (thingp t)
+static inline uint8_t thing_is_action_spawn_noverify (thingp t)
 {
-    return (t->tp->is_action_bridge);
+    return (t->tp->is_action_spawn);
 }
 
 static inline uint8_t thing_is_action_trigger_noverify (thingp t)
