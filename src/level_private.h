@@ -71,6 +71,8 @@ typedef struct level_t_ {
      */
     int32_t timestamp_started;
 
+    uint8_t trigger;
+
     /*
      * Things cannot move but can be animated.
      */
