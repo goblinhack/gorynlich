@@ -43,7 +43,7 @@ uint8_t level_init (void)
     return (true);
 }
 
-static uint8_t level_server_init (void)
+static uint8_t level_server_init (levelp level)
 {
     if (level_server_init_done) {
         return (true);
@@ -53,6 +53,14 @@ static uint8_t level_server_init (void)
 
     command_add(level_command_dead, 
                 "dead", "internal command for thing suicide");
+
+    /*
+     * If a trigger does not exist then activate anthing that may be waiting 
+     * on it.
+     */
+    if (!level->trigger_exists) {
+        level->trigger = 1;
+    }
 
     return (true);
 }
@@ -242,8 +250,6 @@ void level_update_now (levelp level)
 
 void level_load_new (void)
 {
-    server_level_is_being_loaded = true;
-
     LOG("Server: New level, %d.%d", 
         global_config.server_level_pos.y, 
         global_config.server_level_pos.x);
@@ -275,8 +281,6 @@ void level_load_new (void)
             global_config.server_level_pos.x);
     }
 
-    server_level_is_being_loaded = false;
-
     level_update_now(server_level);
 
     level_pause(server_level);
@@ -299,42 +303,64 @@ levelp level_load (level_pos_t level_pos,
 
     dir_and_file = dynprintf("data/levels/%d.%d", level_pos.y, level_pos.x);
 
-    demarshal_p in;
-
     LEVEL_LOG(level, "Level %s: loading", dir_and_file);
 
-    if (!(in = demarshal(dir_and_file))) {
-        /*
-         * Fail
-         *
-         * I'm assuming this means the end of the game
-         *
-        char *popup_str = dynprintf("Failed to load level %s: %s",
-                                    dir_and_file,
-                                    strerror(errno));
+    int pass;
+    int max_pass;
 
-        MSG_BOX("%s", popup_str);
-        myfree(popup_str);
-         */
-        myfree(dir_and_file);
-
-        return (0);
+    if (level_is_map_editor(level) || level_is_editor(level)) {
+        max_pass = 1;
     } else {
         /*
-         * Success
+         * Need 2 passes for levels being read into the game. First pass is 
+         * just to learn where the action triggers are for spawned things and 
+         * the like.
+         *
+         * Second pass creates the things.
          */
-        if (!demarshal_level(in, level)) {
-            char *popup_str = dynprintf("There were some errors "
-                                        "while loading level %s: %s",
+        max_pass = 2;
+    }
+
+    for (pass = 0; pass < max_pass; pass++) {
+        demarshal_p in;
+
+        server_level_is_being_loaded = pass + 1;
+
+        if (!(in = demarshal(dir_and_file))) {
+            /*
+             * Fail
+             *
+             * I'm assuming this means the end of the game
+             *
+            char *popup_str = dynprintf("Failed to load level %s: %s",
                                         dir_and_file,
                                         strerror(errno));
 
             MSG_BOX("%s", popup_str);
             myfree(popup_str);
-        }
+             */
+            myfree(dir_and_file);
 
-        demarshal_fini(in);
+            return (0);
+        } else {
+            /*
+             * Success
+             */
+            if (!demarshal_level(in, level)) {
+                char *popup_str = dynprintf("There were some errors "
+                                            "while loading level %s: %s",
+                                            dir_and_file,
+                                            strerror(errno));
+
+                MSG_BOX("%s", popup_str);
+                myfree(popup_str);
+            }
+
+            demarshal_fini(in);
+        }
     }
+
+    server_level_is_being_loaded = 0;
 
     myfree(dir_and_file);
 
@@ -350,7 +376,7 @@ levelp level_load (level_pos_t level_pos,
         level_reset_players(level);
     }
 
-    level_server_init();
+    level_server_init(level);
 
     LEVEL_LOG(level, "Level loaded");
 
@@ -383,7 +409,7 @@ levelp level_load_random (level_pos_t level_pos,
     level_set_is_paused(level, false);
     level_reset_players(level);
 
-    level_server_init();
+    level_server_init(level);
 
     LEVEL_LOG(level, "Level loaded");
 
@@ -1479,8 +1505,6 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
                                level->exit_reached_when_open);
     } while (demarshal_gotone(ctx));
 
-    server_level_is_being_loaded = true;
-
     if (level_is_map_editor(level)) {
         rc = demarshal_wid_grid(ctx, wid,
                                 wid_editor_level_map_thing_replace_template);
@@ -1491,8 +1515,6 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
         rc = demarshal_wid_grid(ctx, wid,
                                 wid_game_map_server_replace_tile);
     }
-
-    server_level_is_being_loaded = false;
 
     if (level_is_map_editor(level)) {
         /*
