@@ -6,9 +6,24 @@
 
 #pragma once
 
+#include "thing_template.h"
+
 typedef struct {
     int8_t walls[MAP_WIDTH][MAP_HEIGHT];
 } level_walls;
+
+typedef struct level_map_tile_ {
+    tpp tp;
+
+    /*
+     * Data associated with individual tiles.
+     */
+    thing_template_data data;
+} level_map_tile;
+
+typedef struct level_map_grid_ {
+    level_map_tile tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+} level_map_grid;
 
 typedef struct level_t_ {
     level_pos_t level_pos;
@@ -60,6 +75,12 @@ typedef struct level_t_ {
     widp map;
 
     /*
+     * Quick look op for initial things on the map and for finding what to 
+     * spawn on a trigger for ex.
+     */
+    level_map_grid map_grid;
+
+    /*
      * Timers
      */
     timerp end_level_first_phase_fade_out_timer;
@@ -72,6 +93,7 @@ typedef struct level_t_ {
     int32_t timestamp_started;
 
     uint8_t trigger;
+    uint8_t trigger_exists;
 
     /*
      * Things cannot move but can be animated.

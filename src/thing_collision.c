@@ -12,6 +12,7 @@
 #include "wid.h"
 #include "map.h"
 #include "math_util.h"
+#include "level.h"
 #include "wid_game_map_server.h"
 
 typedef struct {
@@ -473,10 +474,8 @@ static void thing_handle_collision (thingp me, thingp it,
          * An action trigger is only ever used to start an object off as the 
          * initiator of a collision.
          */
-        if (thing_is_player(me)) {
-            if (thing_is_action_trigger(it)) {
-                server_level->trigger = 1;
-            }
+        if (thing_is_action_trigger(it)) {
+            level_activate_trigger(server_level);
         }
     }
 

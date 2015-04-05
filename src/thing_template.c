@@ -588,7 +588,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
         GET_OPT_NAMED_BITFIELD(ctx, "is_visible_on_debug_only", t->is_visible_on_debug_only);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action", t->is_action);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_action_bridge", t->is_action_bridge);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_action_spawn", t->is_action_spawn);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_trigger", t->is_action_trigger);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_down", t->is_action_down);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_up", t->is_action_up);
@@ -776,7 +776,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
     PUT_NAMED_BITFIELD(ctx, "is_visible_on_debug_only", t->is_visible_on_debug_only);
     PUT_NAMED_BITFIELD(ctx, "is_action", t->is_action);
-    PUT_NAMED_BITFIELD(ctx, "is_action_bridge", t->is_action_bridge);
+    PUT_NAMED_BITFIELD(ctx, "is_action_spawn", t->is_action_spawn);
     PUT_NAMED_BITFIELD(ctx, "is_action_trigger", t->is_action_trigger);
     PUT_NAMED_BITFIELD(ctx, "is_action_down", t->is_action_down);
     PUT_NAMED_BITFIELD(ctx, "is_action_up", t->is_action_up);
