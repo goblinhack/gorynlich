@@ -953,7 +953,8 @@ wid_game_map_client_replace_tile (widp w,
     }
 
 
-    thing_client_wid_update(t, x + dx, y + dy, false /* smooth */);
+    thing_client_wid_update(t, x + dx, y + dy, false /* smooth */,
+                            true /* is new */);
 
     /*
      * If this is a pre-existing thing perhaps being recreated ona new level
