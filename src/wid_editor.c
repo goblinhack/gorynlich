@@ -39,6 +39,7 @@ static void wid_editor_undo_save(void);
 static void wid_editor_save_level(void);
 static void wid_editor_save(const char *dir_and_file, int is_test_level);
 static void wid_editor_button_animate(widp b, tpp tp);
+static void map_fixup(void);
 
 static widp wid_editor_save_popup; // edit wid_editor_tick if you add more
 static widp wid_editor_map_dialog;
@@ -66,6 +67,89 @@ static void wid_editor_set_mode (int edit_mode)
     ctx->got_line_start = 0;
     ctx->got_square_start = 0;
     ctx->got_cut_start = 0;
+}
+
+static int layer_to_depth (int layer)
+{
+    switch (layer) {
+    case WID_EDITOR_LAYER_MONST:
+        return (MAP_DEPTH_MONST);
+
+    case WID_EDITOR_LAYER_WALLS:
+        return (MAP_DEPTH_WALL);
+
+    case WID_EDITOR_LAYER_FLOOR:
+        return (MAP_DEPTH_FLOOR);
+
+    case WID_EDITOR_LAYER_PLAYER:
+        return (MAP_DEPTH_PLAYER);
+
+    case WID_EDITOR_LAYER_ACTIONS:
+        return (MAP_DEPTH_ACTIONS);
+
+    default:
+        DIE("bad layer %d", layer);
+    }
+}
+
+/*
+ * Force a rewrite of all layers that are not being editted so they in effect 
+ * cannot be overwritten.
+ */
+static void wid_editor_overwrite_inactive_layers (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    if (ctx->layer_mode == WID_EDITOR_LAYER_ALL) {
+        return;
+    }
+
+    int x, y, z;
+    int z_preserve = layer_to_depth(ctx->layer_mode);
+
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            for (z = 0; z < MAP_DEPTH; z++) {
+                if (z == z_preserve) {
+                    continue;
+                }
+
+                memcpy(&ctx->map.tile[x][y][z], 
+                       &ctx->map_preserved_layers.tile[x][y][z], 
+                       sizeof(wid_editor_map_tile));
+            }
+        }
+    }
+
+    map_fixup();
+}
+
+static void wid_editor_set_layer_mode (int layer_mode)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    if (ctx->layer_mode == WID_EDITOR_LAYER_ALL) {
+        /*
+         * Save all layers.
+         */
+        memcpy(&ctx->map_preserved_layers, &ctx->map, sizeof(ctx->map));
+    } else {
+        /*
+         * Move the layers back before changing mode.
+         */
+        wid_editor_overwrite_inactive_layers();
+
+        /*
+         * Now save the merged layers.
+         */
+        memcpy(&ctx->map_preserved_layers, &ctx->map, sizeof(ctx->map));
+    }
+
+    ctx->layer_mode = layer_mode;
 }
 
 static void wid_editor_set_new_tp (int x, int y, int z, 
@@ -418,6 +502,73 @@ static void map_fixup (void)
 }
 
 /*
+ * Set the layer focus.
+ */
+static void wid_editor_update_layer_mode_buttons (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    /*
+     * Reset all buttons.
+     */
+    int i;
+    for (i = 0; i < WID_EDITOR_LAYER_MAX; i++) {
+        widp b = ctx->tile[WID_EDITOR_MENU_CELLS_ACROSS - 1][i].button;
+        if (!b) {
+            continue;
+        }
+
+        color c = CYAN;
+        c.a = 50;
+        wid_set_color(b, WID_COLOR_BG, c);
+
+        c = WHITE;
+        c.a = 100;
+        wid_set_color(b, WID_COLOR_TL, c);
+
+        c = GRAY;
+        c.a = 100;
+        wid_set_color(b, WID_COLOR_BR, c);
+
+        wid_set_color(b, WID_COLOR_TEXT, GRAY);
+
+        switch (i) {
+        case WID_EDITOR_LAYER_FLOOR:
+        case WID_EDITOR_LAYER_WALLS:
+        case WID_EDITOR_LAYER_MONST:
+        case WID_EDITOR_LAYER_ACTIONS:
+        case WID_EDITOR_LAYER_PLAYER:
+        case WID_EDITOR_LAYER_ALL:
+            c = GREEN;
+            c.a = 50;
+            wid_set_color(b, WID_COLOR_BG, c);
+            c.a = 100;
+            wid_set_color(b, WID_COLOR_TL, c);
+            wid_set_color(b, WID_COLOR_BR, c);
+            break;
+        }
+    }
+
+    /*
+     * Set the current focus.
+     */
+    widp b = ctx->tile[WID_EDITOR_MENU_CELLS_ACROSS - 1][ctx->layer_mode].button;
+    if (!b) {
+        DIE("no layer button at %d", ctx->layer_mode);
+    }
+
+    color c = RED;
+    c.a = 100;
+    wid_set_color(b, WID_COLOR_BG, c);
+    c.a = 255;
+    wid_set_color(b, WID_COLOR_TL, RED);
+    wid_set_color(b, WID_COLOR_BR, RED);
+    wid_set_color(b, WID_COLOR_TEXT, GREEN);
+}
+
+/*
  * Set the edit mode focus.
  */
 static void wid_editor_update_edit_mode_buttons (void)
@@ -469,7 +620,13 @@ static void wid_editor_update_edit_mode_buttons (void)
         case WID_EDITOR_MODE_DEL:
         case WID_EDITOR_MODE_UNDO:
         case WID_EDITOR_MODE_REDO:
+            break;
+
         case WID_EDITOR_MODE_NUKE:
+            c.a = 255;
+            wid_set_color(b, WID_COLOR_TL, RED);
+            wid_set_color(b, WID_COLOR_BR, RED);
+            wid_set_color(b, WID_COLOR_BG, BLACK);
             break;
 
         case WID_EDITOR_MODE_TOGGLE:
@@ -853,6 +1010,7 @@ static void wid_editor_update_buttons (void)
         }
     } }
 
+    wid_editor_update_layer_mode_buttons();
     wid_editor_update_edit_mode_buttons();
     wid_editor_update_tile_mode_buttons();
     wid_update(wid_editor_window);
@@ -904,8 +1062,8 @@ static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
     double width = br.x - tl.x;
     double height = br.y - tl.y;
 
-    width *= 1.5;
-    height *= 1.5;
+    width *= 1.35;
+    height *= 1.35;
 
     br.x = tl.x + width;
     tl.y = br.y - height;
@@ -917,6 +1075,12 @@ static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
         tpp tp = ctx->map.tile[x][y][z].tp;
         if (!tp) {
             continue;
+        }
+
+        if (ctx->layer_mode != WID_EDITOR_LAYER_ALL) {
+            if (z != layer_to_depth(ctx->layer_mode)) {
+                continue;
+            }
         }
 
         if (z == MAP_DEPTH_WALL) {
@@ -2113,6 +2277,37 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
         }
     }
 
+    if (x == WID_EDITOR_MENU_CELLS_ACROSS - 1) {
+        switch (y) {
+        case WID_EDITOR_LAYER_UNUSED_0:
+            break;
+        case WID_EDITOR_LAYER_UNUSED_1:
+            break;
+        case WID_EDITOR_LAYER_UNUSED_2:
+            break;
+        case WID_EDITOR_LAYER_UNUSED_3:
+            break;
+        case WID_EDITOR_LAYER_UNUSED_4:
+            break;
+        case WID_EDITOR_LAYER_UNUSED_5:
+            break;
+        case WID_EDITOR_LAYER_UNUSED_6:
+            break;
+        case WID_EDITOR_LAYER_UNUSED_7:
+            break;
+        case WID_EDITOR_LAYER_UNUSED_8:
+            break;
+        case WID_EDITOR_LAYER_FLOOR:
+        case WID_EDITOR_LAYER_WALLS:
+        case WID_EDITOR_LAYER_MONST:
+        case WID_EDITOR_LAYER_ACTIONS:
+        case WID_EDITOR_LAYER_PLAYER:
+        case WID_EDITOR_LAYER_ALL:
+            wid_editor_set_layer_mode(y);
+            break;
+        }
+    }
+
     if (y == WID_EDITOR_MENU_CELLS_DOWN - 1) {
         if (x < WID_EDITOR_MODE_MAX) {
             switch (x) {
@@ -2764,6 +2959,11 @@ static void wid_editor_load_map (level_pos_t level_pos)
 
 static void wid_editor_tick (widp w)
 {
+    /*
+     * Preserve layers from modification that are not being editted.
+     */
+    wid_editor_overwrite_inactive_layers();
+
     if (!wid_is_hidden(wid_console_window)) {
         return;
     }
@@ -3193,6 +3393,7 @@ void wid_editor (level_pos_t level_pos)
     ctx->w = wid_editor_window = window = wid_new_window("wid editor");
     wid_set_client_context(window, ctx);
     ctx->is_new = true;
+    ctx->layer_mode = WID_EDITOR_LAYER_ALL;
 
     /*
      * Main window
@@ -3236,147 +3437,188 @@ void wid_editor (level_pos_t level_pos)
             int focus = (y << 8) | x;
             wid_set_client_context2(b, (void*) (uintptr_t) focus);
 
-            if (y == WID_EDITOR_MENU_CELLS_DOWN - 1) {
-            switch (x) {
-            case WID_EDITOR_MODE_DRAW:
-                wid_set_text(b, "Draw");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "D - shortcut", vsmall_font);
+            if (x == WID_EDITOR_MENU_CELLS_ACROSS - 1) {
+                switch (y) {
+                case WID_EDITOR_LAYER_FLOOR:
+                    wid_set_text(b, "Floor");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Floor layer", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_LAYER_WALLS:
+                    wid_set_text(b, "Walls");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Wall and door layer", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_LAYER_MONST:
+                    wid_set_text(b, "Monsts");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Monster layer", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_LAYER_ACTIONS:
+                    wid_set_text(b, "Actions");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Actions layer", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_LAYER_PLAYER:
+                    wid_set_text(b, "Players");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Player layer", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_LAYER_ALL:
+                    wid_set_text(b, "All");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "All layers", vsmall_font);
+                    }
+                    break;
                 }
-                break;
-            case WID_EDITOR_MODE_LINE:
-                wid_set_text(b, "Line");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "L - shortcut", vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_FILL:
-                wid_set_text(b, "Fill");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "f - shortcut", vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_DEL:
-                wid_set_text(b, "Del");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "x - shortcut", vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_UNDO:
-                wid_set_text(b, "Undo");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "u - shortcut", vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_REDO:
-                wid_set_text(b, "Redo");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "e - shortcut", vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_SAVE:
-                wid_set_text(b, "Save");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "s - shortcut", vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_TOGGLE:
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "TAB - shortcut", vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_YANK:
-                wid_set_text(b, "Yank");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "y - shortcut. picks up a tile",
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_SQUARE:
-                wid_set_text(b, "Rect");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "r - shortcut",
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_CUT:
-                wid_set_text(b, "Cut");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "Remove square section",
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_COPY:
-                wid_set_text(b, "Copy");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "c - shortcut",
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_PASTE:
-                wid_set_text(b, "Paste");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "p - shortcut",
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_TEST:
-                wid_set_text(b, "Test");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "t - shortcut, Test out level",
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_RANDOM:
-                wid_set_text(b, "Random");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "Create random level",
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_BORDER:
-                wid_set_text(b, "Border");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "Create empty level with border",
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_STYLE:
-                wid_set_text(b, "Style");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "Retheme walls and floors randomly",
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_NUKE:
-                wid_set_text(b, "Nuke");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "Z - shortcut. Destroy level.", 
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_VFLIP:
-                wid_set_text(b, "Vflip");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "Vertical flip.", 
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_HFLIP:
-                wid_set_text(b, "Hflip");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "Horzizontal flip.", 
-                                    vsmall_font);
-                }
-                break;
-            case WID_EDITOR_MODE_ROTATE:
-                wid_set_text(b, "Rot");
-                if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "Rotate level.", 
-                                    vsmall_font);
-                }
-                break;
             }
+
+            if (y == WID_EDITOR_MENU_CELLS_DOWN - 1) {
+                switch (x) {
+                case WID_EDITOR_MODE_DRAW:
+                    wid_set_text(b, "Draw");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "D - shortcut", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_LINE:
+                    wid_set_text(b, "Line");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "L - shortcut", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_FILL:
+                    wid_set_text(b, "Fill");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "f - shortcut", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_DEL:
+                    wid_set_text(b, "Del");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "x - shortcut", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_UNDO:
+                    wid_set_text(b, "Undo");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "u - shortcut", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_REDO:
+                    wid_set_text(b, "Redo");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "e - shortcut", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_SAVE:
+                    wid_set_text(b, "Save");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "s - shortcut", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_TOGGLE:
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "TAB - shortcut", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_YANK:
+                    wid_set_text(b, "Yank");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "y - shortcut. picks up a tile",
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_SQUARE:
+                    wid_set_text(b, "Rect");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "r - shortcut",
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_CUT:
+                    wid_set_text(b, "Cut");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Remove square section",
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_COPY:
+                    wid_set_text(b, "Copy");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "c - shortcut",
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_PASTE:
+                    wid_set_text(b, "Paste");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "p - shortcut",
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_TEST:
+                    wid_set_text(b, "Test");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "t - shortcut, Test out level",
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_RANDOM:
+                    wid_set_text(b, "Random");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Create random level",
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_BORDER:
+                    wid_set_text(b, "Border");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Create empty level with border",
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_STYLE:
+                    wid_set_text(b, "Style");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Retheme walls and floors randomly",
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_NUKE:
+                    wid_set_text(b, "Nuke");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Z - shortcut. Destroy level.", 
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_VFLIP:
+                    wid_set_text(b, "Vflip");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Vertical flip.", 
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_HFLIP:
+                    wid_set_text(b, "Hflip");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Horzizontal flip.", 
+                                        vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_ROTATE:
+                    wid_set_text(b, "Rot");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Rotate level.", 
+                                        vsmall_font);
+                    }
+                    break;
+                }
             }
         }
         }

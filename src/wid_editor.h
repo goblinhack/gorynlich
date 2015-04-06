@@ -9,7 +9,7 @@
 #define WID_EDITOR_MENU_CELLS_ACROSS    26
 #define WID_EDITOR_MENU_CELLS_DOWN      16
 
-#define WID_EDITOR_MENU_MAP_ACROSS      26
+#define WID_EDITOR_MENU_MAP_ACROSS      25
 #define WID_EDITOR_MENU_MAP_DOWN        15
 
 #define WID_EDITOR_MENU_TILES_ACROSS    20
@@ -35,7 +35,6 @@ enum {
     WID_EDITOR_MODE_UNUSED_2,
     WID_EDITOR_MODE_UNUSED_3,
     WID_EDITOR_MODE_UNUSED_4,
-    WID_EDITOR_MODE_UNUSED_5,
     WID_EDITOR_MODE_VFLIP,
     WID_EDITOR_MODE_HFLIP,
     WID_EDITOR_MODE_ROTATE,
@@ -45,6 +44,25 @@ enum {
     WID_EDITOR_MODE_RANDOM,
     WID_EDITOR_MODE_NUKE,
     WID_EDITOR_MODE_MAX,
+};
+
+enum {
+    WID_EDITOR_LAYER_UNUSED_0,
+    WID_EDITOR_LAYER_UNUSED_1,
+    WID_EDITOR_LAYER_UNUSED_2,
+    WID_EDITOR_LAYER_UNUSED_3,
+    WID_EDITOR_LAYER_UNUSED_4,
+    WID_EDITOR_LAYER_UNUSED_5,
+    WID_EDITOR_LAYER_UNUSED_6,
+    WID_EDITOR_LAYER_UNUSED_7,
+    WID_EDITOR_LAYER_UNUSED_8,
+    WID_EDITOR_LAYER_PLAYER,
+    WID_EDITOR_LAYER_ACTIONS,
+    WID_EDITOR_LAYER_MONST,
+    WID_EDITOR_LAYER_WALLS,
+    WID_EDITOR_LAYER_FLOOR,
+    WID_EDITOR_LAYER_ALL,
+    WID_EDITOR_LAYER_MAX,
 };
 
 enum {
@@ -151,6 +169,11 @@ typedef struct {
     wid_editor_map_grid map_copy;
     wid_editor_map_grid map_tmp;
 
+    /*
+     * When we change layer, this holds onto all the unmodified layers.
+     */
+    wid_editor_map_grid map_preserved_layers;
+
     uint8_t valid_undo[WID_EDITOR_UNDO];
 
     /*
@@ -190,6 +213,11 @@ typedef struct {
 
     int tile_mode;
     int tile_pool;
+
+    /*
+     * Which slice are we editing.
+     */
+    int layer_mode;
 
     /*
      * Drawing or lines or?
