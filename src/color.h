@@ -7,6 +7,7 @@
 #pragma once
 
 #include "main.h"
+#include "tree.h"
 
 void color_init(void);
 void glcolor_save(void);
@@ -772,3 +773,10 @@ static inline color gl_color_current (void)
 {
     return (gl_last_color);
 }
+
+typedef struct {
+    tree_key_string tree;
+    color c;
+} tree_color_val;
+
+extern tree_rootp colors;
