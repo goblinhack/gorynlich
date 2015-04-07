@@ -761,12 +761,7 @@ color YELLOW_GREEN;
 color YELLOWGREEN;
 color YELLOW;
 
-static tree_root *colors;
-
-typedef struct {
-    tree_key_string tree;
-    color c;
-} tree_color_val;
+tree_root *colors;
 
 static void color_set (const char *name,
                        color *c, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
