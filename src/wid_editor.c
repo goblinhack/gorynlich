@@ -26,6 +26,7 @@
 #include "tile.h"
 #include "marshal.h"
 #include "wid_map.h"
+#include "wid_cmap.h"
 #include "wid_menu.h"
 #include "string_util.h"
 #include "wid_console.h"
@@ -43,6 +44,7 @@ static void map_fixup(void);
 
 static widp wid_editor_save_popup; // edit wid_editor_tick if you add more
 static widp wid_editor_map_dialog;
+static widp wid_choose_color_dialog;
 static widp wid_editor_window;
 static widp wid_editor_background;
 static wid_editor_ctx *wid_editor_window_ctx;
@@ -163,9 +165,18 @@ static void wid_editor_set_new_tp (int x, int y, int z,
     memset(&ctx->map.tile[x][y][z], 0, sizeof(wid_editor_map_tile));
     ctx->map.tile[x][y][z].tp = tp;
 
+    thing_template_data d;
+
     if (data) {
-        ctx->map.tile[x][y][z].data = *data;
+        memcpy(&d, data, sizeof(d));
+    } else {
+        memset(&d, 0, sizeof(d));
+
+        d.col_name = (char*) ctx->col_name;
+        d.col = ctx->col;
     }
+
+    ctx->map.tile[x][y][z].data = d;
 }
 
 /*
@@ -640,6 +651,10 @@ static void wid_editor_update_edit_mode_buttons (void)
                 wid_set_color(b, WID_COLOR_BR, RED);
             }
             break;
+
+        case WID_EDITOR_MODE_COLOR:
+            wid_set_color(b, WID_COLOR_BG, ctx->col);
+            break;
         }
     }
 
@@ -1097,7 +1112,10 @@ static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
             continue;
         }
 
-        glcolor(WHITE);
+        thing_template_data *data = &ctx->map.tile[x][y][z].data;
+        color c = data->col;
+        c.a = 255;
+        glcolor(c);
         tile_blit_fat(tile, 0, tl, br);
     }
 
@@ -1249,6 +1267,28 @@ static void wid_editor_tile_mode_toggle (void)
         ctx->map_x = saved_map_x;
         ctx->map_y = saved_map_y;
     }
+}
+
+static void wid_editor_color_selected (const char *color)
+{
+    wid_choose_color_dialog = 0;
+
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    ctx->col_name = color;
+    ctx->col = color_find(ctx->col_name);
+}
+
+static void wid_editor_color_cancelled (void)
+{
+    wid_choose_color_dialog = 0;
+}
+
+static void wid_editor_color_choose (void)
+{
+    wid_choose_color_dialog = wid_cmap("Choose color",
+                                       wid_editor_color_selected, 
+                                       wid_editor_color_cancelled);
 }
 
 static void wid_editor_tile_mode_set (int val)
@@ -2380,6 +2420,10 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
             case WID_EDITOR_MODE_TOGGLE:
                 wid_editor_tile_mode_toggle();
                 break;
+
+            case WID_EDITOR_MODE_COLOR:
+                wid_editor_color_choose();
+                break;
             }
         }
     }
@@ -2968,7 +3012,7 @@ static void wid_editor_tick (widp w)
         return;
     }
 
-    if (wid_editor_save_popup || wid_editor_map_dialog) {
+    if (wid_editor_save_popup || wid_editor_map_dialog || wid_choose_color_dialog) {
         return;
     }
 
@@ -3259,6 +3303,13 @@ static void wid_editor_save (const char *dir_and_file, int is_test_level)
                     PUT_KET(ctx);
                 }
 
+                if (strcmp(data->col_name, "white")) {
+                    PUT_NAME(ctx, "color");
+                    PUT_BRA(ctx);
+                    PUT_NAMED_STRING(ctx, "color", data->col_name);
+                    PUT_KET(ctx);
+                }
+
                 PUT_KET(ctx);
             }
         }
@@ -3388,6 +3439,9 @@ void wid_editor (level_pos_t level_pos)
     ctx->focus_x = -1;
     ctx->focus_y = -1;
     ctx->level_pos = level_pos;
+
+    ctx->col_name = "white";
+    ctx->col = color_find(ctx->col_name);
 
     widp window;
     ctx->w = wid_editor_window = window = wid_new_window("wid editor");
@@ -3525,6 +3579,11 @@ void wid_editor (level_pos_t level_pos)
                 case WID_EDITOR_MODE_TOGGLE:
                     if (!sdl_joy_axes) {
                         wid_set_tooltip(b, "TAB - shortcut", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_COLOR:
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "Choose color", vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_YANK:
