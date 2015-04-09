@@ -777,6 +777,7 @@ static inline color gl_color_current (void)
 typedef struct {
     tree_key_string tree;
     color c;
+    int include_in_palette;
 } tree_color_val;
 
 extern tree_rootp colors;

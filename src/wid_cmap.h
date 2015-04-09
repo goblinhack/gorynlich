@@ -6,19 +6,19 @@
 
 #pragma once
 
-#define COLORS_ACROSS       30
-#define COLORS_DOWN         30
+#define COLORS_ACROSS       25
+#define COLORS_DOWN         25
 
 typedef struct wid_cmap_cell_ {
     color color;
-    char *name;
+    const char *name;
     int x;
     int y;
 } wid_cmap_color;
 
 typedef void(*wid_cmap_event_t)(widp);
-typedef void(*on_selected_t)(const color);
-typedef void(*on_cancelled_t)(void);
+typedef void(*on_cmap_selected_t)(const char *name);
+typedef void(*on_cmap_cancelled_t)(void);
 
 typedef struct {
     /*
@@ -64,12 +64,12 @@ typedef struct {
      */
     int is_new;
 
-    on_selected_t on_selected;
-    on_cancelled_t on_cancelled;
+    on_cmap_selected_t on_selected;
+    on_cmap_cancelled_t on_cancelled;
 
 } wid_cmap_ctx;
 
-widp wid_cmap(const char *title, on_selected_t, on_cancelled_t);
+widp wid_cmap(const char *title, on_cmap_selected_t, on_cmap_cancelled_t);
 
 widp wid_editor_color_map_thing_replace_template(widp w,
                                                  double x,
