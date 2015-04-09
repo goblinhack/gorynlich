@@ -499,7 +499,6 @@ widp wid_cmap_map_dialog;
 
 static void wid_cmap_exit_selected (const char *name)
 {
-CON("%s",name);
     wid_cmap_map_dialog = 0;
 }
 
@@ -515,6 +514,7 @@ level_pos_t level_pos;
 level_pos.x = 2;
 level_pos.y = 1;
 wid_editor(level_pos);
+return;
     }
     if (0) {
         wid_cmap_map_dialog = wid_cmap("Choose color",
