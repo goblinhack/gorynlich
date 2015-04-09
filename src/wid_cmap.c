@@ -24,14 +24,13 @@
 #include "tile.h"
 #include "string_util.h"
 
-#if 0
 static widp wid_cmap_window;
 static wid_cmap_ctx *wid_cmap_window_ctx;
 static widp wid_cmap_background;
 static void wid_cmap_destroy(widp w);
 static void wid_cmap_set_focus(wid_cmap_ctx *ctx, int focusx, int focusy);
-static int saved_focus_x = 1;
-static int saved_focus_y = 1;
+static int saved_focus_x = 0;
+static int saved_focus_y = 0;
 
 static void wid_cmap_update_buttons (void)
 {
@@ -51,8 +50,8 @@ static void wid_cmap_update_buttons (void)
     verify(ctx);
     ctx->b = 0;
 
-    for (x = 1; x < COLORS_DOWN; x++) {
-    for (y = 1; y < COLORS_ACROSS; y++) {
+    for (x = 0; x < COLORS_DOWN; x++) {
+    for (y = 0; y < COLORS_ACROSS; y++) {
 
         widp b = ctx->buttons[y][x];
         verify(b);
@@ -62,10 +61,8 @@ static void wid_cmap_update_buttons (void)
         fontp font;
         color c;
 
-        tl.x = (double) (x-1) * width;
-        tl.y = (double) (y-1) * height;
-        tl.x += width / 2.0;
-        tl.y += height / 2.0;
+        tl.x = (double) (x) * width;
+        tl.y = (double) (y) * height;
 
         br.x = tl.x;
         br.y = tl.y;
@@ -80,8 +77,7 @@ static void wid_cmap_update_buttons (void)
             tl.y -= zoom;
             br.x += zoom * 2.0;
             br.y += zoom * 2.0;
-            color c = GREEN;
-            c = GREEN;
+            c = WHITE;
 
             ctx->b = b;
         } else {
@@ -90,7 +86,7 @@ static void wid_cmap_update_buttons (void)
             br.x -= zoom * 2.0;
             br.y -= zoom * 2.0;
 
-            c = GRAY70;
+            c = WHITE;
         }
 
         wid_set_tl_br_pct(b, tl, br);
@@ -100,25 +96,16 @@ static void wid_cmap_update_buttons (void)
         wid_cmap_color *map = &ctx->colors[y][x];
 
         c = map->color;
-        c.a = 255;
         wid_set_color(b, WID_COLOR_BG, c);
 
         if ((x == ctx->focusx) && (y == ctx->focusy)) {
-            color c = GRAY;
-            c.a = 100;
-            wid_set_color(b, WID_COLOR_BG, c);
-
             wid_set_color(b, WID_COLOR_TL, GREEN);
             wid_set_color(b, WID_COLOR_BR, GREEN);
-            wid_set_bevel(b, 5);
+            wid_set_bevel(b, 1);
         } else {
-            color c = GRAY;
-            c.a = 100;
-            wid_set_color(b, WID_COLOR_BG, c);
-
             wid_set_color(b, WID_COLOR_TL, WHITE);
             wid_set_color(b, WID_COLOR_BR, BLACK);
-            wid_set_bevel(b, 1);
+            wid_set_bevel(b, 0);
         }
     }
     }
@@ -138,8 +125,8 @@ static void wid_cmap_update_buttons (void)
     if (ctx->is_new) {
         ctx->is_new = false;
 
-        for (x = 1; x < COLORS_DOWN; x++) {
-            for (y = 1; y < COLORS_ACROSS; y++) {
+        for (x = 0; x < COLORS_DOWN; x++) {
+            for (y = 0; y < COLORS_ACROSS; y++) {
 
                 widp b = ctx->buttons[y][x];
 
@@ -525,8 +512,8 @@ static void wid_cmap_destroy_begin (widp w)
      */
     int x, y;
 
-    for (x = 1; x < COLORS_DOWN; x++) {
-        for (y = 1; y < COLORS_ACROSS; y++) {
+    for (x = 0; x < COLORS_DOWN; x++) {
+        for (y = 0; y < COLORS_ACROSS; y++) {
 
             widp b = ctx->buttons[y][x];
             fpoint tl;
@@ -561,10 +548,10 @@ static void wid_cmap_cell_selected (widp w)
         return;
     }
 
-    color l = ctx->colors[ctx->focusy][ctx->focusx].color;
+    const char *n = ctx->colors[ctx->focusy][ctx->focusx].name;
 
     if (ctx->on_selected) {
-        (*ctx->on_selected)(l);
+        (*ctx->on_selected)(n);
         wid_destroy(&wid_cmap_window);
         return;
     }
@@ -629,48 +616,33 @@ static void wid_cmap_load_colors (wid_cmap_ctx *ctx)
 
     { TREE_WALK(colors, c) {
 
-        const char *name = c->tree.key;
-
-        color c;
-
-        if (sscanf(name, "%d.%d", &y, &x) != 2) {
-            WARN("bad format in color name %s, expecting a,b format", name);
+        if (!c->include_in_palette) {
             continue;
         }
+
+        const char *name = c->tree.key;
+        ctx->colors[y][x].color = c->c;
+        ctx->colors[y][x].name = name;
+
+        widp b = ctx->buttons[y][x];
+        if (!b) {
+            DIE("no cmap button");
+        }
+
+        wid_set_tooltip(b, name, med_font);
+        wid_set_font(b, vsmall_font);
 
         x++;
         if (x >= COLORS_ACROSS) {
             x = 0;
             y++;
         }
-
-        colorp l = color_load(c, 
-                              ctx->w,
-                              false, /* is_editor */
-                              true, /* is_map_editor */
-                              false /* on_server */);
-        if (!l) {
-            ERR("Failed to load color %d.%d", y, x);
-            continue;
-        }
-
-        ctx->colors[y][x].color = l;
-
-        widp b = ctx->buttons[y][x];
-
-        wid_set_tooltip(b, color_get_title(l), med_font);
-        wid_set_font(b, vsmall_font);
-
-        wid_cmap_find_player_start(x, y);
-        wid_cmap_find_exits(x, y);
     } }
-
-    dirlist_free(&d);
 }
 
 widp wid_cmap (const char *title, 
-              on_selected_t on_selected, 
-              on_cancelled_t on_cancelled)
+               on_cmap_selected_t on_selected, 
+               on_cmap_cancelled_t on_cancelled)
 {
     wid_cmap_event_t selected = wid_cmap_cell_selected;
     wid_cmap_event_t cancelled = wid_cmap_cell_cancelled;
@@ -721,7 +693,7 @@ widp wid_cmap (const char *title,
         wid_set_no_shape(w);
 
         fpoint tl = { 0.0, 0.0};
-        fpoint br = { 1.0, 0.15};
+        fpoint br = { 1.0, 0.1};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_text(w, title);
@@ -750,8 +722,8 @@ widp wid_cmap (const char *title,
          */
         int x, y;
 
-        for (x = 1; x < COLORS_DOWN; x++) {
-        for (y = 1; y < COLORS_ACROSS; y++) {
+        for (x = 0; x < COLORS_DOWN; x++) {
+        for (y = 0; y < COLORS_ACROSS; y++) {
             widp b = wid_new_square_button(button_container,
                                            "wid map button");
             ctx->buttons[y][x] = b;
@@ -762,7 +734,7 @@ widp wid_cmap (const char *title,
             wid_set_on_key_down(b, wid_cmap_button_key_event);
             wid_set_on_joy_down(b, wid_cmap_button_joy_down_event);
             wid_set_on_mouse_down(b, wid_cmap_button_mouse_event);
-            wid_set_bevel(b, 1);
+            wid_set_bevel(b, 0);
 
             wid_set_color(b, WID_COLOR_BG, GRAY20);
             wid_set_color(b, WID_COLOR_TL, GRAY60);
@@ -819,4 +791,3 @@ widp wid_cmap (const char *title,
 
     return (window);
 }
-#endif
