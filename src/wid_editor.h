@@ -19,6 +19,7 @@
 
 enum {
     WID_EDITOR_MODE_TOGGLE,
+    WID_EDITOR_MODE_COLOR,
     WID_EDITOR_MODE_DRAW,
     WID_EDITOR_MODE_LINE,
     WID_EDITOR_MODE_SQUARE,
@@ -34,7 +35,6 @@ enum {
     WID_EDITOR_MODE_UNUSED_1,
     WID_EDITOR_MODE_UNUSED_2,
     WID_EDITOR_MODE_UNUSED_3,
-    WID_EDITOR_MODE_UNUSED_4,
     WID_EDITOR_MODE_VFLIP,
     WID_EDITOR_MODE_HFLIP,
     WID_EDITOR_MODE_ROTATE,
@@ -127,6 +127,12 @@ typedef struct {
      * Current button
      */
     widp b;
+
+    /*
+     * Current color
+     */
+    const char *col_name;
+    color col;
 
     /*
      * Entered text.

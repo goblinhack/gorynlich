@@ -301,6 +301,12 @@ typedef struct tpp_data_ {
      */
     level_pos_t exit;
 
+    /*
+     * Color of the thing, mainly used in triggers.
+     */
+    char *col_name;
+    color col;
+
     uint8_t exit_set:1;
 } thing_template_data;
 
