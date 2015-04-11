@@ -140,4 +140,12 @@ void level_place_cloudkill(levelp level,
 void level_place_small_cloudkill(levelp level, 
                                  thingp owner,
                                  double x, double y);
-void level_activate_trigger(levelp);
+
+/*
+ * level_trigger.c
+ */
+int level_trigger2slot(levelp level, const char *trigger);
+void level_trigger_activate(levelp, thingp it);
+void level_trigger_alloc(levelp level, const char *trigger);
+int level_trigger_is_activated(levelp level, const char *trigger);
+void level_trigger_activate_default_triggers(levelp);

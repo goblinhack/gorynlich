@@ -25,6 +25,12 @@ typedef struct level_map_grid_ {
     level_map_tile tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
 } level_map_grid;
 
+typedef struct level_trigger_ {
+    const char *name;
+    int activate_exists;
+    int activated;
+} level_trigger;
+
 typedef struct level_t_ {
     level_pos_t level_pos;
 
@@ -92,8 +98,8 @@ typedef struct level_t_ {
      */
     int32_t timestamp_started;
 
-    uint8_t trigger;
-    uint8_t trigger_exists;
+#define MAX_TRIGGERS 256
+    level_trigger trigger[MAX_TRIGGERS];
 
     /*
      * Things cannot move but can be animated.
