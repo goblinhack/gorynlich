@@ -78,7 +78,7 @@ void level_trigger_alloc (levelp level, const char *name)
         if (!level->trigger[i].name) {
             level->trigger[i].name = name;
 
-            LOG("Allocate trigger, %s", name);
+            LEVEL_LOG(level, "Allocate trigger, %s", name);
             return;
         }
     }
@@ -143,9 +143,9 @@ void level_trigger_activate (levelp level, const char *name)
         return;
     }
 
-    level_trigger_mark_activate(level, name);
+    LEVEL_LOG(level, "Activate trigger, %s", name);
 
-    LOG("Activate trigger, %s", name);
+    level_trigger_mark_activate(level, name);
 
     /*
      * Look for any items to be spawned.
@@ -212,8 +212,8 @@ void level_trigger_activate (levelp level, const char *name)
                     t = thing_server_id(cell->id[i]);
 
                     if (thing_is_wall(t)) {
-                        LOG("Active %s via movement trigger %s",
-                            thing_logname(t), name);
+                        LEVEL_LOG(level, "Active %s via movement trigger %s",
+                                  thing_logname(t), name);
 
                         level_trigger_move_thing(tile_tp, t);
                     }
@@ -251,7 +251,7 @@ void level_trigger_activate_default_triggers (levelp level)
             if (tp_is_action_trigger(it)) {
                 const char *it_trigger = tile->data.col_name;
 
-                LOG("Found level trigger, %s", it_trigger);
+                LEVEL_LOG(level, "Found action trigger, %s", it_trigger);
 
                 level_trigger_mark_activate_exists(level, it_trigger);
                 continue;
@@ -270,14 +270,15 @@ void level_trigger_activate_default_triggers (levelp level)
             /*
              * If nothing exists to activate it, activate it now.
              */
-            LOG("Activate trigger, %s", level->trigger[i].name);
+            LEVEL_LOG(level, "No action trigger exists, activate trigger, %s",
+                      level->trigger[i].name);
 
             level_trigger_activate(level, level->trigger[i].name);
         } else {
             /*
              * Else we wait to be activated.
              */
-            LOG("Sleeping trigger, %s", level->trigger[i].name);
+            LEVEL_LOG(level, "Sleeping trigger, %s", level->trigger[i].name);
         }
     }
 }
