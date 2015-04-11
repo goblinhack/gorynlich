@@ -1,12 +1,14 @@
 --------------------------------------- plan for apr --------------------------------------
+- check thing can follow a path
+- fade trigger?
+- add bump trigger
 - make ghosts gray so white bonepiles stand out?
 - implement active timed explosion
-- add bump trigger
 - make item bar wider
-- why is torch in the items menu? it's useless
-- can't shoot through diagonal walls
-- remove gothic and window textures - no longer needed
 - super meat boy style spinning blades of death on invisible tracks
+- can't shoot through diagonal walls
+- why is torch in the items menu? it's useless
+- remove gothic and window textures - no longer needed
 --------------------------------------- plan for may --------------------------------------
 - stats need to do something
 - magic attack - green fireball?
