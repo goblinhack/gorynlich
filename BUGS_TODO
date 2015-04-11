@@ -1,5 +1,4 @@
 --------------------------------------- plan for apr --------------------------------------
-- explosion no longer working
 - fade trigger?
 - add bump trigger
 - make ghosts gray so white bonepiles stand out?
@@ -64,6 +63,7 @@ different profiles for level generation
 mining?
 
 Sat Apr 11 18:39:28 EDT 2015
+- explosion no longer working
 - check thing can follow a path
 - block move broken again!
 
