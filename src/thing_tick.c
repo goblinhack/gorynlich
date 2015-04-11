@@ -119,9 +119,7 @@ static void thing_tick_server_all (void)
          * Do expensive collision tests less often. But for weapons do them
          * all the time else you can have weapons speed through walls.
          */
-        if (time_have_x_tenths_passed_since(DELAY_TENTHS_THING_COLLISION_TEST,
-                                             t->timestamp_collision) ||
-            need_collision_test) {
+        if (need_collision_test) {
 
             thing_handle_collisions(wid_game_map_server_grid_container, t);
 

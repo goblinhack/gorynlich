@@ -71,10 +71,6 @@ void level_trigger_alloc (levelp level, const char *name)
         return;
     }
 
-    if (!level->trigger[0].name) {
-        level->trigger[0].name = default_trigger;
-    }
-
     /*
      * See if the trigger exists
      */
@@ -138,16 +134,10 @@ int level_trigger_is_activated (levelp level, const char *name)
     return (level->trigger[slot].activated);
 }
 
-void level_trigger_activate (levelp level, thingp it)
+void level_trigger_activate (levelp level, const char *name)
 {
     int x, y, z;
     int spawned = 0;
-
-    const char *name = it->data.col_name;
-    if (!name) {
-        name = default_trigger;
-    }
-
 
     if (level_trigger_is_activated(level, name)) {
         return;
@@ -166,39 +156,68 @@ void level_trigger_activate (levelp level, thingp it)
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
 
-            level_map_tile *tile = &level->map_grid.tile[x][y][MAP_DEPTH_ACTIONS];
+            level_map_tile *tile = 
+                            &level->map_grid.tile[x][y][MAP_DEPTH_ACTIONS];
 
-            tpp it = tile->tp;
-            if (!it) {
+            tpp tile_tp = tile->tp;
+            if (!tile_tp) {
                 continue;
             }
 
             const char *it_trigger = tile->data.col_name;
+            if (!it_trigger) {
+                it_trigger = default_trigger;
+            }
+
             if (it_trigger != name) {
                 continue;
             }
 
-            if (!tp_is_action_spawn(it)) {
-                continue;
+            if (tp_is_action_spawn(tile_tp)) {
+                for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
+                    tpp spawn = level->map_grid.tile[x][y][z].tp;
+                    if (!spawn) {
+                        continue;
+                    }
+
+                    wid_game_map_server_replace_tile(level_get_map(level),
+                                                    x,
+                                                    y,
+                                                    0, /* thing */
+                                                    spawn,
+                                                    0, /* tpp data */
+                                                    0 /* item */,
+                                                    0 /* stats */);
+                    spawned = 1;
+                }
             }
 
-            for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
-                tpp it = level->map_grid.tile[x][y][z].tp;
-                if (!it) {
-                    continue;
+            /*
+             * Activate any blocks sitting on movement actions. This will
+             * allow them to do collision testing with the action block and
+             * then move.
+             */
+            if (tp_is_action_left(tile_tp)  ||
+                tp_is_action_right(tile_tp) ||
+                tp_is_action_up(tile_tp)    ||
+                tp_is_action_down(tile_tp)) {
+
+                thing_map *map = &thing_server_map;
+                thing_map_cell *cell = &map->cells[x][y];
+
+                uint32_t i;
+                for (i = 0; i < cell->count; i++) {
+                    thingp t;
+                    
+                    t = thing_server_id(cell->id[i]);
+
+                    if (thing_is_wall(t)) {
+                        LOG("Active %s via movement trigger %s",
+                            thing_logname(t), name);
+
+                        level_trigger_move_thing(tile_tp, t);
+                    }
                 }
-
-                wid_game_map_server_replace_tile(level_get_map(level),
-                                                 x,
-                                                 y,
-                                                 0, /* thing */
-                                                 it,
-                                                 0, /* tpp data */
-                                                 0 /* item */,
-                                                 0 /* stats */);
-                spawned = 1;
-
-                break;
             }
         }
     }
@@ -216,10 +235,13 @@ void level_trigger_activate_default_triggers (levelp level)
 {
     int x, y;
 
+    level_trigger_alloc(level, default_trigger);
+
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
 
-            level_map_tile *tile = &level->map_grid.tile[x][y][MAP_DEPTH_ACTIONS];
+            level_map_tile *tile = 
+                            &level->map_grid.tile[x][y][MAP_DEPTH_ACTIONS];
 
             tpp it = tile->tp;
             if (!it) {
@@ -248,14 +270,42 @@ void level_trigger_activate_default_triggers (levelp level)
             /*
              * If nothing exists to activate it, activate it now.
              */
-            LOG("Activate default trigger, %s", level->trigger[i].name);
+            LOG("Activate trigger, %s", level->trigger[i].name);
 
-            level->trigger[i].activated = 1;
+            level_trigger_activate(level, level->trigger[i].name);
         } else {
             /*
              * Else we wait to be activated.
              */
             LOG("Sleeping trigger, %s", level->trigger[i].name);
         }
+    }
+}
+
+/*
+ * A thing has stepped on a movement trigger. Make it move.
+ */
+void level_trigger_move_thing (tpp me, thingp t)
+{
+    thing_make_active(t);
+
+    double speed = 1.0;
+
+    if (tp_is_action_left(me)) {
+        t->dx = -speed;
+        t->dy = 0;
+        thing_set_dir_left(t);
+    } else if (tp_is_action_right(me)) {
+        t->dx = speed;
+        t->dy = 0;
+        thing_set_dir_right(t);
+    } else if (tp_is_action_up(me)) {
+        t->dx = 0;
+        t->dy = -speed;
+        thing_set_dir_up(t);
+    } else if (tp_is_action_down(me)) {
+        t->dx = 0;
+        t->dy = speed;
+        thing_set_dir_down(t);
     }
 }

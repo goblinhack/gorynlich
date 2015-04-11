@@ -475,7 +475,7 @@ static void thing_handle_collision (thingp me, thingp it,
          * initiator of a collision.
          */
         if (thing_is_action_trigger(it)) {
-            level_trigger_activate(server_level, it);
+            level_trigger_activate(server_level, it->data.col_name);
         }
     }
 
@@ -519,41 +519,19 @@ static void thing_handle_collision (thingp me, thingp it,
     }
 
     /*
-     * If a wall or whatever is on a trigger then activate that wall etc...
+     * Initially we have a wall sitting on a trigger. The wall is inactive
+     * and doesn't do collision tests. The trigger might no be active either 
+     * and so we n
      */
-    if (thing_is_action_left(me)                ||
-        thing_is_action_right(me)               ||
-        thing_is_action_up(me)                  ||
-        thing_is_action_down(me)) {
+    if (thing_is_wall(me)) {
+        if (thing_is_action_left(it)                ||
+            thing_is_action_right(it)               ||
+            thing_is_action_up(it)                  ||
+            thing_is_action_down(it)) {
 
-        if (level_trigger_is_activated(server_level,
-                                       me->data.col_name)) {
-            if (thing_is_door(it)               ||
-                thing_is_wall(it)) {
-                thing_make_active(it);
-
-                /*
-                 * Start the thing moving.
-                 */
-                double speed = 1;
-                
-                if (thing_is_action_left(me)) {
-                    it->dx = -speed;
-                    it->dy = 0;
-                    thing_set_dir_left(it);
-                } else if (thing_is_action_right(me)) {
-                    it->dx = speed;
-                    it->dy = 0;
-                    thing_set_dir_right(it);
-                } else if (thing_is_action_up(me)) {
-                    it->dx = 0;
-                    it->dy = -speed;
-                    thing_set_dir_up(it);
-                } else if (thing_is_action_down(me)) {
-                    it->dx = 0;
-                    it->dy = speed;
-                    thing_set_dir_down(it);
-                }
+            if (level_trigger_is_activated(server_level, 
+                                           it->data.col_name)) {
+                level_trigger_move_thing(thing_tp(it), me);
             }
         }
     }
