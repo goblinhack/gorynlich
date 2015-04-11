@@ -1275,7 +1275,7 @@ static void wid_editor_color_selected (const char *color)
 
     wid_editor_ctx *ctx = wid_editor_window_ctx;
 
-    ctx->col_name = color;
+    ctx->col_name = (char*) color;
     ctx->col = color_find(ctx->col_name);
 }
 
@@ -1286,6 +1286,10 @@ static void wid_editor_color_cancelled (void)
 
 static void wid_editor_color_choose (void)
 {
+    if (wid_choose_color_dialog) {
+        return;
+    }
+
     wid_choose_color_dialog = wid_cmap("Choose color",
                                        wid_editor_color_selected, 
                                        wid_editor_color_cancelled);
@@ -1415,13 +1419,19 @@ static void wid_editor_map_thing_replace (int x, int y, int interactive)
     wid_editor_set_new_tp(x, y, z, tp, 0);
 
     if (tp_is_exit(tp)) {
+        if (wid_editor_map_dialog) {
+            return;
+        }
+
         wid_editor_map_dialog = wid_map("Choose destination",
                                         wid_editor_exit_selected, 
                                         wid_editor_exit_cancelled);
     }
 }
 
-static tpp wid_editor_map_thing_get (int x, int y)
+static tpp wid_editor_map_thing_get (int x, int y,
+                                     color *col,
+                                     char **col_name)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
 
@@ -1435,6 +1445,8 @@ static tpp wid_editor_map_thing_get (int x, int y)
     for (z = MAP_DEPTH - 1; z > 0; z--) {
         tpp tp = ctx->map.tile[x][y][z].tp;
         if (tp) {
+            *col = ctx->map.tile[x][y][z].data.col;
+            *col_name = ctx->map.tile[x][y][z].data.col_name;
             return (tp);
         }
     }
@@ -2287,7 +2299,9 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
 
                 case WID_EDITOR_MODE_YANK:
                     {
-                        tpp tp = wid_editor_map_thing_get(mx, my);
+                        tpp tp = wid_editor_map_thing_get(mx, my, 
+                                                          &ctx->col,
+                                                          &ctx->col_name);
                         if (tp) {
                             wid_editor_chosen_tile[ctx->tile_pool] = tp;
 
@@ -3395,6 +3409,10 @@ static void wid_editor_save_callback_cancel (widp w)
 
 static void wid_editor_save_ask (void)
 {
+    if (wid_editor_save_popup) {
+        return;
+    }
+
     wid_editor_save_popup = 
         wid_menu(0,
                 vvlarge_font,
