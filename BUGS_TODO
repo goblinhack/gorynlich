@@ -1,5 +1,6 @@
 --------------------------------------- plan for apr --------------------------------------
-- check thing can follow a path
+- explosion no longer working
+- block move broken again!
 - fade trigger?
 - add bump trigger
 - make ghosts gray so white bonepiles stand out?
@@ -64,6 +65,7 @@ different profiles for level generation
 mining?
 
 Fri Apr 10 22:10:31 EDT 2015
+- check thing can follow a path
 - add colored triggers
 
 Thu Apr  9 05:57:35 EDT 2015
