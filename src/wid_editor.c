@@ -3317,7 +3317,8 @@ static void wid_editor_save (const char *dir_and_file, int is_test_level)
                     PUT_KET(ctx);
                 }
 
-                if (strcmp(data->col_name, "white")) {
+                if (data->col_name &&
+                    strcmp(data->col_name, "white")) {
                     PUT_NAME(ctx, "color");
                     PUT_BRA(ctx);
                     PUT_NAMED_STRING(ctx, "color", data->col_name);
