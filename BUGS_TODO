@@ -1,6 +1,5 @@
 --------------------------------------- plan for apr --------------------------------------
 - explosion no longer working
-- block move broken again!
 - fade trigger?
 - add bump trigger
 - make ghosts gray so white bonepiles stand out?
@@ -64,8 +63,11 @@ add bot to test out multiplayer ?
 different profiles for level generation
 mining?
 
-Fri Apr 10 22:10:31 EDT 2015
+Sat Apr 11 18:39:28 EDT 2015
 - check thing can follow a path
+- block move broken again!
+
+Fri Apr 10 22:10:31 EDT 2015
 - add colored triggers
 
 Thu Apr  9 05:57:35 EDT 2015
