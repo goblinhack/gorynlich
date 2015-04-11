@@ -3830,16 +3830,16 @@ void thing_set_weapon_carry_anim (thingp t, thingp weapon_carry_anim)
         }
 
         if (weapon_carry_anim) {
-            THING_LOG(t, "weapon_carry_anim change %s->%s", 
+            THING_LOG(t, "weapon carry changed, %s->%s", 
                       thing_logname(old_weapon_carry_anim), 
                       thing_logname(weapon_carry_anim));
         } else {
-            THING_LOG(t, "remove weapon_carry_anim %s", 
+            THING_LOG(t, "remove weapon carry animation, %s", 
                       thing_logname(old_weapon_carry_anim));
         }
     } else {
         if (weapon_carry_anim) {
-            THING_LOG(t, "weapon_carry_anim %s", 
+            THING_LOG(t, "weapon carry anim nos, %s", 
                       thing_logname(weapon_carry_anim));
         }
     }
