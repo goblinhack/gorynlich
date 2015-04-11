@@ -21,6 +21,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/glshapes.o 		\
     $(OBJDIR)/init_fn.o 		\
     $(OBJDIR)/level.o 			\
+    $(OBJDIR)/level_trigger.o 		\
     $(OBJDIR)/log.o 			\
     $(OBJDIR)/main.o 			\
     $(OBJDIR)/map.o 			\

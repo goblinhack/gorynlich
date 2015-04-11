@@ -200,61 +200,6 @@ void wid_game_map_server_wid_destroy (uint8_t keep_players)
     }
 }
 
-void level_activate_trigger (levelp level)
-{
-    int x, y, z;
-    int spawned = 0;
-
-    if (server_level->trigger) {
-        return;
-    }
-
-    server_level->trigger = 1;
-
-    /*
-     * Look for any items to be spawned.
-     *
-     * We don't need to activate movement tiles as they will be activated by 
-     * the move tiles themselves during collision testing.
-     */
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
-
-            tpp trigger = level->map_grid.tile[x][y][MAP_DEPTH_ACTIONS].tp;
-            if (!trigger) {
-                continue;
-            }
-
-            if (!tp_is_action_spawn(trigger)) {
-                continue;
-            }
-
-            for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
-                tpp it = level->map_grid.tile[x][y][z].tp;
-                if (!it) {
-                    continue;
-                }
-
-                wid_game_map_server_replace_tile(level_get_map(level),
-                                                 x,
-                                                 y,
-                                                 0, /* thing */
-                                                 it,
-                                                 0, /* tpp data */
-                                                 0 /* item */,
-                                                 0 /* stats */);
-                spawned = 1;
-
-                break;
-            }
-        }
-    }
-
-    if (spawned) {
-        sound_play_slime();
-    }
-}
-
 static void level_set_new_tp (levelp level,
                               int x, int y, int z, 
                               tpp tp, tpp_data data)
@@ -299,7 +244,7 @@ wid_game_map_server_replace_tile (widp w,
          * Record what triggers exist on the level.
          */
         if (tp_is_action_trigger(tp)) {
-            level->trigger_exists = 1;
+            level_trigger_alloc(level, data->col_name);
         }
 
         level_set_new_tp(level, x, y, z, tp, data);
