@@ -55,12 +55,9 @@ static uint8_t level_server_init (levelp level)
                 "dead", "internal command for thing suicide");
 
     /*
-     * If a trigger does not exist then activate anthing that may be waiting 
-     * on it.
+     * Activate any triggers that have no activators.
      */
-    if (!level->trigger_exists) {
-        level->trigger = 1;
-    }
+    level_trigger_activate_default_triggers(level);
 
     return (true);
 }

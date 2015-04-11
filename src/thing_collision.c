@@ -427,9 +427,9 @@ static void thing_handle_collision (thingp me, thingp it,
         /*
          * Player collects keys and other items
          */
-        if (thing_is_treasure(it)   ||
-            thing_is_weapon(it)     ||
-            thing_is_carryable(it)  ||
+        if (thing_is_treasure(it)               ||
+            thing_is_weapon(it)                 ||
+            thing_is_carryable(it)              ||
             thing_is_food(it)) {
 
             thing_item_collect(me, it, thing_tp(it));
@@ -475,7 +475,7 @@ static void thing_handle_collision (thingp me, thingp it,
          * initiator of a collision.
          */
         if (thing_is_action_trigger(it)) {
-            level_activate_trigger(server_level);
+            level_trigger_activate(server_level, it);
         }
     }
 
@@ -504,11 +504,11 @@ static void thing_handle_collision (thingp me, thingp it,
         thing_is_poison(me)                     ||
         thing_is_explosion(me)) {
 
-        if (thing_is_monst(it)          || 
-            thing_is_fragile(it)        ||
-            thing_is_door(it)           ||
-            thing_is_wall(it)           ||
-            thing_is_player(it)         ||
+        if (thing_is_monst(it)                  || 
+            thing_is_fragile(it)                ||
+            thing_is_door(it)                   ||
+            thing_is_wall(it)                   ||
+            thing_is_player(it)                 ||
             thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.
@@ -518,42 +518,42 @@ static void thing_handle_collision (thingp me, thingp it,
         }
     }
 
-    if (server_level->trigger) {
-        if (thing_is_action_left(me)        ||
-            thing_is_action_right(me)       ||
-            thing_is_action_up(me)          ||
-            thing_is_action_down(me)) {
-            if (thing_is_door(it)           ||
+    /*
+     * If a wall or whatever is on a trigger then activate that wall etc...
+     */
+    if (thing_is_action_left(me)                ||
+        thing_is_action_right(me)               ||
+        thing_is_action_up(me)                  ||
+        thing_is_action_down(me)) {
+
+        if (level_trigger_is_activated(server_level,
+                                       me->data.col_name)) {
+            if (thing_is_door(it)               ||
                 thing_is_wall(it)) {
                 thing_make_active(it);
-            }
-        }
 
-        /*
-         * Normally we have a thing bumping into an action and then it does 
-         * stuff.
-         */
-        if (thing_is_door(me)           ||
-            thing_is_wall(me)) {
-
-            double speed = 1;
-
-            if (thing_is_action_left(it)) {
-                me->dx = -speed;
-                me->dy = 0;
-                thing_set_dir_left(me);
-            } else if (thing_is_action_right(it)) {
-                me->dx = speed;
-                me->dy = 0;
-                thing_set_dir_right(me);
-            } else if (thing_is_action_up(it)) {
-                me->dx = 0;
-                me->dy = -speed;
-                thing_set_dir_up(me);
-            } else if (thing_is_action_down(it)) {
-                me->dx = 0;
-                me->dy = speed;
-                thing_set_dir_down(me);
+                /*
+                 * Start the thing moving.
+                 */
+                double speed = 1;
+                
+                if (thing_is_action_left(me)) {
+                    it->dx = -speed;
+                    it->dy = 0;
+                    thing_set_dir_left(it);
+                } else if (thing_is_action_right(me)) {
+                    it->dx = speed;
+                    it->dy = 0;
+                    thing_set_dir_right(it);
+                } else if (thing_is_action_up(me)) {
+                    it->dx = 0;
+                    it->dy = -speed;
+                    thing_set_dir_up(it);
+                } else if (thing_is_action_down(me)) {
+                    it->dx = 0;
+                    it->dy = speed;
+                    thing_set_dir_down(it);
+                }
             }
         }
     }

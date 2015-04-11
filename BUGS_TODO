@@ -1,6 +1,5 @@
 --------------------------------------- plan for apr --------------------------------------
 - make ghosts gray so white bonepiles stand out?
-- add colored triggers
 - implement active timed explosion
 - add bump trigger
 - make item bar wider
@@ -61,6 +60,9 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Fri Apr 10 22:10:31 EDT 2015
+- add colored triggers
 
 Thu Apr  9 05:57:35 EDT 2015
 - load/save colors in level
