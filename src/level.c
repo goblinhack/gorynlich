@@ -43,7 +43,7 @@ uint8_t level_init (void)
     return (true);
 }
 
-static uint8_t level_server_init (levelp level)
+static uint8_t level_server_side_one_time_init (void)
 {
     if (level_server_init_done) {
         return (true);
@@ -53,11 +53,6 @@ static uint8_t level_server_init (levelp level)
 
     command_add(level_command_dead, 
                 "dead", "internal command for thing suicide");
-
-    /*
-     * Activate any triggers that have no activators.
-     */
-    level_trigger_activate_default_triggers(level);
 
     return (true);
 }
@@ -283,6 +278,21 @@ void level_load_new (void)
     level_pause(server_level);
 }
 
+/*
+ * Routines done for both random and static levels.
+ */
+static void level_loaded_common (levelp level)
+{
+    LEVEL_LOG(level, "level loaded");
+
+    /*
+     * Activate any triggers that have no activators.
+     */
+    if (!level->is_editor && !level->is_map_editor) {
+        level_trigger_activate_default_triggers(level);
+    }
+}
+
 levelp level_load (level_pos_t level_pos, 
                    widp wid, 
                    int is_editor,
@@ -290,6 +300,8 @@ levelp level_load (level_pos_t level_pos,
                    int on_server)
 {
     levelp level;
+
+    level_server_side_one_time_init();
 
     level = level_new(wid, level_pos, is_editor, is_map_editor, on_server);
 
@@ -373,9 +385,7 @@ levelp level_load (level_pos_t level_pos,
         level_reset_players(level);
     }
 
-    level_server_init(level);
-
-    LEVEL_LOG(level, "Level loaded");
+    level_loaded_common(level);
 
     return (level);
 }
@@ -387,6 +397,8 @@ levelp level_load_random (level_pos_t level_pos,
                           int on_server)
 {
     levelp level;
+
+    level_server_side_one_time_init();
 
     level = level_new(wid, 
                       level_pos, 
@@ -406,9 +418,7 @@ levelp level_load_random (level_pos_t level_pos,
     level_set_is_paused(level, false);
     level_reset_players(level);
 
-    level_server_init(level);
-
-    LEVEL_LOG(level, "Level loaded");
+    level_loaded_common(level);
 
     return (level);
 }
