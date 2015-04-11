@@ -42,6 +42,17 @@ uint8_t thing_mob_spawn (thingp t)
         }
 
         /*
+         * Protect against mobs at the edge!
+         */
+        if ((x < 0) || (x >= MAP_WIDTH)) {
+            continue;
+        }
+
+        if ((y < 0) || (y >= MAP_HEIGHT)) {
+            continue;
+        }
+
+        /*
          * Round down so mob spawners on an in between position will not
          * get mixed up. This can happen when we place a mob spawner where
          * a player died, overlapping a wall and we then try to spawn into
@@ -109,6 +120,17 @@ uint8_t thing_mob_spawn_on_death (thingp t)
             y += 1.0;
         } else {
             // centered over player
+        }
+
+        /*
+         * Protect against mobs at the edge!
+         */
+        if ((x < 0) || (x >= MAP_WIDTH)) {
+            continue;
+        }
+
+        if ((y < 0) || (y >= MAP_HEIGHT)) {
+            continue;
         }
 
         if (first) {
