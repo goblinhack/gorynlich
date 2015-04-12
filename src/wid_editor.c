@@ -626,6 +626,7 @@ static void wid_editor_update_edit_mode_buttons (void)
 
         switch (x) {
         case WID_EDITOR_MODE_DRAW:
+        case WID_EDITOR_MODE_PAINT:
         case WID_EDITOR_MODE_LINE:
         case WID_EDITOR_MODE_FILL:
         case WID_EDITOR_MODE_DEL:
@@ -1293,6 +1294,8 @@ static void wid_editor_color_choose (void)
     wid_choose_color_dialog = wid_cmap("Choose color",
                                        wid_editor_color_selected, 
                                        wid_editor_color_cancelled);
+
+    wid_editor_set_mode(WID_EDITOR_MODE_PAINT);
 }
 
 static void wid_editor_tile_mode_set (int val)
@@ -1426,6 +1429,28 @@ static void wid_editor_map_thing_replace (int x, int y, int interactive)
         wid_editor_map_dialog = wid_map("Choose destination",
                                         wid_editor_exit_selected, 
                                         wid_editor_exit_cancelled);
+    }
+}
+
+static void wid_editor_map_thing_paint (int x, int y)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    if ((x < 0) || (y < 0) ||
+        (x >= MAP_WIDTH) ||
+        (y >= MAP_HEIGHT)) {
+        DIE("bad map coord %d,%d", x, y);
+    }
+
+    int z;
+
+    for (z = MAP_DEPTH - 1; z > 0; z--) {
+        tpp tp = ctx->map.tile[x][y][z].tp;
+        if (tp) {
+            ctx->map.tile[x][y][z].data.col = ctx->col;
+            ctx->map.tile[x][y][z].data.col_name = ctx->col_name;
+            return;
+        }
     }
 }
 
@@ -2227,6 +2252,11 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                     wid_editor_undo_save();
                     break;
 
+                case WID_EDITOR_MODE_PAINT:
+                    wid_editor_map_thing_paint(mx, my);
+                    wid_editor_undo_save();
+                    break;
+
                 case WID_EDITOR_MODE_LINE:
                     if (!ctx->got_line_start) {
                         ctx->got_line_start = true;
@@ -2365,6 +2395,7 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
     if (y == WID_EDITOR_MENU_CELLS_DOWN - 1) {
         if (x < WID_EDITOR_MODE_MAX) {
             switch (x) {
+            case WID_EDITOR_MODE_PAINT:
             case WID_EDITOR_MODE_DRAW:
             case WID_EDITOR_MODE_LINE:
             case WID_EDITOR_MODE_DEL:
@@ -2598,6 +2629,11 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             wid_editor_set_mode(WID_EDITOR_MODE_DRAW);
             return (true);
 
+        case 'p':
+            wid_editor_tile_mode_set(false);
+            wid_editor_set_mode(WID_EDITOR_MODE_PAINT);
+            return (true);
+
         case 'y':
             wid_editor_tile_mode_set(false);
             wid_editor_set_mode(WID_EDITOR_MODE_YANK);
@@ -2615,7 +2651,7 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
-        case 'p':
+        case 'v':
             wid_editor_tile_mode_set(false);
             wid_editor_set_mode(WID_EDITOR_MODE_PASTE);
             wid_editor_tile_left_button_pressed(x, y);
@@ -3242,7 +3278,10 @@ static void wid_editor_tick (widp w)
                 }
 
                 if (!ctx->tile_mode &&
-                    (ctx->edit_mode == WID_EDITOR_MODE_DRAW) &&
+                    (
+                        (ctx->edit_mode == WID_EDITOR_MODE_DRAW)    ||
+                        (ctx->edit_mode == WID_EDITOR_MODE_PAINT)
+                    ) &&
                     (ctx->focus_x < WID_EDITOR_MENU_MAP_ACROSS) && 
                     (ctx->focus_y < WID_EDITOR_MENU_MAP_DOWN)) {
 
@@ -3556,25 +3595,31 @@ void wid_editor (level_pos_t level_pos)
                 case WID_EDITOR_MODE_DRAW:
                     wid_set_text(b, "Draw");
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "D - shortcut", vsmall_font);
+                        wid_set_tooltip(b, "D - draw tiles", vsmall_font);
+                    }
+                    break;
+                case WID_EDITOR_MODE_PAINT:
+                    wid_set_text(b, "Paint");
+                    if (!sdl_joy_axes) {
+                        wid_set_tooltip(b, "P - recolor tiles", vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_LINE:
                     wid_set_text(b, "Line");
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "L - shortcut", vsmall_font);
+                        wid_set_tooltip(b, "L - draw lines of tiles", vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_FILL:
                     wid_set_text(b, "Fill");
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "f - shortcut", vsmall_font);
+                        wid_set_tooltip(b, "f - flood fill", vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_DEL:
                     wid_set_text(b, "Del");
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "x - shortcut", vsmall_font);
+                        wid_set_tooltip(b, "x - remove tiles", vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_UNDO:
@@ -3597,46 +3642,46 @@ void wid_editor (level_pos_t level_pos)
                     break;
                 case WID_EDITOR_MODE_TOGGLE:
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "TAB - shortcut", vsmall_font);
+                        wid_set_tooltip(b, "TAB - switch between tile and map mode", vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_COLOR:
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "Choose color", vsmall_font);
+                        wid_set_tooltip(b, "Choose color to paint tiles", vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_YANK:
                     wid_set_text(b, "Yank");
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "y - shortcut. picks up a tile",
+                        wid_set_tooltip(b, "y - picks up a tile and its color",
                                         vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_SQUARE:
                     wid_set_text(b, "Rect");
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "r - shortcut",
+                        wid_set_tooltip(b, "r - draw a rectangle",
                                         vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_CUT:
                     wid_set_text(b, "Cut");
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "Remove square section",
+                        wid_set_tooltip(b, "Remove rectangular section",
                                         vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_COPY:
                     wid_set_text(b, "Copy");
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "c - shortcut",
+                        wid_set_tooltip(b, "c - copy an area into the buffer",
                                         vsmall_font);
                     }
                     break;
                 case WID_EDITOR_MODE_PASTE:
                     wid_set_text(b, "Paste");
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "p - shortcut",
+                        wid_set_tooltip(b, "v - paste a previously cut area",
                                         vsmall_font);
                     }
                     break;
@@ -3671,7 +3716,7 @@ void wid_editor (level_pos_t level_pos)
                 case WID_EDITOR_MODE_NUKE:
                     wid_set_text(b, "Nuke");
                     if (!sdl_joy_axes) {
-                        wid_set_tooltip(b, "Z - shortcut. Destroy level.", 
+                        wid_set_tooltip(b, "Z - Destroy level", 
                                         vsmall_font);
                     }
                     break;
