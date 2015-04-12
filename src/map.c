@@ -360,9 +360,14 @@ uint8_t map_is_visible_on_debug_only_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_visible_on_debug_only));
 }
 
-uint8_t map_is_action_spawn_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_action_zap_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_action_spawn));
+    return (map_is_x_at(level, x, y, tp_is_action_zap));
+}
+
+uint8_t map_is_action_sleep_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_action_sleep));
 }
 
 uint8_t map_is_action_trigger_at (levelp level, int32_t x, int32_t y)
@@ -822,9 +827,14 @@ thingp map_thing_is_visible_on_debug_only_at (levelp level, int32_t x, int32_t y
     return (map_thing_is_x_at(level, x, y, tp_is_visible_on_debug_only));
 }
 
-thingp map_thing_is_action_spawn_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_action_zap_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_action_spawn));
+    return (map_thing_is_x_at(level, x, y, tp_is_action_zap));
+}
+
+thingp map_thing_is_action_sleep_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_action_sleep));
 }
 
 thingp map_thing_is_action_trigger_at (levelp level, int32_t x, int32_t y)
@@ -1300,9 +1310,14 @@ tree_rootp map_all_things_is_visible_on_debug_only_at (levelp level, int32_t x, 
     return (map_all_things_is_x_at(level, x, y, tp_is_visible_on_debug_only));
 }
 
-tree_rootp map_all_things_is_action_spawn_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_action_sleep_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_action_spawn));
+    return (map_all_things_is_x_at(level, x, y, tp_is_action_sleep));
+}
+
+tree_rootp map_all_things_is_action_zap_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_action_zap));
 }
 
 tree_rootp map_all_things_is_action_trigger_at (levelp level, int32_t x, int32_t y)
@@ -1868,9 +1883,14 @@ tpp map_find_visible_on_debug_only_at (levelp level, int32_t x, int32_t y, widp 
     return (map_find_x_at(level, x, y, tp_is_visible_on_debug_only, w));
 }
 
-tpp map_find_action_spawn_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_action_zap_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_action_spawn, w));
+    return (map_find_x_at(level, x, y, tp_is_action_zap, w));
+}
+
+tpp map_find_action_sleep_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_action_sleep, w));
 }
 
 tpp map_find_action_trigger_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -3156,9 +3176,14 @@ tree_rootp map_all_things_is_visible_on_debug_only (levelp level)
     return (map_all_things_is_x(level, tp_is_visible_on_debug_only));
 }
 
-tree_rootp map_all_things_is_action_spawn (levelp level)
+tree_rootp map_all_things_is_action_zap (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_action_spawn));
+    return (map_all_things_is_x(level, tp_is_action_zap));
+}
+
+tree_rootp map_all_things_is_action_sleep (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_action_sleep));
 }
 
 tree_rootp map_all_things_is_action_trigger (levelp level)

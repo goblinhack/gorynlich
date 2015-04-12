@@ -253,7 +253,7 @@ wid_game_map_server_replace_tile (widp w,
     }
 
     /*
-     * Second pass, do not create things that are to obly be created on 
+     * Second pass, do not create things that are to only be created on 
      * triggers.
      */
     if (server_level_is_being_loaded == 2) {
@@ -264,7 +264,7 @@ wid_game_map_server_replace_tile (widp w,
             tpp trigger = level->map_grid.tile[ix][iy][MAP_DEPTH_ACTIONS].tp;
 
             if (trigger) {
-                if (tp_is_action_spawn(trigger)) {
+                if (tp_is_action_sleep(trigger)) {
                     return (0);
                 }
             }
