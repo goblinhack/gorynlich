@@ -586,7 +586,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
                     widp heart =
                         wid_new_square_window("wid player_stats container");
 
-                    fpoint tl = {0.1, 0.80};
+                    fpoint tl = {0.1, 0.78};
                     fpoint br = {0.15, 0.85};
 
                     double dx = (myrand() % 100) / 1500.0;
