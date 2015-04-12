@@ -1,6 +1,5 @@
 --------------------------------------- plan for apr --------------------------------------
 - add bump trigger
-- make ghosts gray so white bonepiles stand out?
 - implement active timed explosion
 - make item bar wider
 - super meat boy style spinning blades of death on invisible tracks
@@ -62,6 +61,7 @@ different profiles for level generation
 mining?
 
 Sun Apr 12 10:48:24 EDT 2015
+- make ghosts gray so white bonepiles stand out?
 - zap block trigger
 - need painted things for debug in game mode too
 - moving wall kills monsters and spawners tool
