@@ -24,7 +24,8 @@ typedef struct {
 static uint32_t nelems;
 static wid_notify_elem elems[MAX_ELEMS];
 
-static double X = 0.80;
+static double X = 0.0;
+static double Y = 0.1;
 static uint32_t DELAY = 10000;
 
 /*
@@ -44,7 +45,7 @@ wid_notify_internal (const char *text, uint32_t level)
     uint32_t chars_per_line;
     uint32_t max_rows;
 
-    chars_per_line = 21;
+    chars_per_line = 40;
     max_rows = 22;
 
     d = split(text, chars_per_line);
@@ -102,20 +103,19 @@ wid_notify_internal (const char *text, uint32_t level)
             fg = WHITE;
             break;
         case INFO:
-            bg = BLUE;
-            bg.a = 100;
+            bg = MEDIUMBLUE;
+            bg.a = 200;
             fg = YELLOW;
             break;
         case WARNING:
             bg = ORANGE3;
-            bg.a = 50;
+            bg.a = 150;
             fg = BLACK;
             break;
         case CRITICAL:
             bg = DARKRED;
             fg = RED;
             break;
-
         }
 
         wid_set_color(wid_notify_window, WID_COLOR_BG, bg);
@@ -126,7 +126,7 @@ wid_notify_internal (const char *text, uint32_t level)
         wid_set_color(wid_notify_window, WID_COLOR_TL, c);
         wid_set_color(wid_notify_window, WID_COLOR_BR, c);
 
-        wid_move_to_pct(wid_notify_window, X + 0.2, 1.0);
+        wid_move_to_pct(wid_notify_window, X + 0.2, Y);
     }
 
     {
@@ -206,7 +206,7 @@ static void wid_notify_move_wids (void)
      */
     uint32_t i;
 
-    double h = 0.97;
+    double h = Y;
 
     for (i = 0; i < nelems; i++) {
         wid_notify_elem *elem = &elems[i];
