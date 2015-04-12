@@ -145,16 +145,18 @@ void wid_player_inventory_button_style (widp w,
     if (player && action_bar_item && 
         (index == stats_get_action_bar_index(s))) {
         color c = RED;
-        c.a = 200;
-        wid_scaling_to_pct_in(w, 1.0, 1.2, 2500, 1000);
         wid_set_color(w, WID_COLOR_TL, c);
         wid_set_color(w, WID_COLOR_BR, c);
         wid_set_rounded_small(w);
-        wid_set_bevel(w, 3);
+        wid_set_bevel(w, 4);
     }
 
     wid_set_thing_template(w, tp);
-    wid_blit_scale_immediate(w, 1.5);
+
+    /*
+     * To have the item appear a bit oversized but it obscure item counts.
+     */
+//    wid_blit_scale_immediate(w, 1.5);
 
     int quantity = item.quantity;
     int quality = item.quality;
@@ -192,8 +194,8 @@ void wid_player_inventory_button_style (widp w,
         wid_set_bevelled(wid_bar, true);
         wid_set_bevel(wid_bar, 2);
 
-        fpoint tl = {0.1f, 0.8f};
-        fpoint br = {0.9f, 0.9f};
+        fpoint tl = {0.1f, 0.85f};
+        fpoint br = {0.9f, 1.0f};
 
         br.x = (0.9 / ((float)THING_ITEM_QUALITY_MAX) )
                     * ((double)quality);

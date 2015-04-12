@@ -237,7 +237,7 @@ static void wid_dead_create (const char *name,
 
     widp w = wid_gravestone = wid_new_window("dead");
     fpoint tl = { 0.0, 0.0 };
-    fpoint br = { 0.25, 0.5 };
+    fpoint br = { 0.30, 0.6 };
 
     wid_set_tl_br_pct(w, tl, br);
 
@@ -301,7 +301,7 @@ static void wid_dead_create (const char *name,
 
     static uint32_t gravestone_appear_delay = 1000;
 
-    wid_move_to_pct_in(w, -0.02, 0.55, gravestone_appear_delay);
+    wid_move_to_pct_in(w, -0.02, 0.45, gravestone_appear_delay);
 
     action_timer_create(
             &wid_timers,
