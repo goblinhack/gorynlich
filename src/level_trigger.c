@@ -214,8 +214,6 @@ void level_trigger_activate (levelp level, const char *name)
                     if (thing_is_wall(t)) {
                         LEVEL_LOG(level, "Active %s via movement trigger %s",
                                   thing_logname(t), name);
-                        CON("Active %s via movement trigger %s",
-                                  thing_logname(t), name);
 
                         level_trigger_move_thing(tile_tp, t);
                     }

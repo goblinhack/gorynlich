@@ -3140,6 +3140,8 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         uint8_t ext2 =
             (((t->torch_light_radius > 0.0)          ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)  |
+            (((t->data.col_name)                     ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT2_COLOR)  |
             ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT2_RESYNC);
 
@@ -3239,6 +3241,14 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)) {
             *data++ = (uint8_t) ((int) (t->torch_light_radius * 4.0));
 //LOG("tx  torch    %f -> %d",t->torch_light_radius, *(data - 1));
+        }
+
+        if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_COLOR)) {
+            *data++ = t->data.col.r;
+            *data++ = t->data.col.g;
+            *data++ = t->data.col.b;
+//LOG("tx  color    %d,%d,%d -> %d",t->data.col.r, t->data.col.g, 
+//t->data.col.b, *(data - 1));
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT)) {
@@ -3459,6 +3469,13 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             torch_light_radius_present = false;
         }
 
+        color c;
+        if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_COLOR)) {
+            c.r = *data++;
+            c.g = *data++;
+            c.b = *data++;
+        }
+
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT)) {
             effect = *data++;
         } else {
@@ -3645,6 +3662,12 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                                             x, y, t, 0);
                 }
             }
+
+            w = thing_wid(t);
+                if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_COLOR)) {
+                    c.a = 255;
+                    wid_set_color(w, WID_COLOR_BLIT, c);
+                }
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT)) {
