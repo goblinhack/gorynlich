@@ -343,7 +343,7 @@ wid_player_action_button_joy_down (widp w,
 static void wid_player_action_create (thing_statsp s, int fast)
 {
     double left_ball_offset = -0.07;
-    double right_ball_offset = 0.055;
+    double right_ball_offset = 0.045;
 
     if (wid_player_action) {
         return;
@@ -423,8 +423,9 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_tilename(w, tmp);
     }
 
+    widp left_ball_squiggles;
     {
-        widp w =
+        widp w = left_ball_squiggles = 
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
@@ -527,8 +528,10 @@ static void wid_player_action_create (thing_statsp s, int fast)
         }
     }
 
+    widp left_ball_stats;
+
     {
-        widp w =
+        widp w = left_ball_stats = 
             wid_new_square_button(wid_player_action, 
                               "wid player_stats container");
 
@@ -555,6 +558,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         if (stats_get_hp(s) <= THING_MIN_HEALTH) {
             wid_hide(left_ball, 0);
+            wid_hide(left_ball_stats, 0);
+            wid_hide(left_ball_squiggles, 0);
         }
 
         static int last_hp;
@@ -679,7 +684,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
     {
         double x;
         double max_across = 10.0;
-        double border_left = 0.065;
+        double border_left = 0.06;
         double border_right = 0.24;
         double dx = (1.0 - (border_left + border_right)) / max_across;
 
@@ -722,6 +727,34 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
             wid_set_on_joy_down(w, wid_player_action_button_joy_down);
 
+            {
+                widp w = 
+                    wid_new_container(wid_item_bar, "inventory shortcut");
+
+                tl.y += 0.25;
+                br.y += 0.25;
+
+                wid_set_tl_br_pct(w, tl, br);
+
+                wid_raise(w);
+
+                color c = WHITE;
+                c.a = 0;
+
+                wid_set_color(w, WID_COLOR_TEXT, WHITE);
+                wid_set_color(w, WID_COLOR_BG, c);
+                wid_set_color(w, WID_COLOR_TL, BLACK);
+                wid_set_color(w, WID_COLOR_BR, BLACK);
+                wid_set_no_shape(w);
+
+                char tmp[40];
+                snprintf(tmp, sizeof(tmp)-1, "%d", i);
+                wid_set_text(w, tmp);
+
+                wid_set_text_bot(w, true);
+                wid_set_text_outline(w, true);
+                wid_set_font(w, med_font);
+            }
             i++;
         }
     }
