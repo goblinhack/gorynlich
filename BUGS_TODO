@@ -1,5 +1,4 @@
 --------------------------------------- plan for apr --------------------------------------
-- fade trigger?
 - add bump trigger
 - make ghosts gray so white bonepiles stand out?
 - implement active timed explosion
@@ -63,6 +62,7 @@ different profiles for level generation
 mining?
 
 Sun Apr 12 10:48:24 EDT 2015
+- zap block trigger
 - need painted things for debug in game mode too
 - moving wall kills monsters and spawners tool
 - added paint ability

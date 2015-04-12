@@ -137,7 +137,8 @@ int level_trigger_is_activated (levelp level, const char *name)
 void level_trigger_activate (levelp level, const char *name)
 {
     int x, y, z;
-    int spawned = 0;
+    int spawned = false;
+    int zapped = false;
 
     if (level_trigger_is_activated(level, name)) {
         return;
@@ -173,6 +174,11 @@ void level_trigger_activate (levelp level, const char *name)
                 continue;
             }
 
+            /*
+             * Any sleeping things that need to be awoken? Actually they don't 
+             * exist yet, so we need to create them. It's best not to waste 
+             * resources with sleeping things until they are needed.
+             */
             if (tp_is_action_sleep(tile_tp)) {
                 for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
                     tpp spawn = level->map_grid.tile[x][y][z].tp;
@@ -180,20 +186,47 @@ void level_trigger_activate (levelp level, const char *name)
                         continue;
                     }
 
+                    /*
+                     * Spawn a new thing.
+                     */
                     wid_game_map_server_replace_tile(level_get_map(level),
-                                                    x,
-                                                    y,
-                                                    0, /* thing */
-                                                    spawn,
-                                                    0, /* tpp data */
-                                                    0 /* item */,
-                                                    0 /* stats */);
+                                                     x,
+                                                     y,
+                                                     0, /* thing */
+                                                     spawn,
+                                                     0, /* tpp data */
+                                                     0 /* item */,
+                                                     0 /* stats */);
                     spawned = 1;
                 }
             }
 
-            if (tp_is_action_sleep(tile_tp)) {
-                // TBD
+            /*
+             * Any things that need to be zapped?
+             */
+            if (tp_is_action_zap(tile_tp)) {
+                for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
+                    /*
+                     * Look for the original thing that it looks like we 
+                     * wanted to destroy. Then try and find it on the map.
+                     */
+                    tpp zap_me = level->map_grid.tile[x][y][z].tp;
+                    if (!zap_me) {
+                        continue;
+                    }
+
+                    /*
+                     * If we find it, zap it.
+                     */
+                    thingp t = map_is_tp_at(server_level, x, y, zap_me);
+                    if (t) {
+                        thing_dead(t, 0, "killed by zap trigger");
+
+                        zapped = true;
+                    }
+
+                    break;
+                }
             }
 
             /*
@@ -228,6 +261,10 @@ void level_trigger_activate (levelp level, const char *name)
 
     if (spawned) {
         sound_play_slime();
+    }
+
+    if (zapped) {
+        level_update_now(server_level);
     }
 }
 

@@ -4,6 +4,7 @@
  * See the LICENSE file.
  */
 
+#pragma once
 
 uint8_t map_is_ring_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_weapon_swing_effect_at(levelp, int32_t x, int32_t y);
@@ -557,3 +558,11 @@ typedef struct tree_thing_node_ {
 } tree_thing_node;
 
 void map_fixup(levelp);
+
+typedef uint8_t (*map_is_at_callback)(tpp);
+
+uint8_t map_count_x_at(levelp level,
+                       int32_t x, int32_t y,
+                       map_is_at_callback callback);
+
+thingp map_is_tp_at(levelp level, int32_t x, int32_t y, tpp tp);
