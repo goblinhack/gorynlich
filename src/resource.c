@@ -2956,16 +2956,6 @@ static uint8_t resource_init_last (void *context)
 
 uint8_t resource_init (void)
 {
-#if 0
-    if (tex_load("data/gfx/window_rock.png", "window_rock") == 0) {
-        DIE("tex init");
-    }
-#endif
-
-    if (tex_load("data/gfx/window_gothic.png", "window_gothic") == 0) {
-        DIE("tex init");
-    }
-
     if (tex_load("data/gfx/window_gothic_wide.png", "gothic_wide") == 0) {
         DIE("tex init");
     }
