@@ -342,6 +342,9 @@ wid_player_action_button_joy_down (widp w,
 
 static void wid_player_action_create (thing_statsp s, int fast)
 {
+    double left_ball_offset = -0.07;
+    double right_ball_offset = 0.055;
+
     if (wid_player_action) {
         return;
     }
@@ -361,13 +364,14 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_no_shape(w);
     }
 
+    widp left_ball;
     {
-        widp w =
+        widp w = left_ball = 
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.2, 0.2};
-        fpoint br = {0.3, 1.0};
+        fpoint tl = {0.2 + left_ball_offset, 0.2};
+        fpoint br = {0.3 + left_ball_offset, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -395,8 +399,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.7, 0.2};
-        fpoint br = {0.8, 1.0};
+        fpoint tl = {0.7 + right_ball_offset, 0.2};
+        fpoint br = {0.8 + right_ball_offset, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -424,8 +428,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.15, 0.2};
-        fpoint br = {0.35, 1.0};
+        fpoint tl = {0.15 + left_ball_offset, 0.2};
+        fpoint br = {0.35 + left_ball_offset, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -448,8 +452,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.65, 0.2};
-        fpoint br = {0.85, 1.0};
+        fpoint tl = {0.65 + right_ball_offset, 0.2};
+        fpoint br = {0.85 + right_ball_offset, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -472,8 +476,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_new_square_button(wid_player_action,
                                   "wid player_stats container");
 
-        fpoint tl = {0.65, 0.2};
-        fpoint br = {0.85, 0.88};
+        fpoint tl = {0.65 + right_ball_offset, 0.2};
+        fpoint br = {0.85 + right_ball_offset, 0.88};
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -528,8 +532,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_new_square_button(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.15, 0.2};
-        fpoint br = {0.35, 0.88};
+        fpoint tl = {0.15 + left_ball_offset, 0.2};
+        fpoint br = {0.35 + left_ball_offset, 0.88};
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -548,6 +552,10 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         snprintf(tmp, sizeof(tmp) - 1, "%d", stats_get_hp(s));
         wid_set_text(w, tmp);
+
+        if (stats_get_hp(s) <= THING_MIN_HEALTH) {
+            wid_hide(left_ball, 0);
+        }
 
         static int last_hp;
         if (last_hp != stats_get_hp(s)) {
@@ -641,35 +649,6 @@ static void wid_player_action_create (thing_statsp s, int fast)
         }
     }
 
-    {
-        widp w =
-            wid_new_container(wid_player_action, 
-                              "wid player_stats container");
-
-        fpoint tl = {0.2, 0.2};
-        fpoint br = {0.3, 1.0};
-
-        wid_set_tl_br_pct(w, tl, br);
-
-        wid_set_color(w, WID_COLOR_TEXT, WHITE);
-        wid_set_color(w, WID_COLOR_BG, WHITE);
-        wid_set_color(w, WID_COLOR_TL, WHITE);
-        wid_set_color(w, WID_COLOR_BR, WHITE);
-        wid_set_no_shape(w);
-
-        int which = (int)(((double)stats_get_hp(s) / (double)s->max_hp) * 16) + 1;
-        if (which > 16) {
-            which = 16;
-        }
-        if (which < 1) {
-            which = 1;
-        }
-
-        char tmp[40];
-        snprintf(tmp, sizeof(tmp)-1, "crystalball.%d", which);
-        wid_set_tilename(w, tmp);
-    }
-
     widp wid_item_bar;
 
     {
@@ -677,8 +656,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.3, 0.5};
-        fpoint br = {0.8, 1.0};
+        fpoint tl = {0.2, 0.4};
+        fpoint br = {0.9, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
 
