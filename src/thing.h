@@ -377,7 +377,8 @@ extern uint16_t THING_ACTION_RIGHT;
 extern uint16_t THING_ACTION_UP;
 extern uint16_t THING_ACTION_DOWN;
 extern uint16_t THING_ACTION_TRIGGER;
-extern uint16_t THING_ACTION_BRIDGE;
+extern uint16_t THING_ACTION_SLEEP;
+extern uint16_t THING_ACTION_ZAP;
 extern uint16_t THING_POISON1;
 extern uint16_t THING_POISON2;
 extern uint16_t THING_POISON3;
@@ -1167,11 +1168,18 @@ static inline uint8_t thing_is_action (thingp t)
     return (tp_is_action(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_action_spawn (thingp t)
+static inline uint8_t thing_is_action_sleep (thingp t)
 {
     verify(t);
 
-    return (tp_is_action_spawn(thing_tp(t)));
+    return (tp_is_action_sleep(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_action_zap (thingp t)
+{
+    verify(t);
+
+    return (tp_is_action_zap(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_action_trigger (thingp t)
@@ -1703,9 +1711,14 @@ static inline uint8_t thing_is_visible_on_debug_only_noverify (thingp t)
     return (t->tp->is_visible_on_debug_only);
 }
 
-static inline uint8_t thing_is_action_spawn_noverify (thingp t)
+static inline uint8_t thing_is_action_sleep_noverify (thingp t)
 {
-    return (t->tp->is_action_spawn);
+    return (t->tp->is_action_sleep);
+}
+
+static inline uint8_t thing_is_action_zap_noverify (thingp t)
+{
+    return (t->tp->is_action_zap);
 }
 
 static inline uint8_t thing_is_action_trigger_noverify (thingp t)
