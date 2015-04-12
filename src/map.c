@@ -15,11 +15,50 @@
 #include "bits.h"
 #include "socket_util.h"
 
-typedef uint8_t (*map_is_at_callback)(tpp);
-
 #ifdef GORY_DEBUG
 FILE *fp = 0;
 #endif
+
+thingp map_is_tp_at (levelp level, int32_t x, int32_t y, tpp tp)
+{
+    widp grid_wid;
+    widp w;
+
+    grid_wid = level_get_map(level);
+    if (!grid_wid) {
+        DIE("no grid wid");
+    }
+
+    /*
+     * Look for a floor tile where we can place stuff.
+     */
+    uint8_t z;
+
+    for (z = 0; z < MAP_DEPTH; z++) {
+        w = wid_grid_find_first(grid_wid, x, y, z);
+        while (w) {
+            thingp thing_it = wid_get_thing(w);
+
+            if (!thing_it) {
+                w = wid_grid_find_next(grid_wid, w, x, y, z);
+                continue;
+            }
+
+            if (thing_is_dead_or_dying(thing_it)) {
+                w = wid_grid_find_next(grid_wid, w, x, y, z);
+                continue;
+            }
+
+            if (tp == wid_get_thing_template(w)) {
+                return (thing_it);
+            }
+
+            w = wid_grid_find_next(grid_wid, w, x, y, z);
+        }
+    }
+
+    return (0);
+}
 
 static uint8_t map_is_x_at (levelp level,
                             int32_t x, int32_t y, map_is_at_callback callback)
@@ -72,9 +111,9 @@ static uint8_t map_is_x_at (levelp level,
     return (false);
 }
 
-static uint8_t map_count_x_at (levelp level,
-                               int32_t x, int32_t y,
-                               map_is_at_callback callback)
+uint8_t map_count_x_at (levelp level,
+                        int32_t x, int32_t y,
+                        map_is_at_callback callback)
 {
     tpp tp;
     widp grid_wid;
@@ -2322,23 +2361,6 @@ if (level != server_level)
 #endif
 }
 
-static uint32_t level_count_is_x (levelp level, map_is_at_callback callback)
-{
-    uint32_t count;
-    int32_t x;
-    int32_t y;
-
-    count = 0;
-
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
-            count += map_count_x_at(level, x, y, callback);
-        }
-    }
-
-    return (count);
-}
-
 static char this_pipe[MAP_WIDTH][MAP_HEIGHT];
 
 static void pipe_flood (levelp level, int32_t x, int32_t y)
@@ -2405,451 +2427,6 @@ uint8_t level_pipe_find_exit (levelp level,
     *exit_y = exits_y[exit];
 
     return (true);
-}
-
-static thingp this_door[MAP_WIDTH][MAP_HEIGHT];
-
-static void door_flood (levelp level, int32_t x, int32_t y)
-{
-    if (this_door[x][y]) {
-        return;
-    }
-
-    if (!(this_door[x][y] = map_thing_is_door_at(level, x, y))) {
-        this_door[x][y] = (thingp) (void*)-1;
-        return;
-    }
-
-    door_flood(level, x-1, y);
-    door_flood(level, x+1, y);
-    door_flood(level, x, y-1);
-    door_flood(level, x, y+1);
-}
-
-void level_open_door (levelp level, int32_t ix, int32_t iy)
-{
-    int32_t x;
-    int32_t y;
-
-    memset(this_door, 0, sizeof(this_door));
-
-    door_flood(level, ix, iy);
-
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
-            if (!this_door[x][y]) {
-                continue;
-            }
-
-            if (this_door[x][y] == (void*)-1) {
-                continue;
-            }
-
-            thing_dead(this_door[x][y], 0 /* killer */, "open");
-        }
-    }
-
-    level_set_monst_map_treat_doors_as_passable(level);
-    level_set_monst_map_treat_doors_as_walls(level);
-    level_set_player_map_treat_doors_as_walls(level);
-
-    /*
-     * Send the update quickly to the client. Don't wait for the things to
-     * tick. The doors should be on the active list now anyway as they were
-     * killed above.
-     */
-    socket_server_tx_map_update(0 /* all clients */, server_active_things,
-                                "open door");
-}
-
-uint32_t level_count_is_player (levelp level)
-{
-    return (level_count_is_x(level, tp_is_player));
-}
-
-uint32_t level_count_is_monst (levelp level)
-{
-    return (level_count_is_x(level, tp_is_monst));
-}
-
-uint32_t level_count_is_wall (levelp level)
-{
-    return (level_count_is_x(level, tp_is_wall));
-}
-
-uint32_t level_count_is_key (levelp level)
-{
-    return (level_count_is_x(level, tp_is_key));
-}
-
-uint32_t level_count_is_rock (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rock));
-}
-
-uint32_t level_count_is_shadow_caster (levelp level)
-{
-    return (level_count_is_x(level, tp_is_shadow_caster));
-}
-
-uint32_t level_count_is_weapon (levelp level)
-{
-    return (level_count_is_x(level, tp_is_weapon));
-}
-
-uint32_t level_count_is_treasure (levelp level)
-{
-    return (level_count_is_x(level, tp_is_treasure));
-}
-
-uint32_t level_count_is_wearable (levelp level)
-{
-    return (level_count_is_x(level, tp_is_wearable));
-}
-
-uint32_t level_count_is_fragile (levelp level)
-{
-    return (level_count_is_x(level, tp_is_fragile));
-}
-
-uint32_t level_count_is_star (levelp level)
-{
-    return (level_count_is_x(level, tp_is_star));
-}
-
-uint32_t level_count_is_animated_no_dir (levelp level)
-{
-    return (level_count_is_x(level, tp_is_animated_no_dir));
-}
-
-uint32_t level_count_is_weapon_swing_effect (levelp level)
-{
-    return (level_count_is_x(level, tp_is_weapon_swing_effect));
-}
-
-uint32_t level_count_is_light_source (levelp level)
-{
-    return (level_count_is_x(level, tp_is_light_source));
-}
-
-uint32_t level_count_is_candle_light (levelp level)
-{
-    return (level_count_is_x(level, tp_is_candle_light));
-}
-
-uint32_t level_count_is_cats_eyes (levelp level)
-{
-    return (level_count_is_x(level, tp_is_cats_eyes));
-}
-
-uint32_t level_count_is_fire (levelp level)
-{
-    return (level_count_is_x(level, tp_is_fire));
-}
-
-uint32_t level_count_is_ring (levelp level)
-{
-    return (level_count_is_x(level, tp_is_ring));
-}
-
-uint32_t level_count_is_animation (levelp level)
-{
-    return (level_count_is_x(level, tp_is_animation));
-}
-
-uint32_t level_count_is_poison (levelp level)
-{
-    return (level_count_is_x(level, tp_is_poison));
-}
-
-uint32_t level_count_is_item_unusable (levelp level)
-{
-    return (level_count_is_x(level, tp_is_item_unusable));
-}
-
-uint32_t level_count_is_valid_for_action_bar (levelp level)
-{
-    return (level_count_is_x(level, tp_is_valid_for_action_bar));
-}
-
-uint32_t level_count_is_seedpod (levelp level)
-{
-    return (level_count_is_x(level, tp_is_seedpod));
-}
-
-uint32_t level_count_is_spam (levelp level)
-{
-    return (level_count_is_x(level, tp_is_spam));
-}
-
-uint32_t level_count_is_door (levelp level)
-{
-    return (level_count_is_x(level, tp_is_door));
-}
-
-uint32_t level_count_is_pipe (levelp level)
-{
-    return (level_count_is_x(level, tp_is_pipe));
-}
-
-uint32_t level_count_is_mob_spawner (levelp level)
-{
-    return (level_count_is_x(level, tp_is_mob_spawner));
-}
-
-uint32_t level_count_is_rrr1 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr1));
-}
-
-uint32_t level_count_is_rrr2 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr2));
-}
-
-uint32_t level_count_is_rrr3 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr3));
-}
-
-uint32_t level_count_is_rrr4 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr4));
-}
-
-uint32_t level_count_is_rrr5 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr5));
-}
-
-uint32_t level_count_is_rrr6 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr6));
-}
-
-uint32_t level_count_is_rrr7 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr7));
-}
-
-uint32_t level_count_is_rrr8 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr8));
-}
-
-uint32_t level_count_is_rrr9 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr9));
-}
-
-uint32_t level_count_is_rrr10 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr10));
-}
-
-uint32_t level_count_is_rrr11 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr11));
-}
-
-uint32_t level_count_is_rrr12 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr12));
-}
-
-uint32_t level_count_is_rrr13 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr13));
-}
-
-uint32_t level_count_is_rrr14 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr14));
-}
-
-uint32_t level_count_is_rrr15 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr15));
-}
-
-uint32_t level_count_is_rrr16 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr16));
-}
-
-uint32_t level_count_is_rrr17 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr17));
-}
-
-uint32_t level_count_is_rrr18 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr18));
-}
-
-uint32_t level_count_is_rrr19 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr19));
-}
-
-uint32_t level_count_is_rrr20 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr20));
-}
-
-uint32_t level_count_is_rrr21 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr21));
-}
-
-uint32_t level_count_is_rrr22 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr22));
-}
-
-uint32_t level_count_is_rrr23 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr23));
-}
-
-uint32_t level_count_is_visible_on_debug_only (levelp level)
-{
-    return (level_count_is_x(level, tp_is_visible_on_debug_only));
-}
-
-uint32_t level_count_is_action (levelp level)
-{
-    return (level_count_is_x(level, tp_is_action));
-}
-
-uint32_t level_count_can_walk_through (levelp level)
-{
-    return (level_count_is_x(level, tp_can_walk_through));
-}
-
-uint32_t level_count_is_weapon_carry_anim (levelp level)
-{
-    return (level_count_is_x(level, tp_is_weapon_carry_anim));
-}
-
-uint32_t level_count_is_spell (levelp level)
-{
-    return (level_count_is_x(level, tp_is_spell));
-}
-
-uint32_t level_count_is_hand_item (levelp level)
-{
-    return (level_count_is_x(level, tp_is_hand_item));
-}
-
-uint32_t level_count_is_boots (levelp level)
-{
-    return (level_count_is_x(level, tp_is_boots));
-}
-
-uint32_t level_count_is_helmet (levelp level)
-{
-    return (level_count_is_x(level, tp_is_helmet));
-}
-
-uint32_t level_count_is_armor (levelp level)
-{
-    return (level_count_is_x(level, tp_is_armor));
-}
-
-uint32_t level_count_is_given_randomly_at_start (levelp level)
-{
-    return (level_count_is_x(level, tp_is_given_randomly_at_start));
-}
-
-uint32_t level_count_is_magical (levelp level)
-{
-    return (level_count_is_x(level, tp_is_magical));
-}
-
-uint32_t level_count_is_degradable (levelp level)
-{
-    return (level_count_is_x(level, tp_is_degradable));
-}
-
-uint32_t level_count_is_cursed (levelp level)
-{
-    return (level_count_is_x(level, tp_is_cursed));
-}
-
-uint32_t level_count_is_animate_only_when_moving (levelp level)
-{
-    return (level_count_is_x(level, tp_is_animate_only_when_moving));
-}
-
-uint32_t level_count_is_warm_blooded (levelp level)
-{
-    return (level_count_is_x(level, tp_is_warm_blooded));
-}
-
-uint32_t level_count_can_be_enchanted (levelp level)
-{
-    return (level_count_is_x(level, tp_can_be_enchanted));
-}
-
-uint32_t level_count_is_stackable (levelp level)
-{
-    return (level_count_is_x(level, tp_is_stackable));
-}
-
-uint32_t level_count_is_torch (levelp level)
-{
-    return (level_count_is_x(level, tp_is_torch));
-}
-
-uint32_t level_count_is_explosion (levelp level)
-{
-    return (level_count_is_x(level, tp_is_explosion));
-}
-
-uint32_t level_count_is_hidden_from_editor (levelp level)
-{
-    return (level_count_is_x(level, tp_is_hidden_from_editor));
-}
-
-uint32_t level_count_is_combustable (levelp level)
-{
-    return (level_count_is_x(level, tp_is_combustable));
-}
-
-uint32_t level_count_is_projectile (levelp level)
-{
-    return (level_count_is_x(level, tp_is_projectile));
-}
-
-uint32_t level_count_is_inactive (levelp level)
-{
-    return (level_count_is_x(level, tp_is_inactive));
-}
-
-uint32_t level_count_is_item_is_hidden (levelp level)
-{
-    return (level_count_is_x(level, tp_is_ring));
-}
-
-uint32_t level_count_is_plant (levelp level)
-{
-    return (level_count_is_x(level, tp_is_plant));
-}
-
-uint32_t level_count_is_food (levelp level)
-{
-    return (level_count_is_x(level, tp_is_food));
-}
-
-uint32_t level_count_is_floor (levelp level)
-{
-    return (level_count_is_x(level, tp_is_floor));
-}
-
-uint32_t level_count_is_exit (levelp level)
-{
-    return (level_count_is_x(level, tp_is_exit));
 }
 
 static tree_rootp map_all_things_is_x (levelp level,
