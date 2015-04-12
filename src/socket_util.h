@@ -187,6 +187,11 @@ typedef struct {
      */
     uint8_t torch_light;
 
+    /*
+     * THING_STATE_BIT_SHIFT_EXT2_COLOR
+     */
+    uint8_t r, g, b;
+
 } __attribute__ ((packed)) msg_map_update;
 
 /*
