@@ -391,6 +391,11 @@ wid_game_map_server_replace_tile (widp w,
                     t->data.exit.y, t->data.exit.x);
             }
         }
+
+        if (t->data.col_name) {
+            t->data.col = color_find(t->data.col_name);
+            wid_set_color(w, WID_COLOR_BLIT, t->data.col);
+        }
     }
 
     if (item) {

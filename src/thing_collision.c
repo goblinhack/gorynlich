@@ -479,9 +479,7 @@ static void thing_handle_collision (thingp me, thingp it,
         }
     }
 
-    if (thing_is_monst(me)                      || 
-        thing_is_wall(me)                       || // moving walls
-        0) {
+    if (thing_is_monst(me)) {
         /*
          * Monster bumped into something.
          */
@@ -489,6 +487,25 @@ static void thing_handle_collision (thingp me, thingp it,
             thing_is_poison(it)                 ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_explosion(it)) {
+            /*
+             * I'm hit!
+             */
+            thing_possible_hit_add(it, "monst hit thing");
+            return;
+        }
+    }
+
+    if (thing_is_wall(me)) {
+        /*
+         * Monster bumped into something.
+         */
+        if (thing_is_player(it)                 ||
+            thing_is_treasure(it)               ||
+            thing_is_food(it)                   ||
+            thing_is_door(it)                   ||
+            thing_is_projectile(it)             ||
+            thing_is_mob_spawner(it)            ||
+            thing_is_monst(it)) {
             /*
              * I'm hit!
              */
