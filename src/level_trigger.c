@@ -173,7 +173,7 @@ void level_trigger_activate (levelp level, const char *name)
                 continue;
             }
 
-            if (tp_is_action_spawn(tile_tp)) {
+            if (tp_is_action_sleep(tile_tp)) {
                 for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
                     tpp spawn = level->map_grid.tile[x][y][z].tp;
                     if (!spawn) {
@@ -190,6 +190,10 @@ void level_trigger_activate (levelp level, const char *name)
                                                     0 /* stats */);
                     spawned = 1;
                 }
+            }
+
+            if (tp_is_action_sleep(tile_tp)) {
+                // TBD
             }
 
             /*

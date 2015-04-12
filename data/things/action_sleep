@@ -1,0 +1,15 @@
+{
+ short_name="action_sleep"
+ raw_name="action_sleep"
+ tooltip="Sleep until activated"
+ is_collision_map_small
+ z_depth=6
+ is_action
+ is_visible_on_debug_only
+ is_action_sleep
+ tiles={
+  tile={
+   tile="action_sleep"
+  }
+ }
+}
