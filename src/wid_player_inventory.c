@@ -92,10 +92,6 @@ void wid_player_inventory_button_style (widp w,
 
     wid_set_mode(w, WID_MODE_NORMAL);
 
-    c = BLACK;
-    c.a = 0;
-    wid_set_color(w, WID_COLOR_BG, c);
-
     if (action_bar_item) {
         c = GRAY50;
         c.a = 100;
@@ -115,6 +111,10 @@ void wid_player_inventory_button_style (widp w,
         c.a = 30;
         wid_set_color(w, WID_COLOR_BR, c);
     }
+
+    c = BLACK;
+    c.a = 0;
+    wid_set_color(w, WID_COLOR_BG, c);
 
     wid_set_mode(w, WID_MODE_OVER);
 
@@ -137,7 +137,7 @@ void wid_player_inventory_button_style (widp w,
     }
 
     c = WHITE;
-    c.a = 100;
+    c.a = 50;
     wid_set_color(w, WID_COLOR_BG, c);
 
     tpp tp = id_to_tp(item.id);

@@ -1,7 +1,10 @@
 --------------------------------------- plan for apr --------------------------------------
+- undo fix
+- move some tiles top right
+- level title dialog
+- signpost trigger
 - add bump trigger
 - implement active timed explosion
-- signpost trigger
 - super meat boy style spinning blades of death on invisible tracks
 - can't shoot through diagonal walls
 --------------------------------------- plan for may --------------------------------------
