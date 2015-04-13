@@ -1,7 +1,5 @@
 --------------------------------------- plan for apr --------------------------------------
-- undo fix
 - move some tiles top right
-- level title dialog
 - signpost trigger
 - add bump trigger
 - implement active timed explosion
@@ -60,6 +58,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Mon Apr 13 18:46:16 EDT 2015
+- level title dialog
+- undo fix
 
 Sun Apr 12 10:48:24 EDT 2015
 - remove gothic and window textures - no longer needed
