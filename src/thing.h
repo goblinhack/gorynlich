@@ -584,7 +584,7 @@ typedef struct thing_ {
     /*
      * Data we read in along with the thing template.
      */
-    thing_template_data data;
+    thing_template_data *data;
 
     /*
      * When to change frame for animation.
