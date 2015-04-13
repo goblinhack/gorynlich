@@ -1363,6 +1363,10 @@ void thing_destroy (thingp t, const char *why)
         client_things_total--;
     }
 
+    if (t->data) {
+        myfree(t->data);
+    }
+
     myfree(t);
 }
 
@@ -2285,9 +2289,9 @@ void thing_reached_exit (thingp t, thingp exit)
         THING_LOG(t, "reached exit");
     }
 
-    if (exit->data.exit_set) {
-        global_config.server_level_pos.y = exit->data.exit.y;
-        global_config.server_level_pos.x = exit->data.exit.x;
+    if (exit->data && exit->data->exit_set) {
+        global_config.server_level_pos.y = exit->data->exit.y;
+        global_config.server_level_pos.x = exit->data->exit.x;
 
         THING_LOG(t, "exit jump to level %d.%d", 
                   global_config.server_level_pos.y,
@@ -3141,7 +3145,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         uint8_t ext2 =
             (((t->torch_light_radius > 0.0)          ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)  |
-            (((t->data.col_name)                     ? 1 : 0) << 
+            (((t->data && t->data->col_name)         ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT2_COLOR)  |
             ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT2_RESYNC);
@@ -3245,9 +3249,9 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         }
 
         if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_COLOR)) {
-            *data++ = t->data.col.r;
-            *data++ = t->data.col.g;
-            *data++ = t->data.col.b;
+            *data++ = t->data->col.r;
+            *data++ = t->data->col.g;
+            *data++ = t->data->col.b;
 //LOG("tx  color    %d,%d,%d -> %d",t->data.col.r, t->data.col.g, 
 //t->data.col.b, *(data - 1));
         }
