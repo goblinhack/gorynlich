@@ -309,6 +309,11 @@ typedef struct tpp_data_ {
     color col;
 
     uint8_t exit_set:1;
+
+    /*
+     * Used for signposts and messages that appear when tiggered.
+     */
+    char text[128];
 } thing_template_data;
 
 uint8_t tp_init(void);

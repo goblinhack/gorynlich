@@ -748,7 +748,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
                 wid_set_no_shape(w);
 
                 char tmp[40];
-                snprintf(tmp, sizeof(tmp)-1, "%d", i);
+                snprintf(tmp, sizeof(tmp)-1, "%d", (i + 1) % 10);
                 wid_set_text(w, tmp);
 
                 wid_set_text_bot(w, true);

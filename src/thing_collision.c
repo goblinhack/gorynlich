@@ -475,7 +475,8 @@ static void thing_handle_collision (thingp me, thingp it,
          * initiator of a collision.
          */
         if (thing_is_action_trigger(it)) {
-            level_trigger_activate(server_level, it->data.col_name);
+            level_trigger_activate(server_level, 
+                                   it->data ? it->data->col_name: 0);
         }
     }
 
@@ -547,7 +548,7 @@ static void thing_handle_collision (thingp me, thingp it,
             thing_is_action_down(it)) {
 
             if (level_trigger_is_activated(server_level, 
-                                           it->data.col_name)) {
+                                           it->data ? it->data->col_name : 0)) {
                 level_trigger_move_thing(thing_tp(it), me);
             }
         }
