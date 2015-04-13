@@ -380,21 +380,25 @@ wid_game_map_server_replace_tile (widp w,
     }
 
     if (data) {
-        t->data = *data;
+        if (!t->data) {
+            t->data = myzalloc(sizeof(thing_template_data), "thing data");
+        }
+
+        memcpy(t->data, data, sizeof(thing_template_data));
 
         if (thing_is_exit(t)) {
-            if (t->data.exit_set) {
+            if (t->data->exit_set) {
                 LOG("Create exit to level %d.%d", 
-                    t->data.exit.y, t->data.exit.x);
+                    t->data->exit.y, t->data->exit.x);
             } else {
                 WARN("An exit was present on level %d.%d with no exit level set",
-                    t->data.exit.y, t->data.exit.x);
+                    t->data->exit.y, t->data->exit.x);
             }
         }
 
-        if (t->data.col_name) {
-            t->data.col = color_find(t->data.col_name);
-            wid_set_color(w, WID_COLOR_BLIT, t->data.col);
+        if (t->data->col_name) {
+            t->data->col = color_find(t->data->col_name);
+            wid_set_color(w, WID_COLOR_BLIT, t->data->col);
         }
     }
 
