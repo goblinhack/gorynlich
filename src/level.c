@@ -1688,9 +1688,9 @@ uint32_t level_count_is_rrr22 (levelp level)
     return (level_count_is_x(level, tp_is_rrr22));
 }
 
-uint32_t level_count_is_rrr23 (levelp level)
+uint32_t level_count_is_action_text (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr23));
+    return (level_count_is_x(level, tp_is_action_text));
 }
 
 uint32_t level_count_is_visible_on_debug_only (levelp level)
