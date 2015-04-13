@@ -2369,7 +2369,7 @@ static uint8_t resource_init_last (void *context)
         0,
         0,
         0,
-        0,
+        "action_text",
         "action_zap",
         "action_sleep",
         "action_trigger",
@@ -2948,6 +2948,7 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_ACTION_UP, "data/things/action_up");
     tp_load(&THING_ACTION_DOWN, "data/things/action_down");
     tp_load(&THING_ACTION_SLEEP, "data/things/action_sleep");
+    tp_load(&THING_ACTION_TEXT, "data/things/action_text");
     tp_load(&THING_ACTION_ZAP, "data/things/action_zap");
     tp_load(&THING_ACTION_TRIGGER, "data/things/action_trigger");
 

@@ -378,6 +378,7 @@ extern uint16_t THING_ACTION_UP;
 extern uint16_t THING_ACTION_DOWN;
 extern uint16_t THING_ACTION_TRIGGER;
 extern uint16_t THING_ACTION_SLEEP;
+extern uint16_t THING_ACTION_TEXT;
 extern uint16_t THING_ACTION_ZAP;
 extern uint16_t THING_POISON1;
 extern uint16_t THING_POISON2;
@@ -1147,11 +1148,11 @@ static inline uint8_t thing_is_rrr22 (thingp t)
     return (tp_is_rrr22(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr23 (thingp t)
+static inline uint8_t thing_is_action_text (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr23(thing_tp(t)));
+    return (tp_is_action_text(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_visible_on_debug_only (thingp t)
@@ -1701,9 +1702,9 @@ static inline uint8_t thing_is_rrr22_noverify (thingp t)
     return (t->tp->is_rrr22);
 }
 
-static inline uint8_t thing_is_rrr23_noverify (thingp t)
+static inline uint8_t thing_is_action_text_noverify (thingp t)
 {
-    return (t->tp->is_rrr23);
+    return (t->tp->is_action_text);
 }
 
 static inline uint8_t thing_is_visible_on_debug_only_noverify (thingp t)
