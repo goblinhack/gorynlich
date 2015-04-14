@@ -591,6 +591,9 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_sleep", t->is_action_sleep);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_zap", t->is_action_zap);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_trigger", t->is_action_trigger);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_action_trigger_hero", t->is_action_trigger_hero);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_action_trigger_wall", t->is_action_trigger_wall);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_action_trigger_monst", t->is_action_trigger_monst);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_down", t->is_action_down);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_up", t->is_action_up);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_left", t->is_action_left);
@@ -779,7 +782,9 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_action", t->is_action);
     PUT_NAMED_BITFIELD(ctx, "is_action_sleep", t->is_action_sleep);
     PUT_NAMED_BITFIELD(ctx, "is_action_zap", t->is_action_zap);
-    PUT_NAMED_BITFIELD(ctx, "is_action_trigger", t->is_action_trigger);
+    PUT_NAMED_BITFIELD(ctx, "is_action_trigger_hero", t->is_action_trigger_hero);
+    PUT_NAMED_BITFIELD(ctx, "is_action_trigger_monst", t->is_action_trigger_monst);
+    PUT_NAMED_BITFIELD(ctx, "is_action_trigger_wall", t->is_action_trigger_wall);
     PUT_NAMED_BITFIELD(ctx, "is_action_down", t->is_action_down);
     PUT_NAMED_BITFIELD(ctx, "is_action_up", t->is_action_up);
     PUT_NAMED_BITFIELD(ctx, "is_action_left", t->is_action_left);
