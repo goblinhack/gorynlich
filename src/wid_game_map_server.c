@@ -244,6 +244,10 @@ wid_game_map_server_replace_tile (widp w,
          * Record what triggers exist on the level.
          */
         if (tp_is_action_trigger(tp)) {
+            if (!data) {
+                DIE("expecting data");
+            }
+
             level_trigger_alloc(level, data->col_name);
         }
 

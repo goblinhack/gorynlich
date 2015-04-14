@@ -202,6 +202,24 @@ void level_trigger_activate (levelp level, const char *name)
             }
 
             /*
+             * Find the thing with the message to broadcast.
+             */
+            if (tp_is_action_text(tile_tp)) {
+                thingp t = map_is_tp_at(level, x, y, tile_tp);
+                if (t) {
+                    if (!t->data) {
+                        DIE("expecting data for thing %s", thing_logname(t));
+                    }
+
+                    if (!t->data->text) {
+                        DIE("expecting data text for thing %s", thing_logname(t));
+                    }
+
+                    socket_tx_server_shout_at_all_players(POPUP, t->data->text);
+                }
+            }
+
+            /*
              * Any things that need to be zapped?
              */
             if (tp_is_action_zap(tile_tp)) {
@@ -218,7 +236,7 @@ void level_trigger_activate (levelp level, const char *name)
                     /*
                      * If we find it, zap it.
                      */
-                    thingp t = map_is_tp_at(server_level, x, y, zap_me);
+                    thingp t = map_is_tp_at(level, x, y, zap_me);
                     if (t) {
                         thing_dead(t, 0, "killed by zap trigger");
 
@@ -264,7 +282,7 @@ void level_trigger_activate (levelp level, const char *name)
     }
 
     if (zapped) {
-        level_update_now(server_level);
+        level_update_now(level);
     }
 }
 
