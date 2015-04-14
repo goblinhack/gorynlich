@@ -1,6 +1,4 @@
 --------------------------------------- plan for apr --------------------------------------
-- add block move trigger
-- add monst? move trigger
 - implement active timed explosion
 - super meat boy style spinning blades of death on invisible tracks
 - can't shoot through diagonal walls
@@ -56,6 +54,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Tue Apr 14 07:11:36 EDT 2015
+- add block move trigger
+- add monst move trigger
 
 Mon Apr 13 18:46:16 EDT 2015
 - signpost trigger
