@@ -245,7 +245,7 @@ wid_game_map_server_replace_tile (widp w,
          */
         if (tp_is_action_trigger(tp)) {
             if (!data) {
-                DIE("expecting data");
+                DIE("expecting data for %s", tp_name(tp));
             }
 
             level_trigger_alloc(level, data->col_name);

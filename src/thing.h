@@ -376,7 +376,9 @@ extern uint16_t THING_ACTION_LEFT;
 extern uint16_t THING_ACTION_RIGHT;
 extern uint16_t THING_ACTION_UP;
 extern uint16_t THING_ACTION_DOWN;
-extern uint16_t THING_ACTION_TRIGGER;
+extern uint16_t THING_ACTION_TRIGGER_HERO;
+extern uint16_t THING_ACTION_TRIGGER_WALL;
+extern uint16_t THING_ACTION_TRIGGER_MONST;
 extern uint16_t THING_ACTION_SLEEP;
 extern uint16_t THING_ACTION_TEXT;
 extern uint16_t THING_ACTION_ZAP;
@@ -1190,6 +1192,27 @@ static inline uint8_t thing_is_action_trigger (thingp t)
     return (tp_is_action_trigger(thing_tp(t)));
 }
 
+static inline uint8_t thing_is_action_trigger_wall (thingp t)
+{
+    verify(t);
+
+    return (tp_is_action_trigger_wall(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_action_trigger_hero (thingp t)
+{
+    verify(t);
+
+    return (tp_is_action_trigger_hero(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_action_trigger_monst (thingp t)
+{
+    verify(t);
+
+    return (tp_is_action_trigger_monst(thing_tp(t)));
+}
+
 static inline uint8_t thing_is_action_down (thingp t)
 {
     verify(t);
@@ -1725,6 +1748,21 @@ static inline uint8_t thing_is_action_zap_noverify (thingp t)
 static inline uint8_t thing_is_action_trigger_noverify (thingp t)
 {
     return (t->tp->is_action_trigger);
+}
+
+static inline uint8_t thing_is_action_trigger_monst_noverify (thingp t)
+{
+    return (t->tp->is_action_trigger_monst);
+}
+
+static inline uint8_t thing_is_action_trigger_hero_noverify (thingp t)
+{
+    return (t->tp->is_action_trigger_hero);
+}
+
+static inline uint8_t thing_is_action_trigger_wall_noverify (thingp t)
+{
+    return (t->tp->is_action_trigger_wall);
 }
 
 static inline uint8_t thing_is_action_down_noverify (thingp t)

@@ -474,7 +474,7 @@ static void thing_handle_collision (thingp me, thingp it,
          * An action trigger is only ever used to start an object off as the 
          * initiator of a collision.
          */
-        if (thing_is_action_trigger(it)) {
+        if (thing_is_action_trigger_hero(it)) {
             level_trigger_activate(server_level, 
                                    it->data ? it->data->col_name: 0);
         }
@@ -494,6 +494,11 @@ static void thing_handle_collision (thingp me, thingp it,
             thing_possible_hit_add(it, "monst hit thing");
             return;
         }
+
+        if (thing_is_action_trigger_monst(it)) {
+            level_trigger_activate(server_level, 
+                                   it->data ? it->data->col_name: 0);
+        }
     }
 
     if (thing_is_wall(me)) {
@@ -512,6 +517,11 @@ static void thing_handle_collision (thingp me, thingp it,
              */
             thing_possible_hit_add(it, "monst hit thing");
             return;
+        }
+
+        if (thing_is_action_trigger_wall(it)) {
+            level_trigger_activate(server_level, 
+                                   it->data ? it->data->col_name: 0);
         }
     }
 
