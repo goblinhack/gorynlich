@@ -70,6 +70,15 @@ static void thing_tick_server_all (void)
         }
 
         /*
+         * Things like bombs on the server need to be animated even though we 
+         * do not see them, so that they get to the end of their anim and then 
+         * explode. Which we do see...
+         */
+        if (thing_is_animated(t)) {
+            thing_animate(t);
+        }
+
+        /*
          * Thing is out of life?
          */
         if (tp_get_lifespan(tp)) {

@@ -1587,6 +1587,14 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     }
 
     /*
+     * Boom!
+     */
+    if (thing_is_bomb(t)) {
+        level_place_small_explosion(thing_level(t), 
+                                    0, /* owner */ t->x, t->y);
+    }
+
+    /*
      * Stop bouncing or swaying.
      */
     if (t->wid) {
@@ -1779,10 +1787,6 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
                     level_place_small_cloudkill(thing_level(t),
                                                 0, // owner
                                                 t->x, t->y);
-                } else if (thing_is_bomb(t)) {
-                    level_place_explosion(thing_level(t),
-                                          0, // owner
-                                          t->x, t->y);
                 } else {
                     level_place_small_explosion(thing_level(t),
                                                 0, // owner
@@ -3145,6 +3149,8 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         uint8_t ext1 =
             ((t->is_dead        ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)             |
+            ((t->on_active_list ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT1_IS_ACTIVE)           |
             ((t->has_left_level ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL)      |
             ((t->effect         ? 1 : 0) << 
@@ -3700,6 +3706,13 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)) {
 //LOG("rx %s dead",thing_logname(t));
             thing_dead(t, 0, "server killed");
+        }
+
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_ACTIVE)) {
+//LOG("rx %s active",thing_logname(t));
+            if (!t->on_active_list) {
+                thing_make_active(t);
+            }
         }
     }
 
