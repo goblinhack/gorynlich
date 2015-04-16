@@ -1,5 +1,8 @@
 --------------------------------------- plan for apr --------------------------------------
 - implement active timed explosion
+- activate bomb on trigger
+- activate bomb on drop
+- bomb needs to be collectable
 - super meat boy style spinning blades of death on invisible tracks
 - can't shoot through diagonal walls
 --------------------------------------- plan for may --------------------------------------
