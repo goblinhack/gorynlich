@@ -1678,9 +1678,9 @@ uint32_t level_count_is_rrr20 (levelp level)
     return (level_count_is_x(level, tp_is_rrr20));
 }
 
-uint32_t level_count_is_rrr21 (levelp level)
+uint32_t level_count_is_bomb (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr21));
+    return (level_count_is_x(level, tp_is_bomb));
 }
 
 uint32_t level_count_is_rrr22 (levelp level)

@@ -368,12 +368,14 @@ static void wid_player_info_create (thing_statsp s, int fast)
 
         wid_set_no_shape(w);
 
-        tpp tp = thing_stats_to_tp(player_stats);
+        if (player_stats->pclass) {
+            tpp tp = thing_stats_to_tp(player_stats);
 
-        const char *tooltip = tp_get_tooltip(tp);
+            const char *tooltip = tp_get_tooltip(tp);
 
-        if (!player) {
-            wid_set_tooltip(w, tooltip, 0 /* font */);
+            if (!player) {
+                wid_set_tooltip(w, tooltip, 0 /* font */);
+            }
         }
     }
 
