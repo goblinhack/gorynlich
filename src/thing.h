@@ -265,6 +265,7 @@ enum {
      * Update msg_map_update if you add here
      ********************************************************************/
     THING_STATE_BIT_SHIFT_EXT1_IS_DEAD,
+    THING_STATE_BIT_SHIFT_EXT1_IS_ACTIVE,
     THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL,
     THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT,

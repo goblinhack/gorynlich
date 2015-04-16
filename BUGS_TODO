@@ -1,10 +1,10 @@
 --------------------------------------- plan for apr --------------------------------------
-- implement active timed explosion
-- activate bomb on trigger
+- yank with layers does not work
 - activate bomb on drop
 - bomb needs to be collectable
-- super meat boy style spinning blades of death on invisible tracks
 - can't shoot through diagonal walls
+- explosion in a long corridor does not work, fizles out
+- super meat boy style spinning blades of death on invisible tracks
 --------------------------------------- plan for may --------------------------------------
 - stats need to do something
 - magic attack - green fireball?
@@ -57,6 +57,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Thu Apr 16 07:30:56 EDT 2015
+- implement bomb
+- activate bomb on trigger
 
 Tue Apr 14 07:11:36 EDT 2015
 - back to draw mode on choose tile
