@@ -342,7 +342,7 @@ tpp tp_find_short_name (const char *name)
         }
     }
 
-    DIE("did not find short template name %s", name);
+    DIE("did not find short template name \"%s\"", name);
 
     return (0);
 }
@@ -583,7 +583,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr20", t->is_rrr20);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr21", t->is_rrr21);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_text", t->is_action_text);
         GET_OPT_NAMED_BITFIELD(ctx, "is_visible_on_debug_only", t->is_visible_on_debug_only);
@@ -775,7 +775,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
     PUT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
     PUT_NAMED_BITFIELD(ctx, "is_rrr20", t->is_rrr20);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr21", t->is_rrr21);
+    PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
     PUT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
     PUT_NAMED_BITFIELD(ctx, "is_action_text", t->is_action_text);
     PUT_NAMED_BITFIELD(ctx, "is_visible_on_debug_only", t->is_visible_on_debug_only);

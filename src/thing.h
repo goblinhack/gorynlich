@@ -423,6 +423,7 @@ extern uint16_t THING_BONEPILE3;
 extern uint16_t THING_GENERATOR5;
 extern uint16_t THING_GENERATOR6;
 extern uint16_t THING_GENERATOR7;
+extern uint16_t THING_BOMB;
 extern uint16_t THING_BOW1;
 extern uint16_t THING_BOW2;
 extern uint16_t THING_BOW3;
@@ -1136,11 +1137,11 @@ static inline uint8_t thing_is_rrr20 (thingp t)
     return (tp_is_rrr20(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr21 (thingp t)
+static inline uint8_t thing_is_bomb (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr21(thing_tp(t)));
+    return (tp_is_bomb(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_rrr22 (thingp t)
@@ -1715,9 +1716,9 @@ static inline uint8_t thing_is_rrr20_noverify (thingp t)
     return (t->tp->is_rrr20);
 }
 
-static inline uint8_t thing_is_rrr21_noverify (thingp t)
+static inline uint8_t thing_is_bomb_noverify (thingp t)
 {
-    return (t->tp->is_rrr21);
+    return (t->tp->is_bomb);
 }
 
 static inline uint8_t thing_is_rrr22_noverify (thingp t)
