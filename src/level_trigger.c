@@ -175,33 +175,6 @@ void level_trigger_activate (levelp level, const char *name)
             }
 
             /*
-             * Any sleeping things that need to be awoken? Actually they don't 
-             * exist yet, so we need to create them. It's best not to waste 
-             * resources with sleeping things until they are needed.
-             */
-            if (tp_is_action_sleep(tile_tp)) {
-                for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
-                    tpp spawn = level->map_grid.tile[x][y][z].tp;
-                    if (!spawn) {
-                        continue;
-                    }
-
-                    /*
-                     * Spawn a new thing.
-                     */
-                    wid_game_map_server_replace_tile(level_get_map(level),
-                                                     x,
-                                                     y,
-                                                     0, /* thing */
-                                                     spawn,
-                                                     0, /* tpp data */
-                                                     0 /* item */,
-                                                     0 /* stats */);
-                    spawned = 1;
-                }
-            }
-
-            /*
              * Find the thing with the message to broadcast.
              */
             if (tp_is_action_text(tile_tp)) {
@@ -220,30 +193,64 @@ void level_trigger_activate (levelp level, const char *name)
             }
 
             /*
+             * Look for the original thing that it looks like we wanted to 
+             * destroy. Then try and find it on the map.
+             */
+            tpp triggerd_tp = 0;
+
+            for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
+                triggerd_tp = level->map_grid.tile[x][y][z].tp;
+                if (triggerd_tp) {
+                    break;
+                }
+            }
+
+            if (!triggerd_tp) {
+                continue;
+            }
+
+            /*
+             * Any sleeping things that need to be awoken? Actually they don't 
+             * exist yet, so we need to create them. It's best not to waste 
+             * resources with sleeping things until they are needed.
+             */
+            if (tp_is_action_sleep(tile_tp)) {
+                LEVEL_LOG(level, "Spawn %s via movement trigger %s",
+                          tp_name(triggerd_tp), name);
+
+                widp w = wid_game_map_server_replace_tile(level_get_map(level),
+                                                          x,
+                                                          y,
+                                                          0, /* thing */
+                                                          triggerd_tp,
+                                                          0, /* tpp data */
+                                                          0 /* item */,
+                                                          0 /* stats */);
+                /*
+                 * For things like bombs and the like, make them active.
+                 */
+                thingp t = wid_get_thing(w);
+                if (t) {
+                    if (!thing_is_wall(t)) {
+                        thing_make_active(t);
+                    }
+                }
+
+                spawned = 1;
+            }
+
+            /*
              * Any things that need to be zapped?
              */
             if (tp_is_action_zap(tile_tp)) {
-                for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
-                    /*
-                     * Look for the original thing that it looks like we 
-                     * wanted to destroy. Then try and find it on the map.
-                     */
-                    tpp zap_me = level->map_grid.tile[x][y][z].tp;
-                    if (!zap_me) {
-                        continue;
-                    }
+                thingp t = map_is_tp_at(level, x, y, triggerd_tp);
+                if (t) {
+                    LEVEL_LOG(level, "Kill %s via movement trigger %s",
+                              thing_logname(t), name);
 
-                    /*
-                     * If we find it, zap it.
-                     */
-                    thingp t = map_is_tp_at(level, x, y, zap_me);
-                    if (t) {
-                        thing_dead(t, 0, "killed by zap trigger");
+                    thing_dead(t, 0, "killed by zap trigger");
 
-                        zapped = true;
-                    }
-
-                    break;
+                    zapped = true;
                 }
             }
 
@@ -257,21 +264,12 @@ void level_trigger_activate (levelp level, const char *name)
                 tp_is_action_up(tile_tp)    ||
                 tp_is_action_down(tile_tp)) {
 
-                thing_map *map = &thing_server_map;
-                thing_map_cell *cell = &map->cells[x][y];
+                thingp t = map_is_tp_at(level, x, y, triggerd_tp);
+                if (t) {
+                    LEVEL_LOG(level, "Active %s via movement trigger %s",
+                              thing_logname(t), name);
 
-                uint32_t i;
-                for (i = 0; i < cell->count; i++) {
-                    thingp t;
-                    
-                    t = thing_server_id(cell->id[i]);
-
-                    if (thing_is_wall(t)) {
-                        LEVEL_LOG(level, "Active %s via movement trigger %s",
-                                  thing_logname(t), name);
-
-                        level_trigger_move_thing(tile_tp, t);
-                    }
+                    level_trigger_move_thing(tile_tp, t);
                 }
             }
         }

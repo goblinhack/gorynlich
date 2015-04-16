@@ -139,6 +139,7 @@ uint16_t THING_BONEPILE3;
 uint16_t THING_GENERATOR5;
 uint16_t THING_GENERATOR6;
 uint16_t THING_GENERATOR7;
+uint16_t THING_BOMB;
 uint16_t THING_BOW1;
 uint16_t THING_BOW2;
 uint16_t THING_BOW3;
@@ -1778,6 +1779,10 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
                     level_place_small_cloudkill(thing_level(t),
                                                 0, // owner
                                                 t->x, t->y);
+                } else if (thing_is_bomb(t)) {
+                    level_place_explosion(thing_level(t),
+                                          0, // owner
+                                          t->x, t->y);
                 } else {
                     level_place_small_explosion(thing_level(t),
                                                 0, // owner
