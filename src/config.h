@@ -129,7 +129,7 @@
 #define MAP_DEPTH_EDITOR            0
 #define MAP_DEPTH_FLOOR             1
 #define MAP_DEPTH_WALL              2
-#define MAP_DEPTH_MONST             3
+#define MAP_DEPTH_MONST_AND_OBJ     3
 #define MAP_DEPTH_PLAYER            4
 #define MAP_DEPTH_EXPLOSION         4
 #define MAP_DEPTH_EXPLOSION_TOP     5
