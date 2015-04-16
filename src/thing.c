@@ -1590,8 +1590,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      * Boom!
      */
     if (thing_is_bomb(t)) {
-        level_place_small_explosion(thing_level(t), 
-                                    0, /* owner */ t->x, t->y);
+        level_place_explosion(thing_level(t), 0, /* owner */ t->x, t->y);
     }
 
     /*
