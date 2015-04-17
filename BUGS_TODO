@@ -1,5 +1,4 @@
 --------------------------------------- plan for apr --------------------------------------
-- bomb chain explosions; need sleeping yet active
 - activate bomb on drop
 - bomb needs to be collectable
 - can't shoot through diagonal walls
@@ -59,6 +58,7 @@ different profiles for level generation
 mining?
 
 Thu Apr 16 07:30:56 EDT 2015
+- bomb chain explosions; need sleeping yet active
 - yank with layers does not work
 - implement bomb
 - activate bomb on trigger

@@ -14,6 +14,7 @@
 #include "wid_game_map_server.h"
 #include "map.h"
 #include "vision.h"
+#include "wid.h"
 
 int level_explosion_flash_effect;
 
@@ -483,6 +484,30 @@ void level_place_cloudkill (levelp level,
                            "data/things/cloudkill2",
                            "data/things/cloudkill3",
                            "data/things/cloudkill4");
+}
+
+void level_place_bomb (levelp level, 
+                       thingp owner,
+                       double x, double y)
+{
+    tpp tp = tp_find("data/things/bomb");
+    if (!tp) {
+        DIE("no bomb template");
+    }
+
+    widp w = wid_game_map_server_replace_tile(
+                                        wid_game_map_server_grid_container,
+                                        x,
+                                        y,
+                                        0, /* thing */
+                                        tp,
+                                        0, /* tpp data */
+                                        0 /* item */,
+                                        0 /* stats */);
+
+    thingp t = wid_get_thing(w);
+
+    thing_set_owner(t, owner);
 }
 
 void level_place_small_cloudkill (levelp level, 
