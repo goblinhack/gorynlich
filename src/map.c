@@ -374,9 +374,9 @@ uint8_t map_is_rrr19_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr19));
 }
 
-uint8_t map_is_rrr20_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_sleeping_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr20));
+    return (map_is_x_at(level, x, y, tp_is_sleeping));
 }
 
 uint8_t map_is_bomb_at (levelp level, int32_t x, int32_t y)
@@ -841,9 +841,9 @@ thingp map_thing_is_rrr19_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr19));
 }
 
-thingp map_thing_is_rrr20_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_sleeping_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr20));
+    return (map_thing_is_x_at(level, x, y, tp_is_sleeping));
 }
 
 thingp map_thing_is_bomb_at (levelp level, int32_t x, int32_t y)
@@ -1324,9 +1324,9 @@ tree_rootp map_all_things_is_rrr19_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr19));
 }
 
-tree_rootp map_all_things_is_rrr20_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_sleeping_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr20));
+    return (map_all_things_is_x_at(level, x, y, tp_is_sleeping));
 }
 
 tree_rootp map_all_things_is_bomb_at (levelp level, int32_t x, int32_t y)
@@ -1897,9 +1897,9 @@ tpp map_find_rrr19_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr19, w));
 }
 
-tpp map_find_rrr20_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_sleeping_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr20, w));
+    return (map_find_x_at(level, x, y, tp_is_sleeping, w));
 }
 
 tpp map_find_bomb_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2728,9 +2728,9 @@ tree_rootp map_all_things_is_rrr19 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr19));
 }
 
-tree_rootp map_all_things_is_rrr20 (levelp level)
+tree_rootp map_all_things_is_sleeping (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr20));
+    return (map_all_things_is_x(level, tp_is_sleeping));
 }
 
 tree_rootp map_all_things_is_bomb (levelp level)

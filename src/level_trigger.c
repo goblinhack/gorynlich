@@ -231,9 +231,8 @@ void level_trigger_activate (levelp level, const char *name)
                  */
                 thingp t = wid_get_thing(w);
                 if (t) {
-                    if (!thing_is_wall(t)) {
-                        thing_make_active(t);
-                    }
+                    thing_wake(t);
+                    thing_make_active(t);
                 }
 
                 spawned = 1;

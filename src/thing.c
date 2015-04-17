@@ -833,6 +833,7 @@ thingp thing_server_new (const char *name,
     t->item.quality = THING_ITEM_QUALITY_MAX;
     t->item.quantity = tp_get_quantity(tp);
     t->item.cursed = tp_is_cursed(tp);
+    t->is_sleeping = tp_is_sleeping(tp);
 
     /*
      * Start out with stats from the template.
@@ -960,6 +961,7 @@ thingp thing_client_new (uint32_t id, tpp tp)
     t->tree.key = id;
     thing_client_ids[id] = t;
     t->tp = tp;
+    t->is_sleeping = tp_is_sleeping(tp);
 
     if (tp_is_player(tp)) {
         t->tree2.key = id;
@@ -1670,6 +1672,19 @@ void thing_make_active (thingp t)
     }
 
     t->on_active_list = true;
+}
+
+void thing_wake (thingp t)
+{
+    verify(t);
+
+    if (!t->is_sleeping) {
+        return;
+    }
+
+    THING_LOG(t, "wake");
+
+    thing_set_is_sleeping(t, false);
 }
 
 static void thing_dying_ (thingp t, thingp killer, char *reason)
@@ -2536,18 +2551,11 @@ uint8_t thing_is_candle_light (thingp t)
     return (t->is_candle_light);
 }
 
-void thing_set_qqq6 (thingp t, uint8_t val)
+void thing_set_is_sleeping (thingp t, uint8_t val)
 {
     verify(t);
 
-    t->qqq6 = val;
-}
-
-uint8_t thing_qqq6 (thingp t)
-{
-    verify(t);
-
-    return (t->qqq6);
+    t->is_sleeping = val;
 }
 
 void thing_set_is_collected (thingp t, uint8_t val)
@@ -3150,6 +3158,8 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
                 THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)             |
             ((t->on_active_list ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT1_IS_ACTIVE)           |
+            ((t->is_sleeping ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT1_IS_SLEEPING)         |
             ((t->has_left_level ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL)      |
             ((t->effect         ? 1 : 0) << 
@@ -3711,6 +3721,13 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 //LOG("rx %s active",thing_logname(t));
             if (!t->on_active_list) {
                 thing_make_active(t);
+            }
+        }
+
+        if (!(ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_SLEEPING))) {
+//LOG("rx %s awake",thing_logname(t));
+            if (t->is_sleeping) {
+                thing_wake(t);
             }
         }
     }
