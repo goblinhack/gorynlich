@@ -197,6 +197,9 @@ void thing_server_action (thingp t,
         } else if (item->id == THING_POTION_CLOUDKILL) {
             level_place_cloudkill(server_level, t, t->x, t->y);
             break;
+        } else if (item->id == THING_BOMB) {
+            level_place_bomb(server_level, t, t->x + 1, t->y);
+            break;
         }
 
         const char *message = tp_message_on_use(tp);

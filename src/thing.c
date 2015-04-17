@@ -1589,10 +1589,14 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     }
 
     /*
-     * Boom!
+     * Boom! If this bomb is not being collected then make it blow up.
      */
-    if (thing_is_bomb(t)) {
-        level_place_explosion(thing_level(t), 0, /* owner */ t->x, t->y);
+    if (t->on_server) {
+        if (!t->is_collected) {
+            if (thing_is_bomb(t)) {
+                level_place_explosion(thing_level(t), 0, /* owner */ t->x, t->y);
+            }
+        }
     }
 
     /*
