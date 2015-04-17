@@ -223,14 +223,6 @@ void thing_client_wid_update (thingp t, double x, double y,
                               uint8_t smooth,
                               uint8_t is_new)
 {
-    /*
-     * Things like moving walls need to move from boring to active lists if 
-     * they move after the great creator has made them thus.
-     */
-    if (!is_new) {
-        thing_make_active(t);
-    }
-
     thing_client_wid_move(t, x, y, smooth);
 
     /*
