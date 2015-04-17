@@ -3,7 +3,7 @@
  raw_name="bomb"
  tooltip="Short fuse"
  z_depth=3
- is_inactive
+ is_sleeping
  is_bomb
  is_combustable
  is_stackable
@@ -13,6 +13,7 @@
   tile={
    delay=250
    tile="bomb1a"
+   is_sleeping
   }
   tile={
    delay=250
