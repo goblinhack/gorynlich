@@ -531,14 +531,6 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
         return;
     }
 
-    /*
-     * Things like moving walls need to move from boring to active lists if 
-     * they move after the great creator has made them thus.
-     */
-    if (!is_new) {
-        thing_make_active(t);
-    }
-
     x *= server_tile_width;
     y *= server_tile_height;
 

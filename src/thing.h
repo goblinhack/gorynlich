@@ -32,6 +32,7 @@ void thing_tick_server_player_slow_all(int force);
 uint8_t thing_mob_spawn(thingp);
 uint8_t thing_mob_spawn_on_death(thingp);
 void thing_make_active(thingp t);
+void thing_wake(thingp t);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 void thing_dying(thingp, thingp killer,
@@ -106,8 +107,7 @@ void thing_set_is_key4(thingp t, uint8_t val);
 uint8_t thing_is_key4(thingp t);
 void thing_set_is_key5(thingp t, uint8_t val);
 uint8_t thing_is_key5(thingp t);
-void thing_set_qqq6(thingp t, uint8_t val);
-uint8_t thing_qqq6(thingp t);
+void thing_set_is_sleeping(thingp t, uint8_t val);
 void thing_set_is_collected(thingp t, uint8_t val);
 uint8_t thing_is_collected(thingp t);
 void thing_set_is_chasing_target(thingp t, uint8_t val);
@@ -266,6 +266,7 @@ enum {
      ********************************************************************/
     THING_STATE_BIT_SHIFT_EXT1_IS_DEAD,
     THING_STATE_BIT_SHIFT_EXT1_IS_ACTIVE,
+    THING_STATE_BIT_SHIFT_EXT1_IS_SLEEPING,
     THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL,
     THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT,
@@ -675,7 +676,7 @@ typedef struct thing_ {
 
     uint32_t is_light_source:1;
     uint32_t is_candle_light:1;
-    uint32_t qqq6:1;
+    uint32_t is_sleeping:1;
     uint32_t is_collected:1;
     uint32_t got_to_exit_first:1;
     uint32_t opened_exit:1;
@@ -1131,11 +1132,15 @@ static inline uint8_t thing_is_rrr19 (thingp t)
     return (tp_is_rrr19(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr20 (thingp t)
+static inline uint8_t thing_is_sleeping (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr20(thing_tp(t)));
+    if (t->is_sleeping) {
+        return (true);
+    }
+
+    return (false);
 }
 
 static inline uint8_t thing_is_bomb (thingp t)
@@ -1712,9 +1717,9 @@ static inline uint8_t thing_is_rrr19_noverify (thingp t)
     return (t->tp->is_rrr19);
 }
 
-static inline uint8_t thing_is_rrr20_noverify (thingp t)
+static inline uint8_t thing_is_sleeping_noverify (thingp t)
 {
-    return (t->tp->is_rrr20);
+    return (t->tp->is_sleeping);
 }
 
 static inline uint8_t thing_is_bomb_noverify (thingp t)

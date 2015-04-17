@@ -81,7 +81,7 @@ typedef struct thing_tile_ {
     uint8_t is_yyy14:1;
     uint8_t is_yyy15:1;
     uint8_t is_yyy16:1;
-    uint8_t is_yyy17:1;
+    uint8_t is_sleeping:1;
     uint8_t is_open:1;
     uint8_t is_dead:1;
     uint8_t is_end_of_anim:1;
