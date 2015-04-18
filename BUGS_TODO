@@ -1,8 +1,7 @@
 --------------------------------------- plan for apr --------------------------------------
-- activate bomb on drop
-- bomb needs to be collectable
+- bomb chain
+- bomb lighting is odd when at edge of visibility
 - can't shoot through diagonal walls
-- explosion in a long corridor does not work, fizles out
 - super meat boy style spinning blades of death on invisible tracks
 --------------------------------------- plan for may --------------------------------------
 - stats need to do something
@@ -56,6 +55,15 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sat Apr 18 08:15:59 EDT 2015
+- explosion in a long corridor does not work, fizles out
+
+Fri Apr 17 20:09:47 EDT 2015
+- some explosions on client would fizzle out
+- explosions can bend around corners
+- activate bomb on drop
+- bomb needs to be collectable
 
 Thu Apr 16 07:30:56 EDT 2015
 - bomb chain explosions; need sleeping yet active

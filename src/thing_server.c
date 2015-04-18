@@ -137,8 +137,6 @@ void thing_server_action (thingp t,
                           uint8_t action,
                           uint32_t action_bar_index)
 {
-    widp grid = wid_game_map_server_grid_container;
-
     if (action_bar_index >= THING_ACTION_BAR_MAX) {
         ERR("invalid action bar slot %u", action_bar_index);
         return;
@@ -225,107 +223,16 @@ void thing_server_action (thingp t,
         return;
     }
 
-    case PLAYER_ACTION_DROP: {
-        double dx = 0;
-        double dy = 0;
+    case PLAYER_ACTION_DROP:
 
-        if (thing_is_dir_down(t)) {
-            dy = 1.0;
+        if (!thing_place(t, tp, item)) {
+            /*
+             * Urk!
+             */
+            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "Drop failed");
+            return;
         }
-
-        if (thing_is_dir_up(t)) {
-            dy = -1.0;
-        }
-
-        if (thing_is_dir_right(t)) {
-            dx = 1.0;
-        }
-
-        if (thing_is_dir_left(t)) {
-            dx = -1.0;
-        }
-
-        if (thing_is_dir_tl(t)) {
-            dx = -1.0;
-            dy = -1.0;
-        }
-
-        if (thing_is_dir_tr(t)) {
-            dx = 1.0;
-            dy = -1.0;
-        }
-
-        if (thing_is_dir_bl(t)) {
-            dx = -1.0;
-            dy = 1.0;
-        }
-
-        if (thing_is_dir_br(t)) {
-            dx = 1.0;
-            dy = 1.0;
-        }
-
-        /*
-         * Sanity check we got one dir.
-         */
-        if ((dx == 0.0) && (dy == 0.0)) {
-            dx = 1.0;
-            dy = 1.0;
-        }
-
-        double x = t->x + dx;
-        double y = t->y + dy;
-
-        /*
-         * Try to place in front of the player.
-         */
-        if (!thing_hit_any_obstacle(grid, t, x, y)) {
-            if (wid_game_map_server_replace_tile(grid, x, y,
-                                                 0, /* thing */
-                                                 tp,
-                                                 0 /* tpp_data */,
-                                                 item,
-                                                 0 /* stats */)) {
-                break;
-            }
-        }
-
-        /*
-         * Just place anywhere free.
-         */
-        for (dx = -1.0; dx <= 1.0; dx += 1.0) {
-            for (dy = -1.0; dy <= 1.0; dy += 1.0) {
-                double x = t->x + dx;
-                double y = t->y + dy;
-
-                if ((dx == 0.0) && (dy == 0.0)) {
-                    continue;
-                }
-
-                if (!thing_hit_any_obstacle(grid, t, x, y)) {
-                    if (wid_game_map_server_replace_tile(grid, x, y, 
-                                                         0, /* thing */
-                                                         tp,
-                                                         0 /* tpp_data */,
-                                                         item,
-                                                         0 /* stats */)) {
-                        goto done;
-                    }
-                }
-
-            }
-        }
-
-        /*
-         * Urk!
-         */
-        MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "Drop failed");
-
-        /*
-         * Failed to drop.
-         */
-        }
-        return;
+        break;
 
     default:
         ERR("Unkown player action %u on action bar item %u", 
@@ -333,8 +240,6 @@ void thing_server_action (thingp t,
             action_bar_index);
         return;
     }
-
-done:
 
     switch (action) {
     case PLAYER_ACTION_USE:
