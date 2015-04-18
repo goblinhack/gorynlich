@@ -76,6 +76,8 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
     double x = t->x + dx;
     double y = t->y + dy;
 
+    thing_round(t, &x, &y);
+
     /*
      * Try to place in front of the player.
      */
@@ -105,6 +107,8 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
 
             double x = t->x + dx;
             double y = t->y + dy;
+
+            thing_round(t, &x, &y);
 
             if (map_find_wall_at(server_level, x, y, 0) ||
                 map_find_door_at(server_level, x, y, 0) ||
@@ -136,6 +140,8 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
             double x = t->x + dx;
             double y = t->y + dy;
 
+            thing_round(t, &x, &y);
+
             if (map_find_wall_at(server_level, x, y, 0) ||
                 map_find_door_at(server_level, x, y, 0) ||
                 map_find_rock_at(server_level, x, y, 0)) {
@@ -154,6 +160,8 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
 
     x = t->x;
     y = t->y;
+
+    thing_round(t, &x, &y);
 
     /*
      * Last resort, just place on the player.

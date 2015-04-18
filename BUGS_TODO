@@ -1,6 +1,5 @@
 --------------------------------------- plan for apr --------------------------------------
-- bomb chain
-- bomb lighting is odd when at edge of visibility
+- cannot collect torch after dropping
 - can't shoot through diagonal walls
 - super meat boy style spinning blades of death on invisible tracks
 --------------------------------------- plan for may --------------------------------------
@@ -57,6 +56,8 @@ different profiles for level generation
 mining?
 
 Sat Apr 18 08:15:59 EDT 2015
+- bomb lighting is odd when at edge of visibility
+- bomb chain
 - explosion in a long corridor does not work, fizles out
 
 Fri Apr 17 20:09:47 EDT 2015
