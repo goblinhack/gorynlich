@@ -8,7 +8,7 @@
  is_animated_no_dir
  is_fire
  is_collision_map_large
- damage=36
+ damage=6
  hit_delay_tenths=1
  tiles={
   tile={

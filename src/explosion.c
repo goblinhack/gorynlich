@@ -146,7 +146,6 @@ static void explosion_flood (levelp level, uint8_t x, uint8_t y)
     explosion_flood(level, x, y+1);
 }
 
-#define DEBUG_EXPLOSION
 #ifdef DEBUG_EXPLOSION
 static FILE *fp;
 
