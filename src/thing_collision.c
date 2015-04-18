@@ -146,6 +146,8 @@ thingp_get_interpolated_position (const thingp t, double *x, double *y)
     if (!wid_is_moving(w)) {
         *x = t->x;
         *y = t->y;
+
+        thing_round(t, x, y);
         return;
     }
 
@@ -157,6 +159,8 @@ thingp_get_interpolated_position (const thingp t, double *x, double *y)
 
     *x = t->last_x + (dx * wdx);
     *y = t->last_y + (dy * wdy);
+
+    thing_round(t, x, y);
 }
 
 static uint8_t things_overlap (const thingp A, 
@@ -377,14 +381,17 @@ static uint8_t things_overlap (const thingp A,
         (Abry > Btly)) {
 
 #if 0
-    if ((thing_is_projectile(A) || 
-         thing_is_projectile(B))) {
-LOG("  A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
-LOG("    %f %f",Ax,Ay);
-LOG("    %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
-LOG("  B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
-LOG("    %f %f",Bx,By);
-LOG("    %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
+    if ((thing_is_bomb(A) || 
+         thing_is_bomb(B))) {
+    if ((thing_is_player(A) || 
+         thing_is_player(B))) {
+CON("  A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
+CON("    %f %f",Ax,Ay);
+CON("    %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
+CON("  B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
+CON("    %f %f",Bx,By);
+CON("    %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
+    }
     }
 #endif
 
@@ -537,6 +544,7 @@ static void thing_handle_collision (thingp me, thingp it,
             thing_is_door(it)                   ||
             thing_is_wall(it)                   ||
             thing_is_player(it)                 ||
+            thing_is_bomb(it)                   ||
             thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.

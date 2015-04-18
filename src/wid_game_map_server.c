@@ -412,6 +412,8 @@ wid_game_map_server_replace_tile (widp w,
 
     wid_set_thing(child, t);
 
+    thing_round(t, &x, &y);
+
     thing_server_wid_update(t, x, y, true /* is_new */);
 
     /*
