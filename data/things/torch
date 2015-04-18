@@ -7,8 +7,7 @@
  is_carryable
  is_light_source
  is_stackable
- light_tint="orange"
- light_radius=0.1
+ light_radius=1.5
  is_animated
  tiles={
   tile={
