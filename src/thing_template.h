@@ -254,9 +254,9 @@ typedef struct tp_ {
     uint8_t is_action_sleep:1;
     uint8_t is_action_zap:1;
     uint8_t is_action_trigger:1;
-    uint8_t is_action_trigger_hero:1;
-    uint8_t is_action_trigger_monst:1;
-    uint8_t is_action_trigger_wall:1;
+    uint8_t is_action_trigger_on_hero:1;
+    uint8_t is_action_trigger_on_monst:1;
+    uint8_t is_action_trigger_on_wall:1;
     uint8_t is_action_down:1;
     uint8_t is_action_up:1;
     uint8_t is_action_left:1;
@@ -711,19 +711,19 @@ static inline uint8_t tp_is_action_trigger (tpp t)
     return (t->is_action_trigger);
 }
 
-static inline uint8_t tp_is_action_trigger_wall (tpp t)
+static inline uint8_t tp_is_action_trigger_on_wall (tpp t)
 {
-    return (t->is_action_trigger_wall);
+    return (t->is_action_trigger_on_wall);
 }
 
-static inline uint8_t tp_is_action_trigger_hero (tpp t)
+static inline uint8_t tp_is_action_trigger_on_hero (tpp t)
 {
-    return (t->is_action_trigger_hero);
+    return (t->is_action_trigger_on_hero);
 }
 
-static inline uint8_t tp_is_action_trigger_monst (tpp t)
+static inline uint8_t tp_is_action_trigger_on_monst (tpp t)
 {
-    return (t->is_action_trigger_monst);
+    return (t->is_action_trigger_on_monst);
 }
 
 static inline uint8_t tp_is_action_down (tpp t)
