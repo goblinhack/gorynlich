@@ -9,6 +9,7 @@
 #include "thing_stats.h"
 #include "string_ext.h"
 #include "wid_game_map_server.h"
+#include "map.h"
 
 void thing_dir (thingp t, double *dx, double *dy)
 {
@@ -117,7 +118,44 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
         }
     }
 
-    return (0);
+    /*
+     * Ok place on top of something else other than a wall
+     */
+    for (dx = -1.0; dx <= 1.0; dx += 1.0) {
+        for (dy = -1.0; dy <= 1.0; dy += 1.0) {
+            double x = t->x + dx;
+            double y = t->y + dy;
+
+            if ((dx == 0.0) && (dy == 0.0)) {
+                continue;
+            }
+
+            if (map_find_wall_at(server_level, x, y, 0) ||
+                map_find_door_at(server_level, x, y, 0) ||
+                map_find_rock_at(server_level, x, y, 0)) {
+                continue;
+            }
+
+            widp w = wid_game_map_server_replace_tile(grid, x, y, 
+                                                        0, /* thing */
+                                                        tp,
+                                                        0 /* tpp_data */,
+                                                        item,
+                                                        0 /* stats */);
+            return (w);
+        }
+    }
+
+    /*
+     * Last resort, just place on the player.
+     */
+    widp w = wid_game_map_server_replace_tile(grid, x, y, 
+                                                0, /* thing */
+                                                tp,
+                                                0 /* tpp_data */,
+                                                item,
+                                                0 /* stats */);
+    return (w);
 }
 
 widp thing_place (thingp t, tpp tp, itemp item)

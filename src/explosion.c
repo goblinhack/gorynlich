@@ -325,8 +325,25 @@ static void level_place_explosion_ (levelp level,
         return;
     }
 
-    for (ix = 1; ix < MAP_WIDTH - 1; ix++) {
-        for (iy = 1; iy < MAP_HEIGHT - 1; iy++) {
+    for (ix = x - radius; ix < x + radius - 1; ix++) {
+        if (ix < 1) {
+            continue;
+        }
+
+        if (ix > MAP_WIDTH - 1) {
+            continue;
+        }
+
+        for (iy = y - radius; iy < y + radius - 1; iy++) {
+                                
+            if (iy < 1) {
+                continue;
+            }
+
+            if (iy > MAP_HEIGHT - 1) {
+                continue;
+            }
+
             int8_t distance = this_explosion[ix][iy];
             if (!distance) {
                 continue;
@@ -398,9 +415,25 @@ static void level_place_spatter (levelp level,
 
     int ix, iy;
 
-    for (ix = 1; ix < MAP_WIDTH - 1; ix++) {
-        for (iy = 1; iy < MAP_HEIGHT - 1; iy++) {
+    for (ix = x - radius; ix < x + radius - 1; ix++) {
+        if (ix < 1) {
+            continue;
+        }
+
+        if (ix > MAP_WIDTH - 1) {
+            continue;
+        }
+
+        for (iy = y - radius; iy < y + radius - 1; iy++) {
                                 
+            if (iy < 1) {
+                continue;
+            }
+
+            if (iy > MAP_HEIGHT - 1) {
+                continue;
+            }
+
             double distance = DISTANCE(x, y, ix, iy);
             if (distance > radius) {
                 continue;
