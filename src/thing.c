@@ -3175,10 +3175,10 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
                 THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT);
 
         uint8_t ext2 =
-            (((t->torch_light_radius > 0.0)          ? 1 : 0) << 
+            ((t->torch_light_radius_set              ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)  |
             (((t->data && t->data->col_name)         ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT2_COLOR)  |
+                THING_STATE_BIT_SHIFT_EXT2_COLOR)               |
             ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT2_RESYNC);
 
@@ -3719,6 +3719,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 
         if (torch_light_radius_present) {
             t->torch_light_radius = torch_light_radius;
+            t->torch_light_radius_set = true;
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)) {

@@ -196,11 +196,13 @@ void thing_server_action (thingp t,
             level_place_cloudkill(server_level, t, t->x, t->y);
             break;
         } else if (item->id == THING_BOMB) {
-            level_place_bomb(server_level, t, t->x + 1, t->y);
-            break;
+            if (level_place_bomb(server_level, t, t->x + 1, t->y)) {
+                break;
+            }
         } else if (item->id == THING_TORCH) {
-            thing_place_behind(t, tp, item);
-            break;
+            if (thing_place_behind(t, tp, item)) {
+                break;
+            }
         }
 
         const char *message = tp_message_on_use(tp);

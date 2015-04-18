@@ -53,10 +53,21 @@ void thing_dir (thingp t, double *dx, double *dy)
     }
 }
 
-static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
+static widp thing_place_ (thingp t, tpp tp, itemp item_in, int behind)
 {
     double dx = 0;
     double dy = 0;
+    item_t item = {0};
+
+    if (item_in) {
+        memcpy(&item, item_in, sizeof(item));
+        item.quantity = tp_get_quantity(tp);
+    } else {
+        item.id = tp_to_id(tp);
+        item.quality = THING_ITEM_QUALITY_MAX;
+        item.quantity = tp_get_quantity(tp);
+        item.cursed = tp_is_cursed(tp);
+    }
 
     thing_dir(t, &dx, &dy);
 
@@ -91,7 +102,7 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
                                                   0, /* thing */
                                                   tp,
                                                   0 /* tpp_data */,
-                                                  item,
+                                                  &item,
                                                   0 /* stats */);
         return (w);
     }
@@ -121,7 +132,7 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
                                                           0, /* thing */
                                                           tp,
                                                           0 /* tpp_data */,
-                                                          item,
+                                                          &item,
                                                           0 /* stats */);
                 return (w);
             }
@@ -152,7 +163,7 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
                                                       0, /* thing */
                                                       tp,
                                                       0 /* tpp_data */,
-                                                      item,
+                                                      &item,
                                                       0 /* stats */);
             return (w);
         }
@@ -170,7 +181,7 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
                                               0, /* thing */
                                               tp,
                                               0 /* tpp_data */,
-                                              item,
+                                              &item,
                                               0 /* stats */);
     return (w);
 }
