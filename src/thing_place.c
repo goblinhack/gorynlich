@@ -99,10 +99,16 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
      */
     for (dx = -1.0; dx <= 1.0; dx += 1.0) {
         for (dy = -1.0; dy <= 1.0; dy += 1.0) {
+            if ((dx == 0.0) && (dy == 0.0)) {
+                continue;
+            }
+
             double x = t->x + dx;
             double y = t->y + dy;
 
-            if ((dx == 0.0) && (dy == 0.0)) {
+            if (map_find_wall_at(server_level, x, y, 0) ||
+                map_find_door_at(server_level, x, y, 0) ||
+                map_find_rock_at(server_level, x, y, 0)) {
                 continue;
             }
 
@@ -123,12 +129,12 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
      */
     for (dx = -1.0; dx <= 1.0; dx += 1.0) {
         for (dy = -1.0; dy <= 1.0; dy += 1.0) {
-            double x = t->x + dx;
-            double y = t->y + dy;
-
             if ((dx == 0.0) && (dy == 0.0)) {
                 continue;
             }
+
+            double x = t->x + dx;
+            double y = t->y + dy;
 
             if (map_find_wall_at(server_level, x, y, 0) ||
                 map_find_door_at(server_level, x, y, 0) ||
@@ -137,24 +143,27 @@ static widp thing_place_ (thingp t, tpp tp, itemp item, int behind)
             }
 
             widp w = wid_game_map_server_replace_tile(grid, x, y, 
-                                                        0, /* thing */
-                                                        tp,
-                                                        0 /* tpp_data */,
-                                                        item,
-                                                        0 /* stats */);
+                                                      0, /* thing */
+                                                      tp,
+                                                      0 /* tpp_data */,
+                                                      item,
+                                                      0 /* stats */);
             return (w);
         }
     }
+
+    x = t->x;
+    y = t->y;
 
     /*
      * Last resort, just place on the player.
      */
     widp w = wid_game_map_server_replace_tile(grid, x, y, 
-                                                0, /* thing */
-                                                tp,
-                                                0 /* tpp_data */,
-                                                item,
-                                                0 /* stats */);
+                                              0, /* thing */
+                                              tp,
+                                              0 /* tpp_data */,
+                                              item,
+                                              0 /* stats */);
     return (w);
 }
 
