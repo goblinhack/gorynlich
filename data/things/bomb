@@ -91,7 +91,7 @@
    delay=250
    tile="bomb10b"
    is_end_of_anim
-   is_dead_on_end_of_anim
+   is_dead_on_end_of_anim_on_server_only
   }
  }
 }

@@ -947,11 +947,17 @@ wid_game_map_client_replace_tile (widp w,
 
     if (thing_is_explosion(t)) {
         wid_scaling_blit_to_pct_in(child, 1.0, 3.0, 500, 0);
-        dx = ((double)(((int)(myrand() % 100)) - 50)) / 100.0;
-        dy = ((double)(((int)(myrand() % 100)) - 50)) / 100.0;
+        /*
+         * The epicenter needs to be where it was on the server as we do a 
+         * flood fill to see where the rest of the explosion goes.
+         */
+        if (!t->is_epicenter) {
+            dx = ((double)(((int)(myrand() % 100)) - 50)) / 100.0;
+            dy = ((double)(((int)(myrand() % 100)) - 50)) / 100.0;
+        }
+
         wid_fade_out(child, 500);
     }
-
 
     thing_client_wid_update(t, x + dx, y + dy, false /* smooth */,
                             true /* is new */);
@@ -979,12 +985,13 @@ wid_game_map_client_replace_tile (widp w,
      * blast.
      */
     if (t->is_epicenter && thing_is_explosion(t) ) {
+
         if ((tp->id == THING_EXPLOSION1) ||
             (tp->id == THING_EXPLOSION2) ||
             (tp->id == THING_EXPLOSION3) ||
             (tp->id == THING_EXPLOSION4)) {
 
-            level_place_fireball(client_level, 0, t->x, t->y);
+            level_place_explosion(client_level, 0, t->x, t->y);
 
         } else if ((tp->id == THING_POISON1) ||
                    (tp->id == THING_POISON2) ||

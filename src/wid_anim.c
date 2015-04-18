@@ -45,9 +45,6 @@ void wid_animate (widp w)
          * Stop the animation here?
          */
         if (thing_tile_is_end_of_anim(tile)) {
-            if (thing_tile_is_dead_on_end_of_anim(tile)) {
-                return;
-            }
             return;
         }
     }
