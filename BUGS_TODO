@@ -1,6 +1,6 @@
 --------------------------------------- plan for apr --------------------------------------
-- cannot collect torch after dropping
 - can't shoot through diagonal walls
+- check text pop up can do color
 - super meat boy style spinning blades of death on invisible tracks
 --------------------------------------- plan for may --------------------------------------
 - stats need to do something
@@ -56,6 +56,7 @@ different profiles for level generation
 mining?
 
 Sat Apr 18 08:15:59 EDT 2015
+- cannot collect torch after dropping
 - no light source for weapons
 - can drop all torches and go into darkness
 - bomb lighting is odd when at edge of visibility
