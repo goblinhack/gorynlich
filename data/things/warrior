@@ -12,6 +12,7 @@
  max_magic=10
  hp_per_level=10
  is_player
+ hit_priority=20
  stats_attack_melee=13
  stats_attack_ranged=10
  stats_attack_magical=6
