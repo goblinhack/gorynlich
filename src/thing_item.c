@@ -58,6 +58,9 @@ static void thing_collect (thingp t,
     uint32_t id;
 
     id = tp_to_id(tp);
+    if (!i.id) {
+        DIE("trying to collect item %s with no id", tp_name(tp));
+    }
 
     if (id == THING_WATER_POISON) {
         /*

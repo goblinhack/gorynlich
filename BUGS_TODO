@@ -56,6 +56,8 @@ different profiles for level generation
 mining?
 
 Sat Apr 18 08:15:59 EDT 2015
+- no light source for weapons
+- can drop all torches and go into darkness
 - bomb lighting is odd when at edge of visibility
 - bomb chain
 - explosion in a long corridor does not work, fizles out
