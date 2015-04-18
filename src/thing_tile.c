@@ -109,6 +109,8 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_dying", t->is_dying);
         GET_OPT_NAMED_BITFIELD(ctx, "is_end_of_anim", t->is_end_of_anim);
         GET_OPT_NAMED_BITFIELD(ctx, "is_dead_on_end_of_anim", t->is_dead_on_end_of_anim);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_dead_on_end_of_anim_on_server_only", 
+                               t->is_dead_on_end_of_anim_on_server_only);
 
     } while (demarshal_gotone(ctx));
 
@@ -201,6 +203,8 @@ static void marshal_thing_tile (marshal_p ctx, thing_tile *t)
     PUT_NAMED_BITFIELD(ctx, "is_dead", t->is_dead);
     PUT_NAMED_BITFIELD(ctx, "is_dying", t->is_dying);
     PUT_NAMED_BITFIELD(ctx, "is_dead_on_end_of_anim", t->is_dead_on_end_of_anim);
+    PUT_NAMED_BITFIELD(ctx, "is_dead_on_end_of_anim_on_server_only", 
+                       t->is_dead_on_end_of_anim_on_server_only);
 
     switch (t->dir) {
     case THING_DIR_LEFT:
@@ -726,6 +730,11 @@ uint8_t thing_tile_is_end_of_anim (thing_tilep t)
 uint8_t thing_tile_is_dead_on_end_of_anim (thing_tilep t)
 {
     return (t->is_dead_on_end_of_anim);
+}
+
+uint8_t thing_tile_is_dead_on_end_of_anim_on_server_only (thing_tilep t)
+{
+    return (t->is_dead_on_end_of_anim_on_server_only);
 }
 
 thing_tilep thing_tile_find (tpp t, uint32_t index, tilep *tile)

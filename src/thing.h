@@ -7,6 +7,7 @@
 #pragma once
 
 #include "tree.h"
+#include "wid.h"
 #include "level_private.h"
 #include "thing_template.h"
 #include <stdlib.h>
@@ -155,7 +156,6 @@ tree_rootp thing_tiles2(thingp);
 
 thing_tilep thing_current_tile(thingp t);
 void thing_reached_exit(thingp t, thingp exit);
-void thing_place(void *);
 void thing_place_timed(tpp t, 
                        double x,
                        double y,
@@ -2054,6 +2054,18 @@ static inline tpp thing_weapon (const thingp t)
 }
 
 /*
+ * Only a certain resolution of thing can be represented on the client.
+ * Convert a floating point value to client rounded value.
+ */
+static inline void thing_round (thingp t, double *x, double *y)
+{
+    const double scale = 256 / MAP_WIDTH;
+
+    *x = round(*x * scale) / scale;
+    *y = round(*y * scale) / scale;
+}
+
+/*
  * thing.c
  */
 void thing_move(thingp t, double x, double y);
@@ -2129,3 +2141,10 @@ void thing_wield_next_weapon(thingp t);
  */
 void 
 thingp_get_interpolated_position(const thingp t, double *x, double *y);
+
+/*
+ * thing_place.c
+ */
+widp thing_place(thingp t, tpp tp, itemp item);
+widp thing_place_behind(thingp t, tpp tp, itemp item);
+void thing_dir(thingp t, double *dx, double *dy);

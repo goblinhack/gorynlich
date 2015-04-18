@@ -909,6 +909,8 @@ void thing_server_init (thingp t, double x, double y)
     t->last_y = -1.0;
     t->map_x = -1.0;
     t->map_y = -1.0;
+
+    thing_round(t, &x, &y);
     t->x = x;
     t->y = y;
 
@@ -3145,8 +3147,11 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 
         widp w = thing_wid(t);
         if (w) {
-            tx = (uint8_t)(int)((t->x * ((double)256)) / MAP_WIDTH);
-            ty = (uint8_t)(int)((t->y * ((double)256)) / MAP_HEIGHT);
+            double rx = t->x;
+            double ry = t->y;
+            thing_round(t, &rx, &ry);
+            tx = (uint8_t)(int)((rx * ((double)256)) / MAP_WIDTH);
+            ty = (uint8_t)(int)((ry * ((double)256)) / MAP_HEIGHT);
         } else {
             tx = 0xFF;
             ty = 0xFF;
