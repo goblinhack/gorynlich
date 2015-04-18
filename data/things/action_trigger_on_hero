@@ -1,16 +1,16 @@
 {
- short_name="action_trigger_hero"
- raw_name="action_trigger_hero"
+ short_name="action_trigger_on_hero"
+ raw_name="action_trigger_on_hero"
  tooltip="Triggers on hero step"
  is_collision_map_small
  z_depth=6
  is_action
  is_visible_on_debug_only
- is_action_trigger_hero
+ is_action_trigger_on_hero
  is_action_trigger
  tiles={
   tile={
-   tile="action_trigger_hero"
+   tile="action_trigger_on_hero"
   }
  }
 }

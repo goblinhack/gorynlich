@@ -481,7 +481,7 @@ static void thing_handle_collision (thingp me, thingp it,
          * An action trigger is only ever used to start an object off as the 
          * initiator of a collision.
          */
-        if (thing_is_action_trigger_hero(it)) {
+        if (thing_is_action_trigger_on_hero(it)) {
             level_trigger_activate(server_level, 
                                    it->data ? it->data->col_name: 0);
         }
@@ -502,7 +502,7 @@ static void thing_handle_collision (thingp me, thingp it,
             return;
         }
 
-        if (thing_is_action_trigger_monst(it)) {
+        if (thing_is_action_trigger_on_monst(it)) {
             level_trigger_activate(server_level, 
                                    it->data ? it->data->col_name: 0);
         }
@@ -526,9 +526,25 @@ static void thing_handle_collision (thingp me, thingp it,
             return;
         }
 
-        if (thing_is_action_trigger_wall(it)) {
+        if (thing_is_action_trigger_on_wall(it)) {
             level_trigger_activate(server_level, 
                                    it->data ? it->data->col_name: 0);
+        }
+
+        /*
+         * Initially we have a wall sitting on a trigger. The wall is inactive
+         * and doesn't do collision tests. The trigger might no be active 
+         * either and so we n
+         */
+        if (thing_is_action_left(it)                ||
+            thing_is_action_right(it)               ||
+            thing_is_action_up(it)                  ||
+            thing_is_action_down(it)) {
+
+            if (level_trigger_is_activated(server_level, 
+                                           it->data ? it->data->col_name : 0)) {
+                level_trigger_move_thing(thing_tp(it), me);
+            }
         }
     }
 
@@ -541,34 +557,16 @@ static void thing_handle_collision (thingp me, thingp it,
 
         if (thing_is_monst(it)                  || 
             thing_is_fragile(it)                ||
+            thing_is_combustable(it)            ||
             thing_is_door(it)                   ||
             thing_is_wall(it)                   ||
             thing_is_player(it)                 ||
-            thing_is_bomb(it)                   ||
             thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.
              */
             thing_possible_hit_add_hitter_killed_on_hitting(
                                             it, "projection hit thing");
-        }
-    }
-
-    /*
-     * Initially we have a wall sitting on a trigger. The wall is inactive
-     * and doesn't do collision tests. The trigger might no be active either 
-     * and so we n
-     */
-    if (thing_is_wall(me)) {
-        if (thing_is_action_left(it)                ||
-            thing_is_action_right(it)               ||
-            thing_is_action_up(it)                  ||
-            thing_is_action_down(it)) {
-
-            if (level_trigger_is_activated(server_level, 
-                                           it->data ? it->data->col_name : 0)) {
-                level_trigger_move_thing(thing_tp(it), me);
-            }
         }
     }
 

@@ -1199,25 +1199,25 @@ static inline uint8_t thing_is_action_trigger (thingp t)
     return (tp_is_action_trigger(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_action_trigger_wall (thingp t)
+static inline uint8_t thing_is_action_trigger_on_wall (thingp t)
 {
     verify(t);
 
-    return (tp_is_action_trigger_wall(thing_tp(t)));
+    return (tp_is_action_trigger_on_wall(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_action_trigger_hero (thingp t)
+static inline uint8_t thing_is_action_trigger_on_hero (thingp t)
 {
     verify(t);
 
-    return (tp_is_action_trigger_hero(thing_tp(t)));
+    return (tp_is_action_trigger_on_hero(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_action_trigger_monst (thingp t)
+static inline uint8_t thing_is_action_trigger_on_monst (thingp t)
 {
     verify(t);
 
-    return (tp_is_action_trigger_monst(thing_tp(t)));
+    return (tp_is_action_trigger_on_monst(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_action_down (thingp t)
@@ -1757,19 +1757,19 @@ static inline uint8_t thing_is_action_trigger_noverify (thingp t)
     return (t->tp->is_action_trigger);
 }
 
-static inline uint8_t thing_is_action_trigger_monst_noverify (thingp t)
+static inline uint8_t thing_is_action_trigger_on_monst_noverify (thingp t)
 {
-    return (t->tp->is_action_trigger_monst);
+    return (t->tp->is_action_trigger_on_monst);
 }
 
-static inline uint8_t thing_is_action_trigger_hero_noverify (thingp t)
+static inline uint8_t thing_is_action_trigger_on_hero_noverify (thingp t)
 {
-    return (t->tp->is_action_trigger_hero);
+    return (t->tp->is_action_trigger_on_hero);
 }
 
-static inline uint8_t thing_is_action_trigger_wall_noverify (thingp t)
+static inline uint8_t thing_is_action_trigger_on_wall_noverify (thingp t)
 {
-    return (t->tp->is_action_trigger_wall);
+    return (t->tp->is_action_trigger_on_wall);
 }
 
 static inline uint8_t thing_is_action_down_noverify (thingp t)
