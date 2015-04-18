@@ -407,7 +407,13 @@ wid_game_map_server_replace_tile (widp w,
     }
 
     if (item) {
-        memcpy(&t->item, &item, sizeof(item_t));
+        memcpy(&t->item, item, sizeof(item_t));
+        t->item.quantity = 1;
+
+        if (!item->id) {
+            DIE("trying to create thing %s with an item, "
+                "but the item has no id set in it", tp_name(tp));
+        }
     }
 
     wid_set_thing(child, t);

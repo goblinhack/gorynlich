@@ -605,15 +605,15 @@ void level_place_cloudkill (levelp level,
                            "data/things/cloudkill4");
 }
 
-void level_place_bomb (levelp level, 
-                       thingp owner,
-                       double x, double y)
+thingp level_place_bomb (levelp level, 
+                         thingp owner,
+                         double x, double y)
 {
     widp w = thing_place_behind(owner, 
                                 id_to_tp(THING_BOMB), 0 /* itemp */);
     if (!w) {
         ERR("could not place bomb");
-        return;
+        return (0);
     }
 
     thingp t = wid_get_thing(w);
@@ -625,6 +625,8 @@ void level_place_bomb (levelp level,
      */
 
     thing_wake(t);
+
+    return (t);
 }
 
 void level_place_small_cloudkill (levelp level, 

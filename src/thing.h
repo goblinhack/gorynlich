@@ -709,6 +709,11 @@ typedef struct thing_ {
      * Limit certain message types.
      */
     uint32_t message_open_door_need_key:1;
+
+    /*
+     * Do we have a light source?
+     */
+    uint32_t torch_light_radius_set:1;
 } thing;
 
 
@@ -2148,3 +2153,9 @@ thingp_get_interpolated_position(const thingp t, double *x, double *y);
 widp thing_place(thingp t, tpp tp, itemp item);
 widp thing_place_behind(thingp t, tpp tp, itemp item);
 void thing_dir(thingp t, double *dx, double *dy);
+
+/*
+ * thing_torch.c
+ */
+void thing_torch_update_count(thingp t, int force);
+void thing_torch_calculate_light(thingp t);
