@@ -9,8 +9,7 @@
  is_light_source
  is_stackable
  carried_as="data/things/torch"
- light_tint="orange"
- light_radius=0.1
+ light_radius=3.0
  is_animated
  tiles={
   tile={
