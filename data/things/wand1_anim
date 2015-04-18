@@ -8,8 +8,8 @@
  is_weapon_carry_anim
  is_light_source
  is_candle_light
- light_tint="white"
- light_radius=1.0
+ light_tint="purple"
+ light_radius=3.0
  tiles={
   tile={
    delay=200
