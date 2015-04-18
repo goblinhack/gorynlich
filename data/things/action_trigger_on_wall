@@ -1,16 +1,16 @@
 {
- short_name="action_trigger_wall"
- raw_name="action_trigger_wall"
+ short_name="action_trigger_on_wall"
+ raw_name="action_trigger_on_wall"
  tooltip="Triggers on moving wall"
  is_collision_map_small
  z_depth=6
  is_action
  is_visible_on_debug_only
- is_action_trigger_wall
+ is_action_trigger_on_wall
  is_action_trigger
  tiles={
   tile={
-   tile="action_trigger_wall"
+   tile="action_trigger_on_wall"
   }
  }
 }

@@ -2370,9 +2370,9 @@ static uint8_t resource_init_last (void *context)
         "action_text",
         "action_zap",
         "action_sleep",
-        "action_trigger_monst",
-        "action_trigger_wall",
-        "action_trigger_hero",
+        "action_trigger_on_monst",
+        "action_trigger_on_wall",
+        "action_trigger_on_hero",
         "action_down",
         "action_right",
         "action_up",
@@ -2951,9 +2951,9 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_ACTION_SLEEP, "data/things/action_sleep");
     tp_load(&THING_ACTION_TEXT, "data/things/action_text");
     tp_load(&THING_ACTION_ZAP, "data/things/action_zap");
-    tp_load(&THING_ACTION_TRIGGER_MONST, "data/things/action_trigger_monst");
-    tp_load(&THING_ACTION_TRIGGER_HERO, "data/things/action_trigger_hero");
-    tp_load(&THING_ACTION_TRIGGER_WALL, "data/things/action_trigger_wall");
+    tp_load(&THING_ACTION_TRIGGER_MONST, "data/things/action_trigger_on_monst");
+    tp_load(&THING_ACTION_TRIGGER_HERO, "data/things/action_trigger_on_hero");
+    tp_load(&THING_ACTION_TRIGGER_WALL, "data/things/action_trigger_on_wall");
 
     return (true);
 }
