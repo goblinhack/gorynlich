@@ -146,6 +146,7 @@ static void explosion_flood (levelp level, uint8_t x, uint8_t y)
     explosion_flood(level, x, y+1);
 }
 
+#define DEBUG_EXPLOSION
 #ifdef DEBUG_EXPLOSION
 static FILE *fp;
 
@@ -267,17 +268,21 @@ static void level_place_explosion_ (levelp level,
     this_explosion_radius = radius;
     explosion_flood(level, x, y);
 
-    uint32_t ix, iy;
+    int ix, iy;
 
 #ifdef DEBUG_EXPLOSION
     if (0) {
         debug_explosion(level, x, y);
     }
 
-    printf("explosion at x %d y %d",(int)x,(int)y);
+    if (level == server_level) {
+        printf("server explosion at x %d y %d\n",(int)x,(int)y);
+    } else {
+        printf("client explosion at x %d y %d\n",(int)x,(int)y);
+    }
 
-    for (iy = 1; iy < MAP_HEIGHT - 1; iy++) {
-        for (ix = 1; ix < MAP_WIDTH - 1; ix++) {
+    for (iy = 0; iy < MAP_HEIGHT; iy++) {
+        for (ix = 0; ix < MAP_WIDTH; ix++) {
             if (((int)x == ix) && ((int)y == iy)) {
                 printf("*");
                 continue;
@@ -325,7 +330,7 @@ static void level_place_explosion_ (levelp level,
         return;
     }
 
-    for (ix = x - radius; ix < x + radius - 1; ix++) {
+    for (ix = x - radius - 1; ix < x + radius - 1; ix++) {
         if (ix < 1) {
             continue;
         }
@@ -334,7 +339,7 @@ static void level_place_explosion_ (levelp level,
             continue;
         }
 
-        for (iy = y - radius; iy < y + radius - 1; iy++) {
+        for (iy = y - radius - 1; iy < y + radius - 1; iy++) {
                                 
             if (iy < 1) {
                 continue;
@@ -415,7 +420,7 @@ static void level_place_spatter (levelp level,
 
     int ix, iy;
 
-    for (ix = x - radius; ix < x + radius - 1; ix++) {
+    for (ix = x - radius - 1; ix < x + radius - 1; ix++) {
         if (ix < 1) {
             continue;
         }
@@ -424,7 +429,7 @@ static void level_place_spatter (levelp level,
             continue;
         }
 
-        for (iy = y - radius; iy < y + radius - 1; iy++) {
+        for (iy = y - radius - 1; iy < y + radius - 1; iy++) {
                                 
             if (iy < 1) {
                 continue;
@@ -609,11 +614,16 @@ void level_place_bomb (levelp level,
                                 id_to_tp(THING_BOMB), 0 /* itemp */);
     if (!w) {
         ERR("could not place bomb");
+        return;
     }
 
     thingp t = wid_get_thing(w);
 
+    /*
+     * Set no owner. Bombs should kill their owner too!
+     *
     thing_set_owner(t, owner);
+     */
 
     thing_wake(t);
 }
