@@ -510,6 +510,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_UINT32(ctx, "id_per_level", t->id_per_level);
 
         GET_OPT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
+        GET_OPT_NAMED_FLOAT(ctx, "scale", t->scale);
 
         uint32_t quantity;
 
@@ -584,7 +585,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
         GET_OPT_NAMED_BITFIELD(ctx, "is_sleeping", t->is_sleeping);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_saw", t->is_saw);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_sawblade", t->is_sawblade);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_text", t->is_action_text);
         GET_OPT_NAMED_BITFIELD(ctx, "is_visible_on_debug_only", t->is_visible_on_debug_only);
         GET_OPT_NAMED_BITFIELD(ctx, "is_action", t->is_action);
@@ -705,7 +706,8 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "stats_defense", t->stats.defense);
     PUT_NAMED_INT32(ctx, "hp_per_level", t->hp_per_level);
     PUT_NAMED_INT32(ctx, "id_per_level", t->id_per_level);
-    PUT_NAMED_INT32(ctx, "light_radius", t->light_radius);
+    PUT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
+    PUT_NAMED_FLOAT(ctx, "scale", t->scale);
     PUT_NAMED_INT32(ctx, "quantity", t->item.quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
@@ -776,7 +778,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
     PUT_NAMED_BITFIELD(ctx, "is_sleeping", t->is_sleeping);
     PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
-    PUT_NAMED_BITFIELD(ctx, "is_saw", t->is_saw);
+    PUT_NAMED_BITFIELD(ctx, "is_sawblade", t->is_sawblade);
     PUT_NAMED_BITFIELD(ctx, "is_action_text", t->is_action_text);
     PUT_NAMED_BITFIELD(ctx, "is_visible_on_debug_only", t->is_visible_on_debug_only);
     PUT_NAMED_BITFIELD(ctx, "is_action", t->is_action);
@@ -1011,6 +1013,15 @@ uint32_t tp_get_id_per_level (tpp t)
 float tp_get_light_radius (tpp t)
 {
     return (t->light_radius);
+}
+
+float tp_get_scale (tpp t)
+{
+    if (!t->scale) {
+        return (1.0);
+    }
+
+    return (t->scale);
 }
 
 uint32_t tp_get_quantity (tpp t)

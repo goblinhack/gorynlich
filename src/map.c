@@ -384,9 +384,9 @@ uint8_t map_is_bomb_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_bomb));
 }
 
-uint8_t map_is_saw_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_sawblade_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_saw));
+    return (map_is_x_at(level, x, y, tp_is_sawblade));
 }
 
 uint8_t map_is_action_text_at (levelp level, int32_t x, int32_t y)
@@ -851,9 +851,9 @@ thingp map_thing_is_bomb_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_bomb));
 }
 
-thingp map_thing_is_saw_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_sawblade_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_saw));
+    return (map_thing_is_x_at(level, x, y, tp_is_sawblade));
 }
 
 thingp map_thing_is_action_text_at (levelp level, int32_t x, int32_t y)
@@ -1334,9 +1334,9 @@ tree_rootp map_all_things_is_bomb_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_bomb));
 }
 
-tree_rootp map_all_things_is_saw_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_sawblade_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_saw));
+    return (map_all_things_is_x_at(level, x, y, tp_is_sawblade));
 }
 
 tree_rootp map_all_things_is_action_text_at (levelp level, int32_t x, int32_t y)
@@ -1909,7 +1909,7 @@ tpp map_find_bomb_at (levelp level, int32_t x, int32_t y, widp *w)
 
 tpp map_find_saw_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_saw, w));
+    return (map_find_x_at(level, x, y, tp_is_sawblade, w));
 }
 
 tpp map_find_action_text_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2738,9 +2738,9 @@ tree_rootp map_all_things_is_bomb (levelp level)
     return (map_all_things_is_x(level, tp_is_bomb));
 }
 
-tree_rootp map_all_things_is_saw (levelp level)
+tree_rootp map_all_things_is_sawblade (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_saw));
+    return (map_all_things_is_x(level, tp_is_sawblade));
 }
 
 tree_rootp map_all_things_is_action_text (levelp level)
