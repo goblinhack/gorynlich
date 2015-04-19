@@ -267,7 +267,7 @@ if (GET_PEEK_NAME(D, N))                                \
 #define PUT_NAMED_INT64(D, N, V)      marshal_named_int64((D), (N), (V))
 
 #define PUT_FLOAT(D, V)               marshal_float((D), (V))
-#define PUT_NFLOAT(D, N, V)           marshal_named_float((D), (N), (V))
+#define PUT_NAMED_FLOAT(D, N, V)           marshal_named_float((D), (N), (V))
 
 #define PUT_PTR(D, V)                 marshal_ptr((D), (V))
 #define PUT_NAMED_PTR(D, N, V)        marshal_named_ptr((D), (N), (V))

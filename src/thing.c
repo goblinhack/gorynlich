@@ -40,7 +40,7 @@ uint16_t THING_WALL5;
 uint16_t THING_WALL6;
 uint16_t THING_DOOR1;
 uint16_t THING_DOOR2;
-uint16_t THING_SAW1;
+uint16_t THING_SAWBLADE1;
 uint16_t THING_NOENTRY;
 uint16_t THING_APPLE1;
 uint16_t THING_APPLE2;
@@ -2104,7 +2104,7 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
     if (thing_is_monst(t)               || 
         thing_is_mob_spawner(t)         || 
         thing_is_wall(t)                ||
-        thing_is_saw(t)                 ||
+        thing_is_sawblade(t)                 ||
         thing_is_door(t)) {
 
         /*

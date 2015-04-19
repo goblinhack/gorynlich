@@ -224,12 +224,12 @@ static uint8_t resource_init_30 (void *context)
 
 static uint8_t resource_init_31 (void *context)
 {
-    return (tex_load_tiled("data/gfx/saw.png",
-                           "saw",
+    return (tex_load_tiled("data/gfx/sawblade.png",
+                           "sawblade",
                            512, 512) != 0) &&
            (tex_load_tiled_black_and_white(
-                           "data/gfx/saw.png",
-                           "saw_black_and_white",
+                           "data/gfx/sawblade.png",
+                           "sawblade_black_and_white",
                            512, 512) != 0);
 }
 
@@ -2635,30 +2635,30 @@ static uint8_t resource_init_last (void *context)
                   TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(poison_tiles), poison_tiles);
 
-    static const char *saw_tiles[] = {
+    static const char *sawblade_tiles[] = {
         // --------------------------------------------------------------------
-        "saw1.1",
-        "saw1.2",
-        "saw1.3",
-        "saw1.4",
-        "saw1.5",
-        "saw1.6",
-        "saw1.7",
-        "saw1.8",
-        "saw1.9",
-        "saw1.10",
-        "saw1.11",
-        "saw1.12",
-        "saw1.13",
-        "saw1.14",
-        "saw1.15",
-        "saw1.16",
+        "sawblade1.1",
+        "sawblade1.2",
+        "sawblade1.3",
+        "sawblade1.4",
+        "sawblade1.5",
+        "sawblade1.6",
+        "sawblade1.7",
+        "sawblade1.8",
+        "sawblade1.9",
+        "sawblade1.10",
+        "sawblade1.11",
+        "sawblade1.12",
+        "sawblade1.13",
+        "sawblade1.14",
+        "sawblade1.15",
+        "sawblade1.16",
     };
 
-    tile_load_arr("saw", 
-                  "saw_black_and_white",
+    tile_load_arr("sawblade", 
+                  "sawblade_black_and_white",
                   128, 128,
-                  ARRAY_SIZE(saw_tiles), saw_tiles);
+                  ARRAY_SIZE(sawblade_tiles), sawblade_tiles);
 
     static const char *anim_man_tiles[] = {
         // --------------------------------------------------------------------
@@ -2810,7 +2810,7 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_PIPE, "data/things/pipe");
     tp_load(&THING_BRAZIER, "data/things/brazier");
     tp_load(&THING_EXIT1, "data/things/exit1");
-    tp_load(&THING_SAW1, "data/things/saw1");
+    tp_load(&THING_SAWBLADE1, "data/things/sawblade1");
 #if 0
     tp_load(&THING_EXIT2, "data/things/exit2");
     tp_load(&THING_EXIT3, "data/things/exit3");

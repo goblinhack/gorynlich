@@ -182,9 +182,20 @@ typedef struct tp_ {
 
     uint32_t d10000_chance_of_appearing;
     uint32_t ppp2;
+
     uint32_t hp_per_level;
     uint32_t id_per_level;
+
+    /*
+     * How much light it gives off in tiles.
+     */
     float light_radius;
+
+    /*
+     * How large or small the thing is blitted as.
+     */
+    float scale;
+
     uint32_t hit_priority;
     uint32_t weapon_fire_delay_tenths;
     uint32_t swing_distance_from_player;
@@ -247,7 +258,7 @@ typedef struct tp_ {
     uint8_t is_rrr19:1;
     uint8_t is_sleeping:1;
     uint8_t is_bomb:1;
-    uint8_t is_saw:1;
+    uint8_t is_sawblade:1;
     uint8_t is_action_text:1;
     uint8_t is_visible_on_debug_only:1;
     uint8_t is_action:1;
@@ -366,6 +377,7 @@ uint32_t tp_get_stats_defense(tpp);
 uint32_t tp_get_d10000_chance_of_appearing(tpp);
 uint32_t tp_get_ppp2(tpp);
 float tp_get_light_radius(tpp);
+float tp_get_scale(tpp);
 uint32_t tp_get_quantity(tpp);
 uint32_t tp_get_hit_priority(tpp);
 uint32_t tp_get_weapon_fire_delay_tenths(tpp);
@@ -677,9 +689,9 @@ static inline uint8_t tp_is_bomb (tpp t)
     return (t->is_bomb);
 }
 
-static inline uint8_t tp_is_saw (tpp t)
+static inline uint8_t tp_is_sawblade (tpp t)
 {
-    return (t->is_saw);
+    return (t->is_sawblade);
 }
 
 static inline uint8_t tp_is_action_text (tpp t)
