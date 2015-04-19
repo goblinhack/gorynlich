@@ -348,6 +348,15 @@ void level_trigger_move_thing (tpp me, thingp t)
 
     double speed = 1.0;
 
+    /*
+     * A trigger on top of a floor tile usually means the trigger is going to 
+     * be used for something that moves under the tile. If we remove this 
+     * check then the floor tile itself will move.
+     */
+    if (thing_is_floor(t)) {
+        return;
+    }
+
     if (tp_is_action_left(me)) {
         t->dx = -speed;
         t->dy = 0;

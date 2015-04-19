@@ -1899,6 +1899,9 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
 {
     thingp orig_hitter = hitter;
 
+if (0)  {
+CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
+}
     verify(t);
     if (hitter) {
         verify(hitter);
@@ -2101,6 +2104,7 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     if (thing_is_monst(t)               || 
         thing_is_mob_spawner(t)         || 
         thing_is_wall(t)                ||
+        thing_is_saw(t)                 ||
         thing_is_door(t)) {
 
         /*
