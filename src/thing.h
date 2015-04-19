@@ -327,6 +327,7 @@ extern uint16_t THING_WALL5;
 extern uint16_t THING_WALL6;
 extern uint16_t THING_DOOR1;
 extern uint16_t THING_DOOR2;
+extern uint16_t THING_SAW1;
 extern uint16_t THING_NOENTRY;
 extern uint16_t THING_APPLE1;
 extern uint16_t THING_APPLE2;
@@ -1155,11 +1156,11 @@ static inline uint8_t thing_is_bomb (thingp t)
     return (tp_is_bomb(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr22 (thingp t)
+static inline uint8_t thing_is_saw (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr22(thing_tp(t)));
+    return (tp_is_saw(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_action_text (thingp t)
@@ -1732,9 +1733,9 @@ static inline uint8_t thing_is_bomb_noverify (thingp t)
     return (t->tp->is_bomb);
 }
 
-static inline uint8_t thing_is_rrr22_noverify (thingp t)
+static inline uint8_t thing_is_saw_noverify (thingp t)
 {
-    return (t->tp->is_rrr22);
+    return (t->tp->is_saw);
 }
 
 static inline uint8_t thing_is_action_text_noverify (thingp t)
