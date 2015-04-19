@@ -191,13 +191,13 @@ static void wid_console_wid_create (void)
 
     {
         fpoint tl = {0.0f, 0.0f};
-        fpoint br = {0.7f, 0.5f};
+        fpoint br = {1.0f, 0.5f};
         color c;
 
         wid_console_window = wid_new_square_window("wid_console");
 
         c = BLACK;
-        c.a = 200;
+        c.a = 100;
 
         wid_set_mode(wid_console_window, WID_MODE_NORMAL);
         wid_set_color(wid_console_window, WID_COLOR_TL, c);
@@ -269,7 +269,7 @@ static void wid_console_wid_create (void)
             wid_set_tl_br_pct(child, tl, br);
             wid_set_text_lhs(child, true);
             wid_set_text_bot(child, true);
-            wid_set_text_fixed_width(child, false);
+            wid_set_text_fixed_width(child, true);
             wid_set_font(child, font);
 
             wid_set_prev(child, prev);
@@ -287,7 +287,7 @@ static void wid_console_wid_create (void)
                 wid_set_tl_br_pct(prefix, tl, br);
                 wid_set_text_lhs(prefix, true);
                 wid_set_text_bot(prefix, true);
-                wid_set_text_fixed_width(prefix, false);
+                wid_set_text_fixed_width(prefix, true);
                 wid_set_font(prefix, font);
                 wid_set_text(prefix, ">");
 
