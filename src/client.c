@@ -37,15 +37,9 @@ uint32_t client_player_died;
 static void client_socket_tx_ping(void);
 static uint8_t client_init_done;
 static void client_poll(void);
-static uint8_t client_set_name(tokens_t *tokens, void *context);
-static uint8_t client_set_pclass(tokens_t *tokens, void *context);
 static uint8_t client_shout(tokens_t *tokens, void *context);
 static uint8_t client_tell(tokens_t *tokens, void *context);
 static uint8_t client_player_show(tokens_t *tokens, void *context);
-static uint8_t client_join(tokens_t *tokens, void *context);
-static uint8_t client_leave(tokens_t *tokens, void *context);
-static uint8_t client_open(tokens_t *tokens, void *context);
-static uint8_t client_close(tokens_t *tokens, void *context);
 static uint8_t client_socket_tell(char *from, char *to, char *msg);
 static void client_check_still_in_game(void);
 
@@ -76,24 +70,6 @@ uint8_t client_init (void)
             return (false);
         }
     }
-
-    command_add(client_set_name, "set name [A-Za-z0-9_-]*",
-                "set player name");
-
-    command_add(client_set_pclass, "set class [A-Za-z0-9_-]*",
-                "set player class e.g warrior");
-
-    command_add(client_open, "open [A-Za-z0-9_-.]* [0-9_-]*",
-                "loosely connect to server <ip> <port>");
-
-    command_add(client_close, "close [A-Za-z0-9_-.]* [0-9_-]*",
-                "close a connect to server <ip> <port>");
-
-    command_add(client_join, "join [A-Za-z0-9_-.]* [0-9_-]*",
-                "join server <ip> <port>");
-
-    command_add(client_leave, "leave current server game",
-                "leave game");
 
     command_add(client_shout, "shout [A-Za-z0-9_-]*",
                 "shout to players");
@@ -239,78 +215,6 @@ void client_tick (void)
     if (player) {
         thing_stats_client_modified(&player->stats);
     }
-}
-
-/*
- * User has entered a command, run it
- */
-static uint8_t client_set_name (tokens_t *tokens, void *context)
-{
-    char *s = tokens->args[2];
-
-    if (!s || !*s) {
-        DIE("need to set a name for client");
-        return (false);
-    }
-
-    uint8_t r = client_socket_set_name(s);
-
-    return (r);
-}
-
-/*
- * User has entered a command, run it
- */
-static uint8_t client_set_pclass (tokens_t *tokens, void *context)
-{
-    char *s = tokens->args[2];
-
-    if (!s || !*s) {
-        WARN("need to set a string");
-        return (false);
-    }
-
-    uint8_t r = client_socket_set_pclass(s);
-
-    return (r);
-}
-
-static uint8_t client_socket_open (char *host, char *port)
-{
-    uint32_t portno;
-    gsocketp s = 0;
-    const char *h;
-
-    h = host;
-    if (!h || !*h) {
-        h = SERVER_DEFAULT_HOST;
-    }
-
-    if (port && *port) {
-        portno = atoi(port);
-    } else {
-        portno = global_config.server_port;
-    }
-
-    LOG("Client: Trying to resolve server address %s:%u", h, portno);
-
-    if (address_resolve(&server_address, h, portno)) {
-        MSG_BOX("Open socket, cannot resolve %s:%u", h, portno);
-        return (false);
-    }
-
-    LOG("Client: Connecting to server address %s:%u", h, portno);
-
-    /*
-     * Connector.
-     */
-    s = socket_connect_from_client(server_address);
-    if (!s) {
-        WARN("Client failed to connect");
-        return (false);
-    }
-
-    return (true);
 }
 
 uint8_t client_socket_close (char *host, char *port)
@@ -654,55 +558,6 @@ uint8_t client_socket_set_pclass (const char *pclass)
     }
 
     return (true);
-}
-
-/*
- * User has entered a command, run it
- */
-uint8_t client_open (tokens_t *tokens, void *context)
-{
-    char *host = tokens->args[1];
-    char *port = tokens->args[2];
-
-    uint8_t r = client_socket_open(host, port);
-
-    return (r);
-}
-
-/*
- * User has entered a command, run it
- */
-uint8_t client_close (tokens_t *tokens, void *context)
-{
-    char *host = tokens->args[1];
-    char *port = tokens->args[2];
-
-    uint8_t r = client_socket_close(host, port);
-
-    return (r);
-}
-
-/*
- * User has entered a command, run it
- */
-uint8_t client_join (tokens_t *tokens, void *context)
-{
-    char *host = tokens->args[1];
-    char *port = tokens->args[2];
-
-    uint8_t r = client_socket_join(host, port, 0, false /* quiet */);
-
-    return (r);
-}
-
-/*
- * User has entered a command, run it
- */
-uint8_t client_leave (tokens_t *tokens, void *context)
-{
-    uint8_t r = client_socket_leave();
-
-    return (r);
 }
 
 /*
