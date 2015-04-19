@@ -293,6 +293,7 @@ typedef struct tp_ {
     uint8_t is_effect_pulse:1;
     uint8_t is_effect_rotate_4way:1;
     uint8_t is_effect_rotate_2way:1;
+    uint8_t has_dir_anim:1;
 
     thing_tilep tilep_join[IS_JOIN_MAX][IS_JOIN_ALT_MAX];
     tilep tilep_join_tile[IS_JOIN_MAX][IS_JOIN_ALT_MAX];

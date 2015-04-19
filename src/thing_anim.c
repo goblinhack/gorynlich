@@ -21,6 +21,7 @@ void thing_animate (thingp t)
     thing_tilep tile;
     tree_rootp tiles;
     const char *command;
+    tpp tp = thing_tp(t);
 
     tile = thing_current_tile(t);
 
@@ -112,42 +113,42 @@ void thing_animate (thingp t)
         } else if (thing_tile_is_dying(tile)) {
             tile = thing_tile_next(tiles, tile);
             continue;
-        } else if (thing_is_dir_tl(t)) {
+        } else if (tp->has_dir_anim && thing_is_dir_tl(t)) {
             if (!thing_tile_is_dir_tl(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
-        } else if (thing_is_dir_bl(t)) {
+        } else if (tp->has_dir_anim && thing_is_dir_bl(t)) {
             if (!thing_tile_is_dir_bl(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
-        } else if (thing_is_dir_br(t)) {
+        } else if (tp->has_dir_anim && thing_is_dir_br(t)) {
             if (!thing_tile_is_dir_br(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
-        } else if (thing_is_dir_tr(t)) {
+        } else if (tp->has_dir_anim && thing_is_dir_tr(t)) {
             if (!thing_tile_is_dir_tr(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
-        } else if (thing_is_dir_up(t)) {
+        } else if (tp->has_dir_anim && thing_is_dir_up(t)) {
             if (!thing_tile_is_dir_up(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
-        } else if (thing_is_dir_down(t)) {
+        } else if (tp->has_dir_anim && thing_is_dir_down(t)) {
             if (!thing_tile_is_dir_down(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
-        } else if (thing_is_dir_left(t)) {
+        } else if (tp->has_dir_anim && thing_is_dir_left(t)) {
             if (!thing_tile_is_dir_left(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
-        } else if (thing_is_dir_right(t)) {
+        } else if (tp->has_dir_anim && thing_is_dir_right(t)) {
             if (!thing_tile_is_dir_right(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
