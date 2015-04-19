@@ -12,55 +12,55 @@
  damage=20
  is_sawblade
  is_animated
- polymorph_on_death="data/things/sawblade2"
+ polymorph_on_death="data/things/sawblade3"
  tiles={
   tile={
-   tile="sawblade1.1"
+   tile="sawblade2.1"
   }
   tile={
-   tile="sawblade1.2"
+   tile="sawblade2.2"
   }
   tile={
-   tile="sawblade1.3"
+   tile="sawblade2.3"
   }
   tile={
-   tile="sawblade1.4"
+   tile="sawblade2.4"
   }
   tile={
-   tile="sawblade1.5"
+   tile="sawblade2.5"
   }
   tile={
-   tile="sawblade1.6"
+   tile="sawblade2.6"
   }
   tile={
-   tile="sawblade1.7"
+   tile="sawblade2.7"
   }
   tile={
-   tile="sawblade1.8"
+   tile="sawblade2.8"
   }
   tile={
-   tile="sawblade1.9"
+   tile="sawblade2.9"
   }
   tile={
-   tile="sawblade1.10"
+   tile="sawblade2.10"
   }
   tile={
-   tile="sawblade1.11"
+   tile="sawblade2.11"
   }
   tile={
-   tile="sawblade1.12"
+   tile="sawblade2.12"
   }
   tile={
-   tile="sawblade1.13"
+   tile="sawblade2.13"
   }
   tile={
-   tile="sawblade1.14"
+   tile="sawblade2.14"
   }
   tile={
-   tile="sawblade1.15"
+   tile="sawblade2.15"
   }
   tile={
-   tile="sawblade1.16"
+   tile="sawblade2.16"
   }
  }
 }
