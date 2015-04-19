@@ -55,6 +55,10 @@ add bot to test out multiplayer ?
 different profiles for level generation
 mining?
 
+Sun Apr 19 10:16:39 EDT 2015
+- saw blade not spinning on anim
+- start default as white trigger
+
 Sat Apr 18 08:15:59 EDT 2015
 - cannot collect torch after dropping
 - no light source for weapons
