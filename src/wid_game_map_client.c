@@ -945,8 +945,12 @@ wid_game_map_client_replace_tile (widp w,
         wid_scaling_blit_to_pct_in(child, 1.0, 1.1, 1000, 10000);
     }
 
-    if (thing_is_saw(t)) {
-        wid_scaling_blit_to_pct_in(child, 0.2, 0.2, 500, 9999999);
+    /*
+     * Does it appear as a different size on screen?
+     */
+    double scale = tp_get_scale(tp);
+    if (scale != 1.0) {
+        wid_scaling_blit_to_pct_in(child, scale, scale, 500, 9999999);
     }
 
     if (thing_is_explosion(t)) {

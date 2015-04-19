@@ -1683,9 +1683,9 @@ uint32_t level_count_is_bomb (levelp level)
     return (level_count_is_x(level, tp_is_bomb));
 }
 
-uint32_t level_count_is_saw (levelp level)
+uint32_t level_count_is_sawblade (levelp level)
 {
-    return (level_count_is_x(level, tp_is_saw));
+    return (level_count_is_x(level, tp_is_sawblade));
 }
 
 uint32_t level_count_is_action_text (levelp level)

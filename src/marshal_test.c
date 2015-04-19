@@ -110,7 +110,7 @@ static void marshal_a (marshal_p ctx, struct A *a)
     PUT_NAMED_STRING(ctx, "b", a->b);
     PUT_NAME(ctx, "c");
     PUT_BRA(ctx); /* { */
-        PUT_NFLOAT(ctx, "d", a->c.d);
+        PUT_NAMED_FLOAT(ctx, "d", a->c.d);
         PUT_NAME(ctx, "e");
         PUT_BRA(ctx); /* { */
             PUT_NAMED_STRING(ctx, "f", a->c.e.f);
