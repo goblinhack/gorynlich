@@ -41,6 +41,9 @@ uint16_t THING_WALL6;
 uint16_t THING_DOOR1;
 uint16_t THING_DOOR2;
 uint16_t THING_SAWBLADE1;
+uint16_t THING_SAWBLADE2;
+uint16_t THING_SAWBLADE3;
+uint16_t THING_SAWBLADE4;
 uint16_t THING_NOENTRY;
 uint16_t THING_APPLE1;
 uint16_t THING_APPLE2;
@@ -1765,10 +1768,12 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
     /*
      * Take note of the hit so we can send an event to the client.
      */
-    thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_SUCCESS);
+    if (thing_is_player(t)) {
+        thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_SUCCESS);
 
-    if (damage > thing_stats_get_hp(t) / 10) {
-        thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_CRIT);
+        if (damage > thing_stats_get_hp(t) / 10) {
+            thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_CRIT);
+        }
     }
 
     /*

@@ -233,6 +233,39 @@ static uint8_t resource_init_31 (void *context)
                            512, 512) != 0);
 }
 
+static uint8_t resource_init_32 (void *context)
+{
+    return (tex_load_tiled("data/gfx/sawblade2.png",
+                           "sawblade2",
+                           512, 512) != 0) &&
+           (tex_load_tiled_black_and_white(
+                           "data/gfx/sawblade2.png",
+                           "sawblade2_black_and_white",
+                           512, 512) != 0);
+}
+
+static uint8_t resource_init_33 (void *context)
+{
+    return (tex_load_tiled("data/gfx/sawblade3.png",
+                           "sawblade3",
+                           512, 512) != 0) &&
+           (tex_load_tiled_black_and_white(
+                           "data/gfx/sawblade3.png",
+                           "sawblade3_black_and_white",
+                           512, 512) != 0);
+}
+
+static uint8_t resource_init_34 (void *context)
+{
+    return (tex_load_tiled("data/gfx/sawblade4.png",
+                           "sawblade4",
+                           512, 512) != 0) &&
+           (tex_load_tiled_black_and_white(
+                           "data/gfx/sawblade4.png",
+                           "sawblade4_black_and_white",
+                           512, 512) != 0);
+}
+
 static uint8_t resource_init_last (void *context)
 {
     static const char *small_tiles[] = {
@@ -2660,6 +2693,81 @@ static uint8_t resource_init_last (void *context)
                   128, 128,
                   ARRAY_SIZE(sawblade_tiles), sawblade_tiles);
 
+    static const char *sawblade2_tiles[] = {
+        // --------------------------------------------------------------------
+        "sawblade2.1",
+        "sawblade2.2",
+        "sawblade2.3",
+        "sawblade2.4",
+        "sawblade2.5",
+        "sawblade2.6",
+        "sawblade2.7",
+        "sawblade2.8",
+        "sawblade2.9",
+        "sawblade2.10",
+        "sawblade2.11",
+        "sawblade2.12",
+        "sawblade2.13",
+        "sawblade2.14",
+        "sawblade2.15",
+        "sawblade2.16",
+    };
+
+    tile_load_arr("sawblade2", 
+                  "sawblade2_black_and_white",
+                  128, 128,
+                  ARRAY_SIZE(sawblade2_tiles), sawblade2_tiles);
+
+    static const char *sawblade3_tiles[] = {
+        // --------------------------------------------------------------------
+        "sawblade3.1",
+        "sawblade3.2",
+        "sawblade3.3",
+        "sawblade3.4",
+        "sawblade3.5",
+        "sawblade3.6",
+        "sawblade3.7",
+        "sawblade3.8",
+        "sawblade3.9",
+        "sawblade3.10",
+        "sawblade3.11",
+        "sawblade3.12",
+        "sawblade3.13",
+        "sawblade3.14",
+        "sawblade3.15",
+        "sawblade3.16",
+    };
+
+    tile_load_arr("sawblade3", 
+                  "sawblade3_black_and_white",
+                  128, 128,
+                  ARRAY_SIZE(sawblade3_tiles), sawblade3_tiles);
+
+    static const char *sawblade4_tiles[] = {
+        // --------------------------------------------------------------------
+        "sawblade4.1",
+        "sawblade4.2",
+        "sawblade4.3",
+        "sawblade4.4",
+        "sawblade4.5",
+        "sawblade4.6",
+        "sawblade4.7",
+        "sawblade4.8",
+        "sawblade4.9",
+        "sawblade4.10",
+        "sawblade4.11",
+        "sawblade4.12",
+        "sawblade4.13",
+        "sawblade4.14",
+        "sawblade4.15",
+        "sawblade4.16",
+    };
+
+    tile_load_arr("sawblade4", 
+                  "sawblade4_black_and_white",
+                  128, 128,
+                  ARRAY_SIZE(sawblade4_tiles), sawblade4_tiles);
+
     static const char *anim_man_tiles[] = {
         // --------------------------------------------------------------------
         "anim_man1.1",
@@ -2811,6 +2919,9 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_BRAZIER, "data/things/brazier");
     tp_load(&THING_EXIT1, "data/things/exit1");
     tp_load(&THING_SAWBLADE1, "data/things/sawblade1");
+    tp_load(&THING_SAWBLADE2, "data/things/sawblade2");
+    tp_load(&THING_SAWBLADE3, "data/things/sawblade3");
+    tp_load(&THING_SAWBLADE4, "data/things/sawblade4");
 #if 0
     tp_load(&THING_EXIT2, "data/things/exit2");
     tp_load(&THING_EXIT3, "data/things/exit3");
@@ -3097,6 +3208,15 @@ uint8_t resource_init (void)
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_31,
                           0, "resource_init_31");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_32,
+                          0, "resource_init_32");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_33,
+                          0, "resource_init_33");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_34,
+                          0, "resource_init_34");
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_last,
                           0, "resource_init_last");
