@@ -6,6 +6,7 @@
  speed=5
  is_shadow_caster
  hit_priority=9
+ max_hp=20
  damage=20
  is_saw
  is_animated
