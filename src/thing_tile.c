@@ -117,23 +117,31 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
     if (up) {
         if (left) {
             t->dir = THING_DIR_TL;
+            t->has_dir_anim = true;
         } else if (right) {
             t->dir = THING_DIR_TR;
+            t->has_dir_anim = true;
         } else {
             t->dir = THING_DIR_UP;
+            t->has_dir_anim = true;
         }
     } else if (down) {
         if (left) {
             t->dir = THING_DIR_BL;
+            t->has_dir_anim = true;
         } else if (right) {
             t->dir = THING_DIR_BR;
+            t->has_dir_anim = true;
         } else {
             t->dir = THING_DIR_DOWN;
+            t->has_dir_anim = true;
         }
     } else if (left) {
         t->dir = THING_DIR_LEFT;
+        t->has_dir_anim = true;
     } else if (right) {
         t->dir = THING_DIR_RIGHT;
+        t->has_dir_anim = true;
     }
 
     GET_KET(ctx);
@@ -267,6 +275,10 @@ void demarshal_thing_tiles (demarshal_p ctx, tpp t)
         }
 
         demarshal_thing_tile(ctx, tile);
+
+        if (tile->has_dir_anim) {
+            t->has_dir_anim = true;
+        }
     }
 
     GET_KET(ctx);

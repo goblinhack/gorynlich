@@ -418,7 +418,14 @@ wid_game_map_server_replace_tile (widp w,
 
     wid_set_thing(child, t);
 
+    /*
+     * Round the co-ordinates to a location the client can represent.
+     */
     thing_round(t, &x, &y);
+
+    if (thing_is_saw(t)) {
+        wid_scaling_blit_to_pct_in(child, 0.2, 0.2, 500, 9999999);
+    }
 
     thing_server_wid_update(t, x, y, true /* is_new */);
 
