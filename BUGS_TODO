@@ -1,7 +1,5 @@
 --------------------------------------- plan for apr --------------------------------------
-- can't shoot through diagonal walls
-- check text pop up can do color
-- super meat boy style spinning blades of death on invisible tracks
+- console font is not really fixed width
 --------------------------------------- plan for may --------------------------------------
 - stats need to do something
 - magic attack - green fireball?
@@ -56,6 +54,9 @@ different profiles for level generation
 mining?
 
 Sun Apr 19 10:16:39 EDT 2015
+- check text pop up can do color
+- super meat boy style spinning blades of death on invisible tracks
+- can't shoot through diagonal walls
 - saw blade not spinning on anim
 - start default as white trigger
 

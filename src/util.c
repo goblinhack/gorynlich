@@ -88,6 +88,11 @@ char *dupstr_ (const char *in,
                const char *func,
                const uint32_t line)
 {
+    if (!in) {
+        ERR("no string to duplicate");
+        return (0);
+    }
+
     char *ptr = strdup(in);
 #ifdef ENABLE_LEAKCHECK
     uint32_t size = (typeof(size)) strlen(in);
