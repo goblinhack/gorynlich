@@ -773,14 +773,17 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 }
             }
 
-            if (thing_is_wall(me) || thing_is_saw(me)) {
+            if (thing_is_wall(me)) {
                 /*
                  * Allow moving walls to crush!
                  */
-                if (!thing_is_wall(it) &&
-                    !thing_is_saw(it)) {
+                if (!thing_is_wall(it)) {
                     continue;
                 }
+            }
+
+            if (thing_is_saw(me)) {
+                continue;
             }
 
             if (!things_overlap(me, nx, ny, it)) {

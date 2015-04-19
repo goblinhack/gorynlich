@@ -5,9 +5,8 @@
  z_depth=4
  speed=5
  is_shadow_caster
- is_collision_map_medium
  hit_priority=9
- damage=50
+ damage=20
  is_saw
  is_animated
  tiles={
