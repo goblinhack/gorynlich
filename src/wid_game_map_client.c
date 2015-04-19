@@ -946,7 +946,7 @@ wid_game_map_client_replace_tile (widp w,
     }
 
     if (thing_is_saw(t)) {
-        wid_scaling_blit_to_pct_in(child, 0.5, 0.5, 500, 9999999);
+        wid_scaling_blit_to_pct_in(child, 0.2, 0.2, 500, 9999999);
     }
 
     if (thing_is_explosion(t)) {
