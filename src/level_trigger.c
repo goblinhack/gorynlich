@@ -27,7 +27,7 @@
 #include "map_jigsaw.h"
 #include "file.h"
 
-static const char *default_trigger = "default_trigger";
+static const char *default_trigger = "white";
 
 /*
  * Find an existing trigger and which slot it is in
