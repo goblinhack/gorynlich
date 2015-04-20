@@ -493,7 +493,6 @@ static void thing_handle_collision (thingp me, thingp it,
          */
         if (thing_is_player(it)                 ||
             thing_is_poison(it)                 ||
-            thing_is_sawblade(it)                    ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_explosion(it)) {
             /*
@@ -509,7 +508,10 @@ static void thing_handle_collision (thingp me, thingp it,
         }
     }
 
-    if (thing_is_wall(me) || thing_is_sawblade(me)) {
+    /*
+     * If spinning blades or moving wall hit something?
+     */
+    if ((thing_is_wall(me) || thing_is_sawblade(me)) && me->on_active_list) {
         /*
          * Wall is crushing something
          */
@@ -562,7 +564,7 @@ static void thing_handle_collision (thingp me, thingp it,
             thing_is_door(it)                   ||
             thing_is_player(it)                 ||
             thing_is_wall(it)                   ||
-            thing_is_sawblade(it)                    ||
+            thing_is_sawblade(it)               ||
             thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.
@@ -711,7 +713,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_projectile(it)             ||
                     thing_is_treasure(it)               ||
                     thing_is_weapon(it)                 ||
-                    thing_is_sawblade(it)                    ||
+                    thing_is_sawblade(it)               ||
                     thing_is_food(it)) {
                     continue;
                 }
@@ -759,7 +761,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_projectile(it)             ||
                     thing_is_poison(it)                 ||
                     thing_is_weapon_swing_effect(it)    ||
-                    thing_is_sawblade(it)                    ||
+                    thing_is_sawblade(it)               ||
                     thing_is_explosion(it)) {
                     continue;
                 }
