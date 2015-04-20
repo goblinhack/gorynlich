@@ -8,10 +8,11 @@
  is_shadow_caster
  is_collision_map_large
  hit_priority=9
- max_hp=2
+ max_hp=1
  damage=20
  is_sawblade
  is_animated
+ is_fragile
  polymorph_on_death="data/things/sawblade2"
  tiles={
   tile={
