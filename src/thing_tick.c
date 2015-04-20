@@ -252,10 +252,9 @@ void thing_tick_server_player_slow_all (int force)
          */
         thing_torch_update_count(t, force);
 
-        /*
-         * If health went over the max, tick it down.
-         */
         if (force || time_have_x_secs_passed_since(1, t->timestamp_health)) {
+            t->timestamp_health = time_get_time_ms();
+
             /*
              * Start to croak it
              */
@@ -269,7 +268,19 @@ void thing_tick_server_player_slow_all (int force)
                 }
             }
 
-            t->timestamp_health = time_get_time_ms();
+            /*
+             * If health went over the max, tick it down.
+             */
+            if (single_player_mode) {
+                /*
+                * Start to croak it
+                */
+                if (thing_stats_get_hp(t) < -4) {
+                    thing_stats_set_hp(t, THING_MIN_HEALTH);
+
+                    thing_update(t);
+                }
+            }
 
             int delta = thing_stats_get_hp(t) - thing_stats_get_max_hp(t);
             if (delta > 0) {
