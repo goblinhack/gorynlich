@@ -329,7 +329,7 @@ static void level_place_explosion_ (levelp level,
         return;
     }
 
-    for (ix = x - radius - 1; ix < x + radius - 1; ix++) {
+    for (ix = x - radius - 1; ix <= x + radius - 1; ix++) {
         if (ix < 1) {
             continue;
         }
@@ -338,7 +338,7 @@ static void level_place_explosion_ (levelp level,
             continue;
         }
 
-        for (iy = y - radius - 1; iy < y + radius - 1; iy++) {
+        for (iy = y - radius - 1; iy <= y + radius - 1; iy++) {
                                 
             if (iy < 1) {
                 continue;
@@ -419,7 +419,7 @@ static void level_place_spatter (levelp level,
 
     int ix, iy;
 
-    for (ix = x - radius - 1; ix < x + radius - 1; ix++) {
+    for (ix = x - radius - 1; ix <= x + radius - 1; ix++) {
         if (ix < 1) {
             continue;
         }
@@ -428,7 +428,7 @@ static void level_place_spatter (levelp level,
             continue;
         }
 
-        for (iy = y - radius - 1; iy < y + radius - 1; iy++) {
+        for (iy = y - radius - 1; iy <= y + radius - 1; iy++) {
                                 
             if (iy < 1) {
                 continue;
@@ -549,7 +549,7 @@ void level_place_blood_crit (levelp level,
     level_place_spatter(level, 
                         owner,
                         x, y,
-                        0, // radius
+                        1, // radius
                         0.5, // density
                         1, // nargs
                         "data/things/blood2");
