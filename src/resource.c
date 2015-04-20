@@ -266,6 +266,17 @@ static uint8_t resource_init_34 (void *context)
                            512, 512) != 0);
 }
 
+static uint8_t resource_init_35 (void *context)
+{
+    return (tex_load_tiled("data/gfx/sawblade5.png",
+                           "sawblade5",
+                           512, 512) != 0) &&
+           (tex_load_tiled_black_and_white(
+                           "data/gfx/sawblade5.png",
+                           "sawblade5_black_and_white",
+                           512, 512) != 0);
+}
+
 static uint8_t resource_init_last (void *context)
 {
     static const char *small_tiles[] = {
@@ -2768,6 +2779,31 @@ static uint8_t resource_init_last (void *context)
                   128, 128,
                   ARRAY_SIZE(sawblade4_tiles), sawblade4_tiles);
 
+    static const char *sawblade5_tiles[] = {
+        // --------------------------------------------------------------------
+        "sawblade5.1",
+        "sawblade5.2",
+        "sawblade5.3",
+        "sawblade5.4",
+        "sawblade5.5",
+        "sawblade5.6",
+        "sawblade5.7",
+        "sawblade5.8",
+        "sawblade5.9",
+        "sawblade5.10",
+        "sawblade5.11",
+        "sawblade5.12",
+        "sawblade5.13",
+        "sawblade5.14",
+        "sawblade5.15",
+        "sawblade5.16",
+    };
+
+    tile_load_arr("sawblade5", 
+                  "sawblade5_black_and_white",
+                  128, 128,
+                  ARRAY_SIZE(sawblade5_tiles), sawblade5_tiles);
+
     static const char *anim_man_tiles[] = {
         // --------------------------------------------------------------------
         "anim_man1.1",
@@ -2922,6 +2958,7 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_SAWBLADE2, "data/things/sawblade2");
     tp_load(&THING_SAWBLADE3, "data/things/sawblade3");
     tp_load(&THING_SAWBLADE4, "data/things/sawblade4");
+    tp_load(&THING_SAWBLADE5, "data/things/sawblade5");
 #if 0
     tp_load(&THING_EXIT2, "data/things/exit2");
     tp_load(&THING_EXIT3, "data/things/exit3");
@@ -3217,6 +3254,9 @@ uint8_t resource_init (void)
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_34,
                           0, "resource_init_34");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_35,
+                          0, "resource_init_35");
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_last,
                           0, "resource_init_last");

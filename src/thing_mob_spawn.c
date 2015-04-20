@@ -90,16 +90,16 @@ uint8_t thing_mob_spawn (thingp t)
     return (false);
 }
 
-uint8_t thing_mob_spawn_on_death (thingp t)
+thingp thing_mob_spawn_on_death (thingp t)
 {
     const char *mob_spawn = tp_spawn_on_death(t->tp);
     if (!mob_spawn) {
-        return (false);
+        return (0);
     }
 
     tpp what = tp_find(mob_spawn);
     if (!what) {
-        return (false);
+        return (0);
     }
 
     uint32_t tries = 20;
@@ -158,7 +158,7 @@ uint8_t thing_mob_spawn_on_death (thingp t)
             continue;
         }
 
-        wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
+        widp w = wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          x,
                                          y,
                                          0, /* thing */
@@ -166,8 +166,8 @@ uint8_t thing_mob_spawn_on_death (thingp t)
                                          0, /* tpp data */
                                          0 /* item */,
                                          0 /* stats */);
-        return (true);
+        return (wid_get_thing(w));
     }
 
-    return (false);
+    return (0);
 }
