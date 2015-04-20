@@ -269,16 +269,11 @@ void thing_tick_server_player_slow_all (int force)
             }
 
             /*
-             * If health went over the max, tick it down.
+             * Quicker death in single player ode.
              */
             if (single_player_mode) {
-                /*
-                * Start to croak it
-                */
                 if (thing_stats_get_hp(t) < -4) {
-                    thing_stats_set_hp(t, THING_MIN_HEALTH);
-
-                    thing_update(t);
+                    thing_dead(t, 0, 0);
                 }
             }
 

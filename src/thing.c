@@ -44,6 +44,7 @@ uint16_t THING_SAWBLADE1;
 uint16_t THING_SAWBLADE2;
 uint16_t THING_SAWBLADE3;
 uint16_t THING_SAWBLADE4;
+uint16_t THING_SAWBLADE5;
 uint16_t THING_NOENTRY;
 uint16_t THING_APPLE1;
 uint16_t THING_APPLE2;
@@ -1269,12 +1270,7 @@ void thing_destroy (thingp t, const char *why)
         action_timers_destroy(&t->timers);
     }
 
-    if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
-        DIE("thing template destroy name [%s] failed", thing_name(t));
-    }
-
-    t->client_or_server_tree = 0;
-    t->on_active_list = false;
+    thing_make_inactive(t);
 
     if (t->on_client_player_things) {
         t->on_client_player_things = false;
@@ -1504,7 +1500,16 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
              */
             const char *spawn = tp_spawn_on_death(tp);
             if (spawn) {
-                thing_mob_spawn_on_death(t);
+                thingp newt = thing_mob_spawn_on_death(t);
+
+                /*
+                 * If this is the player death then give the gravestone a lot 
+                 * of health or it can be immediately killed by a lingering 
+                 * explosion that killed the player too.
+                 */
+                if (newt && thing_is_player(t)) {
+                    newt->stats.hp = 200;
+                }
             }
         }
     }
@@ -1682,6 +1687,22 @@ void thing_make_active (thingp t)
     }
 
     t->on_active_list = true;
+}
+
+void thing_make_inactive (thingp t)
+{
+    verify(t);
+
+    if (!t->on_active_list) {
+        return;
+    }
+
+    if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
+        DIE("thing template destroy name [%s] failed", thing_name(t));
+    }
+
+    t->client_or_server_tree = 0;
+    t->on_active_list = false;
 }
 
 void thing_wake (thingp t)
@@ -2099,7 +2120,28 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
          * No killer to avoid giving a bonus to monsters!
          */
         if (thing_is_fragile(orig_hitter)) {
-            thing_dead(orig_hitter, 0, "self destruct on hitting");
+            /*
+             * Sawblades get more covered in blood each time they kill 
+             * something that is warm blooded. But we don't want that to 
+             * happen for damage from say a bomb. However if the damage is 
+             * really high then we just stop the blade.
+             */
+            if (thing_is_sawblade(t)) {
+                tpp final_tp = tp_find("data/things/sawblade5");
+                if (damage > tp_get_damage(final_tp)) {
+                    /*
+                     * Stop the blades spinning.
+                     */
+                    thing_make_inactive(orig_hitter);
+                } else if (thing_is_warm_blooded(t)) {
+                    /*
+                     * Move to the next most bloody blade
+                     */
+                    thing_dead(orig_hitter, 0, "self destruct on hitting");
+                }
+            } else {
+                thing_dead(orig_hitter, 0, "self destruct on hitting");
+            }
         }
     }
 
@@ -2109,7 +2151,7 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
     if (thing_is_monst(t)               || 
         thing_is_mob_spawner(t)         || 
         thing_is_wall(t)                ||
-        thing_is_sawblade(t)                 ||
+        thing_is_sawblade(t)            ||
         thing_is_door(t)) {
 
         /*

@@ -31,8 +31,9 @@ void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
 void thing_tick_server_player_slow_all(int force);
 uint8_t thing_mob_spawn(thingp);
-uint8_t thing_mob_spawn_on_death(thingp);
+thingp thing_mob_spawn_on_death(thingp);
 void thing_make_active(thingp t);
+void thing_make_inactive(thingp t);
 void thing_wake(thingp t);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
@@ -331,6 +332,7 @@ extern uint16_t THING_SAWBLADE1;
 extern uint16_t THING_SAWBLADE2;
 extern uint16_t THING_SAWBLADE3;
 extern uint16_t THING_SAWBLADE4;
+extern uint16_t THING_SAWBLADE5;
 extern uint16_t THING_NOENTRY;
 extern uint16_t THING_APPLE1;
 extern uint16_t THING_APPLE2;
