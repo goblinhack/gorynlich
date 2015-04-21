@@ -1270,7 +1270,15 @@ void thing_destroy (thingp t, const char *why)
         action_timers_destroy(&t->timers);
     }
 
-    thing_make_inactive(t);
+    /*
+     * Remove from the active or boring list.
+     */
+    if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
+        DIE("thing template destroy name [%s] failed", thing_name(t));
+    }
+
+    t->client_or_server_tree = 0;
+    t->on_active_list = false;
 
     if (t->on_client_player_things) {
         t->on_client_player_things = false;
@@ -1468,7 +1476,14 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
              * e.g. a mob spawner dying and creating a smaller one.
              */
             const char *polymorph = tp_polymorph_on_death(tp);
-            if (polymorph) {
+
+            if (thing_is_sawblade(t) && killer) {
+                /*
+                 * Skip polymorph if there is a killer. We want the blades to 
+                 * just vanish and not get more bloody. That only happens if 
+                 * there is no killer and we force a polymorph.
+                 */
+            } else if (polymorph) {
                 tpp what = tp_find(polymorph);
                 if (!what) {
                     DIE("could now find %s to polymorph into on %s death",
@@ -1687,22 +1702,6 @@ void thing_make_active (thingp t)
     }
 
     t->on_active_list = true;
-}
-
-void thing_make_inactive (thingp t)
-{
-    verify(t);
-
-    if (!t->on_active_list) {
-        return;
-    }
-
-    if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
-        DIE("thing template destroy name [%s] failed", thing_name(t));
-    }
-
-    t->client_or_server_tree = 0;
-    t->on_active_list = false;
 }
 
 void thing_wake (thingp t)
@@ -2126,18 +2125,16 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
              * happen for damage from say a bomb. However if the damage is 
              * really high then we just stop the blade.
              */
-            if (thing_is_sawblade(t)) {
-                tpp final_tp = tp_find("data/things/sawblade5");
-                if (damage > tp_get_damage(final_tp)) {
-                    /*
-                     * Stop the blades spinning.
-                     */
-                    thing_make_inactive(orig_hitter);
-                } else if (thing_is_warm_blooded(t)) {
+            if (thing_is_sawblade(orig_hitter)) {
+                if (thing_is_warm_blooded(t)) {
                     /*
                      * Move to the next most bloody blade
                      */
-                    thing_dead(orig_hitter, 0, "self destruct on hitting");
+                    thing_dead(orig_hitter, 0, "blood splatter");
+                } else {
+                    /*
+                     * Keep on spinning those blades.
+                     */
                 }
             } else {
                 thing_dead(orig_hitter, 0, "self destruct on hitting");
