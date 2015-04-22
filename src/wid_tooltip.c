@@ -54,7 +54,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
     }
 
     if (font == large_font) {
-        chars_per_line = 18;
+        chars_per_line = 38;
         max_rows = 6;
     } else if (font == med_font) {
         chars_per_line = 40;
@@ -183,6 +183,13 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
             wid_set_font(child, font);
             wid_set_color(child, WID_COLOR_TEXT, WHITE);
 
+            color c = BLACK;
+            c.a = 150;
+            wid_set_color(child, WID_COLOR_TL, c);
+            wid_set_color(child, WID_COLOR_BR, c);
+            c.a = 0;
+            wid_set_color(child, WID_COLOR_BG, c);
+
             wid_set_name(wid_tooltip_window, n->line);
         }
 
@@ -200,8 +207,6 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
     wid_raise(wid_tooltip_window);
 
     wid_update(wid_tooltip_window);
-
-    wid_set_do_not_lower(wid_tooltip_window, true);
 
     wid_set_tex(wid_tooltip_window, 0, "gothic_wide");
     wid_set_square(wid_tooltip_window);

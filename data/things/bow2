@@ -16,7 +16,7 @@
  d10000_chance_of_appearing=100
  is_wearable
  is_collision_map_medium
- d10000_chance_of_breaking=50
+ d10000_chance_of_breaking=20
  weapon_carry_anim="data/things/bow1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={

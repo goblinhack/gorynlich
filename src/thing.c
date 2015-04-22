@@ -1923,6 +1923,7 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
 int thing_hit (thingp t, thingp hitter, uint32_t damage)
 {
     thingp orig_hitter = hitter;
+    tpp weapon;
 
 if (0)  {
 CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
@@ -2030,7 +2031,7 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
             /*
              * Get the damage from the weapon being used to swing.
              */
-            tpp weapon = thing_weapon(hitter);
+            weapon = thing_weapon(hitter);
             if (!weapon) {
                 return (false);
             }
@@ -2173,6 +2174,32 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
 
         if (chance > damage) {
             return (false);
+        }
+    }
+
+    /*
+     * Check if the weapon reaches its end of warranty.
+     */
+    if (weapon) {
+        uint32_t d10000_chance_of_breaking = 
+                tp_get_d10000_chance_of_breaking(weapon);
+
+        if (d10000_chance_of_breaking) {
+            int r = (myrand() % 10000);
+
+            if (r <= d10000_chance_of_breaking) {
+                if (!thing_wear_out(hitter, weapon)) {
+                    if (thing_is_player(hitter)) {
+                        MSG_SERVER_SHOUT_AT_PLAYER(
+                            POPUP, hitter, 
+                            "%%%%fg=orange$"
+                            "You damage the %s", 
+                            tp_short_name(weapon));
+                    }
+                }
+
+                THING_LOG(hitter, "damage weapon");
+            }
         }
     }
 
