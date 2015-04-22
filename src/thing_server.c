@@ -280,20 +280,6 @@ void thing_server_fire (thingp t,
         return;
     }
 
-    /*
-     * Check if the weapon reaches its end of warranty.
-     */
-    uint32_t d10000_chance_of_breaking = 
-                    tp_get_d10000_chance_of_breaking(weapon);
-
-    if (d10000_chance_of_breaking) {
-        if ((myrand() % 10000) <= d10000_chance_of_breaking) {
-            thing_wear_out(t, weapon);
-            THING_LOG(t, "damage weapon");
-            return;
-        }
-    }
-
     double dx, dy;
     double dist_from_player = 0.1;
 
