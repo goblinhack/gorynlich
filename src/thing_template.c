@@ -519,7 +519,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         }
 
         GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
-        GET_OPT_NAMED_UINT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
+        GET_OPT_NAMED_UINT32(ctx, "weapon_fire_delay_hundredths", t->weapon_fire_delay_hundredths);
         GET_OPT_NAMED_UINT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
         GET_OPT_NAMED_UINT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
         GET_OPT_NAMED_UINT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
@@ -581,7 +581,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_damaged_on_firing", t->is_damaged_on_firing);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hard", t->is_hard);
         GET_OPT_NAMED_BITFIELD(ctx, "is_sleeping", t->is_sleeping);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
@@ -710,7 +710,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_FLOAT(ctx, "scale", t->scale);
     PUT_NAMED_INT32(ctx, "quantity", t->item.quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
-    PUT_NAMED_INT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
+    PUT_NAMED_INT32(ctx, "weapon_fire_delay_hundredths", t->weapon_fire_delay_hundredths);
     PUT_NAMED_INT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
     PUT_NAMED_INT32(ctx, "bonus_hp_on_use", t->bonus_hp_on_use);
     PUT_NAMED_INT32(ctx, "bonus_magic_on_use", t->bonus_magic_on_use);
@@ -774,7 +774,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
     PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
     PUT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
+    PUT_NAMED_BITFIELD(ctx, "is_damaged_on_firing", t->is_damaged_on_firing);
     PUT_NAMED_BITFIELD(ctx, "is_hard", t->is_hard);
     PUT_NAMED_BITFIELD(ctx, "is_sleeping", t->is_sleeping);
     PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
@@ -1034,9 +1034,9 @@ uint32_t tp_get_hit_priority (tpp t)
     return (t->hit_priority);
 }
 
-uint32_t tp_get_weapon_fire_delay_tenths (tpp t)
+uint32_t tp_get_weapon_fire_delay_hundredths (tpp t)
 {
-    return (t->weapon_fire_delay_tenths);
+    return (t->weapon_fire_delay_hundredths);
 }
 
 uint32_t tp_get_swing_distance_from_player (tpp t)

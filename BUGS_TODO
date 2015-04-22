@@ -1,25 +1,24 @@
-- weapon damage only for hard things
-- drops bombs under player
+* diamond sword doesn't look diamond
+* minor bug: weapon swing is nutso fast when fps sync is off
+* minor bug: power up effect is a bit feeble on shield potion
+* minor bug: apple and water icons look a bit crap
+* minor bug: center textures in the action bar
+
 - attack melee must do something
+- xp level and hp increase per level
 - attack ranged must do something
 - defense must do something
-- diamond sword doesn't look diamond
 - speed must do something
 - vision must do something
 - healing must do something
-- add double arrow for faster moving triggers
-- add stop sign to stop a moving thing?
 --------------------------------------- plan for may --------------------------------------
 - magic attack - green fireball?
 - attack magical must do something
 - sound effects for weapons and hits http://www.bfxr.net/
 - sound on momey collect
 - sound on potion use
-* minor bug: weapon swing is nutso fast when fps sync is off
-* minor bug: power up effect is a bit feeble on shield potion
-* minor bug: apple and water icons look a bit crap
-* minor bug: center textures in the action bar
-- xp level and hp increase per level
+- add double arrow for faster moving triggers
+- add stop sign to stop a moving thing?
 --------------------------------------- plan for june --------------------------------------
 - press m for magic to build up magic attack
 - press m for magic to give life to other players
@@ -58,9 +57,14 @@ backpack drop on death
 add shop
 thief, kill thief to recover items
 --------------------------------------- plan for dec --------------------------------------
+mining?
 add bot to test out multiplayer ?
 different profiles for level generation
-mining?
+
+Wed Apr 22 10:44:16 EDT 2015
+- weapon damage only for hard things
+- bow damage only on firing
+- drops bombs under player
 
 Tue Apr 21 07:56:18 EDT 2015
 - walls must be destroyable

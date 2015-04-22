@@ -197,7 +197,7 @@ typedef struct tp_ {
     float scale;
 
     uint32_t hit_priority;
-    uint32_t weapon_fire_delay_tenths;
+    uint32_t weapon_fire_delay_hundredths;
     uint32_t swing_distance_from_player;
     uint32_t tx_map_update_delay_thousandths;
     uint32_t can_be_hit_chance;
@@ -254,7 +254,7 @@ typedef struct tp_ {
     uint8_t is_rrr15:1;
     uint8_t is_rrr16:1;
     uint8_t is_rrr17:1;
-    uint8_t is_rrr18:1;
+    uint8_t is_damaged_on_firing:1;
     uint8_t is_hard:1;
     uint8_t is_sleeping:1;
     uint8_t is_bomb:1;
@@ -380,7 +380,7 @@ float tp_get_light_radius(tpp);
 float tp_get_scale(tpp);
 uint32_t tp_get_quantity(tpp);
 uint32_t tp_get_hit_priority(tpp);
-uint32_t tp_get_weapon_fire_delay_tenths(tpp);
+uint32_t tp_get_weapon_fire_delay_hundredths(tpp);
 uint32_t tp_get_swing_distance_from_player(tpp);
 
 int16_t tp_get_stats_max_hp(tpp);
@@ -669,9 +669,9 @@ static inline uint8_t tp_is_rrr17 (tpp t)
     return (t->is_rrr17);
 }
 
-static inline uint8_t tp_is_rrr18 (tpp t)
+static inline uint8_t tp_is_damaged_on_firing (tpp t)
 {
-    return (t->is_rrr18);
+    return (t->is_damaged_on_firing);
 }
 
 static inline uint8_t tp_is_hard (tpp t)

@@ -1136,11 +1136,11 @@ static inline uint8_t thing_is_rrr17 (thingp t)
     return (tp_is_rrr17(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr18 (thingp t)
+static inline uint8_t thing_is_damaged_on_firing (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr18(thing_tp(t)));
+    return (tp_is_damaged_on_firing(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_hard (thingp t)
@@ -1728,9 +1728,9 @@ static inline uint8_t thing_is_rrr17_noverify (thingp t)
     return (t->tp->is_rrr17);
 }
 
-static inline uint8_t thing_is_rrr18_noverify (thingp t)
+static inline uint8_t thing_is_damaged_on_firing_noverify (thingp t)
 {
-    return (t->tp->is_rrr18);
+    return (t->tp->is_damaged_on_firing);
 }
 
 static inline uint8_t thing_is_hard_noverify (thingp t)
@@ -2143,8 +2143,8 @@ void thing_weapon_worn_out(thingp owner, tpp weapon);
 void thing_weapon_check_for_wear_damage(thingp target, 
                                        thingp hitter, 
                                        tpp weapon);
-void thing_weapon_check_for_use_damage(thingp hitter, 
-                                       tpp weapon);
+void thing_weapon_check_for_damage_on_firing(thingp hitter,
+                                             tpp weapon);
 
 /*
  * thing_effect.c
