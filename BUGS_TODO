@@ -1,7 +1,3 @@
-- blades only get bloodied on warm blooded things
-- blades stop on lots of damage
-- stopped blades are harmless
-- spawned gravestones must be hard to kill
 - walls must be destroyable
 - attack melee must do something
 - attack ranged must do something
@@ -64,7 +60,10 @@ add bot to test out multiplayer ?
 different profiles for level generation
 mining?
 
-Mon Apr 20 07:00:09 EDT 2015
+Tue Apr 21 07:56:18 EDT 2015
+- stand above a mob spawner and sword does no damage
+- blades only get bloodied on warm blooded things
+- spawned gravestones must be hard to kill
 
 Sun Apr 19 10:16:39 EDT 2015
 - saw blade with blood!

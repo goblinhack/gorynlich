@@ -23,12 +23,6 @@ void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
     *dx = 0;
     *dy = 0;
 
-    /*
-     * Using 0 offset here. If we use non 0 then the weapon swing light
-     * source is off center and so the light jumps around and looks odd.
-     */
-    return;
-
     double dist_from_player = 
         ((double)tp_get_swing_distance_from_player(weapon)) / 10.0;
 
