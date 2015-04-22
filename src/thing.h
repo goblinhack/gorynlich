@@ -758,6 +758,13 @@ static inline uint8_t thing_is_dead (thingp t)
     return (t->is_dead);
 }
 
+static inline uint8_t thing_is_active (thingp t)
+{
+    verify(t);
+
+    return (t->on_active_list);
+}
+
 static inline uint8_t thing_is_epicenter (thingp t)
 {
     verify(t);
@@ -1136,22 +1143,25 @@ static inline uint8_t thing_is_rrr18 (thingp t)
     return (tp_is_rrr18(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr19 (thingp t)
+static inline uint8_t thing_is_hard (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr19(thing_tp(t)));
+    return (tp_is_hard(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_sleeping (thingp t)
 {
     verify(t);
 
-    if (t->is_sleeping) {
-        return (true);
-    }
+    return (t->is_sleeping);
+}
 
-    return (false);
+static inline uint8_t thing_is_awake (thingp t)
+{
+    verify(t);
+
+    return (!t->is_sleeping);
 }
 
 static inline uint8_t thing_is_bomb (thingp t)
@@ -1723,9 +1733,9 @@ static inline uint8_t thing_is_rrr18_noverify (thingp t)
     return (t->tp->is_rrr18);
 }
 
-static inline uint8_t thing_is_rrr19_noverify (thingp t)
+static inline uint8_t thing_is_hard_noverify (thingp t)
 {
-    return (t->tp->is_rrr19);
+    return (t->tp->is_hard);
 }
 
 static inline uint8_t thing_is_sleeping_noverify (thingp t)
@@ -2129,6 +2139,12 @@ thingp thing_weapon_carry_anim(thingp t);
 thingp thing_weapon_swing_anim(thingp t);
 void thing_set_weapon_placement(thingp t);
 widp thing_get_weapon_carry_anim_wid(thingp t);
+void thing_weapon_worn_out(thingp owner, tpp weapon);
+void thing_weapon_check_for_wear_damage(thingp target, 
+                                       thingp hitter, 
+                                       tpp weapon);
+void thing_weapon_check_for_use_damage(thingp hitter, 
+                                       tpp weapon);
 
 /*
  * thing_effect.c
@@ -2158,6 +2174,7 @@ thingp_get_interpolated_position(const thingp t, double *x, double *y);
  */
 widp thing_place(thingp t, tpp tp, itemp item);
 widp thing_place_behind(thingp t, tpp tp, itemp item);
+widp thing_place_behind_or_under(thingp t, tpp tp, itemp item);
 void thing_dir(thingp t, double *dx, double *dy);
 
 /*

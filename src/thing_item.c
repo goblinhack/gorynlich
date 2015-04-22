@@ -335,16 +335,7 @@ int thing_wear_out (thingp t, tpp tp)
     thing_stats_item_remove(t, &t->stats, tp);
 
     if (tp_is_weapon(tp)) {
-        thing_unwield(t);
-
-        if (thing_is_player(t)) {
-            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                                       "%%%%fg=red$"
-                                       "The %s crumbles to dust",
-                                       tp_short_name(tp));
-        }
-
-        thing_wield_next_weapon(t);
+        thing_weapon_worn_out(t, tp);
     }
 
     return (true);
