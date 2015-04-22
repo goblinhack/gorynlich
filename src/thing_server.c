@@ -280,7 +280,10 @@ void thing_server_fire (thingp t,
         return;
     }
 
-    thing_weapon_check_for_use_damage(t, weapon);
+    /*
+     * Does it potentially break each use?
+     */
+    thing_weapon_check_for_damage_on_firing(t, weapon);
 
     double dx, dy;
     double dist_from_player = 0.1;

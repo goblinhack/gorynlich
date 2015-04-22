@@ -10,8 +10,11 @@
  hit_priority=0
  is_carryable
  is_given_randomly_at_start
- weapon_fire_delay_tenths=3
+ weapon_fire_delay_hundredths=10
  is_fragile
+ is_damaged_on_firing
+ d10000_chance_of_appearing=5
+ d10000_chance_of_breaking=10
  is_light_source
  light_tint="orange"
  light_radius=0.1
@@ -20,8 +23,6 @@
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
- d10000_chance_of_appearing=5
- d10000_chance_of_breaking=10
  weapon_carry_anim="data/things/wand1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={
