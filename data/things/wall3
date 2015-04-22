@@ -3,6 +3,7 @@
  raw_name="wall3"
  tooltip="Wall3"
  z_depth=2
+ is_hard
  speed=5
  is_inactive
  is_wall
