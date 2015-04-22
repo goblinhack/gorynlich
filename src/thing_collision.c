@@ -579,8 +579,10 @@ static void thing_handle_collision (thingp me, thingp it,
      */
     if (thing_is_weapon_swing_effect(me)) {
 
-        if (thing_is_monst(it) || 
-            thing_is_door(it) ||
+        if (thing_is_monst(it)                  || 
+            thing_is_door(it)                   ||
+            thing_is_bomb(it)                   ||
+            thing_is_wall(it)                   ||
             /*
              * Don't hit walls. It's daft.
              */

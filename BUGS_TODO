@@ -1,4 +1,3 @@
-- walls must be destroyable
 - attack melee must do something
 - attack ranged must do something
 - defense must do something
@@ -61,6 +60,7 @@ different profiles for level generation
 mining?
 
 Tue Apr 21 07:56:18 EDT 2015
+- walls must be destroyable
 - stand above a mob spawner and sword does no damage
 - blades only get bloodied on warm blooded things
 - spawned gravestones must be hard to kill

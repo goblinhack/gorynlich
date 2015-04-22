@@ -10,7 +10,7 @@
  hit_priority=9
  damage=50
  is_joinable
- can_be_hit_chance=5000
+ can_be_hit_chance=500
  tiles={
   tile={
    tile="wall2_0_0"

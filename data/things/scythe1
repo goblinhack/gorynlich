@@ -16,7 +16,7 @@
  is_animated
  is_valid_for_action_bar
  d10000_chance_of_appearing=20
- d10000_chance_of_breaking=100
+ d10000_chance_of_breaking=30
  weapon_carry_anim="data/things/scythe1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={

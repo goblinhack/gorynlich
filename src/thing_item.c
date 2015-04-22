@@ -106,7 +106,8 @@ static void thing_collect (thingp t,
         }
 
         if (thing_is_player(t)) {
-            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "%s added", tp_short_name(tp));
+            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 
+                                       "%s added", tp_short_name(tp));
         }
         return;
     }
@@ -305,7 +306,7 @@ void thing_used (thingp t, tpp tp)
     }
 }
 
-void thing_wear_out (thingp t, tpp tp)
+int thing_wear_out (thingp t, tpp tp)
 {
     uint32_t id;
     itemp item;
@@ -313,19 +314,19 @@ void thing_wear_out (thingp t, tpp tp)
     id = tp_to_id(tp);
     if (!id) {
         ERR("No such item %s", tp_short_name(tp));
-        return;
+        return (false);
     }
 
     item = thing_has_item(t, id);
     if (!item) {
         ERR("Tried to use item which is %s not carried", 
             tp_short_name(tp));
-        return;
+        return (false);
     }
 
     if (item->quality) {
         item->quality--;
-        return;
+        return (false);
     }
 
     /*
@@ -336,11 +337,17 @@ void thing_wear_out (thingp t, tpp tp)
     if (tp_is_weapon(tp)) {
         thing_unwield(t);
 
-        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t,
-                                   "Your weapon crumbles to dust");
+        if (thing_is_player(t)) {
+            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                                       "%%%%fg=red$"
+                                       "The %s crumbles to dust",
+                                       tp_short_name(tp));
+        }
 
         thing_wield_next_weapon(t);
     }
+
+    return (true);
 }
 
 void thing_drop (thingp t, tpp tp)

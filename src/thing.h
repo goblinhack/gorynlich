@@ -2143,7 +2143,7 @@ void thing_auto_collect(thingp t, thingp it, tpp tp);
 void thing_item_collect(thingp t, thingp it, tpp tp);
 void thing_used(thingp t, tpp tp);
 void thing_drop(thingp t, tpp tp);
-void thing_wear_out(thingp t, tpp tp);
+int thing_wear_out(thingp t, tpp tp);
 void thing_item_destroyed(thingp t, tpp tp);
 void thing_wield_next_weapon(thingp t);
 
