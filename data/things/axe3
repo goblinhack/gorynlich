@@ -9,14 +9,14 @@
  hit_priority=0
  is_carryable
  is_given_randomly_at_start
- weapon_fire_delay_tenths=1
+ weapon_fire_delay_hundredths=8
  damage=12
  swing_distance_from_player=6
  is_wearable
  is_collision_map_medium
  is_valid_for_action_bar
  d10000_chance_of_appearing=50
- d10000_chance_of_breaking=3
+ d10000_chance_of_breaking=5
  weapon_carry_anim="data/things/axe1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={
