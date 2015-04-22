@@ -53,7 +53,11 @@ void thing_dir (thingp t, double *dx, double *dy)
     }
 }
 
-static widp thing_place_ (thingp t, tpp tp, itemp item_in, int behind)
+static widp thing_place_ (thingp t, 
+                          tpp tp, 
+                          itemp item_in, 
+                          const int under, 
+                          const int behind)
 {
     double dx = 0;
     double dy = 0;
@@ -67,6 +71,31 @@ static widp thing_place_ (thingp t, tpp tp, itemp item_in, int behind)
         item.quality = THING_ITEM_QUALITY_MAX;
         item.quantity = tp_get_quantity(tp);
         item.cursed = tp_is_cursed(tp);
+    }
+
+    if (under) {
+        double x = t->x;
+        double y = t->y;
+
+        thing_round(t, &x, &y);
+
+        /*
+        * Try to place in front of the player.
+        */
+        widp grid = wid_game_map_server_grid_container;
+        if (!grid) {
+            DIE("cannot place thing, no grid map");
+        }
+
+        if (!thing_hit_any_obstacle(grid, t, x, y)) {
+            widp w = wid_game_map_server_replace_tile(grid, x, y,
+                                                    0, /* thing */
+                                                    tp,
+                                                    0 /* tpp_data */,
+                                                    &item,
+                                                    0 /* stats */);
+            return (w);
+        }
     }
 
     thing_dir(t, &dx, &dy);
@@ -188,11 +217,16 @@ static widp thing_place_ (thingp t, tpp tp, itemp item_in, int behind)
 
 widp thing_place (thingp t, tpp tp, itemp item)
 {
-    return (thing_place_(t, tp, item, false /* behind */));
+    return (thing_place_(t, tp, item, false /* under */, false /* behind */));
 }
 
 widp thing_place_behind (thingp t, tpp tp, itemp item)
 {
-    return (thing_place_(t, tp, item, true /* behind */));
+    return (thing_place_(t, tp, item, false /* under */, true /* behind */));
+}
+
+widp thing_place_behind_or_under (thingp t, tpp tp, itemp item)
+{
+    return (thing_place_(t, tp, item, true /* under */, true /* behind */));
 }
 

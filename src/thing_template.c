@@ -582,7 +582,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_hard", t->is_hard);
         GET_OPT_NAMED_BITFIELD(ctx, "is_sleeping", t->is_sleeping);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
         GET_OPT_NAMED_BITFIELD(ctx, "is_sawblade", t->is_sawblade);
@@ -775,7 +775,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
     PUT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
     PUT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
+    PUT_NAMED_BITFIELD(ctx, "is_hard", t->is_hard);
     PUT_NAMED_BITFIELD(ctx, "is_sleeping", t->is_sleeping);
     PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
     PUT_NAMED_BITFIELD(ctx, "is_sawblade", t->is_sawblade);

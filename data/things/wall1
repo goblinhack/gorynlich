@@ -3,6 +3,7 @@
  raw_name="wall1"
  tooltip="Wall1"
  z_depth=2
+ is_hard
  is_inactive
  is_wall
  is_shadow_caster

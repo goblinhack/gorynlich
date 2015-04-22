@@ -405,3 +405,90 @@ void thing_set_weapon_placement (thingp t)
 
     wid_set_z_depth(weapon_wid, new_weapon_depth);
 }
+
+/*
+ * Weapon is destroyed due to damage.
+ */
+void thing_weapon_worn_out (thingp t, tpp weapon)
+{
+    thing_unwield(t);
+
+    if (thing_is_player(t)) {
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                                   "%%%%fg=red$"
+                                   "The %s crumbles to dust",
+                                   tp_short_name(weapon));
+    }
+
+    thing_wield_next_weapon(t);
+}
+
+/*
+ * Check for the weapon being damaged.
+ */
+void thing_weapon_check_for_wear_damage (thingp target, 
+                                        thingp hitter, 
+                                        tpp weapon)
+{
+    /*
+     * Hitting soft things doesn't do damage.
+     */
+    if (!thing_is_hard(target)) {
+        return;
+    }
+
+    /*
+     * What are the odds of it being damaged?
+     */
+    uint32_t d10000_chance_of_breaking = 
+            tp_get_d10000_chance_of_breaking(weapon);
+
+    int r = (myrand() % 10000);
+    if (r >= d10000_chance_of_breaking) {
+        return;
+    }
+
+    /*
+     * Take a notch off of the weapons quality.
+     */
+    if (!thing_wear_out(hitter, weapon)) {
+        if (thing_is_player(hitter)) {
+            MSG_SERVER_SHOUT_AT_PLAYER(
+                POPUP, hitter, 
+                "%%%%fg=orange$"
+                "The %s is damaged", 
+                tp_short_name(weapon));
+        }
+    }
+}
+
+/*
+ * For things like bows that wear out
+ */
+void thing_weapon_check_for_use_damage (thingp hitter, 
+                                        tpp weapon)
+{
+    /*
+     * What are the odds of it being damaged?
+     */
+    uint32_t d10000_chance_of_breaking = 
+            tp_get_d10000_chance_of_breaking(weapon);
+
+    int r = (myrand() % 10000);
+    if (r >= d10000_chance_of_breaking) {
+        return;
+    }
+
+    /*
+     * Take a notch off of the weapons quality.
+     */
+    if (!thing_wear_out(hitter, weapon)) {
+        if (thing_is_player(hitter)) {
+            MSG_SERVER_SHOUT_AT_PLAYER(
+                POPUP, hitter, 
+                "%%%%fg=orange$"
+                "The %s is damaged", 
+                tp_short_name(weapon));
+        }
+    }
+}
