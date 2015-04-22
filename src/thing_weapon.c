@@ -438,6 +438,14 @@ void thing_weapon_check_for_wear_damage (thingp target,
     }
 
     /*
+     * If we've already checked for damage on this thing when we used it, 
+     * don't check again on impact. Makes no sense for bows anyway.
+     */
+    if (tp_is_damaged_on_firing(weapon)) {
+        return;
+    }
+
+    /*
      * What are the odds of it being damaged?
      */
     uint32_t d10000_chance_of_breaking = 
@@ -465,9 +473,13 @@ void thing_weapon_check_for_wear_damage (thingp target,
 /*
  * For things like bows that wear out
  */
-void thing_weapon_check_for_use_damage (thingp hitter, 
-                                        tpp weapon)
+void thing_weapon_check_for_damage_on_firing (thingp hitter,
+                                              tpp weapon)
 {
+    if (!tp_is_damaged_on_firing(weapon)) {
+        return;
+    }
+
     /*
      * What are the odds of it being damaged?
      */

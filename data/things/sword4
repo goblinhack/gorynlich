@@ -9,7 +9,7 @@
  hit_priority=0
  is_carryable
  is_given_randomly_at_start
- weapon_fire_delay_tenths=1
+ weapon_fire_delay_hundredths=10
  damage=10
  swing_distance_from_player=5
  is_wearable

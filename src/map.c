@@ -364,9 +364,9 @@ uint8_t map_is_rrr17_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr17));
 }
 
-uint8_t map_is_rrr18_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_damaged_on_firing_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr18));
+    return (map_is_x_at(level, x, y, tp_is_damaged_on_firing));
 }
 
 uint8_t map_is_hard_at (levelp level, int32_t x, int32_t y)
@@ -831,9 +831,9 @@ thingp map_thing_is_rrr17_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr17));
 }
 
-thingp map_thing_is_rrr18_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_damaged_on_firing_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr18));
+    return (map_thing_is_x_at(level, x, y, tp_is_damaged_on_firing));
 }
 
 thingp map_thing_is_hard_at (levelp level, int32_t x, int32_t y)
@@ -1314,9 +1314,9 @@ tree_rootp map_all_things_is_rrr17_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr17));
 }
 
-tree_rootp map_all_things_is_rrr18_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_damaged_on_firing_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr18));
+    return (map_all_things_is_x_at(level, x, y, tp_is_damaged_on_firing));
 }
 
 tree_rootp map_all_things_is_hard_at (levelp level, int32_t x, int32_t y)
@@ -1887,9 +1887,9 @@ tpp map_find_rrr17_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr17, w));
 }
 
-tpp map_find_rrr18_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_damaged_on_firing_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr18, w));
+    return (map_find_x_at(level, x, y, tp_is_damaged_on_firing, w));
 }
 
 tpp map_find_hard_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2718,9 +2718,9 @@ tree_rootp map_all_things_is_rrr17 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr17));
 }
 
-tree_rootp map_all_things_is_rrr18 (levelp level)
+tree_rootp map_all_things_is_damaged_on_firing (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr18));
+    return (map_all_things_is_x(level, tp_is_damaged_on_firing));
 }
 
 tree_rootp map_all_things_is_hard (levelp level)

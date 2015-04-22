@@ -355,9 +355,9 @@ uint8_t wid_game_map_client_player_move (void)
         if (fire) {
             static uint32_t last_fired = 0;
 
-            uint32_t delay = tp_get_weapon_fire_delay_tenths(weapon);
+            uint32_t delay = tp_get_weapon_fire_delay_hundredths(weapon);
             
-            if (!time_have_x_tenths_passed_since(delay, last_fired)) {
+            if (!time_have_x_hundredths_passed_since(delay, last_fired)) {
                 fire = 0;
 
                 if (!up && !down && !left && !right) {
