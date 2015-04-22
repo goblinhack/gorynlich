@@ -2165,41 +2165,24 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
     }
 
     /*
+     * Check if the weapon reaches its end of warranty.
+     *
+     * I think this should be before the miss chance so if we are hitting at 
+     * rock and keep missing then we damage the weapon.
+     */
+    if (weapon) {
+        thing_weapon_check_for_wear_damage(t, hitter, weapon);
+    }
+
+    /*
      * Does the thing get off being hit.
      */
-    uint32_t can_be_hit_chance = 
-                    tp_get_can_be_hit_chance(t->tp);
+    uint32_t can_be_hit_chance = tp_get_can_be_hit_chance(t->tp);
     if (can_be_hit_chance) {
         uint32_t chance = myrand() % (can_be_hit_chance + 1);
 
         if (chance > damage) {
             return (false);
-        }
-    }
-
-    /*
-     * Check if the weapon reaches its end of warranty.
-     */
-    if (weapon) {
-        uint32_t d10000_chance_of_breaking = 
-                tp_get_d10000_chance_of_breaking(weapon);
-
-        if (d10000_chance_of_breaking) {
-            int r = (myrand() % 10000);
-
-            if (r <= d10000_chance_of_breaking) {
-                if (!thing_wear_out(hitter, weapon)) {
-                    if (thing_is_player(hitter)) {
-                        MSG_SERVER_SHOUT_AT_PLAYER(
-                            POPUP, hitter, 
-                            "%%%%fg=orange$"
-                            "You damage the %s", 
-                            tp_short_name(weapon));
-                    }
-                }
-
-                THING_LOG(hitter, "damage weapon");
-            }
         }
     }
 

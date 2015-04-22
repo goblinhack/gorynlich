@@ -16,7 +16,7 @@
  is_collision_map_medium
  is_valid_for_action_bar
  d10000_chance_of_appearing=10
- d10000_chance_of_breaking=1
+ d10000_chance_of_breaking=2
  weapon_carry_anim="data/things/axe2_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={

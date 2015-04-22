@@ -439,10 +439,16 @@ static void thing_handle_collision (thingp me, thingp it,
             thing_is_carryable(it)              ||
             thing_is_food(it)) {
 
-            thing_item_collect(me, it, thing_tp(it));
+            if (thing_is_bomb(it) && thing_is_awake(it)) {
+                /*
+                 * Don't collect ticking bombs.
+                 */
+            } else {
+                thing_item_collect(me, it, thing_tp(it));
 
-            thing_dead(it, me, "collected");
-            return;
+                thing_dead(it, me, "collected");
+                return;
+            }
         }
 
         /*
