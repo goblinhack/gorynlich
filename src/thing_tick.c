@@ -259,20 +259,19 @@ void thing_tick_server_player_slow_all (int force)
              * Start to croak it
              */
             if (thing_stats_get_hp(t) <= 0) {
-                thing_stats_modify_hp(t, -1);
+                if (single_player_mode) {
+                    /*
+                     * Quicker death in single player mode as there is little 
+                     * chance of resurrection.
+                     */
+                    thing_stats_modify_hp(t, -2);
+                } else {
+                    thing_stats_modify_hp(t, -1);
+                }
 
                 thing_update(t);
 
                 if (thing_stats_get_hp(t) <= THING_MIN_HEALTH) {
-                    thing_dead(t, 0, 0);
-                }
-            }
-
-            /*
-             * Quicker death in single player ode.
-             */
-            if (single_player_mode) {
-                if (thing_stats_get_hp(t) < -4) {
                     thing_dead(t, 0, 0);
                 }
             }

@@ -25,7 +25,7 @@ static uint32_t nelems;
 static wid_notify_elem elems[MAX_ELEMS];
 
 static double X = 0.0;
-static double Y = 0.1;
+static double Y = 0.3;
 static uint32_t DELAY = 10000;
 
 /*
