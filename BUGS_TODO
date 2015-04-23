@@ -1,5 +1,4 @@
 * diamond sword doesn't look diamond
-* minor bug: weapon swing is nutso fast when fps sync is off
 * minor bug: power up effect is a bit feeble on shield potion
 * minor bug: apple and water icons look a bit crap
 * minor bug: center textures in the action bar
@@ -62,6 +61,7 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Wed Apr 22 10:44:16 EDT 2015
+* minor bug: weapon swing is nutso fast when fps sync is off
 - weapon damage only for hard things
 - bow damage only on firing
 - drops bombs under player
