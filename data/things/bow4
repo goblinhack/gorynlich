@@ -10,7 +10,7 @@
  hit_priority=0
  is_carryable
  is_given_randomly_at_start
- weapon_fire_delay_hundredths=8
+ weapon_fire_delay_hundredths=15
  is_fragile
  is_damaged_on_firing
  d10000_chance_of_appearing=20

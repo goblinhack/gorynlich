@@ -38,6 +38,7 @@ void tile_get_coords(tilep, float *x1, float *y1, float *x2, float *y2);
 static inline
 void tile_blit_fat (tile *tile, char *name, fpoint tl, fpoint br)
 {
+#if 0
     if (!tile) {
         if (!name) {
             DIE("no name for tile blit");
@@ -45,6 +46,7 @@ void tile_blit_fat (tile *tile, char *name, fpoint tl, fpoint br)
 
         tile = tile_find(name);
     }
+#endif
 
     blit(tile->gl_surface_binding,
          tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
@@ -56,6 +58,7 @@ void tile_blit_fat (tile *tile, char *name, fpoint tl, fpoint br)
 static inline
 void tile_blit_fat_black_and_white (tile *tile, char *name, fpoint tl, fpoint br)
 {
+#if 0
     if (!tile) {
         if (!name) {
             DIE("no name for tile blit");
@@ -63,6 +66,7 @@ void tile_blit_fat_black_and_white (tile *tile, char *name, fpoint tl, fpoint br
 
         tile = tile_find(name);
     }
+#endif
 
     blit(tile->gl_surface_binding_black_and_white,
          tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
@@ -74,6 +78,7 @@ void tile_blit_fat_black_and_white (tile *tile, char *name, fpoint tl, fpoint br
 static inline
 void tile_blit_at (tile *tile, char *name, point tl, point br)
 {
+#if 0
     if (!tile) {
         if (!name) {
             DIE("no name for tile blit");
@@ -81,6 +86,7 @@ void tile_blit_at (tile *tile, char *name, point tl, point br)
 
         tile = tile_find(name);
     }
+#endif
 
     blit(tile->gl_surface_binding,
          tile->x1, tile->y2, tile->x2, tile->y1, tl.x, tl.y, br.x, br.y);
@@ -94,6 +100,7 @@ void tile_blit (tile *tile, char *name, point at)
 {
     point tl, br;
 
+#if 0
     if (!tile) {
         if (!name) {
             DIE("no name for tile blit");
@@ -101,6 +108,7 @@ void tile_blit (tile *tile, char *name, point at)
 
         tile = tile_find(name);
     }
+#endif
 
     tl.x = at.x - tile->width/2;
     br.y = at.y - tile->height/2;
