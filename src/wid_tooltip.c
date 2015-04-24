@@ -184,10 +184,9 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
             wid_set_color(child, WID_COLOR_TEXT, WHITE);
 
             color c = BLACK;
-            c.a = 150;
+            c.a = 0;
             wid_set_color(child, WID_COLOR_TL, c);
             wid_set_color(child, WID_COLOR_BR, c);
-            c.a = 0;
             wid_set_color(child, WID_COLOR_BG, c);
 
             wid_set_name(wid_tooltip_window, n->line);
