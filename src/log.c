@@ -160,7 +160,6 @@ static void msg_ (uint32_t level,
         w = wid_tooltip_transient(buf + len, 3 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.1);
         wid_move_to_pct_centered_in(w, 0.5, 0.1, ONESEC / 2);
-        wid_set_no_shape(w);
     } 
     
     if (wid_notify(level, buf + len)) {

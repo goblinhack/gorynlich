@@ -32,11 +32,6 @@
 #undef ENABLE_DIR_TRAVERSAL_IN_WIDGETS
 
 /*
- * Fancy effects
- */
-#define ENABLE_SLIDING_TOOLTIP
-
-/*
  * Other windows are darker when popups appear
  */
 #undef ENABLE_FADE_OUT_OTHER_WIDGETS_WHEN_FOCUS_LOCKED
