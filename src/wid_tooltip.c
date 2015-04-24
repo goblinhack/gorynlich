@@ -101,7 +101,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
         wid_set_color(wid_tooltip_window, WID_COLOR_TEXT, WHITE);
 
         color c = WHITE;
-        c.a = 255;
+        c.a = 150;
         wid_set_color(wid_tooltip_window, WID_COLOR_BG, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_TL, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_BR, c);
@@ -196,14 +196,9 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
         split_free(&d);
     }
 
-#ifdef ENABLE_SLIDING_TOOLTIP
-    wid_move_to_pct_centered(wid_tooltip_window, -2.5, y);
-    wid_fade_in(wid_tooltip_window, wid_fade_delay);
-    wid_move_to_pct_centered_in(wid_tooltip_window, x, y, wid_swipe_delay);
-#else
     wid_fade_in(wid_tooltip_window, wid_fade_delay);
     wid_move_to_pct_centered(wid_tooltip_window, x, y);
-#endif
+
     wid_raise(wid_tooltip_window);
 
     wid_update(wid_tooltip_window);
