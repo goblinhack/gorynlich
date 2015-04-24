@@ -15,7 +15,7 @@
 #define WID_EDITOR_MENU_TILES_ACROSS    20
 #define WID_EDITOR_MENU_TILES_DOWN      14
 
-#define WID_EDITOR_UNDO                 30
+#define WID_EDITOR_UNDO                 60
 
 enum {
     WID_EDITOR_MODE_TOGGLE,
