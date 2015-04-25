@@ -277,6 +277,17 @@ static uint8_t resource_init_35 (void *context)
                            512, 512) != 0);
 }
 
+static uint8_t resource_init_36 (void *context)
+{
+    return (tex_load_tiled("data/gfx/shield.png",
+                           "shield",
+                           1024, 1024) != 0) &&
+           (tex_load_tiled_black_and_white(
+                           "data/gfx/shield.png",
+                           "shield_black_and_white",
+                           1024, 1024) != 0);
+}
+
 static uint8_t resource_init_last (void *context)
 {
     static const char *small_tiles[] = {
@@ -2905,6 +2916,32 @@ static uint8_t resource_init_last (void *context)
                   ARRAY_SIZE(crystalball_tiles), 
                   crystalball_tiles);
 
+    static const char *shield1_tiles[] = {
+        // --------------------------------------------------------------------
+        "shield1.16",
+        "shield1.15",
+        "shield1.14",
+        "shield1.13",
+        "shield1.12",
+        "shield1.11",
+        "shield1.10",
+        "shield1.9",
+        "shield1.8",
+        "shield1.7",
+        "shield1.6",
+        "shield1.5",
+        "shield1.3",
+        "shield1.4",
+        "shield1.2",
+        "shield1.1",
+    };
+
+    tile_load_arr("shield", 
+                  0, /* black and white */
+                  256, 256,
+                  ARRAY_SIZE(shield1_tiles), 
+                  shield1_tiles);
+
     static const char *crystalball_purple_tiles[] = {
         // --------------------------------------------------------------------
         "crystalball_purple.16",
@@ -2993,6 +3030,7 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_EXPLOSION2, "data/things/explosion2");
     tp_load(&THING_EXPLOSION3, "data/things/explosion3");
     tp_load(&THING_EXPLOSION4, "data/things/explosion4");
+    tp_load(&THING_SHIELD1, "data/things/shield1");
 
     tp_load(&THING_POISON1, "data/things/poison1");
     tp_load(&THING_POISON2, "data/things/poison2");
@@ -3257,6 +3295,9 @@ uint8_t resource_init (void)
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_35,
                           0, "resource_init_35");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_36,
+                          0, "resource_init_36");
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_last,
                           0, "resource_init_last");

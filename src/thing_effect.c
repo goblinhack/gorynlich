@@ -139,7 +139,7 @@ static void thing_client_effect_hit_crit (thingp t)
 
 static void thing_client_effect_power_up (thingp t)
 {
-    int count = 50;
+    int count = 200;
     int i = count;
     while (i--) {
         widp w = t->wid;
@@ -164,8 +164,8 @@ static void thing_client_effect_power_up (thingp t)
         }
 
         wid_move_to_pct_centered(power_up, px, py);
-        px += gaussrand(0.0, 0.15);
-        py += gaussrand(0.0, 0.15);
+        px += gaussrand(0.0, 0.1);
+        py += gaussrand(0.0, 0.1);
         wid_move_to_pct_centered_in(power_up, px, py, delay);
 
         wid_set_no_shape(power_up);
@@ -180,6 +180,6 @@ static void thing_client_effect_power_up (thingp t)
 
         wid_fade_out(power_up, delay);
         wid_destroy_in(power_up, delay);
-        wid_scaling_blit_to_pct_in(power_up, 0.1, 0.4, delay * 2, 0);
+        wid_scaling_blit_to_pct_in(power_up, 0.1, 0.3, delay * 2, 0);
     }
 }

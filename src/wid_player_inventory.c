@@ -292,9 +292,9 @@ void wid_player_inventory_button_style (widp w,
         }
 
         /*
-         * HP bonus
+         * HP bonus. Don't show negative gains, i.e. curses
          */
-        if (tp_get_bonus_hp_on_use(tp)) {
+        if (tp_get_bonus_hp_on_use(tp) > 0) {
             char *tmp2 = dynprintf(
                             "%%%%fmt=left$"
                             "HP gain on use: %d\n", 

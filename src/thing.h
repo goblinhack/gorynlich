@@ -375,6 +375,7 @@ extern uint16_t THING_EXPLOSION1;
 extern uint16_t THING_EXPLOSION2;
 extern uint16_t THING_EXPLOSION3;
 extern uint16_t THING_EXPLOSION4;
+extern uint16_t THING_SHIELD1;
 extern uint16_t THING_HIT_SUCCESS;
 extern uint16_t THING_HIT_MISS;
 extern uint16_t THING_HEART;
@@ -1129,11 +1130,11 @@ static inline uint8_t thing_is_rrr16 (thingp t)
     return (tp_is_rrr16(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr17 (thingp t)
+static inline uint8_t thing_is_shield (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr17(thing_tp(t)));
+    return (tp_is_shield(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_damaged_on_firing (thingp t)
@@ -1723,9 +1724,9 @@ static inline uint8_t thing_is_rrr16_noverify (thingp t)
     return (t->tp->is_rrr16);
 }
 
-static inline uint8_t thing_is_rrr17_noverify (thingp t)
+static inline uint8_t thing_is_shield_noverify (thingp t)
 {
-    return (t->tp->is_rrr17);
+    return (t->tp->is_shield);
 }
 
 static inline uint8_t thing_is_damaged_on_firing_noverify (thingp t)
