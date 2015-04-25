@@ -354,9 +354,9 @@ uint8_t map_is_rrr15_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr15));
 }
 
-uint8_t map_is_rrr16_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_centered_on_owner_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr16));
+    return (map_is_x_at(level, x, y, tp_is_centered_on_owner));
 }
 
 uint8_t map_is_shield_at (levelp level, int32_t x, int32_t y)
@@ -821,9 +821,9 @@ thingp map_thing_is_rrr15_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr15));
 }
 
-thingp map_thing_is_rrr16_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_centered_on_owner_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr16));
+    return (map_thing_is_x_at(level, x, y, tp_is_centered_on_owner));
 }
 
 thingp map_thing_is_shield_at (levelp level, int32_t x, int32_t y)
@@ -1304,9 +1304,9 @@ tree_rootp map_all_things_is_rrr15_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr15));
 }
 
-tree_rootp map_all_things_is_rrr16_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_centered_on_owner_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr16));
+    return (map_all_things_is_x_at(level, x, y, tp_is_centered_on_owner));
 }
 
 tree_rootp map_all_things_is_shield_at (levelp level, int32_t x, int32_t y)
@@ -1879,7 +1879,7 @@ tpp map_find_rrr15_at (levelp level, int32_t x, int32_t y, widp *w)
 
 tpp map_find_rrr16_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr16, w));
+    return (map_find_x_at(level, x, y, tp_is_centered_on_owner, w));
 }
 
 tpp map_find_rrr17_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2708,9 +2708,9 @@ tree_rootp map_all_things_is_rrr15 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr15));
 }
 
-tree_rootp map_all_things_is_rrr16 (levelp level)
+tree_rootp map_all_things_is_centered_on_owner (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr16));
+    return (map_all_things_is_x(level, tp_is_centered_on_owner));
 }
 
 tree_rootp map_all_things_is_shield (levelp level)

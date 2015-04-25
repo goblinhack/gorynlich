@@ -416,6 +416,13 @@ static void thing_handle_collision (thingp me, thingp it,
     }
 
     /*
+     * Need this or shields attack the player.
+     */
+    if (thing_owner(it) == me) {
+        return;
+    }
+
+    /*
      * Filter out boring things.
      */
     if (thing_is_floor(it) ||
@@ -469,6 +476,7 @@ static void thing_handle_collision (thingp me, thingp it,
          */
         if (thing_is_monst(it)                  || 
             thing_is_poison(it)                 ||
+            thing_is_shield(it)                 ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_explosion(it)) {
             /*
@@ -499,6 +507,7 @@ static void thing_handle_collision (thingp me, thingp it,
          */
         if (thing_is_player(it)                 ||
             thing_is_poison(it)                 ||
+            thing_is_shield(it)                 ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_explosion(it)) {
             /*
@@ -592,6 +601,20 @@ static void thing_handle_collision (thingp me, thingp it,
             /*
              * Don't hit walls. It's daft.
              */
+            thing_is_mob_spawner(it)) {
+            /*
+             * Weapon hits monster or generator.
+             */
+            thing_possible_hit_add_hitter_killed_on_hitting(
+                                            it, "sword hit thing");
+        }
+    }
+
+    /*
+     * Shield hits a bad guy?
+     */
+    if (thing_is_shield(me)) {
+        if (thing_is_monst(it) ||
             thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.
@@ -697,6 +720,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
              */
             if (thing_is_floor(it)          ||
                 thing_is_action(it)         ||
+                thing_is_shield(it)         ||
                 thing_is_animation(it)) {
                 continue;
             }

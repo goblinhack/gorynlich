@@ -404,7 +404,7 @@ void wid_game_map_go_back_to_editor (void)
 
 static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
-if (wid_menu_visible) {
+    if (wid_menu_visible) {
         return (false);
     }
 
