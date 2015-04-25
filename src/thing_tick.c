@@ -64,7 +64,7 @@ static void thing_tick_server_all (void)
              * the thing.
              */
             if (!t->updated) {
-                thing_destroy(t, "died");
+                thing_destroy(t, "died on server");
             }
             continue;
         }
@@ -332,7 +332,7 @@ static void thing_tick_client_all (void)
          * Thing has croaked it?
          */
         if (thing_is_dead(t)) {
-            thing_destroy(t, "died");
+            thing_destroy(t, "died on client");
             continue;
         }
 

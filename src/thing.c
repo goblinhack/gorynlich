@@ -1271,7 +1271,7 @@ void thing_destroy (thingp t, const char *why)
         !thing_is_explosion(t) &&
         !thing_is_weapon_swing_effect(t) &&
         !thing_is_weapon_carry_anim(t)) {
-        THING_LOG(t, "destroyed (%s)", why);
+        THING_LOG(t, "destroyed, why(%s)", why);
     }
 
     if (thing_is_player(t)) {
@@ -1438,8 +1438,14 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
     myfree(t->logname);
     t->logname = new_logname;
 
-    if (thing_is_player(t) || thing_is_monst(t)) {
-        THING_LOG(t, "dead (%s)", reason);
+    if (thing_is_floor(t) || 
+        thing_is_door(t) || 
+        thing_is_wall(t)) {
+        /*
+         * Too boring to log.
+         */
+    } else {
+        THING_LOG(t, "dead why(%s)", reason);
     }
 
     if (thing_is_player(t)) {
@@ -1828,6 +1834,8 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
              * Start the death countdown
              */
             thing_stats_set_hp(t, 0);
+
+            THING_LOG(t, "teriminal hit, hp %d, damage %d", thing_stats_get_hp(t), damage);
 
             /*
              * Record who dun it.
