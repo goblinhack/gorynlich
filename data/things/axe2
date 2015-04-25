@@ -1,7 +1,7 @@
 {
- short_name="Learner Axe"
+ short_name="Steel Axe"
  raw_name="axe2"
- tooltip="Learner Axe"
+ tooltip="Steel Axe"
  z_depth=3
  is_weapon
  can_be_enchanted
