@@ -253,7 +253,7 @@ typedef struct tp_ {
     uint8_t is_rrr14:1;
     uint8_t is_rrr15:1;
     uint8_t is_rrr16:1;
-    uint8_t is_rrr17:1;
+    uint8_t is_shield:1;
     uint8_t is_damaged_on_firing:1;
     uint8_t is_hard:1;
     uint8_t is_sleeping:1;
@@ -664,9 +664,9 @@ static inline uint8_t tp_is_rrr16 (tpp t)
     return (t->is_rrr16);
 }
 
-static inline uint8_t tp_is_rrr17 (tpp t)
+static inline uint8_t tp_is_shield (tpp t)
 {
-    return (t->is_rrr17);
+    return (t->is_shield);
 }
 
 static inline uint8_t tp_is_damaged_on_firing (tpp t)

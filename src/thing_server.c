@@ -191,6 +191,9 @@ void thing_server_action (thingp t,
             thing_server_effect(t, THING_STATE_EFFECT_IS_POWER_UP);
             break;
         } else if (item->id == THING_POTION_SHIELD) {
+            if (level_place_shield(server_level, t, t->x + 1, t->y)) {
+                break;
+            }
             break;
         } else if (item->id == THING_POTION_CLOUDKILL) {
             level_place_cloudkill(server_level, t, t->x, t->y);

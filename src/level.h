@@ -144,6 +144,10 @@ thingp level_place_bomb(levelp level,
                         thingp owner,
                         double x, double y);
 
+thingp level_place_shield(levelp level, 
+                          thingp owner,
+                          double x, double y);
+
 /*
  * level_trigger.c
  */
