@@ -5,13 +5,14 @@
  is_animated
  is_hidden_from_editor
  is_shield
+ max_hp=200
  is_animated_no_dir
- is_fire
- scale=0.3
+ scale=0.15
  is_light_source
- light_radius=10.0
+ light_radius=3.0
  is_collision_map_large
  damage=3
+ is_centered_on_owner
  hit_delay_tenths=1
  tiles={
   tile={

@@ -225,19 +225,19 @@ void thing_fini (void)
     if (thing_init_done) {
         thing_init_done = false;
 
-        tree_destroy(&client_player_things, 
+        tree_destroy(&client_player_things,
                      (tree_destroy_func)0);
-        tree_destroy(&server_player_things, 
+        tree_destroy(&server_player_things,
                      (tree_destroy_func)0);
 
-        tree_destroy(&client_active_things, 
+        tree_destroy(&client_active_things,
                      (tree_destroy_func)thing_destroy_implicit);
-        tree_destroy(&server_active_things, 
+        tree_destroy(&server_active_things,
                      (tree_destroy_func)thing_destroy_implicit);
 
-        tree_destroy(&client_boring_things, 
+        tree_destroy(&client_boring_things,
                      (tree_destroy_func)thing_destroy_implicit);
-        tree_destroy(&server_boring_things, 
+        tree_destroy(&server_boring_things,
                      (tree_destroy_func)thing_destroy_implicit);
 
         if (thing_timers) {
@@ -419,7 +419,7 @@ static void thing_map_dump_ (thing_map *map, const char *name)
                     fprintf(fp, "----- ");
                     continue;
                 }
-                
+
                 fprintf(fp, "%5u ", m);
             }
 
@@ -554,7 +554,7 @@ void thing_map_remove (thingp t)
         return;
     }
 
-    DIE("did not find id %u/%s on map at %d,%d to remove", 
+    DIE("did not find id %u/%s on map at %d,%d to remove",
         t->thing_id, thing_logname(t), x, y);
 }
 
@@ -692,7 +692,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
 /*
  * Create a new thing.
  */
-thingp thing_server_new (const char *name, 
+thingp thing_server_new (const char *name,
                          double x, double y,
                          thing_statsp stats)
 {
@@ -705,19 +705,19 @@ thingp thing_server_new (const char *name,
     }
 
     if (!server_player_things) {
-        server_player_things = 
+        server_player_things =
             tree_alloc(TREE_KEY_INTEGER, "server_player_things");
 
         server_player_things->offset = STRUCT_OFFSET(struct thing_, tree2);
     }
 
     if (!server_active_things) {
-        server_active_things = 
+        server_active_things =
             tree_alloc(TREE_KEY_INTEGER, "server_active_things");
     }
 
     if (!server_boring_things) {
-        server_boring_things = 
+        server_boring_things =
             tree_alloc(TREE_KEY_INTEGER, "server_boring_things");
     }
 
@@ -725,7 +725,7 @@ thingp thing_server_new (const char *name,
     t->on_server = true;
 
     /*
-     * Make sure we don't treat changes to these stats with a client version 
+     * Make sure we don't treat changes to these stats with a client version
      * bump.
      */
     thing_stats_set_on_server(t, t->on_server);
@@ -804,7 +804,7 @@ thingp thing_server_new (const char *name,
         t->tree2.key = id;
 
         if (!tree_insert(server_player_things, &t->tree2.node)) {
-            DIE("thing insert name [%s, %u] into server_player_things failed", 
+            DIE("thing insert name [%s, %u] into server_player_things failed",
                 name, id);
         }
 
@@ -814,14 +814,14 @@ thingp thing_server_new (const char *name,
 
     if (tp_is_inactive(tp)) {
         if (!tree_insert(server_boring_things, &t->tree.node)) {
-            DIE("thing insert name [%s, %u] into server_boring_things failed", 
+            DIE("thing insert name [%s, %u] into server_boring_things failed",
                 name, id);
         }
 
         t->client_or_server_tree = server_boring_things;
     } else {
         if (!tree_insert(server_active_things, &t->tree.node)) {
-            DIE("thing insert name [%s, %u] into server_active_things failed", 
+            DIE("thing insert name [%s, %u] into server_active_things failed",
                 name, id);
         }
 
@@ -855,7 +855,13 @@ thingp thing_server_new (const char *name,
     t->stats.thing_id = id;
 
     /*
-     * Start out with the items carried on the template if any. This is not 
+     * Start our with max stats.
+     */
+    thing_stats_set_hp(t, tp_get_stats_max_hp(tp));
+    thing_stats_set_magic(t, tp_get_stats_max_magic(tp));
+
+    /*
+     * Start out with the items carried on the template if any. This is not
      * done for players as they do this in the provisioning screen.
      */
     uint32_t i, j;
@@ -892,10 +898,10 @@ thingp thing_server_new (const char *name,
         !thing_is_weapon_carry_anim(t)) {
 
         if (t->on_server) {
-            THING_LOG(t, "created (total %d monst %d)", 
+            THING_LOG(t, "created (total %d monst %d)",
                       server_things_total, server_monst_things_total);
         } else {
-            THING_LOG(t, "created (total %d monst %d)", 
+            THING_LOG(t, "created (total %d monst %d)",
                       client_things_total, client_monst_things_total);
         }
     }
@@ -938,26 +944,26 @@ thingp thing_client_new (uint32_t id, tpp tp)
     thingp t;
 
     if (!client_player_things) {
-        client_player_things = 
+        client_player_things =
             tree_alloc(TREE_KEY_INTEGER, "client_player_things");
 
         client_player_things->offset = STRUCT_OFFSET(struct thing_, tree2);
     }
 
     if (!client_active_things) {
-        client_active_things = 
+        client_active_things =
                         tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
     }
 
     if (!client_boring_things) {
-        client_boring_things = 
+        client_boring_things =
                         tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
     }
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
 
     /*
-     * We need to set the location of this thing when in combined client 
+     * We need to set the location of this thing when in combined client
      * server mode.
      */
     t->on_server = false;
@@ -1088,10 +1094,10 @@ thingp thing_client_find (uint32_t id)
     // memset(&target, 0, sizeof(target));
     target.tree.key = id;
 
-    result = (typeof(result)) 
+    result = (typeof(result))
                     tree_find(client_active_things, &target.tree.node);
     if (!result) {
-        result = (typeof(result)) 
+        result = (typeof(result))
                         tree_find(client_boring_things, &target.tree.node);
     }
 
@@ -1109,10 +1115,10 @@ thingp thing_server_find (uint32_t id)
     // memset(&target, 0, sizeof(target));
     target.tree.key = id;
 
-    result = (typeof(result)) 
+    result = (typeof(result))
                     tree_find(server_active_things, &target.tree.node);
     if (!result) {
-        result = (typeof(result)) 
+        result = (typeof(result))
                         tree_find(server_boring_things, &target.tree.node);
     }
 
@@ -1155,7 +1161,7 @@ static void thing_remove_hooks (thingp t)
      * We are owned by something. i.e. we are a sword.
      */
     thingp owner = 0;
-    
+
     if (t->owner_thing_id) {
         owner = thing_owner(t);
     }
@@ -1188,7 +1194,7 @@ static void thing_remove_hooks (thingp t)
             thingp carry = thing_weapon_carry_anim(owner);
             if (carry) {
                 /*
-                 * But only if the owner is visible. They may have reached the 
+                 * But only if the owner is visible. They may have reached the
                  * level.
                  */
                 if (thing_is_visible(owner)) {
@@ -1197,6 +1203,10 @@ static void thing_remove_hooks (thingp t)
                     }
                 }
             }
+        }
+
+        if (t->thing_id == owner->shield_anim_thing_id) {
+            thing_set_shield_anim(owner, 0);
         }
 
         thing_set_owner(t, 0);
@@ -1221,8 +1231,16 @@ static void thing_remove_hooks (thingp t)
         thing_dead(item, 0, "weapon swing anim owner killed");
     }
 
+    if (t->shield_anim_thing_id) {
+        thingp item = thing_shield_anim(t);
+        thing_set_shield_anim(t, 0);
+        verify(item);
+        thing_set_owner(item, 0);
+        thing_dead(item, 0, "shield anim owner killed");
+    }
+
     /*
-     * If the inventory is being shown, we need to remove it and make a copy 
+     * If the inventory is being shown, we need to remove it and make a copy
      * of the contents as the thing that holds this information is about to
      * be destroyed.
      */
@@ -1234,7 +1252,7 @@ static void thing_remove_hooks (thingp t)
 
             memcpy(&global_config.dead_stats, &t->stats, sizeof(thing_stats));
 
-            wid_player_action_visible(&global_config.dead_stats, 
+            wid_player_action_visible(&global_config.dead_stats,
                                       true /* fast */);
         }
     }
@@ -1261,7 +1279,7 @@ void thing_destroy (thingp t, const char *why)
 
         thing_dump(t);
     }
- 
+
     /*
      * Stop all timers.
      */
@@ -1284,7 +1302,7 @@ void thing_destroy (thingp t, const char *why)
     if (t->on_client_player_things) {
         t->on_client_player_things = false;
         if (!tree_remove(client_player_things, &t->tree2.node)) {
-            DIE("thing template destroy name [%s] failed (2)", 
+            DIE("thing template destroy name [%s] failed (2)",
                 thing_name(t));
         }
     }
@@ -1292,7 +1310,7 @@ void thing_destroy (thingp t, const char *why)
     if (t->on_server_player_things) {
         t->on_server_player_things = false;
         if (!tree_remove(server_player_things, &t->tree2.node)) {
-            DIE("thing template destroy name [%s] failed (3)", 
+            DIE("thing template destroy name [%s] failed (3)",
                 thing_name(t));
         }
     }
@@ -1329,7 +1347,7 @@ void thing_destroy (thingp t, const char *why)
     }
 
     /*
-     * If this is a player on the server, tell the client the player has 
+     * If this is a player on the server, tell the client the player has
      * croaked it.
      */
     gsocketp s;
@@ -1415,7 +1433,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
     /*
      * Replace the logname
      */
-    char *new_logname = dynprintf("%s (dead, %s)", 
+    char *new_logname = dynprintf("%s (dead, %s)",
                                   t->logname, reason);
     myfree(t->logname);
     t->logname = new_logname;
@@ -1446,7 +1464,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
             } else if (t->player->socket) {
                 hiscore_try_to_add(t->stats.pname, reason, t->stats.xp);
 
-                socket_tx_server_hiscore(t->player->socket, 
+                socket_tx_server_hiscore(t->player->socket,
                                          t->stats.pname,
                                          reason,
                                          t->stats.xp);
@@ -1480,8 +1498,8 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
             if (thing_is_sawblade(t) && killer) {
                 /*
-                 * Skip polymorph if there is a killer. We want the blades to 
-                 * just vanish and not get more bloody. That only happens if 
+                 * Skip polymorph if there is a killer. We want the blades to
+                 * just vanish and not get more bloody. That only happens if
                  * there is no killer and we force a polymorph.
                  */
             } else if (polymorph) {
@@ -1504,7 +1522,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                  * Update the name to reflect the new thing type.
                  */
                 myfree(t->logname);
-                t->logname = dynprintf("%s[%p, id %u] (server)", 
+                t->logname = dynprintf("%s[%p, id %u] (server)",
                                        thing_short_name(t), t,
                                        t->thing_id);
                 return;
@@ -1519,8 +1537,8 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 thingp newt = thing_mob_spawn_on_death(t);
 
                 /*
-                 * If this is the player death then give the gravestone a lot 
-                 * of health or it can be immediately killed by a lingering 
+                 * If this is the player death then give the gravestone a lot
+                 * of health or it can be immediately killed by a lingering
                  * explosion that killed the player too.
                  */
                 if (newt && thing_is_player(t)) {
@@ -1579,7 +1597,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 #if 0
                     if (thing_is_explosion(killer)) {
                         /*
-                         * Too many packets if we kill a lot of things in one 
+                         * Too many packets if we kill a lot of things in one
                          * go.
                          *
                          * But it looks nice... 8)
@@ -1587,8 +1605,8 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                     } else {
 #endif
                         MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
-                                                    "%%%%font=%s$%%%%fg=%s$+%d", 
-                                                    "large", "gold", 
+                                                    "%%%%font=%s$%%%%fg=%s$+%d",
+                                                    "large", "gold",
                                                     val);
 #if 0
                     }
@@ -1601,9 +1619,9 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     /*
      * Flash briefly red on death.
      */
-    if (thing_is_monst(t) || 
-        thing_is_mob_spawner(t) || 
-        thing_is_wall(t) || 
+    if (thing_is_monst(t) ||
+        thing_is_mob_spawner(t) ||
+        thing_is_wall(t) ||
         thing_is_door(t)) {
 
         widp w = t->wid;
@@ -1651,14 +1669,14 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     }
 
     /*
-     * Move the thing from the boring list to the active list and update it so 
+     * Move the thing from the boring list to the active list and update it so
      * that it gets sent to the client.
      */
     if (t->on_server) {
         thing_update(t);
 
         /*
-         * Send the players an update of their status so the client gets the 
+         * Send the players an update of their status so the client gets the
          * final score.
          */
         if (thing_is_player(t)) {
@@ -1800,6 +1818,8 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
     /*
      * Keep hitting until all damage is used up or the thing is dead.
      */
+    THING_LOG(t, "hit, hp %d, damage %d", thing_stats_get_hp(t), damage);
+
     while (damage > 0) {
         if (thing_stats_get_hp(t) <= damage) {
             damage -= thing_stats_get_hp(t);
@@ -1841,6 +1861,9 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
                 }
             }
 
+            THING_LOG(t, "hit by (%s) for %u, now dead",
+                      thing_logname(orig_hitter), damage);
+
             /*
              * If polymorphed, hit again?
              */
@@ -1867,10 +1890,9 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
                 thing_stats_set_hp(t, 0);
             }
 
-            if (thing_is_player(t)) {
-                THING_LOG(t, "hit by (%s) for %u", 
-                          thing_logname(orig_hitter), damage);
-            }
+            THING_LOG(t, "hit by (%s) for %u, hp now %d",
+                      thing_logname(orig_hitter), damage,
+                      t->stats.hp);
 
             damage = 0;
         }
@@ -1912,8 +1934,8 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
                 color = "red";
             }
 
-            MSG_SERVER_SHOUT_OVER_THING(POPUP, t, 
-                                        "%%%%font=%s$%%%%fg=%s$-%d", 
+            MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                        "%%%%font=%s$%%%%fg=%s$-%d",
                                         font, color, orig_damage);
         }
     }
@@ -1926,8 +1948,8 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     thingp orig_hitter = hitter;
     tpp weapon;
 
-if (0)  {
-CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
+if (1)  {
+LOG("%s hitting %s",thing_logname(t), thing_logname(hitter));
 }
     verify(t);
     if (hitter) {
@@ -1943,8 +1965,8 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
 
     if (thing_is_dead_or_dying(hitter)) {
         /*
-         * This case is hit if a ghost runs into a player. The ghost takes 
-         * damage. We don't want the player to keep absorbing hits when 
+         * This case is hit if a ghost runs into a player. The ghost takes
+         * damage. We don't want the player to keep absorbing hits when
          * already dead though.
          */
         return (false);
@@ -1984,7 +2006,7 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
          * Walls and doors and other solid object are not damaged by poison
          * or similar effects. Limit it to explosions and the like.
          */
-        if (thing_is_door(t)            || 
+        if (thing_is_door(t)            ||
             thing_is_wall(t)) {
 
             if (!thing_is_explosion(hitter)     &&
@@ -1997,7 +2019,7 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
         if (thing_is_weapon_swing_effect(hitter)) {
             if (!hitter->owner_thing_id) {
                 /*
-                 * Happens with rapid swings as we only allow one active swing 
+                 * Happens with rapid swings as we only allow one active swing
                  * per owner.
                  *
                 ERR("swung weapon %s has no owner ID", thing_logname(hitter));
@@ -2096,7 +2118,7 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
             damage = thing_tp(hitter)->damage;
         }
     }
-    
+
     /*
      * Allow no more hits than x per second by the hitter.
      */
@@ -2104,11 +2126,11 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
         /*
          * We want the orig hitter, i.e. the sword and not the playet.
          */
-        uint32_t delay = 
+        uint32_t delay =
             tp_get_hit_delay_tenths(orig_hitter->tp);
 
         if (delay) {
-            if (!time_have_x_tenths_passed_since(delay, 
+            if (!time_have_x_tenths_passed_since(delay,
                                                  orig_hitter->timestamp_hit)) {
 
                 return (false);
@@ -2122,9 +2144,9 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
          */
         if (thing_is_fragile(orig_hitter)) {
             /*
-             * Sawblades get more covered in blood each time they kill 
-             * something that is warm blooded. But we don't want that to 
-             * happen for damage from say a bomb. However if the damage is 
+             * Sawblades get more covered in blood each time they kill
+             * something that is warm blooded. But we don't want that to
+             * happen for damage from say a bomb. However if the damage is
              * really high then we just stop the blade.
              */
             if (thing_is_sawblade(orig_hitter)) {
@@ -2147,9 +2169,10 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
     /*
      * Flash briefly red on attempted hits.
      */
-    if (thing_is_monst(t)               || 
-        thing_is_mob_spawner(t)         || 
+    if (thing_is_monst(t)               ||
+        thing_is_mob_spawner(t)         ||
         thing_is_wall(t)                ||
+        thing_is_shield(t)              ||
         thing_is_sawblade(t)            ||
         thing_is_door(t)) {
 
@@ -2168,7 +2191,7 @@ CON("%s hitting %s",thing_logname(t), thing_logname(hitter));
     /*
      * Check if the weapon reaches its end of warranty.
      *
-     * I think this should be before the miss chance so if we are hitting at 
+     * I think this should be before the miss chance so if we are hitting at
      * rock and keep missing then we damage the weapon.
      */
     if (weapon) {
@@ -2213,7 +2236,7 @@ thingp thing_owner (thingp t)
                               t->owner_thing_id, thing_logname(t));
                     return (0);
                 } else {
-                    DIE("no server owner thing found for owner id %u for %s", 
+                    DIE("no server owner thing found for owner id %u for %s",
                         t->owner_thing_id, thing_logname(t));
                 }
             }
@@ -2225,7 +2248,7 @@ thingp thing_owner (thingp t)
         if (t->owner_thing_id) {
             thingp n = thing_client_ids[t->owner_thing_id];
             if (!n) {
-                DIE("no client owner thing found for owner id %u for %s", 
+                DIE("no client owner thing found for owner id %u for %s",
                     t->owner_thing_id, thing_logname(t));
             }
 
@@ -2385,7 +2408,7 @@ void thing_reached_exit (thingp t, thingp exit)
         global_config.server_level_pos.y = exit->data->exit.y;
         global_config.server_level_pos.x = exit->data->exit.x;
 
-        THING_LOG(t, "exit jump to level %d.%d", 
+        THING_LOG(t, "exit jump to level %d.%d",
                   global_config.server_level_pos.y,
                   global_config.server_level_pos.x);
     } else {
@@ -2395,7 +2418,7 @@ void thing_reached_exit (thingp t, thingp exit)
             global_config.server_level_pos.y++;
         }
 
-        THING_LOG(t, "exit to next consecutive level %d.%d", 
+        THING_LOG(t, "exit to next consecutive level %d.%d",
                   global_config.server_level_pos.y,
                   global_config.server_level_pos.x);
     }
@@ -2434,7 +2457,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
     if (level == server_level) {
         {
             TREE_WALK(server_active_things, t) {
-                if (keep_players && 
+                if (keep_players &&
                     thing_is_player_or_owned_by_player(t) &&
                     !thing_is_animation(t) &&
                     !thing_is_weapon_swing_effect(t)) {
@@ -2456,7 +2479,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
 
         {
             TREE_WALK(server_active_things, t) {
-                if (keep_players && 
+                if (keep_players &&
                     thing_is_player_or_owned_by_player(t)) {
                     continue;
                 }
@@ -2475,7 +2498,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
     if (level == client_level) {
         {
             TREE_WALK(client_active_things, t) {
-                if (keep_players && 
+                if (keep_players &&
                     thing_is_player_or_owned_by_player(t) &&
                     !thing_is_animation(t) &&
                     !thing_is_weapon_swing_effect(t)) {
@@ -2498,7 +2521,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
 
         {
             TREE_WALK(client_active_things, t) {
-                if (keep_players && 
+                if (keep_players &&
                     thing_is_player_or_owned_by_player(t)) {
                     continue;
                 }
@@ -2943,10 +2966,10 @@ thing_tilep thing_current_tile (thingp t)
 /*
  * Place a thing after a delay.
  */
-void thing_place_timed (tpp tp, 
+void thing_place_timed (tpp tp,
                         double x,
                         double y,
-                        uint32_t ms, 
+                        uint32_t ms,
                         uint32_t jitter,
                         uint8_t on_server)
 {
@@ -2974,12 +2997,12 @@ void thing_place_timed (tpp tp,
  * Place a thing after a delay.
  */
 void thing_place_and_destroy_timed (levelp level,
-                                    tpp tp, 
+                                    tpp tp,
                                     thingp owner,
                                     double x,
                                     double y,
-                                    uint32_t ms, 
-                                    uint32_t destroy_in, 
+                                    uint32_t ms,
+                                    uint32_t destroy_in,
                                     uint32_t jitter,
                                     uint8_t on_server,
                                     uint8_t is_epicenter)
@@ -3137,12 +3160,12 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         tpp tp = t->tp;
 
         /*
-         * As an optimization do not send dead events for explosions. Let the 
+         * As an optimization do not send dead events for explosions. Let the
          * client destroy those on its own to save sending loads of events.
          */
         if (tp_is_explosion(tp)) {
             /*
-             * Only send the center of a location, the client will then 
+             * Only send the center of a location, the client will then
              * emulate the blast without us needing to send lots of thing IDs.
              */
             if (!t->is_epicenter) {
@@ -3157,7 +3180,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         }
 
         /*
-         * Don't sent local effects to the client to save bandwidth. The 
+         * Don't sent local effects to the client to save bandwidth. The
          * client can infer the swing and animations.
          */
         if (tp_is_weapon_swing_effect(tp) ||
@@ -3167,7 +3190,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         }
 
         /*
-         * If updating to all sockets, decrement the update counter for this 
+         * If updating to all sockets, decrement the update counter for this
          * thing. We only send updates on modified things.
          */
         if (!p) {
@@ -3223,27 +3246,31 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
          * WARING: Keep the above and below in sync.
          */
         uint8_t ext1 =
-            ((t->is_dead        ? 1 : 0) << 
+            ((t->is_dead        ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)             |
-            ((t->on_active_list ? 1 : 0) << 
+            ((t->on_active_list ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_IS_ACTIVE)           |
-            ((t->is_sleeping ? 1 : 0) << 
+            ((t->is_sleeping ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_IS_SLEEPING)         |
-            ((t->has_left_level ? 1 : 0) << 
+            ((t->has_left_level ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL)      |
-            ((t->effect         ? 1 : 0) << 
+            ((t->effect         ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT);
 
         uint8_t ext2 =
-            ((t->torch_light_radius_set              ? 1 : 0) << 
+            ((t->torch_light_radius_set              ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)  |
-            (((t->data && t->data->col_name)         ? 1 : 0) << 
+            (((t->data && t->data->col_name)         ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_COLOR)               |
-            ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) << 
+            ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_RESYNC);
 
         if (t->weapon) {
             ext1 |= 1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT;
+        }
+
+        if (t->owner_thing_id) {
+            ext1 |= 1 << THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT;
         }
 
         if (t->needs_tx_weapon_swung) {
@@ -3252,7 +3279,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         }
 
         /*
-         * Do we need to encode the thing template? Yes if this is the first 
+         * Do we need to encode the thing template? Yes if this is the first
          * update or sending to a new client.
          */
         if (t->first_update || p) {
@@ -3301,55 +3328,61 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 
         if (state & (1 << THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT)) {
             *data++ = id - last_id;
-//LOG("  id       %02x",*(data-1));
+//CON("T id       0x%02x", *(data-1));
         } else {
-            SDLNet_Write16(id, data);               
+            SDLNet_Write16(id, data);
             data += sizeof(uint16_t);
-//LOG("  id       %04x",id);
+//CON("T id       0x%04x", id);
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT)) {
             *data++ = template_id;
-//LOG("  template %02x",template_id);
+//CON("  template 0x%02x", template_id);
         }
 
         if (ext1) {
             *data++ = ext1;
-//LOG("  ext      %02x",ext1);
+//CON("  ext1     0x%02x", ext1);
         }
 
         if (ext2) {
             *data++ = ext2;
-//LOG("  ext      %02x",ext2);
+//CON("  ext2     0x%02x", ext2);
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
             *data++ = tx;
-//LOG("  tx       %02x",tx);
+//CON("  tx       0x%02x", tx);
             *data++ = ty;
-//LOG("  ty       %02x",ty);
+//CON("  ty       0x%02x", ty);
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT)) {
             *data++ = tp_to_id(t->weapon);
-//LOG("  weapon   %0x",tp_to_id(t->weapon));
+//CON("  weapon   %02x", tp_to_id(t->weapon));
+        }
+
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT)) {
+            SDLNet_Write16(t->owner_thing_id, data);
+            data += sizeof(uint16_t);
+//CON("  owner    0x%04x", t->owner_thing_id);
         }
 
         if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)) {
             *data++ = (uint8_t) ((int) (t->torch_light_radius * 4.0));
-//LOG("tx  torch    %f -> %d",t->torch_light_radius, *(data - 1));
+//CON("tx  torch    %f -> %d",t->torch_light_radius, *(data - 1));
         }
 
         if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_COLOR)) {
             *data++ = t->data->col.r;
             *data++ = t->data->col.g;
             *data++ = t->data->col.b;
-//LOG("tx  color    %d,%d,%d -> %d",t->data.col.r, t->data.col.g, 
-//t->data.col.b, *(data - 1));
+//CON("tx  color    %d,%d,%d -> %d",t->data->col.r, t->data->col.g, t->data->col.b, *(data - 1));
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT)) {
             *data++ = t->effect;
+//CON("tx  effetc   %d", t->effect);
             t->effect = 0;
         }
 
@@ -3402,7 +3435,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 
             socket_tx_enqueue(sp, &dup);
         }
-            
+
         /*
          * Reuse the same packet.
          */
@@ -3459,16 +3492,17 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
     uint8_t *eodata = data + packet->len - 1;
     uint16_t last_id = 0;
 
-//LOG("rx map update:");
+//CON("rx map update:");
 //hex_dump_log(data, 0, packet->len);
     while (data < eodata) {
-//LOG("rx map element:");
+//CON("rx map element:");
 //hex_dump_log(data, 0, 10);
         uint8_t state = *data++;
         uint8_t ext1;
         uint8_t ext2;
         uint8_t template_id;
         uint8_t weapon_id;
+        uint16_t owner_id;
         uint8_t weapon_swung;
         uint8_t torch_light_radius_present;
         uint8_t effect;
@@ -3486,14 +3520,14 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
              * Delta ID update.
              */
             id = *data++ + last_id;
-//LOG("  id       %02x",id);
+//CON("R id       0x%02x",id);
         } else {
             /*
              * Full ID update.
              */
             id = SDLNet_Read16(data);
             data += sizeof(uint16_t);
-//LOG("  id       %04x",id);
+//CON("R id       0x%04x", id);
         }
         last_id = id;
 
@@ -3502,7 +3536,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
              * Full template ID update.
              */
             template_id = *data++;
-//LOG("  template %02x",template_id);
+//CON("  template 0x%02x", template_id);
         } else {
             template_id = -1;
         }
@@ -3512,7 +3546,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
              * Extensions present.
              */
             ext1 = *data++;
-//LOG("  ext      %02x",ext);
+//CON("  ext1     0x%02x", ext1);
         } else {
             ext1 = 0;
         }
@@ -3522,7 +3556,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
              * Extensions present.
              */
             ext2 = *data++;
-//LOG("  ext      %02x",ext);
+//CON("  ext2     0x%02x", ext2);
         } else {
             ext2 = 0;
         }
@@ -3533,8 +3567,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
              */
             tx = *data++;
             ty = *data++;
-//LOG("  tx       %02x",tx);
-//LOG("  ty       %02x",ty);
+//CON("  tx       0x%02x", tx);
+//CON("  ty       0x%02x", ty);
 
             x = ((double)tx) / (double) (256 / MAP_WIDTH);
             y = ((double)ty) / (double) (256 / MAP_HEIGHT);
@@ -3553,15 +3587,29 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT)) {
             weapon_id = *data++;
-//LOG("  weapon   %02x",weapon_id);
+            if (!weapon_id) {
+                DIE("THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT set but no weapon");
+            }
+//CON("  weapon   0x%02x",weapon_id);
         } else {
             weapon_id = 0;
+        }
+
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT)) {
+            owner_id = SDLNet_Read16(data);
+            data += sizeof(uint16_t);
+//CON("  owner    0x%04x", owner_id);
+            if (!owner_id) {
+                DIE("THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT set but no owner");
+            }
+        } else {
+            owner_id = 0;
         }
 
         if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)) {
             torch_light_radius = ((float) (*data++)) / 4.0;
             torch_light_radius_present = true;
-//LOG("  torch light %d -> %f", *(data - 1), torch_light_radius);
+//CON("  torch light %d -> %f", *(data - 1), torch_light_radius);
         } else {
             torch_light_radius_present = false;
         }
@@ -3579,11 +3627,11 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             effect = 0;
         }
 
-//LOG("rx id %d",id);
+//CON("rx id %d",id);
         t = thing_client_find(id);
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_SWUNG)) {
             weapon_swung = true;
-//LOG("  weapon swung");
+//CON("  weapon swung");
         } else {
             weapon_swung = false;
         }
@@ -3593,7 +3641,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
         if (!t) {
             if (template_id == (uint8_t)-1) {
                 /*
-                 * It's okay if it is dead, we can ignore this as the server 
+                 * It's okay if it is dead, we can ignore this as the server
                  * is just making sure we got the dead hint.
                  */
                 if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)) {
@@ -3614,7 +3662,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 
             t = thing_client_new(id, tp);
 
-//LOG("rx id %d create thing",id);
+//CON("rx id %d create thing",id);
             if (!need_fixup &&
                 (tp_is_wall(tp) ||
                  tp_is_pipe(tp) ||
@@ -3663,6 +3711,17 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
          */
         t->dir = state & 0x7;
 
+        if (owner_id) {
+            thing_set_owner_id(t, owner_id);
+            if (tp_is_centered_on_owner(tp)) {
+                thingp owner = thing_owner(t);
+                if (owner) {
+                    thing_set_shield_anim(owner, t);
+                }
+            }
+//CON("client set owner of %s to %d", thing_logname(t),  owner_id);
+        }
+
         /*
          * Wield weapons before calling thing_client_wid_update which will
          * also move the weapons.
@@ -3694,7 +3753,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                      */
                     if ((ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_RESYNC))) {
                         /*
-                         * Check we are roughly where the server thinks we 
+                         * Check we are roughly where the server thinks we
                          * are. If wildly out of whack, correct our viewpoint.
                          */
                         THING_LOG(t, "%s server asked for resync", t->logname);
@@ -3705,11 +3764,11 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                                                 false /* is new */);
 
                         wid_game_map_client_scroll_adjust(1);
-                    } else 
+                    } else
                         if ((fabs(x-t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
                             (fabs(y-t->y) > THING_MAX_SERVER_DISCREPANCY * 2)) {
                         /*
-                         * Check we are roughly where the server thinks we 
+                         * Check we are roughly where the server thinks we
                          * are. If wildly out of whack, correct our viewpoint.
                          */
                         THING_LOG(t, "%s out of sync with server, correcting ",
@@ -3744,13 +3803,13 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                      */
                 } else {
                     /*
-                     * We are only ever told about epicenters of explosions 
+                     * We are only ever told about epicenters of explosions
                      * for efficency.
                      */
                     if (thing_is_explosion(t)) {
                         t->is_epicenter = true;
                     }
-                    
+
                     /*
                      * Thing has no wid. Make one.
                      */
@@ -3783,19 +3842,19 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)) {
-//LOG("rx %s dead",thing_logname(t));
+//CON("rx %s dead",thing_logname(t));
             thing_dead(t, 0, "server killed");
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_ACTIVE)) {
-//LOG("rx %s active",thing_logname(t));
+//CON("rx %s active",thing_logname(t));
             if (!t->on_active_list) {
                 thing_make_active(t);
             }
         }
 
         if (!(ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_SLEEPING))) {
-//LOG("rx %s awake",thing_logname(t));
+//CON("rx %s awake",thing_logname(t));
             if (t->is_sleeping) {
                 thing_wake(t);
             }
@@ -3805,7 +3864,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
     if (need_fixup) {
         levelp level;
 
-        level = 
+        level =
             (typeof(level)) wid_get_client_context(
                                         wid_game_map_client_grid_container);
 
@@ -3910,16 +3969,16 @@ void thing_set_owner (thingp t, thingp owner)
         }
 
         if (owner) {
-            THING_LOG(t, "owner change %s->%s", 
+            THING_LOG(t, "owner change %s->%s",
                       thing_logname(old_owner), thing_logname(owner));
         } else {
-            if (0) {
+            if (1) {
                 THING_LOG(t, "remove owner %s", thing_logname(old_owner));
             }
         }
     } else {
         if (owner) {
-            if (0) {
+            if (1) {
                 THING_LOG(t, "owner %s", thing_logname(owner));
             }
         }
@@ -3932,7 +3991,7 @@ void thing_set_owner (thingp t, thingp owner)
     }
 }
 
-void thing_set_weapon_carry_anim_id (thingp t, 
+void thing_set_weapon_carry_anim_id (thingp t,
                                      uint32_t weapon_carry_anim_id)
 {
     thingp weapon_carry_anim;
@@ -3965,16 +4024,16 @@ void thing_set_weapon_carry_anim (thingp t, thingp weapon_carry_anim)
         }
 
         if (weapon_carry_anim) {
-            THING_LOG(t, "weapon carry changed, %s->%s", 
-                      thing_logname(old_weapon_carry_anim), 
+            THING_LOG(t, "weapon carry changed, %s->%s",
+                      thing_logname(old_weapon_carry_anim),
                       thing_logname(weapon_carry_anim));
         } else {
-            THING_LOG(t, "remove weapon carry animation, %s", 
+            THING_LOG(t, "remove weapon carry animation, %s",
                       thing_logname(old_weapon_carry_anim));
         }
     } else {
         if (weapon_carry_anim) {
-            THING_LOG(t, "weapon carry anim nos, %s", 
+            THING_LOG(t, "weapon carry anim nos, %s",
                       thing_logname(weapon_carry_anim));
         }
     }
@@ -3986,7 +4045,7 @@ void thing_set_weapon_carry_anim (thingp t, thingp weapon_carry_anim)
     }
 }
 
-void thing_set_weapon_swing_anim_id (thingp t, 
+void thing_set_weapon_swing_anim_id (thingp t,
                                      uint32_t weapon_swing_anim_id)
 {
     thingp weapon_swing_anim;
@@ -4019,8 +4078,8 @@ void thing_set_weapon_swing_anim (thingp t, thingp weapon_swing_anim)
         }
 
         if (weapon_swing_anim) {
-            THING_LOG(t, "weapon_swing_anim change %s->%s", 
-                      thing_logname(old_weapon_swing_anim), 
+            THING_LOG(t, "weapon_swing_anim change %s->%s",
+                      thing_logname(old_weapon_swing_anim),
                       thing_logname(weapon_swing_anim));
         } else {
             if (0) {

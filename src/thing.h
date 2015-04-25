@@ -271,6 +271,7 @@ enum {
     THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL,
     THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT,
+    THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_WEAPON_SWUNG,
     /********************************************************************
      * Update msg_map_update if you add here
@@ -297,6 +298,7 @@ enum {
     THING_STATE_EFFECT_IS_HIT_MISS,
     THING_STATE_EFFECT_IS_HIT_SUCCESS,
     THING_STATE_EFFECT_IS_POWER_UP,
+    THING_STATE_EFFECT_IS_SHIELD,
     THING_STATE_EFFECT_IS_HIT_CRIT,
 };
 
@@ -484,6 +486,7 @@ typedef struct thing_ {
      */
     uint16_t weapon_carry_anim_thing_id;
     uint16_t weapon_swing_anim_thing_id;
+    uint16_t shield_anim_thing_id;
 
     /*
      * Weapon thing template.
@@ -508,12 +511,12 @@ typedef struct thing_ {
     /*
      * Unique id per thing.
      */
-    uint32_t thing_id;
+    uint16_t thing_id;
 
     /*
      * Who created this thing? e.g. who cast a spell?
      */
-    uint32_t owner_thing_id;
+    uint16_t owner_thing_id;
 
     /*
      * How much damage per hit?
@@ -1123,11 +1126,11 @@ static inline uint8_t thing_is_rrr15 (thingp t)
     return (tp_is_rrr15(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr16 (thingp t)
+static inline uint8_t thing_is_centered_on_owner (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr16(thing_tp(t)));
+    return (tp_is_centered_on_owner(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_shield (thingp t)
@@ -1719,9 +1722,9 @@ static inline uint8_t thing_is_rrr15_noverify (thingp t)
     return (t->tp->is_rrr15);
 }
 
-static inline uint8_t thing_is_rrr16_noverify (thingp t)
+static inline uint8_t thing_is_centered_on_owner_noverify (thingp t)
 {
-    return (t->tp->is_rrr16);
+    return (t->tp->is_centered_on_owner);
 }
 
 static inline uint8_t thing_is_shield_noverify (thingp t)
@@ -2183,3 +2186,12 @@ void thing_dir(thingp t, double *dx, double *dy);
  */
 void thing_torch_update_count(thingp t, int force);
 void thing_torch_calculate_light(thingp t);
+
+/*
+ * thing_weapon.c
+ */
+thingp level_place_shield(levelp level, 
+                          thingp owner,
+                          double x, double y);
+thingp thing_shield_anim(thingp t);
+void thing_set_shield_anim(thingp t, thingp shield_anim);
