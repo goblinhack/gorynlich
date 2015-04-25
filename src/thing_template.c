@@ -580,7 +580,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_shield", t->is_shield);
         GET_OPT_NAMED_BITFIELD(ctx, "is_damaged_on_firing", t->is_damaged_on_firing);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hard", t->is_hard);
         GET_OPT_NAMED_BITFIELD(ctx, "is_sleeping", t->is_sleeping);
@@ -773,7 +773,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
     PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
     PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
+    PUT_NAMED_BITFIELD(ctx, "is_shield", t->is_shield);
     PUT_NAMED_BITFIELD(ctx, "is_damaged_on_firing", t->is_damaged_on_firing);
     PUT_NAMED_BITFIELD(ctx, "is_hard", t->is_hard);
     PUT_NAMED_BITFIELD(ctx, "is_sleeping", t->is_sleeping);
