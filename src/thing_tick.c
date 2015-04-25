@@ -335,8 +335,8 @@ static void thing_tick_client_all (void)
             thing_destroy(t, "died");
             continue;
         }
-//        LOG("  %s",thing_logname(t));
 
+//        LOG("  %s",thing_logname(t));
         /*
          * If on the map.
          */

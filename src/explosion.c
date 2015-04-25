@@ -630,27 +630,6 @@ thingp level_place_bomb (levelp level,
     return (t);
 }
 
-thingp level_place_shield (levelp level, 
-                         thingp owner,
-                         double x, double y)
-{
-    widp w = thing_place_behind_or_under(owner,
-                                         id_to_tp(THING_SHIELD1),
-                                         0 /* itemp */);
-    if (!w) {
-        ERR("could not place shield");
-        return (0);
-    }
-
-    thingp t = wid_get_thing(w);
-
-    thing_set_owner(t, owner);
-
-    thing_wake(t);
-
-    return (t);
-}
-
 void level_place_small_cloudkill (levelp level, 
                                   thingp owner,
                                   double x, double y)
