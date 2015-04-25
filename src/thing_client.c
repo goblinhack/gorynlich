@@ -77,6 +77,17 @@ void thing_client_move (thingp t,
     }
 
     /*
+     * Move the shield with the player.
+     */
+    thingp shield_anim = thing_shield_anim(t);
+    if (shield_anim) {
+        thing_client_wid_update(shield_anim,
+                                t->x, t->y, 
+                                false /* smooth */,
+                                false /* is new */);
+    }
+
+    /*
      * If no widget yet then this can be a dummy move during thing creation
      * just to set the weapon anim correctly.
      */
