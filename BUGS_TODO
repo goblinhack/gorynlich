@@ -1,5 +1,3 @@
-* pale blue transparent with white border for messages?
-* diamond sword doesn't look diamond
 * minor bug: power up effect is a bit feeble on shield potion
 * minor bug: apple and water icons look a bit crap
 
@@ -59,6 +57,10 @@ thief, kill thief to recover items
 mining?
 add bot to test out multiplayer ?
 different profiles for level generation
+
+Fri Apr 24 19:48:42 EDT 2015
+* diamond sword doesn't look diamond
+* pale blue transparent with white border for messages?
 
 Thu Apr 23 21:48:04 EDT 2015
 - weapon fire delay in hundredths

@@ -116,6 +116,8 @@ void wid_player_inventory_button_style (widp w,
     c.a = 0;
     wid_set_color(w, WID_COLOR_BG, c);
 
+    wid_set_blit_center(w, true);
+
     wid_set_mode(w, WID_MODE_OVER);
 
     c = RED;
