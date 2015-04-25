@@ -340,9 +340,9 @@ void wid_player_inventory_button_style (widp w,
             } else if (val >= 1000) {
                 str = "unreliable";
             } else if (val >= 500) {
-                str = "very dodgy";
+                str = "dodgy";
             } else {
-                str = "made by orcs?";
+                str = "terrible";
             }
 
             char *tmp2 = dynprintf("%%%%fmt=left$"
@@ -359,28 +359,27 @@ void wid_player_inventory_button_style (widp w,
          */
         val = tp_get_d10000_chance_of_appearing(tp);
         if (val) {
-            const char *str;
-            if (val >= 50) {
-                str = "commonplace";
-            } else if (val >= 20) {
-                str = "common";
+            const char *str = 0;
+            if (val >= 20) {
+                str = 0;
             } else if (val >= 10) {
-                str = "uncommon";
+                str = "Uncommon";
             } else if (val >= 5) {
-                str = "rare";
+                str = "Rare";
             } else if (val >= 1) {
-                str = "very rare";
+                str = "Very rare";
             } else {
-                str = "unique";
+                str = "Unique";
             }
 
-            char *tmp2 = dynprintf("%%%%fmt=left$"
-                                   "Rarity: %s\n", str);
+            if (str) {
+                char *tmp2 = dynprintf("%%%%fmt=left$Rarity: %s\n", str);
 
-            char *old = tmp;
-            tmp = strappend(old, tmp2);
-            myfree(old);
-            myfree(tmp2);
+                char *old = tmp;
+                tmp = strappend(old, tmp2);
+                myfree(old);
+                myfree(tmp2);
+            }
         }
 
         full_tooltip = tmp;
