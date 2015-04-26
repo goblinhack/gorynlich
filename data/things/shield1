@@ -7,8 +7,10 @@
  is_shield
  max_hp=200
  is_animated_no_dir
+ is_shield_anim
  scale=0.15
  is_light_source
+ hit_priority=100
  light_radius=3.0
  is_collision_map_large
  damage=3

@@ -2767,6 +2767,15 @@ void socket_server_rx_player_move (gsocketp s, UDPpacket *packet, uint8_t *data)
     double y = ((double)msg.y) / THING_COORD_SCALE;
 
     thing_server_move(t, x, y, up, down, left, right, fire);
+
+    if (t->shield_anim_thing_id) {
+        thingp shield = thing_server_find(t->shield_anim_thing_id);
+        if (!shield) {
+            DIE("shield_anim_thing_id set but owner does not exist");
+        }
+
+        thing_server_move(shield, x, y, up, down, left, right, fire);
+    }
 }
 
 void socket_tx_player_action (gsocketp s, 

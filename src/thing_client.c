@@ -76,15 +76,9 @@ void thing_client_move (thingp t,
         thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
-    /*
-     * Move the shield with the player.
-     */
     thingp shield_anim = thing_shield_anim(t);
     if (shield_anim) {
-        thing_client_wid_update(shield_anim,
-                                t->x, t->y, 
-                                false /* smooth */,
-                                false /* is new */);
+        thing_move_set_dir(shield_anim, &x, &y, up, down, left, right);
     }
 
     /*
@@ -256,5 +250,14 @@ void thing_client_wid_update (thingp t, double x, double y,
         weapon_swing_anim->dir = t->dir;
         thing_weapon_swing_offset(t, &dx, &dy);
         thing_client_wid_move(weapon_swing_anim, x + dx, y + dy, smooth);
+    }
+
+    /*
+     * Update the weapon being carried.
+     */
+    thingp shield_anim = thing_shield_anim(t);
+    if (shield_anim) {
+        shield_anim->dir = t->dir;
+        thing_client_wid_move(shield_anim, x, y, smooth);
     }
 }
