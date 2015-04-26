@@ -2594,6 +2594,7 @@ static uint8_t resource_init_last (void *context)
         "cloudkill1.61",
         "cloudkill1.62",
         "cloudkill1.63",
+        "cloudkill1.64",
     };
 
     tile_load_arr("cloudkill", 
@@ -2666,6 +2667,7 @@ static uint8_t resource_init_last (void *context)
         "poison1.61",
         "poison1.62",
         "poison1.63",
+        "poison1.64",
     };
 
     tile_load_arr("poison", 
