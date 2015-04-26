@@ -281,11 +281,11 @@ static uint8_t resource_init_36 (void *context)
 {
     return (tex_load_tiled("data/gfx/shield.png",
                            "shield",
-                           128, 128) != 0) &&
+                           256, 256) != 0) &&
            (tex_load_tiled_black_and_white(
                            "data/gfx/shield.png",
                            "shield_black_and_white",
-                           128, 128) != 0);
+                           256, 256) != 0);
 }
 
 static uint8_t resource_init_last (void *context)
@@ -2938,7 +2938,7 @@ static uint8_t resource_init_last (void *context)
 
     tile_load_arr("shield", 
                   0, /* black and white */
-                  32, 32,
+                  64, 64,
                   ARRAY_SIZE(shield1_tiles), 
                   shield1_tiles);
 
