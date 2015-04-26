@@ -26,6 +26,11 @@ void thing_server_effect (thingp t, int effect)
 {
     verify(t);
 
+    thingp owner = thing_owner(t);
+    if (owner) {
+        t = owner;
+    }
+
     if (!t->on_server) {
         DIE("Trying to do an effect on a client thing");
     }
