@@ -2531,83 +2531,74 @@ static uint8_t resource_init_last (void *context)
                   ARRAY_SIZE(explosion_tiles), explosion_tiles);
 
     static const char *cloudkill_tiles[] = {
-        // --------------------------------------------------------------------
         "cloudkill1.1",
         "cloudkill1.2",
         "cloudkill1.3",
         "cloudkill1.4",
-        "cloudkill2.1",
-        "cloudkill2.2",
-        "cloudkill2.3",
-        "cloudkill2.4",
-        // --------------------------------------------------------------------
         "cloudkill1.5",
         "cloudkill1.6",
         "cloudkill1.7",
         "cloudkill1.8",
-        "cloudkill2.5",
-        "cloudkill2.6",
-        "cloudkill2.7",
-        "cloudkill2.8",
-        // --------------------------------------------------------------------
         "cloudkill1.9",
         "cloudkill1.10",
         "cloudkill1.11",
         "cloudkill1.12",
-        "cloudkill2.9",
-        "cloudkill2.10",
-        "cloudkill2.11",
-        "cloudkill2.12",
-        // --------------------------------------------------------------------
         "cloudkill1.13",
         "cloudkill1.14",
         "cloudkill1.15",
         "cloudkill1.16",
-        "cloudkill2.13",
-        "cloudkill2.14",
-        "cloudkill2.15",
-        "cloudkill2.16",
-        // --------------------------------------------------------------------
-        "cloudkill3.1",
-        "cloudkill3.2",
-        "cloudkill3.3",
-        "cloudkill3.4",
-        "cloudkill4.1",
-        "cloudkill4.2",
-        "cloudkill4.3",
-        "cloudkill4.4",
-        // --------------------------------------------------------------------
-        "cloudkill3.5",
-        "cloudkill3.6",
-        "cloudkill3.7",
-        "cloudkill3.8",
-        "cloudkill4.5",
-        "cloudkill4.6",
-        "cloudkill4.7",
-        "cloudkill4.8",
-        // --------------------------------------------------------------------
-        "cloudkill3.9",
-        "cloudkill3.10",
-        "cloudkill3.11",
-        "cloudkill3.12",
-        "cloudkill4.9",
-        "cloudkill4.10",
-        "cloudkill4.11",
-        "cloudkill4.12",
-        // --------------------------------------------------------------------
-        "cloudkill3.13",
-        "cloudkill3.14",
-        "cloudkill3.15",
-        "cloudkill3.16",
-        "cloudkill4.13",
-        "cloudkill4.14",
-        "cloudkill4.15",
-        "cloudkill4.16",
+        "cloudkill1.17",
+        "cloudkill1.18",
+        "cloudkill1.19",
+        "cloudkill1.20",
+        "cloudkill1.21",
+        "cloudkill1.22",
+        "cloudkill1.23",
+        "cloudkill1.24",
+        "cloudkill1.25",
+        "cloudkill1.26",
+        "cloudkill1.27",
+        "cloudkill1.28",
+        "cloudkill1.29",
+        "cloudkill1.30",
+        "cloudkill1.31",
+        "cloudkill1.32",
+        "cloudkill1.33",
+        "cloudkill1.34",
+        "cloudkill1.35",
+        "cloudkill1.36",
+        "cloudkill1.37",
+        "cloudkill1.38",
+        "cloudkill1.39",
+        "cloudkill1.40",
+        "cloudkill1.41",
+        "cloudkill1.42",
+        "cloudkill1.43",
+        "cloudkill1.44",
+        "cloudkill1.45",
+        "cloudkill1.46",
+        "cloudkill1.47",
+        "cloudkill1.48",
+        "cloudkill1.49",
+        "cloudkill1.50",
+        "cloudkill1.51",
+        "cloudkill1.52",
+        "cloudkill1.53",
+        "cloudkill1.54",
+        "cloudkill1.55",
+        "cloudkill1.56",
+        "cloudkill1.57",
+        "cloudkill1.58",
+        "cloudkill1.59",
+        "cloudkill1.60",
+        "cloudkill1.61",
+        "cloudkill1.62",
+        "cloudkill1.63",
     };
 
     tile_load_arr("cloudkill", 
                   "cloudkill_black_and_white",
-                  TILE_WIDTH, TILE_HEIGHT,
+                  128, 128,
                   ARRAY_SIZE(cloudkill_tiles), cloudkill_tiles);
 
     static const char *poison_tiles[] = {
@@ -3023,13 +3014,8 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_EXPLOSION3, "data/things/explosion3");
     tp_load(&THING_EXPLOSION4, "data/things/explosion4");
     tp_load(&THING_SHIELD1, "data/things/shield1");
-
     tp_load(&THING_POISON1, "data/things/poison1");
-
     tp_load(&THING_CLOUDKILL1, "data/things/cloudkill1");
-    tp_load(&THING_CLOUDKILL2, "data/things/cloudkill2");
-    tp_load(&THING_CLOUDKILL3, "data/things/cloudkill3");
-    tp_load(&THING_CLOUDKILL4, "data/things/cloudkill4");
 
     tp_load(&THING_HEART, "data/things/heart");
     tp_load(&THING_HIT_SUCCESS, "data/things/hit_success");
