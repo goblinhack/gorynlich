@@ -1183,20 +1183,20 @@ static void thing_remove_hooks (thingp t)
      */
     thingp owner = 0;
 
+    THING_LOG(t, "remove hooks");
+
     if (t->owner_thing_id) {
         owner = thing_owner(t);
     }
 
     if (t->owner_thing_id && owner) {
-        if (0) {
+        if (1) {
             THING_LOG(t, "detach from owner %s", thing_logname(owner));
         }
 
-        thing_unwield(t);
-
-        thing_unwield_shield(t);
-
         if (t->thing_id == owner->weapon_carry_anim_thing_id) {
+            thing_unwield(owner);
+
             if (0) {
                 THING_LOG(t, "detach from carry anim owner %s", thing_logname(owner));
             }
@@ -1229,6 +1229,8 @@ static void thing_remove_hooks (thingp t)
         }
 
         if (t->thing_id == owner->shield_anim_thing_id) {
+            thing_unwield_shield(owner);
+
             thing_set_shield_anim(owner, 0);
         }
 
@@ -2030,9 +2032,13 @@ CON("%s is hitting %s",thing_logname(hitter), thing_logname(t));
     /*
      * If the player has a shield, let the shield take the hit.
      */
-    if (t->shield_anim_thing_id) {
+    if (t->shield) {
+        t = thing_shield_anim(t);
+        if (!t) {
+            DIE("no shield anim set but has shield");
+        }
+
         thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_MISS);
-        return (false);
     }
 
     /*
@@ -4039,12 +4045,6 @@ void thing_set_owner (thingp t, thingp owner)
 
     if (owner) {
         t->owner_thing_id = owner->thing_id;
-
-        if (thing_is_centered_on_owner(t)) {
-            if (thing_is_shield(t)) {
-                thing_set_shield_anim(owner, t);
-            }
-        }
     } else {
         t->owner_thing_id = 0;
     }

@@ -13,8 +13,7 @@
 #include "wid_game_map_client.h"
 #include "math_util.h"
 
-void thing_set_shield_anim_id (thingp t,
-                                     uint32_t shield_anim_id)
+void thing_set_shield_anim_id (thingp t, uint32_t shield_anim_id)
 {
     thingp shield_anim;
 
@@ -46,16 +45,16 @@ void thing_set_shield_anim (thingp t, thingp shield_anim)
         }
 
         if (shield_anim) {
-            THING_LOG(t, "weapon carry changed, %s->%s",
+            THING_LOG(t, "shield carry changed, %s->%s",
                       thing_logname(old_shield_anim),
                       thing_logname(shield_anim));
         } else {
-            THING_LOG(t, "remove weapon carry animation, %s",
+            THING_LOG(t, "remove shield carry animation, %s",
                       thing_logname(old_shield_anim));
         }
     } else {
         if (shield_anim) {
-            THING_LOG(t, "weapon carry anim nos, %s",
+            THING_LOG(t, "shield carry anim now, %s",
                       thing_logname(shield_anim));
         }
     }
