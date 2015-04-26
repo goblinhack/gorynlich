@@ -1001,10 +1001,7 @@ wid_game_map_client_replace_tile (widp w,
 
             level_place_explosion(client_level, 0, t->x, t->y);
 
-        } else if ((tp->id == THING_POISON1) ||
-                   (tp->id == THING_POISON2) ||
-                   (tp->id == THING_POISON3) ||
-                   (tp->id == THING_POISON4)) {
+        } else if (tp->id == THING_POISON1) {
 
             level_place_poison(client_level, 0, t->x, t->y);
 
