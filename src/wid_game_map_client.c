@@ -960,11 +960,11 @@ wid_game_map_client_replace_tile (widp w,
          * flood fill to see where the rest of the explosion goes.
          */
         if (!t->is_epicenter) {
-            dx = ((double)(((int)(myrand() % 100)) - 50)) / 100.0;
-            dy = ((double)(((int)(myrand() % 100)) - 50)) / 100.0;
+            dx = gaussrand(0.0, 0.2);
+            dy = gaussrand(0.0, 0.2);
         }
 
-        wid_fade_out(child, 500);
+        wid_fade_out(child, 1000);
     }
 
     thing_client_wid_update(t, x + dx, y + dy, false /* smooth */,
