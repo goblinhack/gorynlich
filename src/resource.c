@@ -2527,7 +2527,7 @@ static uint8_t resource_init_last (void *context)
 
     tile_load_arr("explosion", 
                   "explosion_black_and_white",
-                  TILE_WIDTH, TILE_HEIGHT,
+                  128, 128,
                   ARRAY_SIZE(explosion_tiles), explosion_tiles);
 
     static const char *cloudkill_tiles[] = {
