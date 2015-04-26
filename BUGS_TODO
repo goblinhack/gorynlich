@@ -1,4 +1,3 @@
-- shield potion does nothing
 - attack melee must do something
 - xp level and hp increase per level
 - attack ranged must do something
@@ -55,6 +54,10 @@ thief, kill thief to recover items
 mining?
 add bot to test out multiplayer ?
 different profiles for level generation
+
+Sun Apr 26 09:13:03 EDT 2015
+- shield potion does nothing
+- thing effects were borked
 
 Sat Apr 25 23:02:40 EDT 2015
 - shield potion sort of works
