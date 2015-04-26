@@ -1,75 +1,265 @@
 {
- short_name="Cloud of death"
+ short_name="cloudkill gas"
  raw_name="cloudkill1"
- z_depth=4
+ z_depth=5
  is_animated
  is_hidden_from_editor
+ is_poison
  is_explosion
  is_animated_no_dir
  is_fire
  is_collision_map_large
- damage=6
+ scale=0.4
+ damage=5
  hit_delay_tenths=1
  tiles={
   tile={
    tile="cloudkill1.1"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.2"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.3"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.4"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.5"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.8"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.9"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.10"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.11"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.12"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.13"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.14"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.15"
-   delay=200
+   delay=150
   }
   tile={
    tile="cloudkill1.16"
-   delay=200
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.17"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.18"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.19"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.20"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.21"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.22"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.23"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.24"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.25"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.26"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.27"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.28"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.29"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.30"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.31"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.32"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.33"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.34"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.35"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.36"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.37"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.38"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.39"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.40"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.41"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.42"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.43"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.44"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.45"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.46"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.47"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.48"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.49"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.50"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.51"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.52"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.53"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.54"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.55"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.56"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.57"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.58"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.59"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.60"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.61"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.62"
+   delay=150
+  }
+  tile={
+   tile="cloudkill1.63"
+   delay=150
   }
   tile={
    tile="space"
-   delay=200
+   delay=150
    is_end_of_anim
    is_dead_on_end_of_anim
   }
