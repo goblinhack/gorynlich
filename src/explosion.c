@@ -582,11 +582,8 @@ void level_place_poison (levelp level,
                            x, y,
                            9, // radius
                            0.5, // density
-                           4, // nargs
-                           "data/things/poison1",
-                           "data/things/poison2",
-                           "data/things/poison3",
-                           "data/things/poison4");
+                           1, // nargs
+                           "data/things/poison1");
 }
 
 void level_place_cloudkill (levelp level, 
