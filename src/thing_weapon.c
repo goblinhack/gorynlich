@@ -13,6 +13,118 @@
 #include "wid_game_map_client.h"
 #include "math_util.h"
 
+void thing_set_weapon_carry_anim_id (thingp t,
+                                     uint32_t weapon_carry_anim_id)
+{
+    thingp weapon_carry_anim;
+
+    if (!weapon_carry_anim_id) {
+        thing_set_weapon_carry_anim(t, 0);
+        return;
+    }
+
+    if (t->on_server) {
+        weapon_carry_anim = thing_server_find(weapon_carry_anim_id);
+    } else {
+        weapon_carry_anim = thing_client_find(weapon_carry_anim_id);
+    }
+
+    thing_set_weapon_carry_anim(t, weapon_carry_anim);
+}
+
+void thing_set_weapon_carry_anim (thingp t, thingp weapon_carry_anim)
+{
+    if (weapon_carry_anim) {
+        verify(weapon_carry_anim);
+    }
+
+    thingp old_weapon_carry_anim = thing_weapon_carry_anim(t);
+
+    if (old_weapon_carry_anim) {
+        if (old_weapon_carry_anim == weapon_carry_anim) {
+            return;
+        }
+
+        if (weapon_carry_anim) {
+            THING_LOG(t, "weapon carry changed, %s->%s",
+                      thing_logname(old_weapon_carry_anim),
+                      thing_logname(weapon_carry_anim));
+        } else {
+            THING_LOG(t, "remove weapon carry animation, %s",
+                      thing_logname(old_weapon_carry_anim));
+        }
+    } else {
+        if (weapon_carry_anim) {
+            THING_LOG(t, "weapon carry anim nos, %s",
+                      thing_logname(weapon_carry_anim));
+        }
+    }
+
+    if (weapon_carry_anim) {
+        t->weapon_carry_anim_thing_id = weapon_carry_anim->thing_id;
+    } else {
+        t->weapon_carry_anim_thing_id = 0;
+    }
+}
+
+void thing_set_weapon_swing_anim_id (thingp t,
+                                     uint32_t weapon_swing_anim_id)
+{
+    thingp weapon_swing_anim;
+
+    if (!weapon_swing_anim_id) {
+        thing_set_weapon_swing_anim(t, 0);
+        return;
+    }
+
+    if (t->on_server) {
+        weapon_swing_anim = thing_server_find(weapon_swing_anim_id);
+    } else {
+        weapon_swing_anim = thing_client_find(weapon_swing_anim_id);
+    }
+
+    thing_set_weapon_swing_anim(t, weapon_swing_anim);
+}
+
+void thing_set_weapon_swing_anim (thingp t, thingp weapon_swing_anim)
+{
+    if (weapon_swing_anim) {
+        verify(weapon_swing_anim);
+    }
+
+    thingp old_weapon_swing_anim = thing_weapon_swing_anim(t);
+
+    if (old_weapon_swing_anim) {
+        if (old_weapon_swing_anim == weapon_swing_anim) {
+            return;
+        }
+
+        if (weapon_swing_anim) {
+            THING_LOG(t, "weapon_swing_anim change %s->%s",
+                      thing_logname(old_weapon_swing_anim),
+                      thing_logname(weapon_swing_anim));
+        } else {
+            if (0) {
+                THING_LOG(t, "remove weapon_swing_anim %s",
+                          thing_logname(old_weapon_swing_anim));
+            }
+        }
+    } else {
+        if (weapon_swing_anim) {
+            if (0) {
+                THING_LOG(t, "weapon_swing_anim %s",
+                          thing_logname(weapon_swing_anim));
+            }
+        }
+    }
+
+    if (weapon_swing_anim) {
+        t->weapon_swing_anim_thing_id = weapon_swing_anim->thing_id;
+    } else {
+        t->weapon_swing_anim_thing_id = 0;
+    }
+}
+
 void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
 {
     tpp weapon = thing_weapon(t);
@@ -191,13 +303,13 @@ void thing_wield (thingp t, tpp weapon)
     thing_unwield(t);
 
     if (thing_is_player(t)) {
-        THING_LOG(t, "unwield %s", tp_short_name(weapon));
+        THING_LOG(t, "unwield weapon %s", tp_short_name(weapon));
     }
 
     const char *carry_as = tp_weapon_carry_anim(weapon);
 
     if (!carry_as) {
-        ERR("%s could not wield %s", thing_logname(t), tp_short_name(weapon));
+        ERR("%s could not wield weapon %s", thing_logname(t), tp_short_name(weapon));
         return;
     }
 

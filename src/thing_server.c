@@ -60,6 +60,11 @@ uint8_t thing_server_move (thingp t,
         thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
+    thingp shield_anim = thing_shield_anim(t);
+    if (shield_anim) {
+        thing_move_set_dir(shield_anim, &x, &y, up, down, left, right);
+    }
+
     /*
      * A thing can move diagonally and may not have a collision at the
      * destination, but it might half way through the move; so check for that 
@@ -114,6 +119,10 @@ uint8_t thing_server_move (thingp t,
 
     if (weapon_swing_anim) {
         thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
+    }
+
+    if (shield_anim) {
+        thing_move_set_dir(shield_anim, &x, &y, up, down, left, right);
     }
 
     if (fire) {
@@ -191,9 +200,7 @@ void thing_server_action (thingp t,
             thing_server_effect(t, THING_STATE_EFFECT_IS_POWER_UP);
             break;
         } else if (item->id == THING_POTION_SHIELD) {
-            if (level_place_shield(server_level, t, t->x + 1, t->y)) {
-                break;
-            }
+            thing_wield_shield(t, tp);
             break;
         } else if (item->id == THING_POTION_CLOUDKILL) {
             level_place_cloudkill(server_level, t, t->x, t->y);
@@ -518,5 +525,13 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
 
         thing_weapon_swing_offset(t, &dx, &dy);
         thing_server_wid_move(weapon_swing_anim, x + dx, y + dy, is_new);
+    }
+
+    /*
+     * Make the shield follow the thing.
+     */
+    thingp shield_anim = thing_shield_anim(t);
+    if (shield_anim) {
+        thing_server_wid_move(shield_anim, x, y, is_new);
     }
 }
