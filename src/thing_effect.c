@@ -159,7 +159,7 @@ static void thing_client_effect_power_up (thingp t)
 
         br.y = 
             ((double)global_config.video_gl_width /
-                (double)global_config.video_gl_height) / 10.0;
+             (double)global_config.video_gl_height) / 10.0;
 
         widp power_up = wid_new_square_window("sparkle");
         wid_set_tl_br_pct(power_up, tl, br);
@@ -176,6 +176,16 @@ static void thing_client_effect_power_up (thingp t)
                         ((double)global_config.video_gl_width / 
                          (double)global_config.video_gl_height);
 
+        {
+            double width = wid_get_width(w) / 
+                            (double)global_config.video_gl_width;
+            px -= width / 8.0;
+
+            double height = wid_get_height(w) / 
+                            (double)global_config.video_gl_height;
+            py += height / 4.0;
+        }
+
         wid_move_to_pct_centered(power_up, px, py);
         px += gaussrand(0.0, width/5.0);
         py += gaussrand(0.0, width/5.0);
@@ -185,7 +195,6 @@ static void thing_client_effect_power_up (thingp t)
         wid_set_mode(power_up, WID_MODE_NORMAL);
 
         wid_set_color(power_up, WID_COLOR_BLIT, WHITE);
-        wid_set_z_depth(power_up, 1);
 
         wid_fade_out(power_up, delay);
         wid_destroy_in(power_up, delay);
