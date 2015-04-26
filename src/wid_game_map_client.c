@@ -954,7 +954,7 @@ wid_game_map_client_replace_tile (widp w,
     }
 
     if (thing_is_explosion(t)) {
-        wid_scaling_blit_to_pct_in(child, 1.0, 3.0, 500, 0);
+//        wid_scaling_blit_to_pct_in(child, 1.0, 3.0, 500, 0);
         /*
          * The epicenter needs to be where it was on the server as we do a 
          * flood fill to see where the rest of the explosion goes.
