@@ -169,6 +169,8 @@ static void thing_client_wid_move (thingp t,
         br.x += tile_width / 4.0;
     }
 
+    tl.y -= tile_height / 8.0;
+
     /*
      * Off the map? Perhaps between levels.
      */
