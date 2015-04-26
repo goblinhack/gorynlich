@@ -578,6 +578,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_door(it)                   ||
             thing_is_projectile(it)             ||
             thing_is_mob_spawner(it)            ||
+            thing_is_shield(it)                 ||
             thing_is_monst(it)) {
             /*
              * I'm hit!

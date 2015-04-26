@@ -295,6 +295,7 @@ enum {
      * Sorted in order of importance as only one effect can be sent to the 
      * client at a time.
      */
+    THING_STATE_EFFECT_NONE,
     THING_STATE_EFFECT_IS_HIT_MISS,
     THING_STATE_EFFECT_IS_HIT_SUCCESS,
     THING_STATE_EFFECT_IS_POWER_UP,

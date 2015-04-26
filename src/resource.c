@@ -281,11 +281,11 @@ static uint8_t resource_init_36 (void *context)
 {
     return (tex_load_tiled("data/gfx/shield.png",
                            "shield",
-                           1024, 1024) != 0) &&
+                           128, 128) != 0) &&
            (tex_load_tiled_black_and_white(
                            "data/gfx/shield.png",
                            "shield_black_and_white",
-                           1024, 1024) != 0);
+                           128, 128) != 0);
 }
 
 static uint8_t resource_init_last (void *context)
@@ -2904,8 +2904,8 @@ static uint8_t resource_init_last (void *context)
         "crystalball.7",
         "crystalball.6",
         "crystalball.5",
-        "crystalball.3",
         "crystalball.4",
+        "crystalball.3",
         "crystalball.2",
         "crystalball.1",
     };
@@ -2930,15 +2930,15 @@ static uint8_t resource_init_last (void *context)
         "shield1.7",
         "shield1.6",
         "shield1.5",
-        "shield1.3",
         "shield1.4",
+        "shield1.3",
         "shield1.2",
         "shield1.1",
     };
 
     tile_load_arr("shield", 
                   0, /* black and white */
-                  256, 256,
+                  32, 32,
                   ARRAY_SIZE(shield1_tiles), 
                   shield1_tiles);
 
@@ -2956,8 +2956,8 @@ static uint8_t resource_init_last (void *context)
         "crystalball_purple.7",
         "crystalball_purple.6",
         "crystalball_purple.5",
-        "crystalball_purple.3",
         "crystalball_purple.4",
+        "crystalball_purple.3",
         "crystalball_purple.2",
         "crystalball_purple.1",
     };
