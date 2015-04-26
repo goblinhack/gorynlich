@@ -121,6 +121,11 @@ static void thing_possible_hit_do (thingp hitter)
                 best = cand;
             }
         }
+#if 0
+if (debug) {
+CON("hitter %s target %s",thing_logname(hitter),thing_logname(cand->target));
+}
+#endif
     }
 
     if (best) {
@@ -371,6 +376,23 @@ static uint8_t things_overlap (const thingp A,
     double Btly = By + Bpy1;
     double Bbry = By + Bpy2;
 
+#if 0
+if (debug) {
+    if ((thing_is_shield(A) || 
+         thing_is_shield(B))) {
+    if ((thing_is_monst(A) || 
+         thing_is_monst(B))) {
+CON("    A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
+CON("      %f %f",Ax,Ay);
+CON("      %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
+CON("    B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
+CON("      %f %f",Bx,By);
+CON("      %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
+    }
+    }
+}
+#endif
+
     /*
      * The rectangles don't overlap if one rectangle's minimum in some 
      * dimension is greater than the other's maximum in that dimension.
@@ -379,22 +401,6 @@ static uint8_t things_overlap (const thingp A,
         (Abrx > Btlx) &&
         (Atly < Bbry) && 
         (Abry > Btly)) {
-
-#if 0
-    if ((thing_is_bomb(A) || 
-         thing_is_bomb(B))) {
-    if ((thing_is_player(A) || 
-         thing_is_player(B))) {
-CON("  A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
-CON("    %f %f",Ax,Ay);
-CON("    %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
-CON("  B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
-CON("    %f %f",Bx,By);
-CON("    %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
-    }
-    }
-#endif
-
         return (true);
     }
 
@@ -407,21 +413,6 @@ CON("    %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
 static void thing_handle_collision (thingp me, thingp it, 
                                     int32_t x, int32_t y)
 {
-    if (thing_is_dead_or_dying(it)) {
-        return;
-    }
-
-    if (thing_has_left_level(it)) {
-        return;
-    }
-
-    /*
-     * Need this or shields attack the player.
-     */
-    if (thing_owner(it) == me) {
-        return;
-    }
-
     /*
      * Filter out boring things.
      */
@@ -430,12 +421,53 @@ static void thing_handle_collision (thingp me, thingp it,
         return;
     }
 
+    if (thing_is_dead_or_dying(it)) {
+#if 0
+if (debug) {
+CON("  dead or dying");
+}
+#endif
+        return;
+    }
+
+    if (thing_has_left_level(it)) {
+#if 0
+if (debug) {
+CON("  no on lev");
+}
+#endif
+        return;
+    }
+
+    /*
+     * Need this or shields attack the player.
+     */
+    if (thing_owner(it) == me) {
+#if 0
+if (debug) {
+CON("  owner");
+}
+#endif
+        return;
+    }
+
     /*
      * Do we overlap with something?
      */
     if (!things_overlap(me, -1.0, -1.0, it)) {
+#if 0
+if (debug) {
+CON("  no overlap %s vs %s",thing_logname(me), thing_logname(it));
+}
+#endif
         return;
     }
+
+#if 0
+(debug) {
+CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
+}
+#endif
 
     if (thing_is_player(me)) {
         /*
@@ -482,6 +514,11 @@ static void thing_handle_collision (thingp me, thingp it,
             /*
              * I'm hit!
              */
+#if 0
+if (debug) {
+CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
+}
+#endif
             thing_possible_hit_add(it, "player hit thing");
             return;
         }
@@ -513,6 +550,11 @@ static void thing_handle_collision (thingp me, thingp it,
             /*
              * I'm hit!
              */
+#if 0
+if (debug) {
+CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
+}
+#endif
             thing_possible_hit_add(it, "monst hit thing");
             return;
         }
@@ -540,6 +582,11 @@ static void thing_handle_collision (thingp me, thingp it,
             /*
              * I'm hit!
              */
+#if 0
+if (debug) {
+CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
+}
+#endif
             thing_possible_hit_add(it, "object hit thing");
             return;
         }
@@ -582,7 +629,7 @@ static void thing_handle_collision (thingp me, thingp it,
             thing_is_sawblade(it)               ||
             thing_is_mob_spawner(it)) {
             /*
-             * Weapon hits monster or generator.
+             * Weapon hits monster or generator
              */
             thing_possible_hit_add_hitter_killed_on_hitting(
                                             it, "projection hit thing");
@@ -619,8 +666,12 @@ static void thing_handle_collision (thingp me, thingp it,
             /*
              * Weapon hits monster or generator.
              */
-            thing_possible_hit_add_hitter_killed_on_hitting(
-                                            it, "sword hit thing");
+#if 0
+if (debug) {
+CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
+}
+#endif
+            thing_possible_hit_add(it, "shield hit thing");
         }
     }
 }
@@ -636,6 +687,16 @@ void thing_handle_collisions (widp grid, thingp me)
         return;
     }
 
+#if 0
+if (thing_is_shield(me)) {
+debug = 1;
+CON("  ");
+CON("  ");
+CON("--");
+CON("  ");
+CON("shield coll");
+}
+#endif
     thing_map *map = thing_get_map(me);
 
     for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
@@ -657,6 +718,11 @@ void thing_handle_collisions (widp grid, thingp me)
             } else {
                 it = thing_client_id(cell->id[i]);
             }
+#if 0
+if (debug) {
+CON("%d %d [%d] %s",x,y,i, thing_logname(it));
+}
+#endif
 
             if (me == it) {
                 continue;
@@ -720,7 +786,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
              */
             if (thing_is_floor(it)          ||
                 thing_is_action(it)         ||
-                thing_is_shield(it)         ||
                 thing_is_animation(it)) {
                 continue;
             }
@@ -740,6 +805,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_can_walk_through(it)          ||
                     thing_is_carryable(it)              ||
                     thing_is_weapon_swing_effect(it)    ||
+                    thing_is_shield(it)                 ||
                     thing_is_explosion(it)              ||
                     thing_is_poison(it)                 ||
                     thing_is_projectile(it)             ||
@@ -754,6 +820,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             if (thing_is_explosion(me)                  ||
                 thing_is_projectile(me)                 ||
                 thing_is_poison(me)                     ||
+                thing_is_shield(me)                     ||
                 thing_is_weapon_swing_effect(me)) {
                 /*
                  * Allow these to pass through anything.
@@ -793,6 +860,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_projectile(it)             ||
                     thing_is_poison(it)                 ||
                     thing_is_weapon_swing_effect(it)    ||
+                    thing_is_shield(it)                 ||
                     thing_is_sawblade(it)               ||
                     thing_is_explosion(it)) {
                     continue;

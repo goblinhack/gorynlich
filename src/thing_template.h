@@ -112,8 +112,8 @@ typedef struct tp_ {
      * How this weapon appears on screen when it is used.
      */
     char *weapon_carry_anim;
-
     char *weapon_swing_anim;
+    char *shield_anim;
 
     /*
      * What to shout when an item is used.
@@ -274,6 +274,7 @@ typedef struct tp_ {
     uint8_t is_action_right:1;
     uint8_t can_walk_through:1;
     uint8_t is_weapon_carry_anim:1;
+    uint8_t is_shield_anim:1;
     uint8_t is_spell:1;
     uint8_t is_hand_item:1;
     uint8_t is_boots:1;
@@ -352,6 +353,7 @@ const char *tp_light_tint(tpp);
 color tp_light_color(tpp);
 const char *tp_spawn_on_death(tpp);
 const char *tp_weapon_carry_anim(tpp);
+const char *tp_shield_anim(tpp);
 const char *tp_weapon_swing_anim(tpp);
 const char *tp_message_on_use(tpp);
 const char *tp_mob_spawn(tpp);
@@ -767,6 +769,11 @@ static inline uint8_t tp_can_walk_through (tpp t)
 static inline uint8_t tp_is_weapon_carry_anim (tpp t)
 {
     return (t->is_weapon_carry_anim);
+}
+
+static inline uint8_t tp_is_shield_anim (tpp t)
+{
+    return (t->is_shield_anim);
 }
 
 static inline uint8_t tp_is_spell (tpp t)

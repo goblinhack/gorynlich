@@ -178,9 +178,9 @@ typedef struct {
     uint8_t weapon_id;
 
     /*
-     * THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT
+     * THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT
      */
-    uint16_t owner_id;
+    uint8_t owner_id;
 
     /*
      * THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT

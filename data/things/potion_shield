@@ -11,6 +11,7 @@
  is_given_randomly_at_start
  is_magical
  is_valid_for_action_bar
+ shield_anim="data/things/shield1"
  d10000_chance_of_appearing=75
  is_combustable
  is_fragile

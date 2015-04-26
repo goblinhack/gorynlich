@@ -271,7 +271,7 @@ enum {
     THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL,
     THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT,
-    THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT,
+    THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_WEAPON_SWUNG,
     /********************************************************************
      * Update msg_map_update if you add here
@@ -313,12 +313,6 @@ void thing_client_move(thingp t,
 
 void thing_set_owner_id(thingp t, uint32_t owner_id);
 void thing_set_owner(thingp t, thingp owner);
-
-void thing_set_weapon_carry_anim_id(thingp t, uint32_t weapon_carry_anim_id);
-void thing_set_weapon_carry_anim(thingp t, thingp weapon_carry_anim);
-
-void thing_set_weapon_swing_anim_id(thingp t, uint32_t weapon_swing_anim_id);
-void thing_set_weapon_swing_anim(thingp t, thingp weapon_swing_anim);
 
 extern uint16_t THING_WALL1;
 extern uint16_t THING_WALL_LIT1;
@@ -492,6 +486,11 @@ typedef struct thing_ {
      * Weapon thing template.
      */
     tpp weapon;
+
+    /*
+     * Current shield
+     */
+    tpp shield;
 
     /*
      * Pointer to common settings for this thing.
@@ -1287,6 +1286,13 @@ static inline uint8_t thing_is_weapon_carry_anim (thingp t)
     return (tp_is_weapon_carry_anim(thing_tp(t)));
 }
 
+static inline uint8_t thing_is_shield_anim (thingp t)
+{
+    verify(t);
+
+    return (tp_is_shield_anim(thing_tp(t)));
+}
+
 static inline uint8_t thing_is_spell (thingp t)
 {
     verify(t);
@@ -1827,6 +1833,11 @@ static inline uint8_t thing_is_weapon_carry_anim_noverify (thingp t)
     return (t->tp->is_weapon_carry_anim);
 }
 
+static inline uint8_t thing_is_shield_anim_noverify (thingp t)
+{
+    return (t->tp->is_shield_anim);
+}
+
 static inline uint8_t thing_is_spell_noverify (thingp t)
 {
     return (t->tp->is_spell);
@@ -2078,6 +2089,11 @@ static inline tpp thing_weapon (const thingp t)
     return (id_to_tp(item->id));
 }
 
+static inline tpp thing_shield (const thingp t)
+{
+    return (t->shield);
+}
+
 /*
  * Only a certain resolution of thing can be represented on the client.
  * Convert a floating point value to client rounded value.
@@ -2128,29 +2144,6 @@ void thing_server_fire(thingp t,
                         const uint8_t right);
 
 /*
- * thing_client.c
- */
-
-/*
- * thing_weapon.c
- */
-void thing_unwield(thingp t);
-void thing_weapon_sheath(thingp t);
-void thing_wield(thingp t, tpp tp);
-void thing_swing(thingp t);
-void thing_weapon_swing_offset(thingp t, double *dx, double *dy);
-thingp thing_weapon_carry_anim(thingp t);
-thingp thing_weapon_swing_anim(thingp t);
-void thing_set_weapon_placement(thingp t);
-widp thing_get_weapon_carry_anim_wid(thingp t);
-void thing_weapon_worn_out(thingp owner, tpp weapon);
-void thing_weapon_check_for_wear_damage(thingp target, 
-                                       thingp hitter, 
-                                       tpp weapon);
-void thing_weapon_check_for_damage_on_firing(thingp hitter,
-                                             tpp weapon);
-
-/*
  * thing_effect.c
  */
 void thing_server_effect(thingp t, int effect);
@@ -2188,10 +2181,35 @@ void thing_torch_update_count(thingp t, int force);
 void thing_torch_calculate_light(thingp t);
 
 /*
+ * thing_shield.c
+ */
+thingp thing_shield_anim(thingp t);
+void thing_unwield_shield(thingp t);
+void thing_wield_shield(thingp t, tpp shield);
+widp thing_get_shield_anim_wid(thingp t);
+void thing_set_shield_anim_id(thingp t, uint32_t shield_anim_id);
+void thing_set_shield_anim(thingp t, thingp shield_anim);
+void thing_shield_sheath(thingp t);
+
+/*
  * thing_weapon.c
  */
-thingp level_place_shield(levelp level, 
-                          thingp owner,
-                          double x, double y);
-thingp thing_shield_anim(thingp t);
-void thing_set_shield_anim(thingp t, thingp shield_anim);
+void thing_unwield(thingp t);
+void thing_weapon_sheath(thingp t);
+void thing_wield(thingp t, tpp tp);
+void thing_swing(thingp t);
+void thing_weapon_swing_offset(thingp t, double *dx, double *dy);
+thingp thing_weapon_carry_anim(thingp t);
+thingp thing_weapon_swing_anim(thingp t);
+void thing_set_weapon_placement(thingp t);
+widp thing_get_weapon_carry_anim_wid(thingp t);
+void thing_weapon_worn_out(thingp owner, tpp weapon);
+void thing_weapon_check_for_wear_damage(thingp target, 
+                                       thingp hitter, 
+                                       tpp weapon);
+void thing_weapon_check_for_damage_on_firing(thingp hitter,
+                                             tpp weapon);
+void thing_set_weapon_carry_anim_id(thingp t, uint32_t weapon_carry_anim_id);
+void thing_set_weapon_carry_anim(thingp t, thingp weapon_carry_anim);
+void thing_set_weapon_swing_anim_id(thingp t, uint32_t weapon_swing_anim_id);
+void thing_set_weapon_swing_anim(thingp t, thingp weapon_swing_anim);
