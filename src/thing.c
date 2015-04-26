@@ -302,6 +302,16 @@ void thing_update (thingp t)
             thing_update(weapon_swing_anim);
         }
     }
+
+    /*
+     * Update the weapon being carried.
+     */
+    thingp shield_anim = thing_shield_anim(t);
+    if (shield_anim) {
+        if (!thing_is_dead_or_dying(shield_anim)) {
+            thing_update(shield_anim);
+        }
+    }
 }
 
 /*
@@ -483,18 +493,29 @@ void thing_sanity (thingp t)
 {
     verify(t);
 
-    thingp tmp;
-    tmp = thing_owner(t);
-    if (tmp) {
-        verify(tmp);
+    /*
+     * On the client owners may be missing due to order of deletion
+     * of objects.
+     */
+    if (t->on_server) {
+        thingp tmp;
+        tmp = thing_owner(t);
+        if (tmp) {
+            verify(tmp);
+        }
     }
 
-    tmp = thing_weapon_carry_anim(t);
+    thingp tmp = thing_weapon_carry_anim(t);
     if (tmp) {
         verify(tmp);
     }
 
     tmp = thing_weapon_swing_anim(t);
+    if (tmp) {
+        verify(tmp);
+    }
+
+    tmp = thing_shield_anim(t);
     if (tmp) {
         verify(tmp);
     }
@@ -1173,6 +1194,8 @@ static void thing_remove_hooks (thingp t)
 
         thing_unwield(t);
 
+        thing_unwield_shield(t);
+
         if (t->thing_id == owner->weapon_carry_anim_thing_id) {
             if (0) {
                 THING_LOG(t, "detach from carry anim owner %s", thing_logname(owner));
@@ -1324,6 +1347,8 @@ void thing_destroy (thingp t, const char *why)
      * Destroy the things weapon. Eventually drop a backpack.
      */
     thing_unwield(t);
+
+    thing_unwield_shield(t);
 
     if (t->dead_reason) {
         myfree(t->dead_reason);
@@ -1956,9 +1981,16 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     thingp orig_hitter = hitter;
     tpp weapon;
 
+#if 0
 if (1)  {
-LOG("%s hitting %s",thing_logname(t), thing_logname(hitter));
+if (thing_is_shield(t)) {
+CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
 }
+if (thing_is_shield(hitter)) {
+CON("%s is hitting %s",thing_logname(hitter), thing_logname(t));
+}
+}
+#endif
     verify(t);
     if (hitter) {
         verify(hitter);
@@ -1993,6 +2025,14 @@ LOG("%s hitting %s",thing_logname(t), thing_logname(hitter));
             DIE("hits can only happen from hitter on the server");
             return (false);
         }
+    }
+
+    /*
+     * If the player has a shield, let the shield take the hit.
+     */
+    if (t->shield_anim_thing_id) {
+        thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_MISS);
+        return (false);
     }
 
     /*
@@ -2371,6 +2411,11 @@ void thing_leave_level (thingp t)
     if (weapon_carry_anim) {
         thing_leave_level(weapon_carry_anim);
     }
+
+    thingp shield_anim = thing_shield_anim(t);
+    if (shield_anim) {
+        thing_leave_level(shield_anim);
+    }
 }
 
 void thing_join_level (thingp t)
@@ -2392,6 +2437,11 @@ void thing_join_level (thingp t)
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
         thing_join_level(weapon_carry_anim);
+    }
+
+    thingp shield_anim = thing_shield_anim(t);
+    if (shield_anim) {
+        thing_join_level(shield_anim);
     }
 }
 
@@ -2512,6 +2562,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
                     !thing_is_weapon_swing_effect(t)) {
 
                     thing_weapon_sheath(player);
+                    thing_shield_sheath(player);
                     thing_map_remove(t);
                     thing_set_wid(t, 0);
                     continue;
@@ -3191,7 +3242,8 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
          * Don't sent local effects to the client to save bandwidth. The
          * client can infer the swing and animations.
          */
-        if (tp_is_weapon_swing_effect(tp) ||
+        if (tp_is_weapon_swing_effect(tp)   ||
+            tp_is_shield_anim(tp)           ||
             tp_is_weapon_carry_anim(tp)) {
             t->updated--;
             continue;
@@ -3277,8 +3329,8 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
             ext1 |= 1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT;
         }
 
-        if (t->owner_thing_id) {
-            ext1 |= 1 << THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT;
+        if (t->shield) {
+            ext1 |= 1 << THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT;
         }
 
         if (t->needs_tx_weapon_swung) {
@@ -3370,9 +3422,8 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 //CON("  weapon   %02x", tp_to_id(t->weapon));
         }
 
-        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT)) {
-            SDLNet_Write16(t->owner_thing_id, data);
-            data += sizeof(uint16_t);
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT)) {
+            *data++ = tp_to_id(t->shield);
 //CON("  owner    0x%04x", t->owner_thing_id);
         }
 
@@ -3510,7 +3561,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
         uint8_t ext2;
         uint8_t template_id;
         uint8_t weapon_id;
-        uint16_t owner_id;
+        uint8_t shield_id;
         uint8_t weapon_swung;
         uint8_t torch_light_radius_present;
         uint8_t effect;
@@ -3603,15 +3654,14 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             weapon_id = 0;
         }
 
-        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT)) {
-            owner_id = SDLNet_Read16(data);
-            data += sizeof(uint16_t);
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT)) {
+            shield_id = *data++;
 //CON("  owner    0x%04x", owner_id);
-            if (!owner_id) {
+            if (!shield_id) {
                 DIE("THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT set but no owner");
             }
         } else {
-            owner_id = 0;
+            shield_id = 0;
         }
 
         if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)) {
@@ -3719,17 +3769,6 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
          */
         t->dir = state & 0x7;
 
-        if (owner_id) {
-            thing_set_owner_id(t, owner_id);
-            if (tp_is_centered_on_owner(tp)) {
-                thingp owner = thing_owner(t);
-                if (owner) {
-                    thing_set_shield_anim(owner, t);
-                }
-            }
-//CON("client set owner of %s to %d", thing_logname(t),  owner_id);
-        }
-
         /*
          * Wield weapons before calling thing_client_wid_update which will
          * also move the weapons.
@@ -3738,6 +3777,12 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             thing_wield(t, id_to_tp(weapon_id));
         } else if (t->weapon) {
             thing_unwield(t);
+        }
+
+        if (shield_id) {
+            thing_wield_shield(t, id_to_tp(shield_id));
+        } else if (t->shield) {
+            thing_unwield_shield(t);
         }
 
         if (weapon_swung) {
@@ -3828,10 +3873,10 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             }
 
             w = thing_wid(t);
-                if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_COLOR)) {
-                    c.a = 255;
-                    wid_set_color(w, WID_COLOR_BLIT, c);
-                }
+            if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_COLOR)) {
+                c.a = 255;
+                wid_set_color(w, WID_COLOR_BLIT, c);
+            }
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT)) {
@@ -3994,120 +4039,14 @@ void thing_set_owner (thingp t, thingp owner)
 
     if (owner) {
         t->owner_thing_id = owner->thing_id;
+
+        if (thing_is_centered_on_owner(t)) {
+            if (thing_is_shield(t)) {
+                thing_set_shield_anim(owner, t);
+            }
+        }
     } else {
         t->owner_thing_id = 0;
-    }
-}
-
-void thing_set_weapon_carry_anim_id (thingp t,
-                                     uint32_t weapon_carry_anim_id)
-{
-    thingp weapon_carry_anim;
-
-    if (!weapon_carry_anim_id) {
-        thing_set_weapon_carry_anim(t, 0);
-        return;
-    }
-
-    if (t->on_server) {
-        weapon_carry_anim = thing_server_find(weapon_carry_anim_id);
-    } else {
-        weapon_carry_anim = thing_client_find(weapon_carry_anim_id);
-    }
-
-    thing_set_weapon_carry_anim(t, weapon_carry_anim);
-}
-
-void thing_set_weapon_carry_anim (thingp t, thingp weapon_carry_anim)
-{
-    if (weapon_carry_anim) {
-        verify(weapon_carry_anim);
-    }
-
-    thingp old_weapon_carry_anim = thing_weapon_carry_anim(t);
-
-    if (old_weapon_carry_anim) {
-        if (old_weapon_carry_anim == weapon_carry_anim) {
-            return;
-        }
-
-        if (weapon_carry_anim) {
-            THING_LOG(t, "weapon carry changed, %s->%s",
-                      thing_logname(old_weapon_carry_anim),
-                      thing_logname(weapon_carry_anim));
-        } else {
-            THING_LOG(t, "remove weapon carry animation, %s",
-                      thing_logname(old_weapon_carry_anim));
-        }
-    } else {
-        if (weapon_carry_anim) {
-            THING_LOG(t, "weapon carry anim nos, %s",
-                      thing_logname(weapon_carry_anim));
-        }
-    }
-
-    if (weapon_carry_anim) {
-        t->weapon_carry_anim_thing_id = weapon_carry_anim->thing_id;
-    } else {
-        t->weapon_carry_anim_thing_id = 0;
-    }
-}
-
-void thing_set_weapon_swing_anim_id (thingp t,
-                                     uint32_t weapon_swing_anim_id)
-{
-    thingp weapon_swing_anim;
-
-    if (!weapon_swing_anim_id) {
-        thing_set_weapon_swing_anim(t, 0);
-        return;
-    }
-
-    if (t->on_server) {
-        weapon_swing_anim = thing_server_find(weapon_swing_anim_id);
-    } else {
-        weapon_swing_anim = thing_client_find(weapon_swing_anim_id);
-    }
-
-    thing_set_weapon_swing_anim(t, weapon_swing_anim);
-}
-
-void thing_set_weapon_swing_anim (thingp t, thingp weapon_swing_anim)
-{
-    if (weapon_swing_anim) {
-        verify(weapon_swing_anim);
-    }
-
-    thingp old_weapon_swing_anim = thing_weapon_swing_anim(t);
-
-    if (old_weapon_swing_anim) {
-        if (old_weapon_swing_anim == weapon_swing_anim) {
-            return;
-        }
-
-        if (weapon_swing_anim) {
-            THING_LOG(t, "weapon_swing_anim change %s->%s",
-                      thing_logname(old_weapon_swing_anim),
-                      thing_logname(weapon_swing_anim));
-        } else {
-            if (0) {
-                THING_LOG(t, "remove weapon_swing_anim %s",
-                          thing_logname(old_weapon_swing_anim));
-            }
-        }
-    } else {
-        if (weapon_swing_anim) {
-            if (0) {
-                THING_LOG(t, "weapon_swing_anim %s",
-                          thing_logname(weapon_swing_anim));
-            }
-        }
-    }
-
-    if (weapon_swing_anim) {
-        t->weapon_swing_anim_thing_id = weapon_swing_anim->thing_id;
-    } else {
-        t->weapon_swing_anim_thing_id = 0;
     }
 }
 
