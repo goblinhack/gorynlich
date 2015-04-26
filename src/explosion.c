@@ -81,7 +81,7 @@ static uint8_t level_place_explosion_at (levelp level,
     return (true);
 }
 
-static uint8_t this_explosion[MAP_WIDTH][MAP_HEIGHT];
+static double this_explosion[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t this_explosion_x;
 static uint8_t this_explosion_y;
 static uint8_t this_explosion_radius;
@@ -104,11 +104,11 @@ static void explosion_flood (levelp level, uint8_t x, uint8_t y)
         return;
     }
 
-    if (this_explosion[x][y]) {
+    if (this_explosion[x][y] > 0.0) {
         return;
     }
 
-    uint8_t distance = DISTANCE(x, y, this_explosion_x, this_explosion_y);
+    double distance = DISTANCE(x, y, this_explosion_x, this_explosion_y);
 
     if (distance > this_explosion_radius) {
         return;
@@ -261,13 +261,18 @@ static void level_place_explosion_ (levelp level,
      * Record the start of this explosion. We will do a map flood fill to find 
      * out the extent of the detonation.
      */
-    memset(this_explosion, 0, sizeof(this_explosion));
+    int ix, iy;
+
+    for (ix = 0; ix < MAP_WIDTH; ix++) {
+        for (iy = 0; iy < MAP_HEIGHT; iy++) {
+            this_explosion[ix][iy] = 0.0;
+        }
+    }
+
     this_explosion_x = x;
     this_explosion_y = y;
     this_explosion_radius = radius;
     explosion_flood(level, x, y);
-
-    int ix, iy;
 
 #ifdef DEBUG_EXPLOSION
     if (0) {
@@ -329,7 +334,7 @@ static void level_place_explosion_ (levelp level,
         return;
     }
 
-    for (ix = x - radius - 1; ix <= x + radius - 1; ix++) {
+    for (ix = x - radius - 2; ix <= x + radius + 2; ix++) {
         if (ix < 1) {
             continue;
         }
@@ -338,7 +343,7 @@ static void level_place_explosion_ (levelp level,
             continue;
         }
 
-        for (iy = y - radius - 1; iy <= y + radius - 1; iy++) {
+        for (iy = y - radius - 2; iy <= y + radius + 2; iy++) {
                                 
             if (iy < 1) {
                 continue;
@@ -350,10 +355,6 @@ static void level_place_explosion_ (levelp level,
 
             int8_t distance = this_explosion[ix][iy];
             if (!distance) {
-                continue;
-            }
-
-            if (distance > radius) {
                 continue;
             }
 
@@ -419,7 +420,7 @@ static void level_place_spatter (levelp level,
 
     int ix, iy;
 
-    for (ix = x - radius - 1; ix <= x + radius - 1; ix++) {
+    for (ix = x - radius - 1; ix <= x + radius + 1; ix++) {
         if (ix < 1) {
             continue;
         }
@@ -428,7 +429,7 @@ static void level_place_spatter (levelp level,
             continue;
         }
 
-        for (iy = y - radius - 1; iy <= y + radius - 1; iy++) {
+        for (iy = y - radius - 1; iy <= y + radius + 1; iy++) {
                                 
             if (iy < 1) {
                 continue;
