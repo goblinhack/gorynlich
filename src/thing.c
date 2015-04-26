@@ -1183,14 +1183,16 @@ static void thing_remove_hooks (thingp t)
      */
     thingp owner = 0;
 
-    THING_LOG(t, "remove hooks");
+    if (0) {
+        THING_LOG(t, "remove hooks");
+    }
 
     if (t->owner_thing_id) {
         owner = thing_owner(t);
     }
 
     if (t->owner_thing_id && owner) {
-        if (1) {
+        if (0) {
             THING_LOG(t, "detach from owner %s", thing_logname(owner));
         }
 
@@ -1733,19 +1735,23 @@ void thing_make_active (thingp t)
         return;
     }
 
+    if (!t->client_or_server_tree) {
+        return;
+    }
+
     if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
-        DIE("thing move, remove boring [%s] failed", thing_name(t));
+        DIE("thing move, remove boring list [%s] failed", thing_name(t));
     }
 
     if (t->client_or_server_tree == server_boring_things) {
         if (!tree_insert(server_active_things, &t->tree.node)) {
-            DIE("thing move, insert active [%s] failed", thing_name(t));
+            DIE("thing move, insert active list [%s] failed", thing_name(t));
         }
 
         t->client_or_server_tree = server_active_things;
     } else if (t->client_or_server_tree == client_boring_things) {
         if (!tree_insert(client_active_things, &t->tree.node)) {
-            DIE("thing move, insert active [%s] failed", thing_name(t));
+            DIE("thing move, insert active list [%s] failed", thing_name(t));
         }
 
         t->client_or_server_tree = client_active_things;
@@ -4031,13 +4037,13 @@ void thing_set_owner (thingp t, thingp owner)
             THING_LOG(t, "owner change %s->%s",
                       thing_logname(old_owner), thing_logname(owner));
         } else {
-            if (1) {
+            if (0) {
                 THING_LOG(t, "remove owner %s", thing_logname(old_owner));
             }
         }
     } else {
         if (owner) {
-            if (1) {
+            if (0) {
                 THING_LOG(t, "owner %s", thing_logname(owner));
             }
         }
