@@ -24,6 +24,8 @@ static void thing_client_effect_power_up(thingp t);
  */
 void thing_server_effect (thingp t, int effect)
 {
+    verify(t);
+
     if (!t->on_server) {
         DIE("Trying to do an effect on a client thing");
     }

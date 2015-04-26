@@ -55,7 +55,7 @@ void thing_set_weapon_carry_anim (thingp t, thingp weapon_carry_anim)
         }
     } else {
         if (weapon_carry_anim) {
-            THING_LOG(t, "weapon carry anim nos, %s",
+            THING_LOG(t, "weapon carry anim now, %s",
                       thing_logname(weapon_carry_anim));
         }
     }
