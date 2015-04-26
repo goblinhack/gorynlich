@@ -954,14 +954,13 @@ wid_game_map_client_replace_tile (widp w,
     }
 
     if (thing_is_explosion(t)) {
-//        wid_scaling_blit_to_pct_in(child, 1.0, 3.0, 500, 0);
         /*
          * The epicenter needs to be where it was on the server as we do a 
          * flood fill to see where the rest of the explosion goes.
          */
         if (!t->is_epicenter) {
-            dx = gaussrand(0.0, 0.2);
-            dy = gaussrand(0.0, 0.2);
+            dx = gaussrand(0.0, 0.3);
+            dy = gaussrand(0.0, 0.3);
         }
 
         wid_fade_out(child, 1000);
@@ -1005,10 +1004,7 @@ wid_game_map_client_replace_tile (widp w,
 
             level_place_poison(client_level, 0, t->x, t->y);
 
-        } else if ((tp->id == THING_CLOUDKILL1) ||
-                   (tp->id == THING_CLOUDKILL2) ||
-                   (tp->id == THING_CLOUDKILL3) ||
-                   (tp->id == THING_CLOUDKILL4)) {
+        } else if (tp->id == THING_CLOUDKILL1) {
 
             level_place_cloudkill(client_level, 0, t->x, t->y);
 
