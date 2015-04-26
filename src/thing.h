@@ -1126,11 +1126,11 @@ static inline uint8_t thing_is_rrr15 (thingp t)
     return (tp_is_rrr15(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_centered_on_owner (thingp t)
+static inline uint8_t thing_is_rrr16 (thingp t)
 {
     verify(t);
 
-    return (tp_is_centered_on_owner(thing_tp(t)));
+    return (tp_is_rrr16(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_shield (thingp t)
@@ -1729,9 +1729,9 @@ static inline uint8_t thing_is_rrr15_noverify (thingp t)
     return (t->tp->is_rrr15);
 }
 
-static inline uint8_t thing_is_centered_on_owner_noverify (thingp t)
+static inline uint8_t thing_is_rrr16_noverify (thingp t)
 {
-    return (t->tp->is_centered_on_owner);
+    return (t->tp->is_rrr16);
 }
 
 static inline uint8_t thing_is_shield_noverify (thingp t)

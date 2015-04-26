@@ -1,7 +1,7 @@
 {
  short_name="shield"
  raw_name="shield1"
- z_depth=5
+ z_depth=2
  is_animated
  is_hidden_from_editor
  is_shield
@@ -14,7 +14,6 @@
  light_radius=1.0
  is_collision_map_large
  damage=3
- is_centered_on_owner
  hit_delay_tenths=1
  tiles={
   tile={

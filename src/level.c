@@ -1653,9 +1653,9 @@ uint32_t level_count_is_rrr15 (levelp level)
     return (level_count_is_x(level, tp_is_rrr15));
 }
 
-uint32_t level_count_is_centered_on_owner (levelp level)
+uint32_t level_count_is_rrr16 (levelp level)
 {
-    return (level_count_is_x(level, tp_is_centered_on_owner));
+    return (level_count_is_x(level, tp_is_rrr16));
 }
 
 uint32_t level_count_is_shield (levelp level)

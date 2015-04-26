@@ -146,9 +146,9 @@ static void thing_client_effect_hit_crit (thingp t)
 
 static void thing_client_effect_power_up (thingp t)
 {
-    int count = 200;
-    int i = count;
-    while (i--) {
+    double rad;
+
+    for (rad = 0.0; rad < RAD_360; rad += RAD_360 / 360.0) {
         widp w = t->wid;
         double px, py;
 
@@ -163,30 +163,32 @@ static void thing_client_effect_power_up (thingp t)
 
         widp power_up = wid_new_square_window("sparkle");
         wid_set_tl_br_pct(power_up, tl, br);
-        wid_set_tilename(power_up, "sparkle");
+        wid_set_tilename(power_up, "shield1.1");
 
         int delay = gaussrand(200, 500);
         if (delay < 100) {
             delay = 100;
         }
 
+        double width = 0.05;
+        px += fcos(rad) * width;
+        py += (fsin(rad) * width) * 
+                        ((double)global_config.video_gl_width / 
+                         (double)global_config.video_gl_height);
+
         wid_move_to_pct_centered(power_up, px, py);
-        px += gaussrand(0.0, 0.1);
-        py += gaussrand(0.0, 0.1);
+        px += gaussrand(0.0, width/5.0);
+        py += gaussrand(0.0, width/5.0);
         wid_move_to_pct_centered_in(power_up, px, py, delay);
 
         wid_set_no_shape(power_up);
         wid_set_mode(power_up, WID_MODE_NORMAL);
 
-        color c;
-        c.a = 255;
-        c.r = myrand() % 255;
-        c.g = myrand() % 255;
-        c.b = myrand() % 255;
-        wid_set_color(power_up, WID_COLOR_BLIT, c);
+        wid_set_color(power_up, WID_COLOR_BLIT, WHITE);
+        wid_set_z_depth(power_up, 1);
 
         wid_fade_out(power_up, delay);
         wid_destroy_in(power_up, delay);
-        wid_scaling_blit_to_pct_in(power_up, 0.1, 0.3, delay * 2, 0);
+        wid_scaling_blit_to_pct_in(power_up, 0.1, 1.0, delay * 2, 0);
     }
 }
