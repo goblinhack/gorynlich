@@ -585,7 +585,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_shield", t->is_shield);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_powerup", t->is_powerup);
         GET_OPT_NAMED_BITFIELD(ctx, "is_damaged_on_firing", t->is_damaged_on_firing);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hard", t->is_hard);
         GET_OPT_NAMED_BITFIELD(ctx, "is_sleeping", t->is_sleeping);
@@ -606,7 +606,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_right", t->is_action_right);
         GET_OPT_NAMED_BITFIELD(ctx, "can_walk_through", t->can_walk_through);
         GET_OPT_NAMED_BITFIELD(ctx, "is_weapon_carry_anim", t->is_weapon_carry_anim);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_shield_anim", t->is_shield_anim);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_powerup_anim", t->is_powerup_anim);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spell", t->is_spell);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hand_item", t->is_hand_item);
         GET_OPT_NAMED_BITFIELD(ctx, "is_boots", t->is_boots);
@@ -780,7 +780,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
     PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
     PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
-    PUT_NAMED_BITFIELD(ctx, "is_shield", t->is_shield);
+    PUT_NAMED_BITFIELD(ctx, "is_powerup", t->is_powerup);
     PUT_NAMED_BITFIELD(ctx, "is_damaged_on_firing", t->is_damaged_on_firing);
     PUT_NAMED_BITFIELD(ctx, "is_hard", t->is_hard);
     PUT_NAMED_BITFIELD(ctx, "is_sleeping", t->is_sleeping);
@@ -800,7 +800,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_action_right", t->is_action_right);
     PUT_NAMED_BITFIELD(ctx, "can_walk_through", t->can_walk_through);
     PUT_NAMED_BITFIELD(ctx, "is_weapon_carry_anim", t->is_weapon_carry_anim);
-    PUT_NAMED_BITFIELD(ctx, "is_shield_anim", t->is_shield_anim);
+    PUT_NAMED_BITFIELD(ctx, "is_powerup_anim", t->is_powerup_anim);
     PUT_NAMED_BITFIELD(ctx, "is_spell", t->is_spell);
     PUT_NAMED_BITFIELD(ctx, "is_hand_item", t->is_hand_item);
     PUT_NAMED_BITFIELD(ctx, "is_boots", t->is_boots);

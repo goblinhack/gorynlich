@@ -378,8 +378,8 @@ static uint8_t things_overlap (const thingp A,
 
 #if 0
 if (debug) {
-    if ((thing_is_shield(A) || 
-         thing_is_shield(B))) {
+    if ((thing_is_powerup(A) || 
+         thing_is_powerup(B))) {
     if ((thing_is_monst(A) || 
          thing_is_monst(B))) {
 CON("    A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
@@ -508,7 +508,7 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
          */
         if (thing_is_monst(it)                  || 
             thing_is_poison(it)                 ||
-            thing_is_shield(it)                 ||
+            thing_is_powerup(it)                 ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_explosion(it)) {
             /*
@@ -544,7 +544,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
          */
         if (thing_is_player(it)                 ||
             thing_is_poison(it)                 ||
-            thing_is_shield(it)                 ||
+            thing_is_powerup(it)                 ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_explosion(it)) {
             /*
@@ -578,7 +578,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_door(it)                   ||
             thing_is_projectile(it)             ||
             thing_is_mob_spawner(it)            ||
-            thing_is_shield(it)                 ||
+            thing_is_powerup(it)                 ||
             thing_is_monst(it)) {
             /*
              * I'm hit!
@@ -661,7 +661,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
     /*
      * Shield hits a bad guy?
      */
-    if (thing_is_shield(me)) {
+    if (thing_is_powerup(me)) {
         if (thing_is_monst(it) ||
             thing_is_mob_spawner(it)) {
             /*
@@ -689,7 +689,7 @@ void thing_handle_collisions (widp grid, thingp me)
     }
 
 #if 0
-if (thing_is_shield(me)) {
+if (thing_is_powerup(me)) {
 debug = 1;
 CON("  ");
 CON("  ");
@@ -806,7 +806,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_can_walk_through(it)          ||
                     thing_is_carryable(it)              ||
                     thing_is_weapon_swing_effect(it)    ||
-                    thing_is_shield(it)                 ||
+                    thing_is_powerup(it)                 ||
                     thing_is_explosion(it)              ||
                     thing_is_poison(it)                 ||
                     thing_is_projectile(it)             ||
@@ -821,7 +821,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             if (thing_is_explosion(me)                  ||
                 thing_is_projectile(me)                 ||
                 thing_is_poison(me)                     ||
-                thing_is_shield(me)                     ||
+                thing_is_powerup(me)                     ||
                 thing_is_weapon_swing_effect(me)) {
                 /*
                  * Allow these to pass through anything.
@@ -861,7 +861,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_projectile(it)             ||
                     thing_is_poison(it)                 ||
                     thing_is_weapon_swing_effect(it)    ||
-                    thing_is_shield(it)                 ||
+                    thing_is_powerup(it)                 ||
                     thing_is_sawblade(it)               ||
                     thing_is_explosion(it)) {
                     continue;
