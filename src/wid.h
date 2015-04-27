@@ -502,11 +502,12 @@ typedef struct widgrid_ {
     uint32_t height;
     uint32_t pixwidth;
     uint32_t pixheight;
-    uint8_t bounds_valid;
     double tl_x;
     double tl_y;
     double br_x;
     double br_y;
+    uint8_t bounds_valid:1;
+    uint8_t bounds_locked:1;
 } widgrid;
 
 typedef struct wid_move_ {
