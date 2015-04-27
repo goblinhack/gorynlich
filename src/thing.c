@@ -88,6 +88,7 @@ uint16_t THING_EXPLOSION2;
 uint16_t THING_EXPLOSION3;
 uint16_t THING_EXPLOSION4;
 uint16_t THING_SHIELD1;
+uint16_t THING_POWERUP1;
 uint16_t THING_HIT_SUCCESS;
 uint16_t THING_HIT_MISS;
 uint16_t THING_HEART;
@@ -1985,10 +1986,10 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
 
 #if 0
 if (1)  {
-if (thing_is_shield(t)) {
+if (thing_is_powerup(t)) {
 CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
 }
-if (thing_is_shield(hitter)) {
+if (thing_is_powerup(hitter)) {
 CON("%s is hitting %s",thing_logname(hitter), thing_logname(t));
 }
 }
@@ -2226,7 +2227,7 @@ CON("%s is hitting %s",thing_logname(hitter), thing_logname(t));
     if (thing_is_monst(t)               ||
         thing_is_mob_spawner(t)         ||
         thing_is_wall(t)                ||
-        thing_is_shield(t)              ||
+        thing_is_powerup(t)              ||
         thing_is_sawblade(t)            ||
         thing_is_door(t)) {
 
@@ -3249,7 +3250,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
          * client can infer the swing and animations.
          */
         if (tp_is_weapon_swing_effect(tp)   ||
-            tp_is_shield_anim(tp)           ||
+            tp_is_powerup_anim(tp)           ||
             tp_is_weapon_carry_anim(tp)) {
             t->updated--;
             continue;

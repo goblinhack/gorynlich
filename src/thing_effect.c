@@ -163,7 +163,7 @@ static void thing_client_effect_power_up (thingp t)
 
         widp power_up = wid_new_square_window("sparkle");
         wid_set_tl_br_pct(power_up, tl, br);
-        wid_set_tilename(power_up, "shield1.1");
+        wid_set_tilename(power_up, "powerup1.1");
 
         int delay = gaussrand(200, 500);
         if (delay < 100) {
