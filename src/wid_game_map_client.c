@@ -972,6 +972,10 @@ wid_game_map_client_replace_tile (widp w,
         wid_fade_out(child, 1000);
     }
 
+    if (thing_is_powerup_anim(t)) {
+        dy = 0.5;
+    }
+
     thing_client_wid_update(t, x + dx, y + dy, false /* smooth */,
                             true /* is new */);
 

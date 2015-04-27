@@ -1658,9 +1658,9 @@ uint32_t level_count_is_rrr16 (levelp level)
     return (level_count_is_x(level, tp_is_rrr16));
 }
 
-uint32_t level_count_is_shield (levelp level)
+uint32_t level_count_is_powerup (levelp level)
 {
-    return (level_count_is_x(level, tp_is_shield));
+    return (level_count_is_x(level, tp_is_powerup));
 }
 
 uint32_t level_count_is_damaged_on_firing (levelp level)
