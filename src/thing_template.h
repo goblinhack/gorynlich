@@ -253,7 +253,7 @@ typedef struct tp_ {
     uint8_t is_rrr14:1;
     uint8_t is_rrr15:1;
     uint8_t is_rrr16:1;
-    uint8_t is_shield:1;
+    uint8_t is_powerup:1;
     uint8_t is_damaged_on_firing:1;
     uint8_t is_hard:1;
     uint8_t is_sleeping:1;
@@ -274,7 +274,7 @@ typedef struct tp_ {
     uint8_t is_action_right:1;
     uint8_t can_walk_through:1;
     uint8_t is_weapon_carry_anim:1;
-    uint8_t is_shield_anim:1;
+    uint8_t is_powerup_anim:1;
     uint8_t is_spell:1;
     uint8_t is_hand_item:1;
     uint8_t is_boots:1;
@@ -666,9 +666,9 @@ static inline uint8_t tp_is_rrr16 (tpp t)
     return (t->is_rrr16);
 }
 
-static inline uint8_t tp_is_shield (tpp t)
+static inline uint8_t tp_is_powerup (tpp t)
 {
-    return (t->is_shield);
+    return (t->is_powerup);
 }
 
 static inline uint8_t tp_is_damaged_on_firing (tpp t)
@@ -771,9 +771,9 @@ static inline uint8_t tp_is_weapon_carry_anim (tpp t)
     return (t->is_weapon_carry_anim);
 }
 
-static inline uint8_t tp_is_shield_anim (tpp t)
+static inline uint8_t tp_is_powerup_anim (tpp t)
 {
-    return (t->is_shield_anim);
+    return (t->is_powerup_anim);
 }
 
 static inline uint8_t tp_is_spell (tpp t)

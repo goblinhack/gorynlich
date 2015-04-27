@@ -279,12 +279,23 @@ static uint8_t resource_init_35 (void *context)
 
 static uint8_t resource_init_36 (void *context)
 {
-    return (tex_load_tiled("data/gfx/shield.png",
-                           "shield",
+    return (tex_load_tiled("data/gfx/shield1.png",
+                           "shield1",
+                           1024, 512) != 0) &&
+           (tex_load_tiled_black_and_white(
+                           "data/gfx/shield1.png",
+                           "shield1_black_and_white",
+                           1024, 512) != 0);
+}
+
+static uint8_t resource_init_37 (void *context)
+{
+    return (tex_load_tiled("data/gfx/powerup1.png",
+                           "powerup1",
                            256, 256) != 0) &&
            (tex_load_tiled_black_and_white(
-                           "data/gfx/shield.png",
-                           "shield_black_and_white",
+                           "data/gfx/powerup1.png",
+                           "powerup1_black_and_white",
                            256, 256) != 0);
 }
 
@@ -2903,6 +2914,22 @@ static uint8_t resource_init_last (void *context)
 
     static const char *shield1_tiles[] = {
         // --------------------------------------------------------------------
+        "shield1.32",
+        "shield1.31",
+        "shield1.30",
+        "shield1.29",
+        "shield1.28",
+        "shield1.27",
+        "shield1.26",
+        "shield1.25",
+        "shield1.24",
+        "shield1.23",
+        "shield1.22",
+        "shield1.21",
+        "shield1.20",
+        "shield1.19",
+        "shield1.18",
+        "shield1.17",
         "shield1.16",
         "shield1.15",
         "shield1.14",
@@ -2921,11 +2948,37 @@ static uint8_t resource_init_last (void *context)
         "shield1.1",
     };
 
-    tile_load_arr("shield", 
+    tile_load_arr("shield1", 
                   0, /* black and white */
-                  64, 64,
+                  128, 128,
                   ARRAY_SIZE(shield1_tiles), 
                   shield1_tiles);
+
+    static const char *powerup1_tiles[] = {
+        // --------------------------------------------------------------------
+        "powerup1.16",
+        "powerup1.15",
+        "powerup1.14",
+        "powerup1.13",
+        "powerup1.12",
+        "powerup1.11",
+        "powerup1.10",
+        "powerup1.9",
+        "powerup1.8",
+        "powerup1.7",
+        "powerup1.6",
+        "powerup1.5",
+        "powerup1.4",
+        "powerup1.3",
+        "powerup1.2",
+        "powerup1.1",
+    };
+
+    tile_load_arr("powerup1", 
+                  0, /* black and white */
+                  64, 64,
+                  ARRAY_SIZE(powerup1_tiles), 
+                  powerup1_tiles);
 
     static const char *crystalball_purple_tiles[] = {
         // --------------------------------------------------------------------
@@ -3016,6 +3069,7 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_EXPLOSION3, "data/things/explosion3");
     tp_load(&THING_EXPLOSION4, "data/things/explosion4");
     tp_load(&THING_SHIELD1, "data/things/shield1");
+    tp_load(&THING_POWERUP1, "data/things/powerup1");
     tp_load(&THING_POISON1, "data/things/poison1");
     tp_load(&THING_CLOUDKILL1, "data/things/cloudkill1");
 
@@ -3275,6 +3329,9 @@ uint8_t resource_init (void)
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_36,
                           0, "resource_init_36");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_37,
+                          0, "resource_init_37");
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_last,
                           0, "resource_init_last");

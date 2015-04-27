@@ -260,6 +260,6 @@ void thing_client_wid_update (thingp t, double x, double y,
     thingp shield_anim = thing_shield_anim(t);
     if (shield_anim) {
         shield_anim->dir = t->dir;
-        thing_client_wid_move(shield_anim, x, y, smooth);
+        thing_client_wid_move(shield_anim, x, y + 0.5, smooth);
     }
 }
