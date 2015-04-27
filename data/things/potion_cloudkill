@@ -2,7 +2,7 @@
  short_name="Cloudkill potion"
  raw_name="potion_cloudkill"
  tooltip="Potion of darkness"
- z_depth=4
+ z_depth=3
  is_inactive
  is_food
  is_stackable
