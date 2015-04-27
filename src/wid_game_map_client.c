@@ -205,6 +205,12 @@ void wid_game_map_client_scroll_adjust (uint8_t adjust)
         wid_move_to_horiz_pct(wid_game_map_client_horiz_scroll, playerx);
     }
 
+    /*
+     * Lock the level scroll bar so we don't adjust the level size when 
+     * explosions or anything else leaks over the edge.
+     */
+    wid_game_map_client_grid_container->grid->bounds_locked = 1;
+
     last_playerx = playerx;
     last_playery = playery;
 }
