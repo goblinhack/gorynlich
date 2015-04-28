@@ -1464,6 +1464,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
 
     if (thing_is_floor(t) || 
         thing_is_door(t) || 
+        thing_is_explosion(t) || 
         thing_is_wall(t)) {
         /*
          * Too boring to log.
@@ -1897,8 +1898,10 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
                 }
             }
 
-            THING_LOG(t, "hit by (%s) for %u, now dead",
-                      thing_logname(orig_hitter), damage);
+            if (0) {
+                THING_LOG(t, "hit by (%s) for %u, now dead",
+                        thing_logname(orig_hitter), damage);
+            }
 
             /*
              * If polymorphed, hit again?
