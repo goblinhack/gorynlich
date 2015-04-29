@@ -219,9 +219,14 @@ void blit_init (void)
 
     gl_array_buf = (typeof(gl_array_buf))
                     myzalloc(gl_array_size_required, "GL xy buffer");
+
+    /*
+     * Make the end a bit smaller so we have plenty of headroom.
+     */
     gl_array_buf_end =
             (typeof(gl_array_buf_end))
-                ((char *)gl_array_buf) + gl_array_size_required;
+                ((char *)gl_array_buf) + 
+                ((gl_array_size_required * 2) / 3);
 
     bufp = gl_array_buf;
     bufp_end = gl_array_buf_end;

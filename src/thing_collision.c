@@ -93,7 +93,7 @@ static void thing_possible_hit_do (thingp hitter)
          * Skip things that aren't really hitable.
          */
         if (thing_is_animation(cand->target) ||
-            thing_is_explosion(cand->target) ||
+            thing_is_cloud_effect(cand->target) ||
             thing_is_weapon_swing_effect(cand->target)) {
             continue;
         }
@@ -507,10 +507,10 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
          * Player bumped into something.
          */
         if (thing_is_monst(it)                  || 
-            thing_is_poison(it)                 ||
-            thing_is_powerup(it)                 ||
+            thing_is_gas_cloud(it)              ||
+            thing_is_powerup(it)                ||
             thing_is_weapon_swing_effect(it)    ||
-            thing_is_explosion(it)) {
+            thing_is_cloud_effect(it)) {
             /*
              * I'm hit!
              */
@@ -543,10 +543,10 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
          * Monster bumped into something.
          */
         if (thing_is_player(it)                 ||
-            thing_is_poison(it)                 ||
-            thing_is_powerup(it)                 ||
+            thing_is_gas_cloud(it)              ||
+            thing_is_powerup(it)                ||
             thing_is_weapon_swing_effect(it)    ||
-            thing_is_explosion(it)) {
+            thing_is_cloud_effect(it)) {
             /*
              * I'm hit!
              */
@@ -618,7 +618,6 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
      * Explosion hit something?
      */
     if (thing_is_projectile(me)                 || 
-        thing_is_poison(me)                     ||
         thing_is_explosion(me)) {
 
         if (thing_is_monst(it)                  || 
@@ -628,6 +627,22 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_player(it)                 ||
             thing_is_wall(it)                   ||
             thing_is_sawblade(it)               ||
+            thing_is_mob_spawner(it)) {
+            /*
+             * Weapon hits monster or generator
+             */
+            thing_possible_hit_add_hitter_killed_on_hitting(
+                                            it, "projection hit thing");
+        }
+    }
+
+    /*
+     * Poison cloud hit something?
+     */
+    if (thing_is_gas_cloud(me)) {
+
+        if (thing_is_monst(it)                  || 
+            thing_is_player(it)                 ||
             thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator
@@ -806,9 +821,9 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_can_walk_through(it)          ||
                     thing_is_carryable(it)              ||
                     thing_is_weapon_swing_effect(it)    ||
-                    thing_is_powerup(it)                 ||
+                    thing_is_powerup(it)                ||
                     thing_is_explosion(it)              ||
-                    thing_is_poison(it)                 ||
+                    thing_is_gas_cloud(it)              ||
                     thing_is_projectile(it)             ||
                     thing_is_treasure(it)               ||
                     thing_is_weapon(it)                 ||
@@ -818,10 +833,9 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 }
             }
 
-            if (thing_is_explosion(me)                  ||
-                thing_is_projectile(me)                 ||
-                thing_is_poison(me)                     ||
-                thing_is_powerup(me)                     ||
+            if (thing_is_projectile(me)                 ||
+                thing_is_cloud_effect(me)               ||
+                thing_is_powerup(me)                    ||
                 thing_is_weapon_swing_effect(me)) {
                 /*
                  * Allow these to pass through anything.
@@ -859,11 +873,10 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                      * Walk through friendly fire.
                      */
                     thing_is_projectile(it)             ||
-                    thing_is_poison(it)                 ||
                     thing_is_weapon_swing_effect(it)    ||
-                    thing_is_powerup(it)                 ||
+                    thing_is_powerup(it)                ||
                     thing_is_sawblade(it)               ||
-                    thing_is_explosion(it)) {
+                    thing_is_cloud_effect(it)) {
                     continue;
                 }
 
