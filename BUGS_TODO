@@ -1,3 +1,4 @@
+- poison gas cloud kills user
 - attack melee must do something
 - xp level and hp increase per level
 - attack ranged must do something
@@ -6,6 +7,7 @@
 - vision must do something
 - healing must do something
 --------------------------------------- plan for may --------------------------------------
+- add screaming fire skull monst?
 - magic attack - green fireball?
 - attack magical must do something
 - sound effects for weapons and hits http://www.bfxr.net/
@@ -54,6 +56,13 @@ thief, kill thief to recover items
 mining?
 add bot to test out multiplayer ?
 different profiles for level generation
+
+Tue Apr 28 21:11:51 EDT 2015
+- crash with weapon wear fixed
+- crash with opengl tex buf overflow poss fixed
+- poison should not destroy spinning blades
+- better brazier effect
+- replace wizard fireball
 
 Sun Apr 26 09:13:03 EDT 2015
 - fix level scrolling so when explosions leak over the edge the level scroll doesn't jump

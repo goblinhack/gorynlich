@@ -959,7 +959,7 @@ wid_game_map_client_replace_tile (widp w,
         wid_scaling_blit_to_pct_in(child, scale, scale, 500, 9999999);
     }
 
-    if (thing_is_explosion(t)) {
+    if (thing_is_cloud_effect(t)) {
         /*
          * The epicenter needs to be where it was on the server as we do a 
          * flood fill to see where the rest of the explosion goes.
@@ -1001,7 +1001,7 @@ wid_game_map_client_replace_tile (widp w,
      * We've been told about the epicenter of an explsion, now emulate the 
      * blast.
      */
-    if (t->is_epicenter && thing_is_explosion(t) ) {
+    if (t->is_epicenter && thing_is_cloud_effect(t) ) {
 
         if ((tp->id == THING_EXPLOSION1) ||
             (tp->id == THING_EXPLOSION2) ||

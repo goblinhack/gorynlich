@@ -239,9 +239,9 @@ uint8_t map_is_fire_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_fire));
 }
 
-uint8_t map_is_poison_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_gas_cloud_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_poison));
+    return (map_is_x_at(level, x, y, tp_is_gas_cloud));
 }
 
 uint8_t map_is_item_unusable_at (levelp level, int32_t x, int32_t y)
@@ -349,14 +349,14 @@ uint8_t map_is_rrr14_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr14));
 }
 
-uint8_t map_is_rrr15_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_poison_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr15));
+    return (map_is_x_at(level, x, y, tp_is_poison));
 }
 
-uint8_t map_is_rrr16_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_cloud_effect_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr16));
+    return (map_is_x_at(level, x, y, tp_is_cloud_effect));
 }
 
 uint8_t map_is_powerup_at (levelp level, int32_t x, int32_t y)
@@ -706,9 +706,9 @@ thingp map_thing_is_animation_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_animation));
 }
 
-thingp map_thing_is_poison_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_gas_cloud_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_poison));
+    return (map_thing_is_x_at(level, x, y, tp_is_gas_cloud));
 }
 
 thingp map_thing_is_item_unusable_at (levelp level, int32_t x, int32_t y)
@@ -816,14 +816,14 @@ thingp map_thing_is_rrr14_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr14));
 }
 
-thingp map_thing_is_rrr15_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_poison_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr15));
+    return (map_thing_is_x_at(level, x, y, tp_is_poison));
 }
 
-thingp map_thing_is_rrr16_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_cloud_effect_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr16));
+    return (map_thing_is_x_at(level, x, y, tp_is_cloud_effect));
 }
 
 thingp map_thing_is_powerup_at (levelp level, int32_t x, int32_t y)
@@ -1189,9 +1189,9 @@ tree_rootp map_all_things_is_animation_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_animation));
 }
 
-tree_rootp map_all_things_is_poison_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_gas_cloud_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_poison));
+    return (map_all_things_is_x_at(level, x, y, tp_is_gas_cloud));
 }
 
 tree_rootp map_all_things_is_item_unusable_at (levelp level, int32_t x, int32_t y)
@@ -1299,14 +1299,14 @@ tree_rootp map_all_things_is_rrr14_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr14));
 }
 
-tree_rootp map_all_things_is_rrr15_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_poison_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr15));
+    return (map_all_things_is_x_at(level, x, y, tp_is_poison));
 }
 
-tree_rootp map_all_things_is_rrr16_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_cloud_effect_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr16));
+    return (map_all_things_is_x_at(level, x, y, tp_is_cloud_effect));
 }
 
 tree_rootp map_all_things_is_powerup_at (levelp level, int32_t x, int32_t y)
@@ -1754,7 +1754,7 @@ tpp map_find_explosion_at (levelp level,
 tpp map_find_spikes_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_poison, w));
+    return (map_find_x_at(level, x, y, tp_is_gas_cloud, w));
 }
 
 tpp map_find_is_item_unusable_at (levelp level,
@@ -1872,19 +1872,14 @@ tpp map_find_rrr14_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr14, w));
 }
 
-tpp map_find_rrr15_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_is_poison_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr15, w));
+    return (map_find_x_at(level, x, y, tp_is_poison, w));
 }
 
-tpp map_find_rrr16_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_cloud_effect_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr16, w));
-}
-
-tpp map_find_rrr17_at (levelp level, int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_powerup, w));
+    return (map_find_x_at(level, x, y, tp_is_cloud_effect, w));
 }
 
 tpp map_find_damaged_on_firing_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2593,9 +2588,9 @@ tree_rootp map_all_things_is_animation (levelp level)
     return (map_all_things_is_x(level, tp_is_animation));
 }
 
-tree_rootp map_all_things_is_poison (levelp level)
+tree_rootp map_all_things_is_gas_cloud (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_poison));
+    return (map_all_things_is_x(level, tp_is_gas_cloud));
 }
 
 tree_rootp map_all_things_is_item_unusable (levelp level)
@@ -2703,14 +2698,14 @@ tree_rootp map_all_things_is_rrr14 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr14));
 }
 
-tree_rootp map_all_things_is_rrr15 (levelp level)
+tree_rootp map_all_things_is_poison (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr15));
+    return (map_all_things_is_x(level, tp_is_poison));
 }
 
-tree_rootp map_all_things_is_rrr16 (levelp level)
+tree_rootp map_all_things_is_cloud_effect (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr16));
+    return (map_all_things_is_x(level, tp_is_cloud_effect));
 }
 
 tree_rootp map_all_things_is_powerup (levelp level)

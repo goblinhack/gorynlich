@@ -228,7 +228,7 @@ typedef struct tp_ {
     uint8_t is_ring:1;
     uint8_t is_animation:1;
     uint8_t is_shadow_caster_soft:1;
-    uint8_t is_poison:1;
+    uint8_t is_gas_cloud:1;
     uint8_t is_carryable:1;
     uint8_t is_item_unusable:1;
     uint8_t is_valid_for_action_bar:1;
@@ -251,8 +251,8 @@ typedef struct tp_ {
     uint8_t is_rrr12:1;
     uint8_t is_rrr13:1;
     uint8_t is_rrr14:1;
-    uint8_t is_rrr15:1;
-    uint8_t is_rrr16:1;
+    uint8_t is_poison:1;
+    uint8_t is_cloud_effect:1;
     uint8_t is_powerup:1;
     uint8_t is_damaged_on_firing:1;
     uint8_t is_hard:1;
@@ -541,9 +541,9 @@ static inline uint8_t tp_is_collision_map_large (tpp t)
     return (t->is_collision_map_large);
 }
 
-static inline uint8_t tp_is_poison (tpp t)
+static inline uint8_t tp_is_gas_cloud (tpp t)
 {
-    return (t->is_poison);
+    return (t->is_gas_cloud);
 }
 
 static inline uint8_t tp_is_item_unusable (tpp t)
@@ -656,14 +656,14 @@ static inline uint8_t tp_is_rrr14 (tpp t)
     return (t->is_rrr14);
 }
 
-static inline uint8_t tp_is_rrr15 (tpp t)
+static inline uint8_t tp_is_poison (tpp t)
 {
-    return (t->is_rrr15);
+    return (t->is_poison);
 }
 
-static inline uint8_t tp_is_rrr16 (tpp t)
+static inline uint8_t tp_is_cloud_effect (tpp t)
 {
-    return (t->is_rrr16);
+    return (t->is_cloud_effect);
 }
 
 static inline uint8_t tp_is_powerup (tpp t)

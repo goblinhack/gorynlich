@@ -967,11 +967,11 @@ static inline uint8_t thing_is_animation (thingp t)
     return (tp_is_animation(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_poison (thingp t)
+static inline uint8_t thing_is_gas_cloud (thingp t)
 {
     verify(t);
 
-    return (tp_is_poison(thing_tp(t)));
+    return (tp_is_gas_cloud(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_item_unusable (thingp t)
@@ -1114,18 +1114,18 @@ static inline uint8_t thing_is_rrr14 (thingp t)
     return (tp_is_rrr14(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr15 (thingp t)
+static inline uint8_t thing_is_poison (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr15(thing_tp(t)));
+    return (tp_is_poison(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr16 (thingp t)
+static inline uint8_t thing_is_cloud_effect (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr16(thing_tp(t)));
+    return (tp_is_cloud_effect(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_powerup (thingp t)
@@ -1614,9 +1614,9 @@ static inline uint8_t thing_is_animation_noverify (thingp t)
     return (t->tp->is_animation);
 }
 
-static inline uint8_t thing_is_poison_noverify (thingp t)
+static inline uint8_t thing_is_gas_cloud_noverify (thingp t)
 {
-    return (t->tp->is_poison);
+    return (t->tp->is_gas_cloud);
 }
 
 static inline uint8_t thing_is_item_unusable_noverify (thingp t)
@@ -1719,14 +1719,14 @@ static inline uint8_t thing_is_rrr14_noverify (thingp t)
     return (t->tp->is_rrr14);
 }
 
-static inline uint8_t thing_is_rrr15_noverify (thingp t)
+static inline uint8_t thing_is_poison_noverify (thingp t)
 {
-    return (t->tp->is_rrr15);
+    return (t->tp->is_poison);
 }
 
-static inline uint8_t thing_is_rrr16_noverify (thingp t)
+static inline uint8_t thing_is_cloud_effect_noverify (thingp t)
 {
-    return (t->tp->is_rrr16);
+    return (t->tp->is_cloud_effect);
 }
 
 static inline uint8_t thing_is_powerup_noverify (thingp t)
