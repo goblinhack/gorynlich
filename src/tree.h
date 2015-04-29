@@ -15,8 +15,8 @@
 typedef enum { RB_RED, RB_BLACK } node_color;
 
 typedef struct tree_node_ {
-    struct tree_node_ *left;
     struct tree_node_ *right;
+    struct tree_node_ *left;
     struct tree_node_ *parent;
     uint16_t color;
     uint16_t is_static_mem;
@@ -93,12 +93,9 @@ tree_root *tree_alloc(tree_key_type, const char *name);
 tree_root *tree_alloc_custom(tree_key_func, const char *name);
 tree_node *tree_root_top(tree_root *);
 tree_node *tree_top(tree_node *);
-tree_node *tree_root_last(tree_root *);
 tree_node *tree_root_first(tree_root *);
-tree_node *tree_first(tree_node *);
 tree_node *tree_root_get_nth(tree_root *, uint32_t n);
 tree_node *tree_root_get_random(tree_root *);
-tree_node *tree_last(tree_node *);
 tree_node *tree_get_prev(tree_root *, tree_node *top, tree_node *);
 uint32_t tree_root_size(tree_root *);
 uint32_t tree_size(const tree_node *top);
@@ -647,4 +644,58 @@ static inline tree_node *tree_get_next_ ## compare_func (tree_root *root, \
     return (top);							\
 }									\
 
+/*
+ * Get the highest node in the subtree.
+ */
+static inline tree_node *tree_root_last (tree_root *root)
+{
+    tree_node *top;
+
+    if (unlikely(!root)) {
+        return (0);
+    }
+
+    top = root->node;
+    if (unlikely(!top)) {
+        return (0);
+    }
+
+    while (top->right) {
+        top = top->right;
+    }
+
+    return (top);
+}
+
+/*
+ * Get the least node in the subtree.
+ */
+static inline tree_node *tree_first (tree_node *top)
+{
+    if (unlikely(!top)) {
+        return (0);
+    }
+
+    while (top->left) {
+        top = top->left;
+    }
+
+    return (top);
+}
+
+/*
+ * Get the highest node in the subtree.
+ */
+static inline tree_node *tree_last (tree_node *top)
+{
+    if (unlikely(!top)) {
+        return (0);
+    }
+
+    while (top->right) {
+        top = top->right;
+    }
+
+    return (top);
+}
 #endif
