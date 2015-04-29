@@ -560,7 +560,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
         GET_OPT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
         GET_OPT_NAMED_BITFIELD(ctx, "is_animation", t->is_animation);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_poison", t->is_poison);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_gas_cloud", t->is_gas_cloud);
         GET_OPT_NAMED_BITFIELD(ctx, "is_carryable", t->is_carryable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_valid_for_action_bar", t->is_valid_for_action_bar);
@@ -583,8 +583,8 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_poison", t->is_poison);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_cloud_effect", t->is_cloud_effect);
         GET_OPT_NAMED_BITFIELD(ctx, "is_powerup", t->is_powerup);
         GET_OPT_NAMED_BITFIELD(ctx, "is_damaged_on_firing", t->is_damaged_on_firing);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hard", t->is_hard);
@@ -755,7 +755,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
     PUT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
     PUT_NAMED_BITFIELD(ctx, "is_animation", t->is_animation);
-    PUT_NAMED_BITFIELD(ctx, "is_poison", t->is_poison);
+    PUT_NAMED_BITFIELD(ctx, "is_gas_cloud", t->is_gas_cloud);
     PUT_NAMED_BITFIELD(ctx, "is_carryable", t->is_carryable);
     PUT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
     PUT_NAMED_BITFIELD(ctx, "is_valid_for_action_bar", t->is_valid_for_action_bar);
@@ -778,8 +778,8 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
     PUT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
     PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
+    PUT_NAMED_BITFIELD(ctx, "is_poison", t->is_poison);
+    PUT_NAMED_BITFIELD(ctx, "is_cloud_effect", t->is_cloud_effect);
     PUT_NAMED_BITFIELD(ctx, "is_powerup", t->is_powerup);
     PUT_NAMED_BITFIELD(ctx, "is_damaged_on_firing", t->is_damaged_on_firing);
     PUT_NAMED_BITFIELD(ctx, "is_hard", t->is_hard);

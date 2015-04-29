@@ -1538,9 +1538,9 @@ uint32_t level_count_is_animation (levelp level)
     return (level_count_is_x(level, tp_is_animation));
 }
 
-uint32_t level_count_is_poison (levelp level)
+uint32_t level_count_is_gas_cloud (levelp level)
 {
-    return (level_count_is_x(level, tp_is_poison));
+    return (level_count_is_x(level, tp_is_gas_cloud));
 }
 
 uint32_t level_count_is_item_unusable (levelp level)
@@ -1648,14 +1648,14 @@ uint32_t level_count_is_rrr14 (levelp level)
     return (level_count_is_x(level, tp_is_rrr14));
 }
 
-uint32_t level_count_is_rrr15 (levelp level)
+uint32_t level_count_is_poison (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr15));
+    return (level_count_is_x(level, tp_is_poison));
 }
 
-uint32_t level_count_is_rrr16 (levelp level)
+uint32_t level_count_is_cloud_effect (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr16));
+    return (level_count_is_x(level, tp_is_cloud_effect));
 }
 
 uint32_t level_count_is_powerup (levelp level)
