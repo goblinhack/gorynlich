@@ -1900,7 +1900,7 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
 
             if (0) {
                 THING_LOG(t, "hit by (%s) for %u, now dead",
-                        thing_logname(orig_hitter), damage);
+                          thing_logname(orig_hitter), damage);
             }
 
             /*
