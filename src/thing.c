@@ -323,7 +323,7 @@ static void thing_try_to_flush_ids_ (thingp *ids)
             continue;
         }
 
-        if (thing_is_explosion(t)) {
+        if (thing_is_cloud_effect(t)) {
             thing_destroy(t, "too many things");
         }
     }
@@ -349,7 +349,7 @@ static void thing_try_to_flush_client_ids_ (thingp *ids)
             continue;
         }
 
-        if (thing_is_explosion(t)) {
+        if (thing_is_cloud_effect(t)) {
             thing_destroy(t, "too many things");
         }
     }
@@ -652,7 +652,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
         /*
          * Try to find something we can boot out.
          */
-        if (thing_is_explosion(t)) {
+        if (thing_is_cloud_effect(t)) {
             /*
              * Don't bother. This is a transient thing.
              */
@@ -674,7 +674,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
                 DIE("expected to find a thing on the map here");
             }
 
-            if (thing_is_explosion(p) ||
+            if (thing_is_cloud_effect(p) ||
                 thing_is_weapon_swing_effect(p)) {
                 thing_map_remove(p);
                 break;
@@ -909,7 +909,7 @@ thingp thing_server_new (const char *name,
     }
 
     if (!thing_is_inactive_noverify(t) &&
-        !thing_is_explosion(t) &&
+        !thing_is_cloud_effect(t) &&
         !thing_is_weapon_swing_effect(t) &&
         !thing_is_weapon_carry_anim(t)) {
 
@@ -1028,7 +1028,7 @@ thingp thing_client_new (uint32_t id, tpp tp)
                            t->thing_id);
 
     if (!thing_is_inactive_noverify(t) &&
-        !thing_is_explosion(t) &&
+        !thing_is_cloud_effect(t) &&
         !thing_is_weapon_swing_effect(t) &&
         !thing_is_weapon_carry_anim(t)) {
         THING_LOG(t, "created");
@@ -1290,7 +1290,7 @@ void thing_destroy (thingp t, const char *why)
     verify(t);
 
     if (!thing_is_inactive_noverify(t) &&
-        !thing_is_explosion(t) &&
+        !thing_is_cloud_effect(t) &&
         !thing_is_weapon_swing_effect(t) &&
         !thing_is_weapon_carry_anim(t)) {
         THING_LOG(t, "destroyed, why(%s)", why);
@@ -1464,7 +1464,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
 
     if (thing_is_floor(t) || 
         thing_is_door(t) || 
-        thing_is_explosion(t) || 
+        thing_is_cloud_effect(t) || 
         thing_is_wall(t)) {
         /*
          * Too boring to log.
@@ -1626,7 +1626,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
                 if (thing_is_player(recipient)) {
 #if 0
-                    if (thing_is_explosion(killer)) {
+                    if (thing_is_cloud_effect(killer)) {
                         /*
                          * Too many packets if we kill a lot of things in one
                          * go.
@@ -1985,7 +1985,7 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
 int thing_hit (thingp t, thingp hitter, uint32_t damage)
 {
     thingp orig_hitter = hitter;
-    tpp weapon;
+    tpp weapon = 0;
 
 #if 0
 if (1)  {
@@ -2067,7 +2067,7 @@ CON("%s is hitting %s",thing_logname(hitter), thing_logname(t));
         if (thing_is_door(t)            ||
             thing_is_wall(t)) {
 
-            if (!thing_is_explosion(hitter)     &&
+            if (!thing_is_cloud_effect(hitter)  &&
                 !thing_is_projectile(hitter)    &&
                 !thing_is_weapon_swing_effect(hitter)) {
                 return (false);
@@ -2230,14 +2230,14 @@ CON("%s is hitting %s",thing_logname(hitter), thing_logname(t));
     if (thing_is_monst(t)               ||
         thing_is_mob_spawner(t)         ||
         thing_is_wall(t)                ||
-        thing_is_powerup(t)              ||
+        thing_is_powerup(t)             ||
         thing_is_sawblade(t)            ||
         thing_is_door(t)) {
 
         /*
          * Assume missed due to the logic below where we detect chance.
          */
-        if (orig_hitter && thing_is_explosion(orig_hitter)) {
+        if (orig_hitter && thing_is_cloud_effect(orig_hitter)) {
             /*
              * No flashing
              */
@@ -3232,7 +3232,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
          * As an optimization do not send dead events for explosions. Let the
          * client destroy those on its own to save sending loads of events.
          */
-        if (tp_is_explosion(tp)) {
+        if (tp_is_cloud_effect(tp)) {
             /*
              * Only send the center of a location, the client will then
              * emulate the blast without us needing to send lots of thing IDs.
@@ -3253,7 +3253,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
          * client can infer the swing and animations.
          */
         if (tp_is_weapon_swing_effect(tp)   ||
-            tp_is_powerup_anim(tp)           ||
+            tp_is_powerup_anim(tp)          ||
             tp_is_weapon_carry_anim(tp)) {
             t->updated--;
             continue;
@@ -3869,7 +3869,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                      * We are only ever told about epicenters of explosions
                      * for efficency.
                      */
-                    if (thing_is_explosion(t)) {
+                    if (thing_is_cloud_effect(t)) {
                         t->is_epicenter = true;
                     }
 
