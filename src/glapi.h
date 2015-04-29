@@ -213,11 +213,11 @@ gl_push (float **p,
     static float last_right;
     static float last_bottom;
 
-    if (*p >= p_end) {
+    if (unlikely(*p >= p_end)) {
         DIE("overflow on gl bug");
     }
 
-    if (!first) {
+    if (likely(!first)) {
         /*
          * If there is a break in the triangle strip then make a degenerate
          * triangle.
@@ -369,7 +369,7 @@ gl_push_triangle_colored (float **p,
                           float r2, float g2, float b2, float a2,
                           float r3, float g3, float b3, float a3)
 {
-    if (*p >= p_end) {
+    if (unlikely(*p >= p_end)) {
         DIE("overflow on gl bug");
     }
 
@@ -390,7 +390,7 @@ gl_push_point (float **p,
                float x1, float y1,
                float r1, float g1, float b1, float a1)
 {
-    if (*p >= p_end) {
+    if (unlikely(*p >= p_end)) {
         DIE("overflow on gl bug");
     }
 
@@ -436,7 +436,7 @@ gl_push_triangle (float **p,
                   float x2, float y2,
                   float x3, float y3)
 {
-    if (*p >= p_end) {
+    if (unlikely(*p >= p_end)) {
         DIE("overflow on gl bug");
     }
 
