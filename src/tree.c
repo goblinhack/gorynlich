@@ -130,61 +130,6 @@ tree_node *tree_root_first (tree_root *root)
 }
 
 /*
- * Get the highest node in the subtree.
- */
-tree_node *tree_root_last (tree_root *root)
-{
-    tree_node *top;
-
-    if (!root) {
-        return (0);
-    }
-
-    top = root->node;
-    if (!top) {
-        return (0);
-    }
-
-    while (top->right) {
-        top = top->right;
-    }
-
-    return (top);
-}
-
-/*
- * Get the least node in the subtree.
- */
-tree_node *tree_first (tree_node *top)
-{
-    if (!top) {
-        return (0);
-    }
-
-    while (top->left) {
-        top = top->left;
-    }
-
-    return (top);
-}
-
-/*
- * Get the highest node in the subtree.
- */
-tree_node *tree_last (tree_node *top)
-{
-    if (!top) {
-        return (0);
-    }
-
-    while (top->right) {
-        top = top->right;
-    }
-
-    return (top);
-}
-
-/*
  * Find the next lowest node.
  */
 tree_node *tree_get_prev (tree_root *root,

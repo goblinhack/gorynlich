@@ -624,16 +624,3 @@ thingp level_place_bomb (levelp level,
 
     return (t);
 }
-
-void level_place_small_cloudkill (levelp level, 
-                                  thingp owner,
-                                  double x, double y)
-{
-    level_place_explosion_(level, 
-                           owner,
-                           x, y,
-                           2, // radius
-                           0.5, // density
-                           1, // nargs
-                           "data/things/cloudkill1");
-}
