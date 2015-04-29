@@ -1887,15 +1887,9 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
              * Explodes on death ala Sith Lord? Only a lesser one, mind.
              */
             if (tp_is_combustable(t->tp)) {
-                if (thing_is_monst(t)) {
-                    level_place_small_cloudkill(thing_level(t),
-                                                0, // owner
-                                                t->x, t->y);
-                } else {
-                    level_place_small_explosion(thing_level(t),
-                                                0, // owner
-                                                t->x, t->y);
-                }
+                level_place_small_explosion(thing_level(t),
+                                            0, // owner
+                                            t->x, t->y);
             }
 
             if (0) {
