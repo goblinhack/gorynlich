@@ -143,11 +143,10 @@ void gl_ortho_set(int32_t width, int32_t height);
  *
  * Push elements onto the array buffer.
  */
-static inline void 
-gl_push_texcoord (float **p, float x, float y)
-{
-    *(*p)++ = x;
-    *(*p)++ = y;
+#define gl_push_texcoord(p, x, y) \
+{ \
+    *p++ = x; \
+    *p++ = y; \
 }
 
 /*
@@ -155,11 +154,10 @@ gl_push_texcoord (float **p, float x, float y)
  *
  * Push elements onto the array buffer.
  */
-static inline void 
-gl_push_vertex (float **p, float x, float y)
-{
-    *(*p)++ = x;
-    *(*p)++ = y;
+#define gl_push_vertex(p, x, y) \
+{ \
+    *p++ = x; \
+    *p++ = y; \
 }
 
 /*
@@ -167,16 +165,13 @@ gl_push_vertex (float **p, float x, float y)
  *
  * Push elements onto the array buffer.
  */
-static inline void 
-gl_push_rgba (float **p, float r, float g, float b, float a)
-{
-    float *P = *p;
-    *P++ = r;
-    *P++ = g;
-    *P++ = b;
-    *P++ = a;
-    *p = P;
-}
+#define gl_push_rgba(p, r, g, b, a) \
+{ \
+    *p++ = r; \
+    *p++ = g; \
+    *p++ = b; \
+    *p++ = a; \
+} \
 
 #define Vertex2f(x, y)                          \
     *xyp++ = x;                                 \
@@ -192,7 +187,7 @@ extern void blit_init(void);
  * gl_push
  */
 static inline void
-gl_push (float **p,
+gl_push (float **P,
          float *p_end,
          uint8_t first,
          float tex_left,
@@ -212,8 +207,9 @@ gl_push (float **p,
     static float last_tex_bottom;
     static float last_right;
     static float last_bottom;
+    float *p = *P;
 
-    if (unlikely(*p >= p_end)) {
+    if (unlikely(p >= p_end)) {
         DIE("overflow on gl bug");
     }
 
@@ -253,6 +249,7 @@ gl_push (float **p,
     last_tex_bottom = tex_bottom;
     last_right = right;
     last_bottom = bottom;
+    *P = p;
 }
 
 static inline
@@ -269,10 +266,10 @@ void blit (int tex,
 #ifdef ENABLE_GL_BULK_DRAW_ARRAYS
     uint8_t first;
 
-    if (!buf_tex) {
+    if (unlikely(!buf_tex)) {
         blit_init();
         first = true;
-    } else if (buf_tex != tex) {
+    } else if (unlikely(buf_tex != tex)) {
         blit_flush();
         first = true;
     } else {
@@ -288,26 +285,6 @@ void blit (int tex,
     float b = ((float)c.b) / 255.0;
     float a = ((float)c.a) / 255.0;
 
-    float r1 = r;
-    float g1 = g;
-    float b1 = b;
-    float a1 = a;
-
-    float r2 = r;
-    float g2 = g;
-    float b2 = b;
-    float a2 = a;
-
-    float r3 = r;
-    float g3 = g;
-    float b3 = b;
-    float a3 = a;
-
-    float r4 = r;
-    float g4 = g;
-    float b4 = b;
-    float a4 = a;
-
     gl_push(&bufp,
             bufp_end,
             first,
@@ -319,10 +296,10 @@ void blit (int tex,
             top,
             right,
             bottom,
-            r1, g1, b1, a1,
-            r2, g2, b2, a2,
-            r3, g3, b3, a3,
-            r4, g4, b4, a4);
+            r, g, b, a,
+            r, g, b, a,
+            r, g, b, a,
+            r, g, b, a);
 #else
     glBindTexture(GL_TEXTURE_2D, tex);
 
@@ -359,102 +336,76 @@ void blit (int tex,
 /*
  * gl_push_triangle
  */
-static inline void
-gl_push_triangle_colored (float **p,
-                          float *p_end,
-                          float x1, float y1,
-                          float x2, float y2,
-                          float x3, float y3,
-                          float r1, float g1, float b1, float a1,
-                          float r2, float g2, float b2, float a2,
-                          float r3, float g3, float b3, float a3)
-{
-    if (unlikely(*p >= p_end)) {
-        DIE("overflow on gl bug");
-    }
-
-    gl_push_vertex(p, x1, y1);
-    gl_push_rgba(p, r1, g1, b1, a1);
-    gl_push_vertex(p, x2, y2);
-    gl_push_rgba(p, r2, g2, b2, a2);
-    gl_push_vertex(p, x3, y3);
-    gl_push_rgba(p, r2, g3, b3, a3);
-}
+#define gl_push_triangle_colored(p, \
+                                 p_end, \
+                                 x1, y1, \
+                                 x2, y2, \
+                                 x3, y3, \
+                                 r1, g1, b1, a1, \
+                                 r2, g2, b2, a2, \
+                                 r3, g3, b3, a3) \
+{ \
+    gl_push_vertex(p, x1, y1); \
+    gl_push_rgba(p, r1, g1, b1, a1); \
+    gl_push_vertex(p, x2, y2); \
+    gl_push_rgba(p, r2, g2, b2, a2); \
+    gl_push_vertex(p, x3, y3); \
+    gl_push_rgba(p, r2, g3, b3, a3); \
+} \
 
 /*
  * gl_push_point
  */
-static inline void
-gl_push_point (float **p,
-               float *p_end,
-               float x1, float y1,
-               float r1, float g1, float b1, float a1)
-{
-    if (unlikely(*p >= p_end)) {
-        DIE("overflow on gl bug");
-    }
+#define gl_push_point(p, p_end, \
+                      x1, y1, \
+                      r1, g1, b1, a1) \
+{ \
+    gl_push_vertex(p, x1, y1); \
+    gl_push_rgba(p, r1, g1, b1, a1); \
+} \
 
-    gl_push_vertex(p, x1, y1);
-    gl_push_rgba(p, r1, g1, b1, a1);
-}
+#define triangle_colored(x1, y1, \
+                         x2, y2, \
+                         x3, y3, \
+                         r1, g1, b1, a1, \
+                         r2, g2, b2, a2, \
+                         r3, g3, b3, a3) \
+{ \
+    gl_push_triangle_colored(bufp, \
+                             bufp_end, \
+                             x1, y1, \
+                             x2, y2, \
+                             x3, y3, \
+                             r1, g1, b1, a1, \
+                             r2, g2, b2, a2, \
+                             r3, g3, b3, a3); \
+} \
 
-static inline
-void triangle_colored (float x1, float y1,
-                       float x2, float y2,
-                       float x3, float y3,
-                       float r1, float g1, float b1, float a1,
-                       float r2, float g2, float b2, float a2,
-                       float r3, float g3, float b3, float a3)
-{
-    gl_push_triangle_colored(&bufp,
-                             bufp_end,
-                             x1, y1,
-                             x2, y2,
-                             x3, y3,
-                             r1, g1, b1, a1,
-                             r2, g2, b2, a2,
-                             r3, g3, b3, a3);
-}
-
-static inline
-void push_point (float x1, float y1,
-                 float r1, float g1, float b1, float a1)
-{
-    gl_push_point(&bufp,
-                  bufp_end,
-                  x1, y1,
-                  r1, g1, b1, a1);
-}
+#define push_point(x1, y1, r1, g1, b1, a1) \
+{ \
+    gl_push_point(bufp, \
+                  bufp_end, \
+                  x1, y1, \
+                  r1, g1, b1, a1); \
+} \
 
 /*
  * gl_push_triangle
  */
-static inline void
-gl_push_triangle (float **p,
-                  float *p_end,
-                  float x1, float y1,
-                  float x2, float y2,
-                  float x3, float y3)
-{
-    if (unlikely(*p >= p_end)) {
-        DIE("overflow on gl bug");
-    }
+#define gl_push_triangle(p, p_end, x1, y1, x2, y2, x3, y3) \
+{ \
+    gl_push_vertex(p, x1, y1); \
+    gl_push_vertex(p, x2, y2); \
+    gl_push_vertex(p, x3, y3); \
+} \
 
-    gl_push_vertex(p, x1, y1);
-    gl_push_vertex(p, x2, y2);
-    gl_push_vertex(p, x3, y3);
-}
-
-static inline
-void triangle (float x1, float y1,
-               float x2, float y2,
-               float x3, float y3)
-{
-    gl_push_triangle(&bufp,
-                     bufp_end,
-                     x1, y1,
-                     x2, y2,
-                     x3, y3);
+#define triangle(x1, y1, x2, y2, x3, y3) \
+{ \
+    gl_push_triangle(bufp, \
+                     bufp_end, \
+                     x1, y1, \
+                     x2, y2, \
+                     x3, y3); \
 }
 
 /*
