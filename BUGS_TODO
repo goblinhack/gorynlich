@@ -1,3 +1,6 @@
+- out of slots adding blood
+- map periodic updater is too slow
+- tx socket thing loop is too slow
 - attack melee must do something
 - xp level and hp increase per level
 - attack ranged must do something
