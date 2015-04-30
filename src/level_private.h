@@ -40,16 +40,11 @@ typedef struct level_t_ {
      * monster will wait by the door. If there is an open wall it will hit the
      * door and then decide to go for the opening.
      */
-    level_walls monst_map_treat_doors_as_passable;
-    level_walls monst_map_treat_doors_as_walls;
-
-    /*
-     * And this is for players to define the range of a flood fill explosion.
-     */
-    level_walls player_map_treat_doors_as_walls;
+    level_walls map_treat_doors_as_passable;
+    level_walls map_treat_doors_as_walls;
 
     level_walls walls;
-    level_walls roads;
+    level_walls doors;
     level_walls pipes;
     level_walls end_pipe;
 
@@ -177,5 +172,3 @@ typedef struct level_t_ {
     uint8_t exit_request:1;
 
 } level_t;
-
-extern level_walls dmap_player_map_treat_doors_as_walls;
