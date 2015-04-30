@@ -11,6 +11,7 @@
 #include "level_private.h"
 #include "thing_template.h"
 #include <stdlib.h>
+#include <math.h>
 
 uint8_t thing_init(void);
 void thing_fini(void);
