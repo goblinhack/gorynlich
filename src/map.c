@@ -334,19 +334,19 @@ uint8_t map_is_rrr11_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr11));
 }
 
-uint8_t map_is_rrr12_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_magical_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr12));
+    return (map_is_x_at(level, x, y, tp_is_magical_weapon));
 }
 
-uint8_t map_is_rrr13_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_ranged_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr13));
+    return (map_is_x_at(level, x, y, tp_is_ranged_weapon));
 }
 
-uint8_t map_is_rrr14_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_melee_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr14));
+    return (map_is_x_at(level, x, y, tp_is_melee_weapon));
 }
 
 uint8_t map_is_poison_at (levelp level, int32_t x, int32_t y)
@@ -801,19 +801,19 @@ thingp map_thing_is_rrr11_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr11));
 }
 
-thingp map_thing_is_rrr12_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_magical_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr12));
+    return (map_thing_is_x_at(level, x, y, tp_is_magical_weapon));
 }
 
-thingp map_thing_is_rrr13_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_ranged_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr13));
+    return (map_thing_is_x_at(level, x, y, tp_is_ranged_weapon));
 }
 
-thingp map_thing_is_rrr14_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_melee_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr14));
+    return (map_thing_is_x_at(level, x, y, tp_is_melee_weapon));
 }
 
 thingp map_thing_is_poison_at (levelp level, int32_t x, int32_t y)
@@ -1284,19 +1284,19 @@ tree_rootp map_all_things_is_rrr11_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr11));
 }
 
-tree_rootp map_all_things_is_rrr12_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_magical_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr12));
+    return (map_all_things_is_x_at(level, x, y, tp_is_magical_weapon));
 }
 
-tree_rootp map_all_things_is_rrr13_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_ranged_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr13));
+    return (map_all_things_is_x_at(level, x, y, tp_is_ranged_weapon));
 }
 
-tree_rootp map_all_things_is_rrr14_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_melee_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr14));
+    return (map_all_things_is_x_at(level, x, y, tp_is_melee_weapon));
 }
 
 tree_rootp map_all_things_is_poison_at (levelp level, int32_t x, int32_t y)
@@ -1857,19 +1857,19 @@ tpp map_find_rrr11_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr11, w));
 }
 
-tpp map_find_rrr12_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_magical_weapon_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr12, w));
+    return (map_find_x_at(level, x, y, tp_is_magical_weapon, w));
 }
 
-tpp map_find_rrr13_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_ranged_weapon_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr13, w));
+    return (map_find_x_at(level, x, y, tp_is_ranged_weapon, w));
 }
 
-tpp map_find_rrr14_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_melee_weapon_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr14, w));
+    return (map_find_x_at(level, x, y, tp_is_melee_weapon, w));
 }
 
 tpp map_find_is_poison_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2683,19 +2683,19 @@ tree_rootp map_all_things_is_rrr11 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr11));
 }
 
-tree_rootp map_all_things_is_rrr12 (levelp level)
+tree_rootp map_all_things_is_magical_weapon (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr12));
+    return (map_all_things_is_x(level, tp_is_magical_weapon));
 }
 
-tree_rootp map_all_things_is_rrr13 (levelp level)
+tree_rootp map_all_things_is_ranged_weapon (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr13));
+    return (map_all_things_is_x(level, tp_is_ranged_weapon));
 }
 
-tree_rootp map_all_things_is_rrr14 (levelp level)
+tree_rootp map_all_things_is_melee_weapon (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr14));
+    return (map_all_things_is_x(level, tp_is_melee_weapon));
 }
 
 tree_rootp map_all_things_is_poison (levelp level)
