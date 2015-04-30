@@ -402,6 +402,11 @@ void thing_server_fire (thingp t,
     thing_set_owner(p, t);
 
     /*
+     * Set up the modifier damage if this is say a fireball or bow for ex.
+     */
+    p->damage = thing_stats_get_damage(t);
+
+    /*
      * Round up say -0.7 to -1.0
      */
     dx *= 10.0;

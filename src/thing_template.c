@@ -580,9 +580,9 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_magical_weapon", t->is_magical_weapon);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_ranged_weapon", t->is_ranged_weapon);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_melee_weapon", t->is_melee_weapon);
         GET_OPT_NAMED_BITFIELD(ctx, "is_poison", t->is_poison);
         GET_OPT_NAMED_BITFIELD(ctx, "is_cloud_effect", t->is_cloud_effect);
         GET_OPT_NAMED_BITFIELD(ctx, "is_powerup", t->is_powerup);
@@ -775,9 +775,9 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
     PUT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
     PUT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
+    PUT_NAMED_BITFIELD(ctx, "is_magical_weapon", t->is_magical_weapon);
+    PUT_NAMED_BITFIELD(ctx, "is_ranged_weapon", t->is_ranged_weapon);
+    PUT_NAMED_BITFIELD(ctx, "is_melee_weapon", t->is_melee_weapon);
     PUT_NAMED_BITFIELD(ctx, "is_poison", t->is_poison);
     PUT_NAMED_BITFIELD(ctx, "is_cloud_effect", t->is_cloud_effect);
     PUT_NAMED_BITFIELD(ctx, "is_powerup", t->is_powerup);

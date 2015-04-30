@@ -2158,9 +2158,8 @@ CON("%s is hitting %s",thing_logname(hitter), thing_logname(t));
          * Take the damage from the weapon that hits first.
          */
         if (!damage) {
-            damage = orig_hitter->damage;
-            if (!damage) {
-                damage = tp_get_damage(orig_hitter->tp);
+            if (orig_hitter) {
+                damage = thing_stats_get_damage(orig_hitter);
             }
         }
 
@@ -2168,19 +2167,9 @@ CON("%s is hitting %s",thing_logname(hitter), thing_logname(t));
          * If still no damage, use the thing that did the hitting.
          */
         if (!damage) {
-            damage = hitter->damage;
-            if (!damage) {
-                damage = tp_get_damage(hitter->tp);
+            if (hitter) {
+                damage = thing_stats_get_damage(hitter);
             }
-        }
-    }
-
-    /*
-     * Does the thing do damage?
-     */
-    if (!damage) {
-        if (hitter) {
-            damage = thing_tp(hitter)->damage;
         }
     }
 
