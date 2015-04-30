@@ -896,6 +896,49 @@ static inline uint8_t wid_is_moving (widp w)
     return (false);
 }
 
+static inline int8_t 
+tree_wid_compare_func (const tree_node *a, const tree_node *b)
+{
+    widp A = (typeof(A))a;
+    widp B = (typeof(B))b;
+
+    if (A->tree.priority > B->tree.priority) {
+        return (-1);
+    }
+
+    if (A->tree.priority < B->tree.priority) {
+        return (1);
+    }
+
+    if (A->tree.z_depth > B->tree.z_depth) {
+        return (-1);
+    }
+
+    if (A->tree.z_depth < B->tree.z_depth) {
+        return (1);
+    }
+
+    if (A->tree.br.y > B->tree.br.y) {
+        return (-1);
+    }
+
+    if (A->tree.br.y < B->tree.br.y) {
+        return (1);
+    }
+
+    if (A->tree.key < B->tree.key) {
+        return (-1);
+    }
+
+    if (A->tree.key > B->tree.key) {
+        return (1);
+    }
+
+    return (0);
+}
+
+TREE_PREV_INLINE(tree_wid_compare_func) 
+
 extern widp wid_mouse_template;
 
 extern const int32_t wid_fade_delay;
