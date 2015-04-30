@@ -1280,7 +1280,7 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
      * Add current player names.
      */
     uint32_t p = 0;
-    thingp t;
+    thingp t = 0;
 
     TREE_OFFSET_WALK_UNSAFE(server_player_things, t) {
         if (p >= MAX_PLAYERS) {

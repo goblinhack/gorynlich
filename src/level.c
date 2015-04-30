@@ -781,10 +781,8 @@ static void level_finished (levelp level)
                                 "level destroy boring things");
     socket_server_tx_map_update(0, server_active_things,
                                 "level destroy active things");
-    int test_level;
 
     wid_game_map_server_wid_destroy(true /* keep players */);
-    test_level = false;
 
     { TREE_WALK(server_active_things, t) {
         if (!thing_is_player_or_owned_by_player(t)) {
