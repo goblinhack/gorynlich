@@ -1094,25 +1094,25 @@ static inline uint8_t thing_is_rrr11 (thingp t)
     return (tp_is_rrr11(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr12 (thingp t)
+static inline uint8_t thing_is_magical_weapon (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr12(thing_tp(t)));
+    return (tp_is_magical_weapon(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr13 (thingp t)
+static inline uint8_t thing_is_ranged_weapon (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr13(thing_tp(t)));
+    return (tp_is_ranged_weapon(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr14 (thingp t)
+static inline uint8_t thing_is_melee_weapon (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr14(thing_tp(t)));
+    return (tp_is_melee_weapon(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_poison (thingp t)
@@ -1705,19 +1705,19 @@ static inline uint8_t thing_is_rrr11_noverify (thingp t)
     return (t->tp->is_rrr11);
 }
 
-static inline uint8_t thing_is_rrr12_noverify (thingp t)
+static inline uint8_t thing_is_magical_weapon_noverify (thingp t)
 {
-    return (t->tp->is_rrr12);
+    return (t->tp->is_magical_weapon);
 }
 
-static inline uint8_t thing_is_rrr13_noverify (thingp t)
+static inline uint8_t thing_is_ranged_weapon_noverify (thingp t)
 {
-    return (t->tp->is_rrr13);
+    return (t->tp->is_ranged_weapon);
 }
 
-static inline uint8_t thing_is_rrr14_noverify (thingp t)
+static inline uint8_t thing_is_melee_weapon_noverify (thingp t)
 {
-    return (t->tp->is_rrr14);
+    return (t->tp->is_melee_weapon);
 }
 
 static inline uint8_t thing_is_poison_noverify (thingp t)

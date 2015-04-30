@@ -4,6 +4,7 @@
  tooltip="Golden Axe"
  z_depth=3
  is_weapon
+ is_melee_weapon
  can_be_enchanted
  is_degradable
  hit_priority=0

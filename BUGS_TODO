@@ -1,6 +1,4 @@
-- out of slots adding blood
-- map periodic updater is too slow
-- tx socket thing loop is too slow
+--------------------------------------- plan for may --------------------------------------
 - attack melee must do something
 - xp level and hp increase per level
 - attack ranged must do something
@@ -8,21 +6,21 @@
 - speed must do something
 - vision must do something
 - healing must do something
---------------------------------------- plan for may --------------------------------------
 - add screaming fire skull monst?
 - magic attack - green fireball?
 - attack magical must do something
+--------------------------------------- plan for june --------------------------------------
 - sound effects for weapons and hits http://www.bfxr.net/
 - sound on momey collect
 - sound on potion use
 - add double arrow for faster moving triggers
 - add stop sign to stop a moving thing?
---------------------------------------- plan for june --------------------------------------
 - press m for magic to build up magic attack
 - press m for magic to give life to other players
 - pop bouncing m and arrow over player to give them a clue what to do
 - first to exit level gets 2 spending points, else get 1
 - pause character on spending point window - on single player?
+- tx socket thing loop is too slow could use a thing array to update
 --------------------------------------- plan for jul --------------------------------------
 more monsters, ideas:
     * screaming skulls that fire fireballs
@@ -60,6 +58,8 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Wed Apr 29 07:42:05 EDT 2015
+- out of slots adding blood
+- map periodic updater is too slow
 - sped up level obstacle generation
 - some optimizations for opengl ops; prob does nothing
 - poison gas cloud kills user
