@@ -223,17 +223,11 @@ void level_update_now (levelp level)
     map_fixup(level);
 
     level_set_walls(level);
-    level_set_monst_map_treat_doors_as_passable(level);
-    level_set_monst_map_treat_doors_as_walls(level);
-    level_set_player_map_treat_doors_as_walls(level);
-    level_set_doors(level);
-    level_set_pipes(level);
-    level_pipe_find_ends(level);
 
     /*
      * One time generate of expensive wander map
      */
-    dmap_generate_monst_map_wander(level);
+    dmap_generate_map_wander(level);
 
     /*
      * Ensure things are updated at the start of the new level.
@@ -476,138 +470,74 @@ void level_set_map (levelp level, widp wid)
     wid_set_client_context(wid, level);
 }
 
-/*
- * Or other things we collide with.
- */
 void level_set_walls (levelp level)
 {
     int32_t x;
     int32_t y;
+    int32_t z;
 
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
-            if (map_is_wall_at(level, x, y)) {
-                level->walls.walls[x][y] = '+';
-            } else {
-                level->walls.walls[x][y] = ' ';
-            }
-        }
-    }
-}
+    widp w = wid_game_map_server_grid_container;
 
-/*
- * Or other things we collide with.
- */
-void level_set_monst_map_treat_doors_as_passable (levelp level)
-{
-    int32_t x;
-    int32_t y;
+    memset(level->map_treat_doors_as_walls.walls, ' ',
+           sizeof(level->map_treat_doors_as_walls.walls));
+    memset(level->map_treat_doors_as_passable.walls, ' ',
+           sizeof(level->map_treat_doors_as_passable.walls));
+    memset(level->walls.walls, ' ',
+           sizeof(level->walls.walls));
+    memset(level->doors.walls, ' ',
+           sizeof(level->doors.walls));
+    memset(level->pipes.walls, ' ',
+           sizeof(level->pipes.walls));
 
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
-            if (map_is_wall_at(level, x, y)         ||
-                map_is_exit_at(level, x, y)         ||
-                map_is_spam_at(level, x, y)) {
-                /*
-                 * Obstacle.
-                 */
-                level->monst_map_treat_doors_as_passable.walls[x][y] = '+';
-            } else {
-                /*
-                 * Note, doors are considered as empty space.
-                 */
-                level->monst_map_treat_doors_as_passable.walls[x][y] = ' ';
-            }
-        }
-    }
-}
+    for (z = MAP_DEPTH_WALL; z < MAP_DEPTH_PLAYER; z++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            for (y = 0; y < MAP_HEIGHT; y++) {
+                tree_root **tree = 
+                    w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+                widgridnode *node;
 
-/*
- * Or other things we collide with.
- */
-void level_set_monst_map_treat_doors_as_walls (levelp level)
-{
-    int32_t x;
-    int32_t y;
+                TREE_WALK_REVERSE_UNSAFE_INLINE(
+                                    *tree, 
+                                    node,
+                                    tree_prev_tree_wid_compare_func) {
 
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
-            if (map_is_wall_at(level, x, y)         ||
-                map_is_door_at(level, x, y)         ||
-                map_is_exit_at(level, x, y)         ||
-                map_is_spam_at(level, x, y)         ||
-                map_is_mob_spawner_at(level, x, y)) {
+                    widp w = node->wid;
 
-                /*
-                 * Considered as walls.
-                 */
-                level->monst_map_treat_doors_as_walls.walls[x][y] = '+';
-            } else {
-                level->monst_map_treat_doors_as_walls.walls[x][y] = ' ';
-            }
-        }
-    }
-}
+                    thingp t = wid_get_thing(w);
+                    if (!t) {
+                        continue;
+                    }
 
-/*
- * Used in flood filling explosions
- */
-void level_set_player_map_treat_doors_as_walls (levelp level)
-{
-    int32_t x;
-    int32_t y;
+                    /*
+                     * Identify obstacles.
+                     */
+                    if (thing_is_wall(t) ||
+                        thing_is_door(t) ||
+                        thing_is_mob_spawner(t) ||
+                        thing_is_exit(t)) {
+                        level->map_treat_doors_as_walls.walls[x][y] = '+';
+                    }
 
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
-            if (map_is_wall_at(level, x, y)         ||
-                map_is_door_at(level, x, y)         ||
-                map_is_exit_at(level, x, y)         ||
-                map_is_spam_at(level, x, y)) {
+                    /*
+                     * Same as above, but treat doors as passable.
+                     */
+                    if (thing_is_wall(t) ||
+                        thing_is_exit(t)) {
+                        level->map_treat_doors_as_passable.walls[x][y] = '+';
+                    }
 
-                /*
-                 * Considered as walls for explosions.
-                 */
-                level->player_map_treat_doors_as_walls.walls[x][y] = '+';
-            } else {
-                level->player_map_treat_doors_as_walls.walls[x][y] = ' ';
-            }
-        }
-    }
-}
+                    if (thing_is_wall(t)) {
+                        level->walls.walls[x][y] = '+';
+                    }
 
-/*
- * Or other things we collide with.
- */
-void level_set_doors (levelp level)
-{
-    int32_t x;
-    int32_t y;
+                    if (thing_is_door(t)) {
+                        level->doors.walls[x][y] = '+';
+                    }
 
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
-            if (map_is_door_at(level, x, y)) {
-                level->roads.walls[x][y] = '+';
-            } else {
-                level->roads.walls[x][y] = ' ';
-            }
-        }
-    }
-}
-
-/*
- * Or other things we collide with.
- */
-void level_set_pipes (levelp level)
-{
-    int32_t x;
-    int32_t y;
-
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
-            if (map_is_pipe_at(level, x, y)) {
-                level->pipes.walls[x][y] = '+';
-            } else {
-                level->pipes.walls[x][y] = ' ';
+                    if (thing_is_pipe(t)) {
+                        level->pipes.walls[x][y] = '+';
+                    }
+                }
             }
         }
     }
@@ -964,12 +894,12 @@ void level_server_tick (levelp level)
             ts = time_get_time_ms();
 
             level_set_walls(level);
-            level_set_monst_map_treat_doors_as_passable(level);
-            level_set_monst_map_treat_doors_as_walls(level);
-            level_set_player_map_treat_doors_as_walls(level);
-            level_set_doors(level);
-            level_set_pipes(level);
-            level_pipe_find_ends(level);
+            if (0) {
+                /*
+                 * Not used yet.
+                 */
+                level_pipe_find_ends(level);
+            }
         }
     }
 }
@@ -1875,9 +1805,7 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
         }
     }
 
-    level_set_monst_map_treat_doors_as_passable(level);
-    level_set_monst_map_treat_doors_as_walls(level);
-    level_set_player_map_treat_doors_as_walls(level);
+    level_set_walls(level);
 
     /*
      * Send the update quickly to the client. Don't wait for the things to

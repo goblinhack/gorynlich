@@ -1596,8 +1596,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
          * If this is a dead player, then rethink AI targets.
          */
         if (thing_is_player(t)) {
-            level_set_monst_map_treat_doors_as_passable(server_level);
-            level_set_monst_map_treat_doors_as_walls(server_level);
+            level_set_walls(server_level);
         }
 
         /*
@@ -1804,8 +1803,7 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
          * If this is a dead player, then rethink AI targets.
          */
         if (thing_is_player(t)) {
-            level_set_monst_map_treat_doors_as_passable(server_level);
-            level_set_monst_map_treat_doors_as_walls(server_level);
+            level_set_walls(server_level);
         }
     } else {
         /*
