@@ -1,7 +1,5 @@
 --------------------------------------- plan for may --------------------------------------
-- attack melee must do something
 - xp level and hp increase per level
-- attack ranged must do something
 - defense must do something
 - speed must do something
 - vision must do something
@@ -56,6 +54,10 @@ thief, kill thief to recover items
 mining?
 add bot to test out multiplayer ?
 different profiles for level generation
+
+Thu Apr 30 07:44:28 EDT 2015
+- attack melee must do something
+- attack ranged must do something
 
 Wed Apr 29 07:42:05 EDT 2015
 - out of slots adding blood
