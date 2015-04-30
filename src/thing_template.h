@@ -248,9 +248,9 @@ typedef struct tp_ {
     uint8_t is_rrr9:1;
     uint8_t is_rrr10:1;
     uint8_t is_rrr11:1;
-    uint8_t is_rrr12:1;
-    uint8_t is_rrr13:1;
-    uint8_t is_rrr14:1;
+    uint8_t is_magical_weapon:1;
+    uint8_t is_ranged_weapon:1;
+    uint8_t is_melee_weapon:1;
     uint8_t is_poison:1;
     uint8_t is_cloud_effect:1;
     uint8_t is_powerup:1;
@@ -641,19 +641,19 @@ static inline uint8_t tp_is_rrr11 (tpp t)
     return (t->is_rrr11);
 }
 
-static inline uint8_t tp_is_rrr12 (tpp t)
+static inline uint8_t tp_is_magical_weapon (tpp t)
 {
-    return (t->is_rrr12);
+    return (t->is_magical_weapon);
 }
 
-static inline uint8_t tp_is_rrr13 (tpp t)
+static inline uint8_t tp_is_ranged_weapon (tpp t)
 {
-    return (t->is_rrr13);
+    return (t->is_ranged_weapon);
 }
 
-static inline uint8_t tp_is_rrr14 (tpp t)
+static inline uint8_t tp_is_melee_weapon (tpp t)
 {
-    return (t->is_rrr14);
+    return (t->is_melee_weapon);
 }
 
 static inline uint8_t tp_is_poison (tpp t)

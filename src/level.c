@@ -1561,19 +1561,19 @@ uint32_t level_count_is_rrr11 (levelp level)
     return (level_count_is_x(level, tp_is_rrr11));
 }
 
-uint32_t level_count_is_rrr12 (levelp level)
+uint32_t level_count_is_magical_weapon (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr12));
+    return (level_count_is_x(level, tp_is_magical_weapon));
 }
 
-uint32_t level_count_is_rrr13 (levelp level)
+uint32_t level_count_is_ranged_weapon (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr13));
+    return (level_count_is_x(level, tp_is_ranged_weapon));
 }
 
-uint32_t level_count_is_rrr14 (levelp level)
+uint32_t level_count_is_melee_weapon (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr14));
+    return (level_count_is_x(level, tp_is_melee_weapon));
 }
 
 uint32_t level_count_is_poison (levelp level)
