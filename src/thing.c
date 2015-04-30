@@ -652,7 +652,9 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
         /*
          * Try to find something we can boot out.
          */
-        if (thing_is_cloud_effect(t)) {
+        if (thing_is_cloud_effect(t)    ||
+            thing_is_explosion(t)       ||
+            thing_is_weapon_swing_effect(t)) {
             /*
              * Don't bother. This is a transient thing.
              */
@@ -674,8 +676,12 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
                 DIE("expected to find a thing on the map here");
             }
 
-            if (thing_is_cloud_effect(p) ||
+            if (thing_is_cloud_effect(p)    ||
+                thing_is_explosion(p)       ||
                 thing_is_weapon_swing_effect(p)) {
+                /*
+                 * Kick out this transient thing.
+                 */
                 thing_map_remove(p);
                 break;
             }
@@ -908,6 +914,9 @@ thingp thing_server_new (const char *name,
         server_things_total++;
     }
 
+    /*
+     * Too boring to log about?
+     */
     if (!thing_is_inactive_noverify(t) &&
         !thing_is_cloud_effect(t) &&
         !thing_is_weapon_swing_effect(t) &&
@@ -1027,6 +1036,9 @@ thingp thing_client_new (uint32_t id, tpp tp)
     t->logname = dynprintf("%s[%p, id %u] (client)", thing_short_name(t), t,
                            t->thing_id);
 
+    /*
+     * Too boring to log about?
+     */
     if (!thing_is_inactive_noverify(t) &&
         !thing_is_cloud_effect(t) &&
         !thing_is_weapon_swing_effect(t) &&
@@ -2059,9 +2071,12 @@ CON("%s is hitting %s",thing_logname(hitter), thing_logname(t));
         if (thing_is_door(t)            ||
             thing_is_wall(t)) {
 
-            if (!thing_is_cloud_effect(hitter)  &&
+            if (!thing_is_explosion(hitter)     &&
                 !thing_is_projectile(hitter)    &&
                 !thing_is_weapon_swing_effect(hitter)) {
+                /*
+                 * Not something that typically damages walls.
+                 */
                 return (false);
             }
         }
