@@ -80,7 +80,6 @@ static void wid_map_update_buttons (void)
             tl.y -= zoom;
             br.x += zoom * 2.0;
             br.y += zoom * 2.0;
-            color c = GREEN;
             c = GREEN;
 
             ctx->b = b;
