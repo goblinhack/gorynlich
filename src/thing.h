@@ -193,11 +193,11 @@ uint32_t thing_is_carrying_thing_count(thingp, tp_is);
  * thing_ai.c
  */
 uint8_t thing_find_nexthop(thingp t, int32_t *x, int32_t *y);
-void dmap_generate_monst_map_wander(levelp level);
+void dmap_generate_map_wander(levelp level);
 void thing_generate_dmaps(void);
 void dmap_process_init(void);
 void dmap_process_fini(void);
-void dmap_generate_player_map(double x, double y);
+void dmap_generate_map(double x, double y);
 
 typedef struct {
     tpp tp;
