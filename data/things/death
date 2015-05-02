@@ -6,7 +6,7 @@
     "data/things/scythe1"
  }
  z_depth=3
- speed=2
+ speed=5
  max_hp=200
  damage=8
  bonus_xp_on_death=1000

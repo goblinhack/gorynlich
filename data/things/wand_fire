@@ -2,7 +2,7 @@
  short_name="Wand"
  raw_name="wand_fire"
  tooltip="Wand of fire"
- fires="data/things/fireball"
+ fires="data/things/fireball1"
  z_depth=3
  is_weapon
  is_magical_weapon

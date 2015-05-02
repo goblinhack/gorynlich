@@ -9,7 +9,7 @@
  is_shadow_caster
  is_rock
  hit_priority=20
- speed=5
+ speed=20
  damage=50
  is_joinable
  can_be_hit_chance=50000000
