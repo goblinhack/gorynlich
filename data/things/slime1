@@ -1,7 +1,7 @@
 {
- short_name="Lesser slime"
+ short_name="Purple slime"
  raw_name="slime-1"
- tooltip="Lesser slime"
+ tooltip="Purple slime"
  z_depth=3
  speed=1
  max_hp=5

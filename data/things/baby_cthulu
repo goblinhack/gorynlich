@@ -4,9 +4,9 @@
  tooltip="Baby cthulu"
  z_depth=3
  speed=2
- max_hp=20
- damage=20
- bonus_xp_on_death=50
+ max_hp=200
+ damage=11
+ bonus_xp_on_death=150
  vision_distance=20
  hit_delay_tenths=10
  is_monst
@@ -17,136 +17,40 @@
  is_collision_map_large
  is_animated
  fires="data/things/plasmaball1"
- weapon_fire_delay_hundredths=500
+ weapon_fire_delay_hundredths=1500
  d10000_chance_of_appearing=5
  tiles={
-  tile={
-   delay=50
-   tile="baby-cthulu1"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu2"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu3"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu4"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu5"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu6"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu7"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu8"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu9"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu10"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu11"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu12"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu13"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu14"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu15"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu16"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu17"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu18"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu19"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu20"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu21"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu22"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu23"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu24"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu25"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu26"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu27"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu28"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu29"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu30"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu31"
-  }
-  tile={
-   delay=50
-   tile="baby-cthulu32"
-  }
+  tile={ delay=150 tile="baby-cthulu1" }
+  tile={ delay=150 tile="baby-cthulu2" }
+  tile={ delay=150 tile="baby-cthulu3" }
+  tile={ delay=150 tile="baby-cthulu4" }
+  tile={ delay=150 tile="baby-cthulu5" }
+  tile={ delay=150 tile="baby-cthulu6" }
+  tile={ delay=150 tile="baby-cthulu7" }
+  tile={ delay=150 tile="baby-cthulu8" }
+  tile={ delay=150 tile="baby-cthulu9" }
+  tile={ delay=150 tile="baby-cthulu10" }
+  tile={ delay=150 tile="baby-cthulu11" }
+  tile={ delay=150 tile="baby-cthulu12" }
+  tile={ delay=150 tile="baby-cthulu13" }
+  tile={ delay=150 tile="baby-cthulu14" }
+  tile={ delay=150 tile="baby-cthulu15" }
+  tile={ delay=150 tile="baby-cthulu16" }
+  tile={ delay=150 tile="baby-cthulu17" }
+  tile={ delay=150 tile="baby-cthulu18" }
+  tile={ delay=150 tile="baby-cthulu19" }
+  tile={ delay=150 tile="baby-cthulu20" }
+  tile={ delay=150 tile="baby-cthulu21" }
+  tile={ delay=150 tile="baby-cthulu22" }
+  tile={ delay=150 tile="baby-cthulu23" }
+  tile={ delay=150 tile="baby-cthulu24" }
+  tile={ delay=150 tile="baby-cthulu25" }
+  tile={ delay=150 tile="baby-cthulu26" }
+  tile={ delay=150 tile="baby-cthulu27" }
+  tile={ delay=150 tile="baby-cthulu28" }
+  tile={ delay=150 tile="baby-cthulu29" }
+  tile={ delay=150 tile="baby-cthulu30" }
+  tile={ delay=150 tile="baby-cthulu31" }
+  tile={ delay=150 tile="baby-cthulu32" }
  }
 }
