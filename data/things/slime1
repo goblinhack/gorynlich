@@ -14,10 +14,8 @@
  is_shadow_caster_soft
  hit_priority=10
  is_cats_eyes
- is_collision_map_large
+ is_collision_map_medium
  is_animated
- mob_spawn_delay_tenths=20
- mob_spawn="data/things/slime1"
  d10000_chance_of_appearing=30
  tiles={
   tile={ delay=200 tile="slime-1-1-11" }
