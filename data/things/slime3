@@ -1,11 +1,11 @@
 {
- short_name="Great slime"
+ short_name="Poison slime"
  raw_name="slime-3"
- tooltip="Great slime"
+ tooltip="Poison slime"
  z_depth=3
  speed=2
  max_hp=20
- damage=3
+ damage=10
  bonus_xp_on_death=20
  vision_distance=20
  hit_delay_tenths=10
@@ -14,23 +14,15 @@
  is_shadow_caster_soft
  hit_priority=10
  is_cats_eyes
- is_collision_map_large
+ is_collision_map_medium
  is_animated
- is_mob_spawner
- mob_spawn_delay_tenths=200
- mob_spawn="data/things/slime3"
  d10000_chance_of_appearing=10
  tiles={
-  tile={ delay=200 tile="slime-3-1-11" }
-  tile={ delay=200 tile="slime-3-2-11" }
-  tile={ delay=200 tile="slime-3-3-11" }
-  tile={ delay=200 tile="slime-3-4-11" }
-  tile={ delay=200 tile="slime-3-5-11" }
-  tile={ delay=20 tile="slime-3-1-10" }
-  tile={ delay=20 tile="slime-3-2-10" }
-  tile={ delay=20 tile="slime-3-3-10" }
-  tile={ delay=20 tile="slime-3-4-10" }
-  tile={ delay=20 tile="slime-3-5-10" }
+  tile={ delay=500 tile="slime-3-1-10" }
+  tile={ delay=500 tile="slime-3-2-10" }
+  tile={ delay=500 tile="slime-3-3-10" }
+  tile={ delay=500 tile="slime-3-4-10" }
+  tile={ delay=500 tile="slime-3-5-10" }
   tile={ delay=20 tile="slime-3-1-9" }
   tile={ delay=20 tile="slime-3-2-9" }
   tile={ delay=20 tile="slime-3-3-9" }
