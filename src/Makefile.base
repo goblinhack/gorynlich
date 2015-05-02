@@ -69,6 +69,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/thing_weapon.o 		\
     $(OBJDIR)/thing_shield.o 		\
     $(OBJDIR)/thing_torch.o 		\
+    $(OBJDIR)/thing_damage.o 		\
     $(OBJDIR)/tile.o 			\
     $(OBJDIR)/time.o 			\
     $(OBJDIR)/timer.o 			\
