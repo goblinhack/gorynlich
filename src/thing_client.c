@@ -200,7 +200,7 @@ static void thing_client_wid_move (thingp t,
             speed = 1;
         }
 
-        double ms = (1000.0 / speed) / (1.0 / time_step);
+        double ms = (5000.0 / speed) / (1.0 / time_step);
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
 

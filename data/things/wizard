@@ -7,7 +7,7 @@
     "data/things/torches"
  }
  z_depth=4
- speed=5
+ speed=20
  max_hp=100
  max_magic=100
  hp_per_level=4

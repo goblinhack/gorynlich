@@ -4,7 +4,7 @@
  tooltip="A banana"
  is_hidden_from_editor
  z_depth=3
- speed=20
+ speed=70
  damage=6
  hit_delay_tenths=1
  is_fragile
