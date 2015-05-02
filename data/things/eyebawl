@@ -3,7 +3,7 @@
  raw_name="eyebawl"
  tooltip="EyeBawl"
  z_depth=3
- speed=6
+ speed=30
  max_hp=1
  damage=10
  bonus_xp_on_death=5

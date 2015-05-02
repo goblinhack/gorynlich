@@ -3,7 +3,7 @@
  raw_name="ghost3"
  tooltip="Greater phantom"
  z_depth=3
- speed=3
+ speed=15
  max_hp=1
  damage=6
  polymorph_on_death="data/things/ghost2"

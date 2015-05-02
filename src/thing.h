@@ -351,6 +351,11 @@ extern uint16_t THING_DWARF;
 extern uint16_t THING_GHOST1;
 extern uint16_t THING_GHOST2;
 extern uint16_t THING_GHOST3;
+extern uint16_t THING_SLIME1;
+extern uint16_t THING_SLIME2;
+extern uint16_t THING_SLIME3;
+extern uint16_t THING_DEMON1;
+extern uint16_t THING_BABY_CTHULU;
 extern uint16_t THING_EYEBAWL;
 extern uint16_t THING_DEMON;
 extern uint16_t THING_MONK;
@@ -451,7 +456,9 @@ extern uint16_t THING_TORCHES;
 extern uint16_t THING_COINS1;
 extern uint16_t THING_CHEST1;
 extern uint16_t THING_ARROW;
-extern uint16_t THING_FIREBALL;
+extern uint16_t THING_FIREBALL1;
+extern uint16_t THING_FIREBALL2;
+extern uint16_t THING_PLASMABALL1;
 
 typedef struct thing_ {
     tree_key_int tree;

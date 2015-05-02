@@ -4,7 +4,7 @@
  tooltip="Wall5"
  z_depth=2
  is_hard
- speed=5
+ speed=15
  is_inactive
  is_wall
  is_shadow_caster
