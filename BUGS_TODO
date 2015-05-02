@@ -1,4 +1,6 @@
 --------------------------------------- plan for may --------------------------------------
+- display attack/defense stats on screen
+- show little bars when hovering over an item as to its abilities
 - xp level and hp increase per level
 - defense must do something
 - speed must do something
@@ -21,11 +23,13 @@
 - tx socket thing loop is too slow could use a thing array to update
 --------------------------------------- plan for jul --------------------------------------
 more monsters, ideas:
+    * spider webs that slow you down and spiders that fire them, webs spawn spiders too
+    * teleports
     * screaming skulls that fire fireballs
     * mushroom clouds / game of life generator for growing mould spores ?
     * giant worm like creature?
 dungeon decorations
-    * lava pools and bridges ?
+    * disintegrating floors that change into lava pools ?
     * water ?
     * more wall types
     * dart and rock traps
