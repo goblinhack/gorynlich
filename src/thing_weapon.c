@@ -528,7 +528,7 @@ void thing_weapon_worn_out (thingp t, tpp weapon)
     if (thing_is_player(t)) {
         MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
                                    "%%%%fg=red$"
-                                   "The %s crumbles to dust",
+                                   "Your %s crumbles to dust",
                                    tp_short_name(weapon));
     }
 
@@ -576,7 +576,7 @@ void thing_weapon_check_for_wear_damage (thingp target,
             MSG_SERVER_SHOUT_AT_PLAYER(
                 POPUP, hitter, 
                 "%%%%fg=orange$"
-                "The %s is damaged", 
+                "Your %s is damaged", 
                 tp_short_name(weapon));
         }
     }
@@ -611,7 +611,7 @@ void thing_weapon_check_for_damage_on_firing (thingp hitter,
             MSG_SERVER_SHOUT_AT_PLAYER(
                 POPUP, hitter, 
                 "%%%%fg=orange$"
-                "The %s is damaged", 
+                "Your %s is damaged", 
                 tp_short_name(weapon));
         }
     }
