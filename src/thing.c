@@ -2997,8 +2997,8 @@ double thing_speed (thingp t)
 {
     verify(t);
 
-    if (tp_get_move_speed(t->tp)) {
-        return (((double)tp_get_move_speed(t->tp)));
+    if (t->is_jumping && tp_get_jump_speed(t->tp)) {
+        return (((double)tp_get_jump_speed(t->tp)));
     }
 
     return (((double)tp_get_speed(t->tp)));

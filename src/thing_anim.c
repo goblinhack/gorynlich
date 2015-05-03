@@ -229,7 +229,12 @@ void thing_animate (thingp t)
                        (void*) t /* context */);
     }
 
-    if (thing_tile_is_jumping(tile)) {
+    if (thing_tile_begin_jump(tile)) {
         t->one_shot_move = true;
+    }
+
+    t->is_jumping = false;
+    if (thing_tile_is_jumping(tile)) {
+        t->is_jumping = true;
     }
 }

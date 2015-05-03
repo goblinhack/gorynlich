@@ -732,6 +732,11 @@ typedef struct thing_ {
      * Moves only occasionally?
      */
     uint32_t one_shot_move:1;
+
+    /*
+     * In the middle of a jump animation?
+     */
+    uint32_t is_jumping:1;
 } thing;
 
 

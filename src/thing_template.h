@@ -189,7 +189,7 @@ typedef struct tp_ {
     uint32_t ppp7;
     uint32_t ppp8;
     uint32_t ppp9;
-    uint32_t move_speed;
+    uint32_t jump_speed;
 
     uint32_t hp_per_level;
     uint32_t id_per_level;
@@ -393,7 +393,7 @@ uint32_t tp_get_ppp6(tpp);
 uint32_t tp_get_ppp7(tpp);
 uint32_t tp_get_ppp8(tpp);
 uint32_t tp_get_ppp9(tpp);
-uint32_t tp_get_move_speed(tpp);
+uint32_t tp_get_jump_speed(tpp);
 float tp_get_light_radius(tpp);
 float tp_get_scale(tpp);
 uint32_t tp_get_quantity(tpp);
