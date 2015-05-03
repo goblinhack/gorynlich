@@ -44,6 +44,7 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
         }
 
         GET_OPT_NAMED_BITFIELD(ctx, "is_jumping", t->is_jumping);
+        GET_OPT_NAMED_BITFIELD(ctx, "begin_jump", t->begin_jump);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_block", t->is_join_block);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_horiz", t->is_join_horiz);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_vert", t->is_join_vert);
@@ -385,6 +386,11 @@ uint8_t thing_tile_is_moving (thing_tilep t)
 uint8_t thing_tile_is_jumping (thing_tilep t)
 {
     return (t->is_jumping);
+}
+
+uint8_t thing_tile_begin_jump (thing_tilep t)
+{
+    return (t->begin_jump);
 }
 
 uint8_t thing_tile_is_join_block (thing_tilep t)

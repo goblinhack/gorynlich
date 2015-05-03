@@ -478,7 +478,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_UINT32(ctx, "ppp7", t->ppp7);
         GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
-        GET_OPT_NAMED_UINT32(ctx, "move_speed", t->move_speed);
+        GET_OPT_NAMED_UINT32(ctx, "jump_speed", t->jump_speed);
 
         int16_t tmp_int16 = 0;
         uint32_t tmp_uint32 = 0;
@@ -717,7 +717,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "ppp7", t->ppp7);
     PUT_NAMED_INT32(ctx, "ppp8", t->ppp8);
     PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
-    PUT_NAMED_INT32(ctx, "move_speed", t->move_speed);
+    PUT_NAMED_INT32(ctx, "jump_speed", t->jump_speed);
     PUT_NAMED_INT32(ctx, "max_hp", t->stats.max_hp);
     PUT_NAMED_INT32(ctx, "max_magic", t->stats.max_magic);
     PUT_NAMED_INT32(ctx, "stats_attack_melee", t->stats.attack_melee);
@@ -1014,9 +1014,9 @@ uint32_t tp_get_ppp9 (tpp t)
     return (t->ppp9);
 }
 
-uint32_t tp_get_move_speed (tpp t)
+uint32_t tp_get_jump_speed (tpp t)
 {
-    return (t->move_speed);
+    return (t->jump_speed);
 }
 
 int16_t tp_get_stats_max_hp (tpp t)
