@@ -1,4 +1,5 @@
 --------------------------------------- plan for may --------------------------------------
+- change update to a loop, not tree walk
 - display attack/defense stats on screen
 - show little bars when hovering over an item as to its abilities
 - xp level and hp increase per level
