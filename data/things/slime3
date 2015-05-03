@@ -133,11 +133,5 @@
   tile={ delay=1 tile="slime-3-3-10" is_moving is_jumping }
   tile={ delay=1 tile="slime-3-4-10" is_moving is_jumping }
   tile={ delay=1 tile="slime-3-5-10" is_moving is_jumping }
-
-  tile={ delay=1 tile="slime-3-1-11" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-2-11" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-3-11" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-4-11" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-5-11" is_moving is_jumping }
  }
 }
