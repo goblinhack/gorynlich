@@ -504,6 +504,15 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
         thing_is_weapon_swing_effect(t)) {
         wid_set_tl_br(t->wid, tl, br);
     } else {
+        if (t->want_to_jump) {
+            t->want_to_jump = false;
+            t->is_jumping = true;
+        }
+
+        if (t->is_jumping) {
+            wid_move_end(t->wid);
+        }
+
         wid_move_to_abs_in(t->wid, tl.x, tl.y, 5000.0 / thing_speed(t));
     }
 }

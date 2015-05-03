@@ -98,40 +98,40 @@
   tile={ delay=50 tile="slime-3-4-4" }
   tile={ delay=50 tile="slime-3-5-4" begin_jump is_jumping }
 
-  tile={ delay=1 tile="slime-3-1-5" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-2-5" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-3-5" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-4-5" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-5-5" is_moving is_jumping }
+  tile={ delay=1 tile="slime-3-1-5" is_jumping }
+  tile={ delay=1 tile="slime-3-2-5" is_jumping }
+  tile={ delay=1 tile="slime-3-3-5" is_jumping }
+  tile={ delay=1 tile="slime-3-4-5" is_jumping }
+  tile={ delay=1 tile="slime-3-5-5" is_jumping }
 
-  tile={ delay=1 tile="slime-3-1-6" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-2-6" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-3-6" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-4-6" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-5-6" is_moving is_jumping }
+  tile={ delay=1 tile="slime-3-1-6" is_jumping }
+  tile={ delay=1 tile="slime-3-2-6" is_jumping }
+  tile={ delay=1 tile="slime-3-3-6" is_jumping }
+  tile={ delay=1 tile="slime-3-4-6" is_jumping }
+  tile={ delay=1 tile="slime-3-5-6" is_jumping }
 
-  tile={ delay=1 tile="slime-3-1-7" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-2-7" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-3-7" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-4-7" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-5-7" is_moving is_jumping }
+  tile={ delay=1 tile="slime-3-1-7" is_jumping }
+  tile={ delay=1 tile="slime-3-2-7" is_jumping }
+  tile={ delay=1 tile="slime-3-3-7" is_jumping }
+  tile={ delay=1 tile="slime-3-4-7" is_jumping }
+  tile={ delay=1 tile="slime-3-5-7" is_jumping }
 
-  tile={ delay=1 tile="slime-3-1-8" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-2-8" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-3-8" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-4-8" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-5-8" is_moving is_jumping }
+  tile={ delay=1 tile="slime-3-1-8" is_jumping }
+  tile={ delay=1 tile="slime-3-2-8" is_jumping }
+  tile={ delay=1 tile="slime-3-3-8" is_jumping }
+  tile={ delay=1 tile="slime-3-4-8" is_jumping }
+  tile={ delay=1 tile="slime-3-5-8" is_jumping }
 
-  tile={ delay=1 tile="slime-3-1-9" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-2-9" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-3-9" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-4-9" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-5-9" is_moving is_jumping }
+  tile={ delay=1 tile="slime-3-1-9" is_jumping }
+  tile={ delay=1 tile="slime-3-2-9" is_jumping }
+  tile={ delay=1 tile="slime-3-3-9" is_jumping }
+  tile={ delay=1 tile="slime-3-4-9" is_jumping }
+  tile={ delay=1 tile="slime-3-5-9" is_jumping }
 
-  tile={ delay=1 tile="slime-3-1-10" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-2-10" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-3-10" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-4-10" is_moving is_jumping }
-  tile={ delay=1 tile="slime-3-5-10" is_moving is_jumping }
+  tile={ delay=1 tile="slime-3-1-10" is_jumping }
+  tile={ delay=1 tile="slime-3-2-10" is_jumping }
+  tile={ delay=1 tile="slime-3-3-10" is_jumping }
+  tile={ delay=1 tile="slime-3-4-10" is_jumping }
+  tile={ delay=1 tile="slime-3-5-10" is_jumping }
  }
 }
