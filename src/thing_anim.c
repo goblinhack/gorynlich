@@ -217,4 +217,8 @@ void thing_animate (thingp t)
                        true /* execute command */,
                        (void*) t /* context */);
     }
+
+    if (thing_tile_is_moving(tile)) {
+        t->one_shot_move = true;
+    }
 }

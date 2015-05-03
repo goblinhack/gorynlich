@@ -198,11 +198,20 @@ static void thing_tick_server_all (void)
             /*
              * Look for a new hpp.
              */
-            if (thing_is_monst(t) && speed && w && !wid_is_moving(w)) {
+            if (thing_is_monst(t) && 
+                !wid_is_moving(w) &&
+                w && 
+                (speed || t->one_shot_move)) {
+
                 int32_t nexthop_x = -1;
                 int32_t nexthop_y = -1;
 
                 if (thing_find_nexthop(t, &nexthop_x, &nexthop_y)) {
+
+                    if (t->one_shot_move) {
+                        t->one_shot_move = false;
+                    }
+
                     /*
                      * Add some jitter.
                      */
