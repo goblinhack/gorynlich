@@ -22,6 +22,7 @@ void thing_animate (thingp t)
     tree_rootp tiles;
     const char *command;
     tpp tp = thing_tp(t);
+    widp w = t->wid;
 
     tile = thing_current_tile(t);
 
@@ -113,6 +114,16 @@ void thing_animate (thingp t)
         } else if (thing_tile_is_dying(tile)) {
             tile = thing_tile_next(tiles, tile);
             continue;
+        } else if (tp->has_moving_anim && wid_is_moving(w)) {
+            if (!thing_tile_is_moving(tile)) {
+                tile = thing_tile_next(tiles, tile);
+                continue;
+            }
+        } else if (tp->has_moving_anim && !wid_is_moving(w)) {
+            if (thing_tile_is_moving(tile)) {
+                tile = thing_tile_next(tiles, tile);
+                continue;
+            }
         } else if (tp->has_dir_anim && thing_is_dir_tl(t)) {
             if (!thing_tile_is_dir_tl(tile)) {
                 tile = thing_tile_next(tiles, tile);
@@ -218,7 +229,7 @@ void thing_animate (thingp t)
                        (void*) t /* context */);
     }
 
-    if (thing_tile_is_moving(tile)) {
+    if (thing_tile_is_jumping(tile)) {
         t->one_shot_move = true;
     }
 }
