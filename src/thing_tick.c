@@ -149,6 +149,10 @@ static void thing_tick_server_all (void)
             if (thing_is_dead(t)) {
                 continue;
             }
+        } else if (t->one_shot_move) {
+            /*
+             * Always try and move; might be wanting to jump
+             */
         } else {
             /*
              * If not moving then we need to do a check to see if we can move
@@ -190,19 +194,23 @@ static void thing_tick_server_all (void)
          * out.
          */
         if (!t->updated) {
-            /*
-             * Make things go faster if taking too long.
-             */
             float speed = tp_get_speed(tp);
 
-            /*
-             * Look for a new hpp.
-             */
-            if (thing_is_monst(t) && 
-                !wid_is_moving(w) &&
-                w && 
-                (speed || t->one_shot_move)) {
+            int look_for_new_hop = false;
 
+            if (t->one_shot_move) {
+                /*
+                 * Forced look for a new hop.
+                 */
+                look_for_new_hop = true;
+            } else if (thing_is_monst(t) && !wid_is_moving(w) && w && speed) {
+                /*
+                 * Look for a new hpp.
+                 */
+                look_for_new_hop = true;
+            }
+
+            if (look_for_new_hop) {
                 int32_t nexthop_x = -1;
                 int32_t nexthop_y = -1;
 
