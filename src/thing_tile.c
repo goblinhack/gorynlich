@@ -39,6 +39,11 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
         GET_OPT_NAMED_STRING(ctx, "tile", t->tilename);
         GET_OPT_NAMED_STRING(ctx, "command", t->command);
         GET_OPT_NAMED_BITFIELD(ctx, "is_moving", t->is_moving);
+        if (t->is_moving) {
+            t->has_moving_anim = true;
+        }
+
+        GET_OPT_NAMED_BITFIELD(ctx, "is_jumping", t->is_jumping);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_block", t->is_join_block);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_horiz", t->is_join_horiz);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_vert", t->is_join_vert);
@@ -164,6 +169,7 @@ static void marshal_thing_tile (marshal_p ctx, thing_tile *t)
 
     PUT_NAMED_BITFIELD(ctx, "is_join_block", t->is_join_block);
     PUT_NAMED_BITFIELD(ctx, "is_moving", t->is_moving);
+    PUT_NAMED_BITFIELD(ctx, "is_jumping", t->is_jumping);
     PUT_NAMED_BITFIELD(ctx, "is_join_horiz", t->is_join_horiz);
     PUT_NAMED_BITFIELD(ctx, "is_join_vert", t->is_join_vert);
     PUT_NAMED_BITFIELD(ctx, "is_join_node", t->is_join_node);
@@ -374,6 +380,11 @@ uint32_t thing_tile_delay (thing_tile *t)
 uint8_t thing_tile_is_moving (thing_tilep t)
 {
     return (t->is_moving);
+}
+
+uint8_t thing_tile_is_jumping (thing_tilep t)
+{
+    return (t->is_jumping);
 }
 
 uint8_t thing_tile_is_join_block (thing_tilep t)

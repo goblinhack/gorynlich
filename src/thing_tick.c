@@ -208,6 +208,9 @@ static void thing_tick_server_all (void)
 
                 if (thing_find_nexthop(t, &nexthop_x, &nexthop_y)) {
 
+                    /*
+                     * Let the slimes jump!
+                     */
                     if (t->one_shot_move) {
                         t->one_shot_move = false;
                     }

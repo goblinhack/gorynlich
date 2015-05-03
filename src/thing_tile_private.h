@@ -74,6 +74,7 @@ typedef struct thing_tile_ {
     uint8_t is_join_horiz2:1;
     uint8_t is_join_vert2:1;
     uint8_t is_moving:1;
+    uint8_t is_jumping:1;
     uint8_t dir:4;
     uint8_t is_yyy5:1;
     uint8_t is_yyy6:1;
@@ -95,5 +96,6 @@ typedef struct thing_tile_ {
     uint8_t is_dead_on_end_of_anim:1;
     uint8_t is_dead_on_end_of_anim_on_server_only:1;
     uint8_t has_dir_anim:1;
+    uint8_t has_moving_anim:1;
 
 } thing_tile;
