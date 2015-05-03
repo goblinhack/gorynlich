@@ -39,10 +39,6 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
         GET_OPT_NAMED_STRING(ctx, "tile", t->tilename);
         GET_OPT_NAMED_STRING(ctx, "command", t->command);
         GET_OPT_NAMED_BITFIELD(ctx, "is_moving", t->is_moving);
-        if (t->is_moving) {
-            t->has_moving_anim = true;
-        }
-
         GET_OPT_NAMED_BITFIELD(ctx, "is_jumping", t->is_jumping);
         GET_OPT_NAMED_BITFIELD(ctx, "begin_jump", t->begin_jump);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_block", t->is_join_block);
