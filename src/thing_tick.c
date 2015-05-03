@@ -246,7 +246,13 @@ static void thing_tick_server_all (void)
                 /*
                  * Not sure if should retry rapidly when we can't place.
                  */
-                thing_mob_spawn(t);
+                if (t->timestamp_mob_spawn) {
+                    /*
+                     * Skip first time around else new born things spawn in a 
+                     * loop.
+                     */
+                    thing_mob_spawn(t);
+                }
 
                 /*
                  * Add some jitter.

@@ -19,6 +19,9 @@
  is_collision_map_medium
  is_animated
  d10000_chance_of_appearing=10
+ is_mob_spawner
+ mob_spawn_delay_tenths=300
+ mob_spawn="data/things/slime2"
  tiles={
   tile={ delay=50 tile="slime-3-1-4" }
   tile={ delay=50 tile="slime-3-2-4" }
