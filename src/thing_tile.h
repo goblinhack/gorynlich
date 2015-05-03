@@ -17,6 +17,7 @@ const char *thing_tile_command(thing_tilep);
 uint8_t thing_tile_is_moving(thing_tilep);
 uint8_t thing_tile_begin_jump(thing_tilep);
 uint8_t thing_tile_is_jumping(thing_tilep);
+uint8_t thing_tile_is_end_of_jump(thing_tilep);
 uint8_t thing_tile_is_join_block(thing_tilep);
 uint8_t thing_tile_is_join_horiz(thing_tilep);
 uint8_t thing_tile_is_join_vert(thing_tilep);

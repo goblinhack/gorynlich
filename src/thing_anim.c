@@ -114,15 +114,19 @@ void thing_animate (thingp t)
         } else if (thing_tile_is_dying(tile)) {
             tile = thing_tile_next(tiles, tile);
             continue;
-        } else if (tp->has_moving_anim && wid_is_moving(w)) {
-            if (!thing_tile_is_moving(tile)) {
-                tile = thing_tile_next(tiles, tile);
-                continue;
+        } else if (tp_is_effect_rotate_2way(tp)) {
+            if (wid_is_moving(w)) {
+                if (!thing_tile_is_moving(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
             }
-        } else if (tp->has_moving_anim && !wid_is_moving(w)) {
-            if (thing_tile_is_moving(tile)) {
-                tile = thing_tile_next(tiles, tile);
-                continue;
+
+            if (!wid_is_moving(w)) {
+                if (thing_tile_is_moving(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
             }
         } else if (tp->has_dir_anim && thing_is_dir_tl(t)) {
             if (!thing_tile_is_dir_tl(tile)) {
@@ -229,12 +233,24 @@ void thing_animate (thingp t)
                        (void*) t /* context */);
     }
 
-    if (thing_tile_begin_jump(tile)) {
-        t->one_shot_move = true;
-    }
-
-    t->is_jumping = false;
-    if (thing_tile_is_jumping(tile)) {
-        t->is_jumping = true;
+    /*
+     * These are actions to do on the server. If they appear on the client it 
+     * is only because we sync those values over.
+     */
+    if (t->on_server) {
+        /*
+         * Send a jump on the next move to the client?
+         */
+        if (thing_tile_begin_jump(tile)) {
+            t->one_shot_move = true;
+            t->is_jumping = true;
+        }
+    } else {
+        /*
+         * End of jump on the client?
+         */
+        if (!wid_is_moving(w)) {
+            t->is_jumping = false;
+        }
     }
 }
