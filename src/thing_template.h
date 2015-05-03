@@ -182,6 +182,14 @@ typedef struct tp_ {
 
     uint32_t d10000_chance_of_appearing;
     uint32_t ppp2;
+    uint32_t ppp3;
+    uint32_t ppp4;
+    uint32_t ppp5;
+    uint32_t ppp6;
+    uint32_t ppp7;
+    uint32_t ppp8;
+    uint32_t ppp9;
+    uint32_t move_speed;
 
     uint32_t hp_per_level;
     uint32_t id_per_level;
@@ -247,7 +255,6 @@ typedef struct tp_ {
     uint8_t is_rrr8:1;
     uint8_t is_rrr9:1;
     uint8_t is_rrr10:1;
-    uint8_t is_rrr11:1;
     uint8_t is_magical_weapon:1;
     uint8_t is_ranged_weapon:1;
     uint8_t is_melee_weapon:1;
@@ -378,6 +385,14 @@ uint32_t tp_get_stats_defense(tpp);
 
 uint32_t tp_get_d10000_chance_of_appearing(tpp);
 uint32_t tp_get_ppp2(tpp);
+uint32_t tp_get_ppp3(tpp);
+uint32_t tp_get_ppp4(tpp);
+uint32_t tp_get_ppp5(tpp);
+uint32_t tp_get_ppp6(tpp);
+uint32_t tp_get_ppp7(tpp);
+uint32_t tp_get_ppp8(tpp);
+uint32_t tp_get_ppp9(tpp);
+uint32_t tp_get_move_speed(tpp);
 float tp_get_light_radius(tpp);
 float tp_get_scale(tpp);
 uint32_t tp_get_quantity(tpp);
@@ -634,11 +649,6 @@ static inline uint8_t tp_is_rrr9 (tpp t)
 static inline uint8_t tp_is_rrr10 (tpp t)
 {
     return (t->is_rrr10);
-}
-
-static inline uint8_t tp_is_rrr11 (tpp t)
-{
-    return (t->is_rrr11);
 }
 
 static inline uint8_t tp_is_magical_weapon (tpp t)

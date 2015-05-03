@@ -3,9 +3,9 @@
  raw_name="slime-1"
  tooltip="Purple slime"
  z_depth=3
- speed=1
  max_hp=5
  damage=1
+ move_speed=30
  bonus_xp_on_death=20
  vision_distance=20
  hit_delay_tenths=10
@@ -47,7 +47,7 @@
   tile={ delay=20 tile="slime-1-2-6" }
   tile={ delay=20 tile="slime-1-3-6" }
   tile={ delay=20 tile="slime-1-4-6" }
-  tile={ delay=20 tile="slime-1-5-6" }
+  tile={ delay=20 tile="slime-1-5-6" is_moving }
   tile={ delay=20 tile="slime-1-1-5" }
   tile={ delay=20 tile="slime-1-2-5" }
   tile={ delay=20 tile="slime-1-3-5" }

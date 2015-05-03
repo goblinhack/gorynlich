@@ -727,6 +727,11 @@ typedef struct thing_ {
      * Do we have a light source?
      */
     uint32_t torch_light_radius_set:1;
+
+    /*
+     * Moves only occasionally?
+     */
+    uint32_t one_shot_move:1;
 } thing;
 
 
@@ -1092,13 +1097,6 @@ static inline uint8_t thing_is_rrr10 (thingp t)
     verify(t);
 
     return (tp_is_rrr10(thing_tp(t)));
-}
-
-static inline uint8_t thing_is_rrr11 (thingp t)
-{
-    verify(t);
-
-    return (tp_is_rrr11(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_magical_weapon (thingp t)
@@ -1705,11 +1703,6 @@ static inline uint8_t thing_is_rrr9_noverify (thingp t)
 static inline uint8_t thing_is_rrr10_noverify (thingp t)
 {
     return (t->tp->is_rrr10);
-}
-
-static inline uint8_t thing_is_rrr11_noverify (thingp t)
-{
-    return (t->tp->is_rrr11);
 }
 
 static inline uint8_t thing_is_magical_weapon_noverify (thingp t)

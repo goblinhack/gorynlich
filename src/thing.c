@@ -2997,6 +2997,10 @@ double thing_speed (thingp t)
 {
     verify(t);
 
+    if (tp_get_move_speed(t->tp)) {
+        return (((double)tp_get_move_speed(t->tp)));
+    }
+
     return (((double)tp_get_speed(t->tp)));
 }
 
