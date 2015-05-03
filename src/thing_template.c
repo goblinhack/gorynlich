@@ -471,6 +471,14 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_INT16(ctx, "bonus_magic_on_use", t->bonus_magic_on_use);
         GET_OPT_NAMED_UINT32(ctx, "d10000_chance_of_appearing", t->d10000_chance_of_appearing);
         GET_OPT_NAMED_UINT32(ctx, "ppp2", t->ppp2);
+        GET_OPT_NAMED_UINT32(ctx, "ppp3", t->ppp3);
+        GET_OPT_NAMED_UINT32(ctx, "ppp4", t->ppp4);
+        GET_OPT_NAMED_UINT32(ctx, "ppp5", t->ppp5);
+        GET_OPT_NAMED_UINT32(ctx, "ppp6", t->ppp6);
+        GET_OPT_NAMED_UINT32(ctx, "ppp7", t->ppp7);
+        GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
+        GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
+        GET_OPT_NAMED_UINT32(ctx, "move_speed", t->move_speed);
 
         int16_t tmp_int16 = 0;
         uint32_t tmp_uint32 = 0;
@@ -579,7 +587,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr8", t->is_rrr8);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
         GET_OPT_NAMED_BITFIELD(ctx, "is_magical_weapon", t->is_magical_weapon);
         GET_OPT_NAMED_BITFIELD(ctx, "is_ranged_weapon", t->is_ranged_weapon);
         GET_OPT_NAMED_BITFIELD(ctx, "is_melee_weapon", t->is_melee_weapon);
@@ -702,6 +710,14 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "bonus_cash_on_collect", t->bonus_cash_on_collect);
     PUT_NAMED_INT32(ctx, "d10000_chance_of_appearing", t->d10000_chance_of_appearing);
     PUT_NAMED_INT32(ctx, "ppp2", t->ppp2);
+    PUT_NAMED_INT32(ctx, "ppp3", t->ppp3);
+    PUT_NAMED_INT32(ctx, "ppp4", t->ppp4);
+    PUT_NAMED_INT32(ctx, "ppp5", t->ppp5);
+    PUT_NAMED_INT32(ctx, "ppp6", t->ppp6);
+    PUT_NAMED_INT32(ctx, "ppp7", t->ppp7);
+    PUT_NAMED_INT32(ctx, "ppp8", t->ppp8);
+    PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
+    PUT_NAMED_INT32(ctx, "move_speed", t->move_speed);
     PUT_NAMED_INT32(ctx, "max_hp", t->stats.max_hp);
     PUT_NAMED_INT32(ctx, "max_magic", t->stats.max_magic);
     PUT_NAMED_INT32(ctx, "stats_attack_melee", t->stats.attack_melee);
@@ -774,7 +790,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr8", t->is_rrr8);
     PUT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
     PUT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
     PUT_NAMED_BITFIELD(ctx, "is_magical_weapon", t->is_magical_weapon);
     PUT_NAMED_BITFIELD(ctx, "is_ranged_weapon", t->is_ranged_weapon);
     PUT_NAMED_BITFIELD(ctx, "is_melee_weapon", t->is_melee_weapon);
@@ -961,6 +977,46 @@ uint32_t tp_get_d10000_chance_of_appearing (tpp t)
 uint32_t tp_get_ppp2 (tpp t)
 {
     return (t->ppp2);
+}
+
+uint32_t tp_get_ppp3 (tpp t)
+{
+    return (t->ppp3);
+}
+
+uint32_t tp_get_ppp4 (tpp t)
+{
+    return (t->ppp4);
+}
+
+uint32_t tp_get_ppp5 (tpp t)
+{
+    return (t->ppp5);
+}
+
+uint32_t tp_get_ppp6 (tpp t)
+{
+    return (t->ppp6);
+}
+
+uint32_t tp_get_ppp7 (tpp t)
+{
+    return (t->ppp7);
+}
+
+uint32_t tp_get_ppp8 (tpp t)
+{
+    return (t->ppp8);
+}
+
+uint32_t tp_get_ppp9 (tpp t)
+{
+    return (t->ppp9);
+}
+
+uint32_t tp_get_move_speed (tpp t)
+{
+    return (t->move_speed);
 }
 
 int16_t tp_get_stats_max_hp (tpp t)

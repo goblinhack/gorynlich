@@ -329,11 +329,6 @@ uint8_t map_is_rrr10_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr10));
 }
 
-uint8_t map_is_rrr11_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, tp_is_rrr11));
-}
-
 uint8_t map_is_magical_weapon_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, tp_is_magical_weapon));
@@ -794,11 +789,6 @@ thingp map_thing_is_rrr9_at (levelp level, int32_t x, int32_t y)
 thingp map_thing_is_rrr10_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, tp_is_rrr10));
-}
-
-thingp map_thing_is_rrr11_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr11));
 }
 
 thingp map_thing_is_magical_weapon_at (levelp level, int32_t x, int32_t y)
@@ -1277,11 +1267,6 @@ tree_rootp map_all_things_is_rrr9_at (levelp level, int32_t x, int32_t y)
 tree_rootp map_all_things_is_rrr10_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr10));
-}
-
-tree_rootp map_all_things_is_rrr11_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr11));
 }
 
 tree_rootp map_all_things_is_magical_weapon_at (levelp level, int32_t x, int32_t y)
@@ -1850,11 +1835,6 @@ tpp map_find_rrr9_at (levelp level, int32_t x, int32_t y, widp *w)
 tpp map_find_rrr10_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_rrr10, w));
-}
-
-tpp map_find_rrr11_at (levelp level, int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_rrr11, w));
 }
 
 tpp map_find_magical_weapon_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2676,11 +2656,6 @@ tree_rootp map_all_things_is_rrr9 (levelp level)
 tree_rootp map_all_things_is_rrr10 (levelp level)
 {
     return (map_all_things_is_x(level, tp_is_rrr10));
-}
-
-tree_rootp map_all_things_is_rrr11 (levelp level)
-{
-    return (map_all_things_is_x(level, tp_is_rrr11));
 }
 
 tree_rootp map_all_things_is_magical_weapon (levelp level)

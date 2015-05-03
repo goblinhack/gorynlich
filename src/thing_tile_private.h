@@ -19,6 +19,11 @@ typedef struct thing_tile_ {
      */
     uint32_t delay;
 
+    /*
+     * Move now at x speed
+     */
+    uint32_t move;
+
     uint8_t is_join_node:1;
     uint8_t is_join_left:1;
     uint8_t is_join_bot:1;
@@ -68,6 +73,7 @@ typedef struct thing_tile_ {
     uint8_t is_join_block:1;
     uint8_t is_join_horiz2:1;
     uint8_t is_join_vert2:1;
+    uint8_t is_moving:1;
     uint8_t dir:4;
     uint8_t is_yyy5:1;
     uint8_t is_yyy6:1;

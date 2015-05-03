@@ -12,7 +12,9 @@ void thing_tile_free(thing_tilep);
 
 const char *thing_tile_name(thing_tilep);
 uint32_t thing_tile_delay(thing_tilep);
+uint32_t thing_tile_move(thing_tilep);
 const char *thing_tile_command(thing_tilep);
+uint8_t thing_tile_is_moving(thing_tilep);
 uint8_t thing_tile_is_join_block(thing_tilep);
 uint8_t thing_tile_is_join_horiz(thing_tilep);
 uint8_t thing_tile_is_join_vert(thing_tilep);
