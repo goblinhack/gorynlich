@@ -18,11 +18,11 @@
  is_animated
  d10000_chance_of_appearing=30
  tiles={
-  tile={ delay=200 tile="slime-1-1-11" }
-  tile={ delay=200 tile="slime-1-2-11" }
-  tile={ delay=200 tile="slime-1-3-11" }
-  tile={ delay=200 tile="slime-1-4-11" }
-  tile={ delay=200 tile="slime-1-5-11" }
+  tile={ delay=20 tile="slime-1-1-11" }
+  tile={ delay=20 tile="slime-1-2-11" }
+  tile={ delay=20 tile="slime-1-3-11" }
+  tile={ delay=20 tile="slime-1-4-11" }
+  tile={ delay=20 tile="slime-1-5-11" }
   tile={ delay=20 tile="slime-1-1-10" }
   tile={ delay=20 tile="slime-1-2-10" }
   tile={ delay=20 tile="slime-1-3-10" }
