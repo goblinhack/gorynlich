@@ -17,6 +17,9 @@
  is_cats_eyes
  is_collision_map_medium
  is_animated
+ is_mob_spawner
+ mob_spawn_delay_tenths=300
+ mob_spawn="data/things/slime1"
  d10000_chance_of_appearing=30
  tiles={
   tile={ delay=100 tile="slime-1-1-4" }
