@@ -202,9 +202,15 @@ static void thing_client_wid_move (thingp t,
         }
 
         double ms = (5000.0 / speed) / (1.0 / time_step);
+//CON("move speed %f", speed);
+
+        if (t->is_jumping) {
+            if (wid_is_moving(t->wid)) {
+                wid_move_end(t->wid);
+            }
+        }
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
-
     } else {
         wid_set_tl_br(t->wid, tl, br);
     }

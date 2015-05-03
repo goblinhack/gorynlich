@@ -738,6 +738,7 @@ typedef struct thing_ {
      * In the middle of a jump animation?
      */
     uint32_t is_jumping:1;
+    uint32_t want_to_jump:1;
 } thing;
 
 
@@ -1166,6 +1167,13 @@ static inline uint8_t thing_is_sleeping (thingp t)
     verify(t);
 
     return (t->is_sleeping);
+}
+
+static inline uint8_t thing_is_jumping (thingp t)
+{
+    verify(t);
+
+    return (t->is_jumping);
 }
 
 static inline uint8_t thing_is_awake (thingp t)
