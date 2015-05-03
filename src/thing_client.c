@@ -197,7 +197,8 @@ static void thing_client_wid_move (thingp t,
         }
 
         if (!speed) {
-            speed = 1;
+            ERR("thing %s is wanting to move distance %f but I don't know what speed at",
+                thing_logname(t), dist);
         }
 
         double ms = (5000.0 / speed) / (1.0 / time_step);

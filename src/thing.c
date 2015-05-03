@@ -2997,7 +2997,7 @@ double thing_speed (thingp t)
 {
     verify(t);
 
-    if (t->is_jumping && tp_get_jump_speed(t->tp)) {
+    if (t->is_jumping) {
         return (((double)tp_get_jump_speed(t->tp)));
     }
 
@@ -3337,10 +3337,17 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         uint8_t ext2 =
             ((t->torch_light_radius_set              ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)  |
+            ((t->is_jumping                          ? 1 : 0) <<
+                THING_STATE_BIT_SHIFT_EXT2_IS_JUMPING)          |
             (((t->data && t->data->col_name)         ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_COLOR)               |
             ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_RESYNC);
+
+        /*
+         * Once the jump is sent to the client, turn it off.
+         */
+        t->is_jumping = false;
 
         if (t->weapon) {
             ext1 |= 1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT;
@@ -3856,6 +3863,17 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                      * Move something which is not the local player. Could
                      * be another player or monster etc...
                      */
+                    if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_IS_JUMPING)) {
+                        t->is_jumping = true;
+#if 0
+if (t->is_jumping) {
+    CON("%s jump to %f,%f",thing_logname(t),x,y);
+} else {
+    CON("%s move to %f,%f",thing_logname(t),x,y);
+}
+#endif
+                    }
+
                     thing_client_wid_update(t, x, y, true /* smooth */,
                                             false /* is new */);
 

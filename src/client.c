@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Neil McGill
+* Copyright (C) 2011 Neil McGill
  *
  * See the README file for license.
  */

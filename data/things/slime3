@@ -7,6 +7,7 @@
  max_hp=20
  damage=10
  jump_speed=30
+ is_effect_rotate_2way
  bonus_xp_on_death=20
  vision_distance=20
  hit_delay_tenths=10
@@ -95,7 +96,7 @@
   tile={ delay=50 tile="slime-2-2-4" }
   tile={ delay=50 tile="slime-2-3-4" }
   tile={ delay=50 tile="slime-2-4-4" }
-  tile={ delay=50 tile="slime-2-5-4" begin_jump }
+  tile={ delay=50 tile="slime-2-5-4" begin_jump is_jumping }
 
   tile={ delay=1 tile="slime-2-1-5" is_moving is_jumping }
   tile={ delay=1 tile="slime-2-2-5" is_moving is_jumping }

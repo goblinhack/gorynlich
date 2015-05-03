@@ -285,6 +285,7 @@ enum {
      ********************************************************************/
     THING_STATE_BIT_SHIFT_EXT2_RESYNC,
     THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS,
+    THING_STATE_BIT_SHIFT_EXT2_IS_JUMPING,
     THING_STATE_BIT_SHIFT_EXT2_COLOR,
     /********************************************************************
      * Update msg_map_update if you add here
