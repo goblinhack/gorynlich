@@ -9,6 +9,7 @@
  is_animated_no_dir
  is_fire
  is_light_source
+ explosion_radius=4.0
  light_radius=10.0
  is_collision_map_large
  scale=0.4

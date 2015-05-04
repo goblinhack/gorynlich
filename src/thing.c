@@ -110,6 +110,7 @@ uint16_t THING_ACTION_SLEEP;
 uint16_t THING_ACTION_TEXT;
 uint16_t THING_ACTION_ZAP;
 uint16_t THING_POISON1;
+uint16_t THING_POISON2;
 uint16_t THING_CLOUDKILL1;
 uint16_t THING_BOMB;
 uint16_t THING_SPAM;
@@ -1688,7 +1689,10 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     if (t->on_server) {
         if (!t->is_collected) {
             if (thing_is_bomb(t)) {
-                level_place_explosion(thing_level(t), 0, /* owner */ t->x, t->y);
+                level_place_explosion(thing_level(t),
+                                      0, /* owner */
+                                      t->tp,
+                                      t->x, t->y);
             }
         }
     }
@@ -1904,9 +1908,10 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
              * Explodes on death ala Sith Lord? Only a lesser one, mind.
              */
             if (tp_is_combustable(t->tp)) {
-                level_place_small_explosion(thing_level(t),
-                                            0, // owner
-                                            t->x, t->y);
+                level_place_explosion(thing_level(t),
+                                      0, // owner
+                                      t->tp,
+                                      t->x, t->y);
             }
 
             if (0) {
