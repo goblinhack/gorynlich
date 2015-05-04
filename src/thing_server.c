@@ -190,20 +190,19 @@ void thing_server_action (thingp t,
             return;
         }
 
-        if (item->id == THING_POTION_FIRE) {
-            level_place_fireball(server_level, t, t->x, t->y);
-            break;
-        } else if (item->id == THING_POTION_MONSTICIDE) {
-            level_place_poison(server_level, t, t->x, t->y);
+        if ((item->id == THING_POTION_FIRE) ||
+            (item->id == THING_POTION_MONSTICIDE) ||
+            (item->id == THING_POTION_CLOUDKILL)) {
+            level_place_explosion(server_level,
+                                  t,
+                                  tp,
+                                  t->x, t->y);
             break;
         } else if (item->id == THING_POTION_LIFE) {
             thing_server_effect(t, THING_STATE_EFFECT_IS_POWER_UP);
             break;
         } else if (item->id == THING_POTION_SHIELD) {
             thing_wield_shield(t, tp);
-            break;
-        } else if (item->id == THING_POTION_CLOUDKILL) {
-            level_place_cloudkill(server_level, t, t->x, t->y);
             break;
         } else if (item->id == THING_BOMB) {
             if (level_place_bomb(server_level, t, t->x + 1, t->y)) {

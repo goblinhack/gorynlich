@@ -16,6 +16,7 @@
  is_shadow_caster
  hit_priority=10
  is_combustable
+ explodes_as="data/things/explosion3"
  is_animated
  tiles={
   tile={

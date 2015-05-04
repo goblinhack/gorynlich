@@ -21,15 +21,15 @@ int level_explosion_flash_effect;
 /*
  * Place an explosion
  */
-static uint8_t level_place_explosion_at (levelp level,
-                                         thingp owner,
-                                         double ox, 
-                                         double oy, 
-                                         double x, 
-                                         double y, 
-                                         uint8_t dist,
-                                         uint32_t nargs,
-                                         va_list args)
+static void level_place_explosion_at (levelp level,
+                                      thingp owner,
+                                      double ox, 
+                                      double oy, 
+                                      double x, 
+                                      double y, 
+                                      uint8_t dist,
+                                      uint32_t nargs,
+                                      va_list args)
 {
     /*
      * Choose one of the things in the args list to place.
@@ -42,12 +42,14 @@ static uint8_t level_place_explosion_at (levelp level,
     }
 
     if (!name) {
-        DIE("cannot place explosion thing");
+        ERR("cannot place explosion thing");
+        return;
     }
 
     tpp tp = tp_find(name);
     if (!tp) {
-        DIE("no explosion for name %s", name);
+        ERR("no explosion for name %s", name);
+        return;
     }
 
     double delay = DISTANCE(ox, oy, x, y) * 150;
@@ -78,7 +80,6 @@ static uint8_t level_place_explosion_at (levelp level,
                                   level == server_level ? 1 : 0,
                                   dist == 0 ? 1 : 0);
 
-    return (true);
 }
 
 static double this_explosion[MAP_WIDTH][MAP_HEIGHT];
@@ -470,38 +471,56 @@ static void level_place_spatter (levelp level,
 
 void level_place_explosion (levelp level, 
                             thingp owner,
+                            tpp tp,
                             double x, double y)
 {
-    level_explosion_flash_effect = 20;
+    const char *explodes_as = 0;
 
-    level_place_explosion_(level, 
-                           owner,
-                           x, y,
-                           6, // radius
-                           0.5, // density
-                           4, // nargs
-                           "data/things/explosion1",
-                           "data/things/explosion2",
-                           "data/things/explosion3",
-                           "data/things/explosion4");
-}
+    if (tp) {
+        if (tp_is_cloud_effect(tp)) {
+            explodes_as = tp_name(tp);
+        } else {
+            explodes_as = tp_explodes_as(tp);
+        }
+    }
 
-void level_place_small_explosion (levelp level, 
-                                  thingp owner,
-                                  double x, double y)
-{
+    /*
+     * Used for fire potions and bombs as it gives a layered effect.
+     */
+    if (!explodes_as || 
+            (tp_to_id(tp) == THING_EXPLOSION1) ||
+            (tp_to_id(tp) == THING_BOMB)) {
+
+        level_explosion_flash_effect = 20;
+
+        level_place_explosion_(level, 
+                               owner,
+                               x, y,
+                               6, // radius
+                               0.5, // density
+                               4, // nargs
+                               "data/things/explosion1",
+                               "data/things/explosion2",
+                               "data/things/explosion3",
+                               "data/things/explosion4");
+        return;
+    }
+
+    tpp gas_cloud = tp_find(explodes_as);
+    if (!gas_cloud) {
+        ERR("no explosion for name %s", explodes_as);
+        return;
+    }
+
     level_explosion_flash_effect = 5;
 
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           1, // radius
+                           tp_get_explosion_radius(gas_cloud),
                            0.5, // density
-                           4, // nargs
-                           "data/things/explosion1",
-                           "data/things/explosion2",
-                           "data/things/explosion3",
-                           "data/things/explosion4");
+                           1, // nargs
+                           explodes_as);
 }
 
 void level_place_hit_success (levelp level, 
@@ -554,50 +573,6 @@ void level_place_blood_crit (levelp level,
                         0.5, // density
                         1, // nargs
                         "data/things/blood2");
-}
-
-void level_place_fireball (levelp level, 
-                           thingp owner,
-                           double x, double y)
-{
-    level_explosion_flash_effect = 20;
-
-    level_place_explosion_(level, 
-                           owner,
-                           x, y,
-                           6, // radius
-                           0.5, // density
-                           4, // nargs
-                           "data/things/explosion1",
-                           "data/things/explosion2",
-                           "data/things/explosion3",
-                           "data/things/explosion4");
-}
-
-void level_place_poison (levelp level, 
-                         thingp owner,
-                         double x, double y)
-{
-    level_place_explosion_(level, 
-                           owner,
-                           x, y,
-                           6, // radius
-                           0.5, // density
-                           1, // nargs
-                           "data/things/poison1");
-}
-
-void level_place_cloudkill (levelp level, 
-                            thingp owner,
-                            double x, double y)
-{
-    level_place_explosion_(level, 
-                           owner,
-                           x, y,
-                           6, // radius
-                           0.5, // density
-                           1, // nargs
-                           "data/things/cloudkill1");
 }
 
 thingp level_place_bomb (levelp level, 
