@@ -397,6 +397,7 @@ extern uint16_t THING_ACTION_SLEEP;
 extern uint16_t THING_ACTION_TEXT;
 extern uint16_t THING_ACTION_ZAP;
 extern uint16_t THING_POISON1;
+extern uint16_t THING_POISON2;
 extern uint16_t THING_CLOUDKILL1;
 extern uint16_t THING_SPAM;
 extern uint16_t THING_POTION_MONSTICIDE;

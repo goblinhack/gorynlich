@@ -270,6 +270,10 @@ static void tp_destroy_internal (tpp t)
         myfree(t->spawn_on_death);
     }
 
+    if (t->explodes_as) {
+        myfree(t->explodes_as);
+    }
+
     if (t->weapon_carry_anim) {
         myfree(t->weapon_carry_anim);
     }
@@ -454,6 +458,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_STRING(ctx, "carried_as", t->carried_as);
         GET_OPT_NAMED_STRING(ctx, "light_tint", t->light_tint);
         GET_OPT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
+        GET_OPT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
         GET_OPT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
         GET_OPT_NAMED_STRING(ctx, "shield_anim", t->shield_anim);
         GET_OPT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
@@ -524,6 +529,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
 
         GET_OPT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
         GET_OPT_NAMED_FLOAT(ctx, "scale", t->scale);
+        GET_OPT_NAMED_FLOAT(ctx, "explosion_radius", t->explosion_radius);
 
         uint32_t quantity;
 
@@ -695,6 +701,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_STRING(ctx, "carried_as", t->carried_as);
     PUT_NAMED_STRING(ctx, "light_tint", t->light_tint);
     PUT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
+    PUT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
     PUT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
     PUT_NAMED_STRING(ctx, "shield_anim", t->shield_anim);
     PUT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
@@ -731,6 +738,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "id_per_level", t->id_per_level);
     PUT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
     PUT_NAMED_FLOAT(ctx, "scale", t->scale);
+    PUT_NAMED_FLOAT(ctx, "explosion_radius", t->explosion_radius);
     PUT_NAMED_INT32(ctx, "quantity", t->item.quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_hundredths", t->weapon_fire_delay_hundredths);
@@ -897,6 +905,11 @@ color tp_light_color (tpp t)
 const char *tp_spawn_on_death (tpp t)
 {
     return (t->spawn_on_death);
+}
+
+const char *tp_explodes_as (tpp t)
+{
+    return (t->explodes_as);
 }
 
 const char *tp_weapon_carry_anim (tpp t)
@@ -1091,6 +1104,15 @@ float tp_get_scale (tpp t)
     }
 
     return (t->scale);
+}
+
+float tp_get_explosion_radius (tpp t)
+{
+    if (!t->explosion_radius) {
+        return (1.0);
+    }
+
+    return (t->explosion_radius);
 }
 
 uint32_t tp_get_quantity (tpp t)

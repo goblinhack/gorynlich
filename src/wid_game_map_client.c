@@ -965,8 +965,8 @@ wid_game_map_client_replace_tile (widp w,
          * flood fill to see where the rest of the explosion goes.
          */
         if (!t->is_epicenter) {
-            dx = gaussrand(0.0, 0.3);
-            dy = gaussrand(0.0, 0.3);
+            dx = gaussrand(0.0, 0.5);
+            dy = gaussrand(0.0, 0.5);
         }
 
         wid_fade_out(child, 1000);
@@ -1003,24 +1003,21 @@ wid_game_map_client_replace_tile (widp w,
      */
     if (t->is_epicenter && thing_is_cloud_effect(t) ) {
 
-        if ((tp->id == THING_EXPLOSION1) ||
-            (tp->id == THING_EXPLOSION2) ||
-            (tp->id == THING_EXPLOSION3) ||
-            (tp->id == THING_EXPLOSION4)) {
+        if ((tp->id == THING_EXPLOSION1)        ||
+            (tp->id == THING_EXPLOSION2)        ||
+            (tp->id == THING_EXPLOSION3)        ||
+            (tp->id == THING_EXPLOSION4)        ||
+            (tp->id == THING_BOMB)              ||
+            (tp->id == THING_POISON1)           ||
+            (tp->id == THING_POISON2)           ||
+            (tp->id == THING_CLOUDKILL1)) {
 
-            level_place_explosion(client_level, 0, t->x, t->y);
-
-        } else if (tp->id == THING_POISON1) {
-
-            level_place_poison(client_level, 0, t->x, t->y);
-
-        } else if (tp->id == THING_CLOUDKILL1) {
-
-            level_place_cloudkill(client_level, 0, t->x, t->y);
-
+            level_place_explosion(client_level,
+                                  0, /* owner */
+                                  tp,
+                                  t->x, t->y);
         } else {
             ERR("unknown explosion %s", thing_logname(t));
-            level_place_explosion(client_level, 0, t->x, t->y);
         }
     }
 

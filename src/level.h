@@ -107,10 +107,8 @@ extern int level_explosion_flash_effect;
 
 void level_place_explosion(levelp level, 
                            thingp owner,
+                           tpp explodes_as,
                            double x, double y);
-void level_place_small_explosion(levelp level, 
-                                 thingp owner,
-                                 double x, double y);
 void level_place_hit_success(levelp level, 
                          thingp owner,
                          double x, double y);
@@ -123,15 +121,6 @@ void level_place_blood(levelp level,
 void level_place_blood_crit(levelp level, 
                             thingp owner,
                             double x, double y);
-void level_place_fireball(levelp level, 
-                          thingp owner,
-                          double x, double y);
-void level_place_poison(levelp level, 
-                        thingp owner,
-                        double x, double y);
-void level_place_cloudkill(levelp level, 
-                           thingp owner,
-                           double x, double y);
 thingp level_place_bomb(levelp level, 
                         thingp owner,
                         double x, double y);
