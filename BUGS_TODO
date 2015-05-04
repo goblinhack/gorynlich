@@ -1,5 +1,6 @@
 --------------------------------------- plan for may --------------------------------------
 - change update to a loop, not tree walk
+- fireball and plasmaball firing
 - display attack/defense stats on screen
 - show little bars when hovering over an item as to its abilities
 - xp level and hp increase per level
@@ -10,6 +11,7 @@
 - add screaming fire skull monst?
 - magic attack - green fireball?
 - attack magical must do something
+- make cheese holy
 --------------------------------------- plan for june --------------------------------------
 - sound effects for weapons and hits http://www.bfxr.net/
 - sound on momey collect
