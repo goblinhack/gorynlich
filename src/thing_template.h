@@ -109,6 +109,11 @@ typedef struct tp_ {
     char *spawn_on_death;
 
     /*
+     * For potions and monster death.
+     */
+    char *explodes_as;
+
+    /*
      * How this weapon appears on screen when it is used.
      */
     char *weapon_carry_anim;
@@ -203,6 +208,11 @@ typedef struct tp_ {
      * How large or small the thing is blitted as.
      */
     float scale;
+
+    /*
+     * How large an explosion is.
+     */
+    float explosion_radius;
 
     uint32_t hit_priority;
     uint32_t weapon_fire_delay_hundredths;
@@ -359,6 +369,7 @@ const char *tp_carried_as(tpp);
 const char *tp_light_tint(tpp);
 color tp_light_color(tpp);
 const char *tp_spawn_on_death(tpp);
+const char *tp_explodes_as(tpp);
 const char *tp_weapon_carry_anim(tpp);
 const char *tp_shield_anim(tpp);
 const char *tp_weapon_swing_anim(tpp);
@@ -395,6 +406,7 @@ uint32_t tp_get_ppp9(tpp);
 uint32_t tp_get_jump_speed(tpp);
 float tp_get_light_radius(tpp);
 float tp_get_scale(tpp);
+float tp_get_explosion_radius(tpp);
 uint32_t tp_get_quantity(tpp);
 uint32_t tp_get_hit_priority(tpp);
 uint32_t tp_get_weapon_fire_delay_hundredths(tpp);

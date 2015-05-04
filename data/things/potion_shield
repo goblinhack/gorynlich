@@ -14,6 +14,7 @@
  shield_anim="data/things/shield1"
  d10000_chance_of_appearing=75
  is_combustable
+ explodes_as="data/things/explosion3"
  is_fragile
  tiles={
   tile={
