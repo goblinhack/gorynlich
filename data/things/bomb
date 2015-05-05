@@ -6,7 +6,6 @@
  is_sleeping
  is_bomb
  is_combustable
- is_cloud_effect
  is_fragile
  is_stackable
  is_carryable
