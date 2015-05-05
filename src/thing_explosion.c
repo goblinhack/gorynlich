@@ -21,20 +21,27 @@ int level_explosion_flash_effect;
 /*
  * Place an explosion
  */
-static void level_place_explosion_at (levelp level,
-                                      thingp owner,
-                                      double ox, 
-                                      double oy, 
-                                      double x, 
-                                      double y, 
-                                      uint8_t dist,
-                                      uint32_t nargs,
-                                      va_list args)
+void level_place_explosion_at (levelp level,
+                               thingp owner,
+                               double ox, 
+                               double oy, 
+                               double x, 
+                               double y, 
+                               uint8_t dist,
+                               uint8_t epicenter,
+                               uint32_t nargs,
+                               va_list args)
 {
     /*
      * Choose one of the things in the args list to place.
      */
-    uint32_t r = (myrand() % nargs) + 1;
+    uint32_t r;
+
+    if (epicenter) {
+        r = 1;
+    } else {
+        r = (myrand() % nargs) + 1;
+    }
 
     const char *name = 0;
     while (r--) {
@@ -78,7 +85,7 @@ static void level_place_explosion_at (levelp level,
                                   destroy_in,
                                   jitter,
                                   level == server_level ? 1 : 0,
-                                  dist == 0 ? 1 : 0);
+                                  epicenter);
 
 }
 
@@ -87,7 +94,7 @@ static uint8_t this_explosion_x;
 static uint8_t this_explosion_y;
 static uint8_t this_explosion_radius;
 
-static void explosion_flood (levelp level, uint8_t x, uint8_t y)
+void explosion_flood (levelp level, uint8_t x, uint8_t y)
 {
     if (x < 1) {
         return;
@@ -322,6 +329,7 @@ static void level_place_explosion_ (levelp level,
                                     x, 
                                     y, 
                                     0,
+                                    true, /* epicenter */
                                     nargs, args);
     va_end(args);
 
@@ -375,92 +383,7 @@ static void level_place_explosion_ (levelp level,
                                                     ex, 
                                                     ey, 
                                                     distance,
-                                                    nargs, args);
-                    va_end(args);
-                }
-            }
-        }
-    }
-}
-
-static void level_place_spatter (levelp level, 
-                                 thingp owner,
-                                 double x, 
-                                 double y,
-                                 int radius,
-                                 double density,
-                                 uint32_t nargs, ...)
-{
-    va_list args;
-
-    /*
-     * Place the epicenter. This is what on the server gets sent to the 
-     * client.
-     */
-    va_start(args, nargs);
-
-    (void) level_place_explosion_at(level, 
-                                    owner,
-                                    x,
-                                    y,
-                                    x, 
-                                    y, 
-                                    0,
-                                    nargs, args);
-    va_end(args);
-
-    /*
-     * If 0 radius, then we want to only place the epicenter of the explosion 
-     * so that it gets synced to the client. This is useful for explosions 
-     * that are effects only and do not interact, so we don't need to place
-     * the explosion tiles on the server to do collisions.
-     */
-    if (!radius) {
-        return;
-    }
-
-    int ix, iy;
-
-    for (ix = x - radius - 1; ix <= x + radius + 1; ix++) {
-        if (ix < 1) {
-            continue;
-        }
-
-        if (ix > MAP_WIDTH - 1) {
-            continue;
-        }
-
-        for (iy = y - radius - 1; iy <= y + radius + 1; iy++) {
-                                
-            if (iy < 1) {
-                continue;
-            }
-
-            if (iy > MAP_HEIGHT - 1) {
-                continue;
-            }
-
-            double distance = DISTANCE(x, y, ix, iy);
-            if (distance > radius) {
-                continue;
-            }
-
-            double dx, dy;
-
-            for (dx = -0.5; dx <= 0.5; dx += density) {
-                for (dy = -0.5; dy <= 0.5; dy += density) {
-                    double ex = ix + dx;
-                    double ey = iy + dy;
-
-                    va_start(args, nargs);
-
-                    (void) level_place_explosion_at(level, 
-                                                    owner,
-                                                    x,
-                                                    y,
-                                                    ex, 
-                                                    ey, 
-                                                    distance,
+                                                    false, /* epicenter */
                                                     nargs, args);
                     va_end(args);
                 }
@@ -521,81 +444,4 @@ void level_place_explosion (levelp level,
                            0.5, // density
                            1, // nargs
                            explodes_as);
-}
-
-void level_place_hit_success (levelp level, 
-                              thingp owner,
-                              double x, double y)
-{
-    level_place_spatter(level, 
-                        owner,
-                        x, y,
-                        0, // radius
-                        0.5, // density
-                        1, // nargs
-                        "data/things/hit_success");
-}
-
-void level_place_hit_miss (levelp level, 
-                          thingp owner,
-                          double x, double y)
-{
-    level_place_spatter(level, 
-                        owner,
-                        x, y,
-                        0, // radius
-                        0.5, // density
-                        1, // nargs
-                        "data/things/hit_miss");
-}
-
-void level_place_blood (levelp level, 
-                        thingp owner,
-                        double x, double y)
-{
-    level_place_spatter(level, 
-                        owner,
-                        x, y,
-                        0, // radius
-                        0.5, // density
-                        1, // nargs
-                        "data/things/blood1");
-}
-
-void level_place_blood_crit (levelp level, 
-                             thingp owner,
-                             double x, double y)
-{
-    level_place_spatter(level, 
-                        owner,
-                        x, y,
-                        1, // radius
-                        0.5, // density
-                        1, // nargs
-                        "data/things/blood2");
-}
-
-thingp level_place_bomb (levelp level, 
-                         thingp owner,
-                         double x, double y)
-{
-    widp w = thing_place_behind_or_under(owner,
-                                         id_to_tp(THING_BOMB),
-                                         0 /* itemp */);
-    if (!w) {
-        ERR("could not place bomb");
-        return (0);
-    }
-
-    thingp t = wid_get_thing(w);
-
-    /*
-     * Set no owner. Bombs should kill their owner too!
-     *
-    thing_set_owner(t, owner);
-     */
-
-    thing_wake(t);
-
-    return (t);
 }
