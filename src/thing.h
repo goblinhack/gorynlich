@@ -2225,3 +2225,46 @@ void thing_set_weapon_carry_anim_id(thingp t, uint32_t weapon_carry_anim_id);
 void thing_set_weapon_carry_anim(thingp t, thingp weapon_carry_anim);
 void thing_set_weapon_swing_anim_id(thingp t, uint32_t weapon_swing_anim_id);
 void thing_set_weapon_swing_anim(thingp t, thingp weapon_swing_anim);
+
+/*
+ * thing_explosion.c
+ */
+extern int level_explosion_flash_effect;
+
+void level_place_explosion_at(levelp level,
+                              thingp owner,
+                              double ox, 
+                              double oy, 
+                              double x, 
+                              double y, 
+                              uint8_t dist,
+                              uint8_t epicenter,
+                              uint32_t nargs,
+                              va_list args);
+void level_place_explosion(levelp level, 
+                           thingp owner,
+                           tpp explodes_as,
+                           double x, double y);
+void explosion_flood(levelp level, uint8_t x, uint8_t y);
+
+/*
+ * thing_blood.c
+ */
+void level_place_hit_success(levelp level, 
+                         thingp owner,
+                         double x, double y);
+void level_place_hit_miss(levelp level, 
+                         thingp owner,
+                         double x, double y);
+void level_place_blood(levelp level, 
+                       thingp owner,
+                       double x, double y);
+void level_place_blood_crit(levelp level, 
+                            thingp owner,
+                            double x, double y);
+/*
+ * thing_bomb.c
+ */
+thingp level_place_bomb(levelp level, 
+                        thingp owner,
+                        double x, double y);

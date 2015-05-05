@@ -5,13 +5,11 @@
  is_animated
  is_hidden_from_editor
  is_powerup
- max_hp=200
+ max_hp=300
  scale=0.75
  is_animated_no_dir
  is_powerup_anim
- is_light_source
  hit_priority=100
- light_radius=1.0
  is_collision_map_large
  damage=3
  hit_delay_tenths=1

@@ -103,32 +103,6 @@ uint8_t level_is_ready_to_fade_out(levelp level);
 void level_set_is_paused(levelp level, uint8_t val);
 void level_place_plant_pod(levelp);
 
-extern int level_explosion_flash_effect;
-
-void level_place_explosion(levelp level, 
-                           thingp owner,
-                           tpp explodes_as,
-                           double x, double y);
-void level_place_hit_success(levelp level, 
-                         thingp owner,
-                         double x, double y);
-void level_place_hit_miss(levelp level, 
-                         thingp owner,
-                         double x, double y);
-void level_place_blood(levelp level, 
-                       thingp owner,
-                       double x, double y);
-void level_place_blood_crit(levelp level, 
-                            thingp owner,
-                            double x, double y);
-thingp level_place_bomb(levelp level, 
-                        thingp owner,
-                        double x, double y);
-
-thingp level_place_shield(levelp level, 
-                          thingp owner,
-                          double x, double y);
-
 /*
  * level_trigger.c
  */

@@ -7,11 +7,10 @@
  speed=55
  damage=12
  hit_delay_tenths=1
- is_fragile
  is_projectile
  is_animated
  is_light_source
- light_radius=1.5
+ light_radius=0.5
  is_collision_map_medium
  tiles={
   tile={
