@@ -14,6 +14,7 @@
  is_monst
  is_shadow_caster
  is_shadow_caster_soft
+ is_variable_size
  is_combustable
  explodes_as="data/things/poison1"
  is_poison

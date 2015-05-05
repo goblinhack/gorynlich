@@ -1100,11 +1100,11 @@ static inline uint8_t thing_is_rrr9 (thingp t)
     return (tp_is_rrr9(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr10 (thingp t)
+static inline uint8_t thing_is_variable_size (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr10(thing_tp(t)));
+    return (tp_is_variable_size(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_magical_weapon (thingp t)
@@ -1715,9 +1715,9 @@ static inline uint8_t thing_is_rrr9_noverify (thingp t)
     return (t->tp->is_rrr9);
 }
 
-static inline uint8_t thing_is_rrr10_noverify (thingp t)
+static inline uint8_t thing_is_variable_size_noverify (thingp t)
 {
-    return (t->tp->is_rrr10);
+    return (t->tp->is_variable_size);
 }
 
 static inline uint8_t thing_is_magical_weapon_noverify (thingp t)
