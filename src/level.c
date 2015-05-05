@@ -1551,9 +1551,9 @@ uint32_t level_count_is_rrr9 (levelp level)
     return (level_count_is_x(level, tp_is_rrr9));
 }
 
-uint32_t level_count_is_rrr10 (levelp level)
+uint32_t level_count_is_variable_size (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr10));
+    return (level_count_is_x(level, tp_is_variable_size));
 }
 
 uint32_t level_count_is_magical_weapon (levelp level)
