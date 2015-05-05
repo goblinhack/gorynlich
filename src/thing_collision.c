@@ -555,6 +555,7 @@ if (debug) {
 CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
+//CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             thing_possible_hit_add(it, "monst hit thing");
             return;
         }
@@ -578,7 +579,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_door(it)                   ||
             thing_is_projectile(it)             ||
             thing_is_mob_spawner(it)            ||
-            thing_is_powerup(it)                 ||
+            thing_is_powerup(it)                ||
             thing_is_monst(it)) {
             /*
              * I'm hit!
@@ -588,6 +589,7 @@ if (debug) {
 CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
+//CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             thing_possible_hit_add(it, "object hit thing");
             return;
         }
@@ -628,11 +630,18 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_wall(it)                   ||
             thing_is_sawblade(it)               ||
             thing_is_mob_spawner(it)) {
-            /*
-             * Weapon hits monster or generator
-             */
-            thing_possible_hit_add_hitter_killed_on_hitting(
-                                            it, "projection hit thing");
+//CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
+            if (thing_owner(me) == it) {
+                /*
+                 * Don't hit your owner.
+                 */
+            } else {
+                /*
+                 * Weapon hits monster or generator
+                 */
+                thing_possible_hit_add_hitter_killed_on_hitting(
+                                                it, "projection hit thing");
+            }
         }
     }
 
@@ -647,6 +656,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             /*
              * Weapon hits monster or generator
              */
+//CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             thing_possible_hit_add_hitter_killed_on_hitting(
                                             it, "projection hit thing");
         }
@@ -668,6 +678,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             /*
              * Weapon hits monster or generator.
              */
+//CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             thing_possible_hit_add_hitter_killed_on_hitting(
                                             it, "sword hit thing");
         }
@@ -687,6 +698,7 @@ if (debug) {
 CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
+//CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             thing_possible_hit_add(it, "shield hit thing");
         }
     }
@@ -875,6 +887,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_projectile(it)             ||
                     thing_is_weapon_swing_effect(it)    ||
                     thing_is_powerup(it)                ||
+                    thing_is_explosion(it)              ||
                     thing_is_sawblade(it)               ||
                     thing_is_cloud_effect(it)) {
                     continue;

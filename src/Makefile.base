@@ -13,7 +13,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/config.o			\
     $(OBJDIR)/demarshal.o 		\
     $(OBJDIR)/dir.o 			\
-    $(OBJDIR)/explosion.o 		\
     $(OBJDIR)/file.o 			\
     $(OBJDIR)/font.o 			\
     $(OBJDIR)/geo.o 			\
@@ -53,23 +52,26 @@ GAME_OBJECTS=				\
     $(OBJDIR)/tex.o 			\
     $(OBJDIR)/thing.o 			\
     $(OBJDIR)/thing_ai.o 		\
-    $(OBJDIR)/thing_place.o 		\
     $(OBJDIR)/thing_anim.o 		\
-    $(OBJDIR)/thing_collision.o 	\
-    $(OBJDIR)/thing_effect.o 		\
+    $(OBJDIR)/thing_blood.o 		\
+    $(OBJDIR)/thing_bomb.o 		\
     $(OBJDIR)/thing_client.o 		\
-    $(OBJDIR)/thing_server.o 		\
+    $(OBJDIR)/thing_collision.o 	\
+    $(OBJDIR)/thing_damage.o 		\
+    $(OBJDIR)/thing_effect.o 		\
+    $(OBJDIR)/thing_explosion.o 	\
     $(OBJDIR)/thing_item.o 		\
     $(OBJDIR)/thing_mob_spawn.o 	\
+    $(OBJDIR)/thing_place.o 		\
+    $(OBJDIR)/thing_server.o 		\
+    $(OBJDIR)/thing_shield.o 		\
     $(OBJDIR)/thing_stats.o 		\
     $(OBJDIR)/thing_template.o 		\
     $(OBJDIR)/thing_tick.o 		\
     $(OBJDIR)/thing_tile.o 		\
     $(OBJDIR)/thing_timer.o 		\
-    $(OBJDIR)/thing_weapon.o 		\
-    $(OBJDIR)/thing_shield.o 		\
     $(OBJDIR)/thing_torch.o 		\
-    $(OBJDIR)/thing_damage.o 		\
+    $(OBJDIR)/thing_weapon.o 		\
     $(OBJDIR)/tile.o 			\
     $(OBJDIR)/time.o 			\
     $(OBJDIR)/timer.o 			\
@@ -86,6 +88,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_choose_name.o 	\
     $(OBJDIR)/wid_choose_pclass.o 	\
     $(OBJDIR)/wid_choose_stats.o 	\
+    $(OBJDIR)/wid_cmap.o 		\
     $(OBJDIR)/wid_console.o 		\
     $(OBJDIR)/wid_dead.o 		\
     $(OBJDIR)/wid_dirlist.o 		\
@@ -99,17 +102,16 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_intro_about.o 	\
     $(OBJDIR)/wid_intro_demo.o 		\
     $(OBJDIR)/wid_intro_settings.o 	\
+    $(OBJDIR)/wid_keyboard.o 		\
+    $(OBJDIR)/wid_map.o 		\
+    $(OBJDIR)/wid_menu.o 		\
     $(OBJDIR)/wid_notify.o 		\
+    $(OBJDIR)/wid_numpad.o 		\
     $(OBJDIR)/wid_player_action.o 	\
     $(OBJDIR)/wid_player_info.o 	\
     $(OBJDIR)/wid_player_inventory.o 	\
     $(OBJDIR)/wid_player_stats.o 	\
     $(OBJDIR)/wid_popup.o 		\
-    $(OBJDIR)/wid_menu.o 		\
-    $(OBJDIR)/wid_keyboard.o 		\
-    $(OBJDIR)/wid_numpad.o 		\
-    $(OBJDIR)/wid_map.o 		\
-    $(OBJDIR)/wid_cmap.o 		\
     $(OBJDIR)/wid_server_create.o 	\
     $(OBJDIR)/wid_server_edit.o 	\
     $(OBJDIR)/wid_server_join.o 	\

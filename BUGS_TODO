@@ -1,8 +1,10 @@
 --------------------------------------- plan for may --------------------------------------
-- change update to a loop, not tree walk
+- wizard cannot shoot diagonally up
+- bomb did not appear
 - fireball and plasmaball firing
 - display attack/defense stats on screen
-- show little bars when hovering over an item as to its abilities
+- show little bars when hovering over an item as to its abilities, sho attack/defese/shield
+- shields should be additive when used
 - xp level and hp increase per level
 - defense must do something
 - speed must do something
@@ -12,6 +14,7 @@
 - magic attack - green fireball?
 - attack magical must do something
 - make cheese holy
+- change update to a loop, not tree walk
 --------------------------------------- plan for june --------------------------------------
 - sound effects for weapons and hits http://www.bfxr.net/
 - sound on momey collect
@@ -61,6 +64,10 @@ thief, kill thief to recover items
 mining?
 add bot to test out multiplayer ?
 different profiles for level generation
+
+Mon May  4 22:36:17 EDT 2015
+- once caught in blood splatter cannot escape
+- explosion not layered any more
 
 Sun May  3 07:46:51 EDT 2015
 - exploding slime and configurable explodes as
