@@ -1,6 +1,5 @@
 --------------------------------------- plan for may --------------------------------------
 - wizard cannot shoot diagonally up
-- bomb did not appear
 - fireball and plasmaball firing
 - display attack/defense stats on screen
 - show little bars when hovering over an item as to its abilities, sho attack/defese/shield
@@ -66,6 +65,8 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Mon May  4 22:36:17 EDT 2015
+- variable size slimes
+- bomb did not appear
 - once caught in blood splatter cannot escape
 - explosion not layered any more
 

@@ -955,6 +955,15 @@ wid_game_map_client_replace_tile (widp w,
      * Does it appear as a different size on screen?
      */
     double scale = tp_get_scale(tp);
+
+    /*
+     * So we have baby and bigger slimes. But alas this is visual only and has 
+     * no effect on hp on the server yet.
+     */
+    if (thing_is_variable_size(t)) {
+        scale += gaussrand(0.0, 0.1);
+    }
+
     if (scale != 1.0) {
         wid_scaling_blit_to_pct_in(child, scale, scale, 500, 9999999);
     }
