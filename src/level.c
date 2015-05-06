@@ -1466,9 +1466,9 @@ uint32_t level_count_is_animation (levelp level)
     return (level_count_is_x(level, tp_is_animation));
 }
 
-uint32_t level_count_is_gas_cloud (levelp level)
+uint32_t level_count_is_non_explosive_gas_cloud (levelp level)
 {
-    return (level_count_is_x(level, tp_is_gas_cloud));
+    return (level_count_is_x(level, tp_is_non_explosive_gas_cloud));
 }
 
 uint32_t level_count_is_item_unusable (levelp level)
@@ -1546,9 +1546,9 @@ uint32_t level_count_is_rrr8 (levelp level)
     return (level_count_is_x(level, tp_is_rrr8));
 }
 
-uint32_t level_count_is_rrr9 (levelp level)
+uint32_t level_count_is_ethereal (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr9));
+    return (level_count_is_x(level, tp_is_ethereal));
 }
 
 uint32_t level_count_is_variable_size (levelp level)
