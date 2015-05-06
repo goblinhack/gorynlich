@@ -429,8 +429,8 @@ void level_place_explosion (levelp level,
         return;
     }
 
-    tpp gas_cloud = tp_find(explodes_as);
-    if (!gas_cloud) {
+    tpp non_explosive_gas_cloud = tp_find(explodes_as);
+    if (!non_explosive_gas_cloud) {
         ERR("no explosion for name %s", explodes_as);
         return;
     }
@@ -440,7 +440,7 @@ void level_place_explosion (levelp level,
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           tp_get_explosion_radius(gas_cloud),
+                           tp_get_explosion_radius(non_explosive_gas_cloud),
                            0.5, // density
                            1, // nargs
                            explodes_as);
