@@ -20,6 +20,7 @@ typedef struct {
     const char *reason;
     uint16_t priority;
     uint8_t hitter_killed_on_hitting:1;
+    uint8_t hitter_killed_on_hit_or_miss:1;
 } thing_possible_hit;
 
 #define MAX_THING_POSSIBLE_HIT 16
@@ -33,7 +34,8 @@ static uint32_t thing_possible_hit_size;
 static void 
 thing_possible_hit_add_hitter_killed_on_hitting_ (thingp target,
                                                   const char *reason,
-                                                  int hitter_killed_on_hitting)
+                                                  int hitter_killed_on_hitting,
+                                                  int hitter_killed_on_hit_or_miss)
 {
     if (thing_possible_hit_size >= MAX_THING_POSSIBLE_HIT) {
         return;
@@ -44,6 +46,7 @@ thing_possible_hit_add_hitter_killed_on_hitting_ (thingp target,
     h->target = target;
     h->priority = tp_get_hit_priority(target->tp);
     h->hitter_killed_on_hitting = hitter_killed_on_hitting;
+    h->hitter_killed_on_hit_or_miss = hitter_killed_on_hit_or_miss;
 }
 
 static void 
@@ -51,6 +54,7 @@ thing_possible_hit_add (thingp target, const char *reason)
 {
     thing_possible_hit_add_hitter_killed_on_hitting_(target,
                                                      reason,
+                                                     false,
                                                      false);
 }
 
@@ -60,6 +64,17 @@ thing_possible_hit_add_hitter_killed_on_hitting (thingp target,
 {
     thing_possible_hit_add_hitter_killed_on_hitting_(target,
                                                      reason,
+                                                     true,
+                                                     false);
+}
+
+static void 
+thing_possible_hit_add_hitter_killed_on_hit_or_miss (thingp target,
+                                                 const char *reason)
+{
+    thing_possible_hit_add_hitter_killed_on_hitting_(target,
+                                                     reason,
+                                                     false,
                                                      true);
 }
 
@@ -121,18 +136,20 @@ static void thing_possible_hit_do (thingp hitter)
                 best = cand;
             }
         }
-#if 0
-if (debug) {
-CON("hitter %s target %s",thing_logname(hitter),thing_logname(cand->target));
-}
-#endif
+//CON("hitter %s target 
+//%s",thing_logname(hitter),thing_logname(cand->target));
     }
 
     if (best) {
+//CON("hitter %s best %s and hitter_killed_on_hitting 
+//%d",thing_logname(hitter),thing_logname(best->target), 
+//best->hitter_killed_on_hitting);
         if (thing_hit(best->target, hitter, 0)) {
             if (best->hitter_killed_on_hitting) {
                 thing_dead(hitter, 0, "hit");
             }
+        } else if (best->hitter_killed_on_hit_or_miss) {
+            thing_dead(hitter, 0, "hit");
         }
     }
 
@@ -668,7 +685,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
                 /*
                  * Weapon hits monster or generator
                  */
-                thing_possible_hit_add_hitter_killed_on_hitting(
+                thing_possible_hit_add_hitter_killed_on_hit_or_miss(
                                                 it, "projection hit thing");
                 return;
             }
@@ -687,7 +704,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
              * Weapon hits monster or generator
              */
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
-            thing_possible_hit_add_hitter_killed_on_hitting(
+            thing_possible_hit_add_hitter_killed_on_hit_or_miss(
                                             it, "projection hit thing");
             return;
         }
