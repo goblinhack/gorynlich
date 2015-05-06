@@ -239,9 +239,9 @@ uint8_t map_is_fire_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_fire));
 }
 
-uint8_t map_is_gas_cloud_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_non_explosive_gas_cloud_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_gas_cloud));
+    return (map_is_x_at(level, x, y, tp_is_non_explosive_gas_cloud));
 }
 
 uint8_t map_is_item_unusable_at (levelp level, int32_t x, int32_t y)
@@ -319,9 +319,9 @@ uint8_t map_is_rrr8_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr8));
 }
 
-uint8_t map_is_rrr9_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_ethereal_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr9));
+    return (map_is_x_at(level, x, y, tp_is_ethereal));
 }
 
 uint8_t map_is_variable_size_at (levelp level, int32_t x, int32_t y)
@@ -701,9 +701,9 @@ thingp map_thing_is_animation_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_animation));
 }
 
-thingp map_thing_is_gas_cloud_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_non_explosive_gas_cloud_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_gas_cloud));
+    return (map_thing_is_x_at(level, x, y, tp_is_non_explosive_gas_cloud));
 }
 
 thingp map_thing_is_item_unusable_at (levelp level, int32_t x, int32_t y)
@@ -781,9 +781,9 @@ thingp map_thing_is_rrr8_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr8));
 }
 
-thingp map_thing_is_rrr9_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_ethereal_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr9));
+    return (map_thing_is_x_at(level, x, y, tp_is_ethereal));
 }
 
 thingp map_thing_is_variable_size_at (levelp level, int32_t x, int32_t y)
@@ -1179,9 +1179,9 @@ tree_rootp map_all_things_is_animation_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_animation));
 }
 
-tree_rootp map_all_things_is_gas_cloud_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_non_explosive_gas_cloud_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_gas_cloud));
+    return (map_all_things_is_x_at(level, x, y, tp_is_non_explosive_gas_cloud));
 }
 
 tree_rootp map_all_things_is_item_unusable_at (levelp level, int32_t x, int32_t y)
@@ -1259,9 +1259,9 @@ tree_rootp map_all_things_is_rrr8_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr8));
 }
 
-tree_rootp map_all_things_is_rrr9_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_ethereal_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr9));
+    return (map_all_things_is_x_at(level, x, y, tp_is_ethereal));
 }
 
 tree_rootp map_all_things_is_variable_size_at (levelp level, int32_t x, int32_t y)
@@ -1739,7 +1739,7 @@ tpp map_find_explosion_at (levelp level,
 tpp map_find_spikes_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_gas_cloud, w));
+    return (map_find_x_at(level, x, y, tp_is_non_explosive_gas_cloud, w));
 }
 
 tpp map_find_is_item_unusable_at (levelp level,
@@ -1827,9 +1827,9 @@ tpp map_find_rrr8_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr8, w));
 }
 
-tpp map_find_rrr9_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_ethereal_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr9, w));
+    return (map_find_x_at(level, x, y, tp_is_ethereal, w));
 }
 
 tpp map_find_variable_size_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2568,9 +2568,9 @@ tree_rootp map_all_things_is_animation (levelp level)
     return (map_all_things_is_x(level, tp_is_animation));
 }
 
-tree_rootp map_all_things_is_gas_cloud (levelp level)
+tree_rootp map_all_things_is_non_explosive_gas_cloud (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_gas_cloud));
+    return (map_all_things_is_x(level, tp_is_non_explosive_gas_cloud));
 }
 
 tree_rootp map_all_things_is_item_unusable (levelp level)
@@ -2648,9 +2648,9 @@ tree_rootp map_all_things_is_rrr8 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr8));
 }
 
-tree_rootp map_all_things_is_rrr9 (levelp level)
+tree_rootp map_all_things_is_ethereal (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr9));
+    return (map_all_things_is_x(level, tp_is_ethereal));
 }
 
 tree_rootp map_all_things_is_variable_size (levelp level)

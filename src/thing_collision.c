@@ -507,7 +507,6 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
          * Player bumped into something.
          */
         if (thing_is_monst(it)                  || 
-            thing_is_gas_cloud(it)              ||
             thing_is_powerup(it)                ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_cloud_effect(it)) {
@@ -543,7 +542,6 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
          * Monster bumped into something.
          */
         if (thing_is_player(it)                 ||
-            thing_is_gas_cloud(it)              ||
             thing_is_powerup(it)                ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_cloud_effect(it)) {
@@ -570,6 +568,38 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
      * If spinning blades or moving wall hit something?
      */
     if ((thing_is_wall(me) || thing_is_sawblade(me)) && me->on_active_list) {
+
+        if (thing_is_sawblade(me)) {
+            /*
+             * Sawblades are tricky. We want them to be covered in blood and 
+             * to do that they need to polymorph and essentially die on the 
+             * first hit.
+             */
+            if (thing_is_warm_blooded(it)) {
+                uint16_t id = tp_to_id(me->tp);
+                switch (id) {
+                case THING_SAWBLADE1:
+                case THING_SAWBLADE2:
+                case THING_SAWBLADE3:
+                case THING_SAWBLADE4:
+                    thing_possible_hit_add_hitter_killed_on_hitting(
+                                                    it, "projection hit thing");
+                    return;
+
+                default:
+                    break;
+                }
+            }
+
+        }
+
+        /*
+         * Allow things like death to walk unharmed through walls.
+         */
+        if (thing_is_ethereal(it)) {
+            return;
+        }
+
         /*
          * Wall is crushing something
          */
@@ -577,7 +607,6 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_treasure(it)               ||
             thing_is_food(it)                   ||
             thing_is_door(it)                   ||
-            thing_is_projectile(it)             ||
             thing_is_mob_spawner(it)            ||
             thing_is_powerup(it)                ||
             thing_is_monst(it)) {
@@ -641,6 +670,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
                  */
                 thing_possible_hit_add_hitter_killed_on_hitting(
                                                 it, "projection hit thing");
+                return;
             }
         }
     }
@@ -648,7 +678,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
     /*
      * Poison cloud hit something?
      */
-    if (thing_is_gas_cloud(me)) {
+    if (thing_is_non_explosive_gas_cloud(me)) {
 
         if (thing_is_monst(it)                  || 
             thing_is_player(it)                 ||
@@ -659,6 +689,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             thing_possible_hit_add_hitter_killed_on_hitting(
                                             it, "projection hit thing");
+            return;
         }
     }
 
@@ -681,6 +712,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             thing_possible_hit_add_hitter_killed_on_hitting(
                                             it, "sword hit thing");
+            return;
         }
     }
 
@@ -700,6 +732,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 #endif
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             thing_possible_hit_add(it, "shield hit thing");
+            return;
         }
     }
 }
@@ -835,7 +868,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_weapon_swing_effect(it)    ||
                     thing_is_powerup(it)                ||
                     thing_is_explosion(it)              ||
-                    thing_is_gas_cloud(it)              ||
+                    thing_is_non_explosive_gas_cloud(it)              ||
                     thing_is_projectile(it)             ||
                     thing_is_treasure(it)               ||
                     thing_is_weapon(it)                 ||

@@ -19,7 +19,6 @@
  * Using static memory as these things never change once made.
  */
 thing_template thing_templates_chunk[THING_MAX];
-static uint32_t thing_templates_chunk_count;
 
 tree_root *thing_templates;
 tree_root *thing_templates_create_order;
@@ -182,7 +181,7 @@ static void tp_fill_cache (tpp t)
     }
 }
 
-tpp tp_load (uint16_t *id, const char *name)
+tpp tp_load (uint16_t id, const char *name)
 {
     tpp t;
     demarshal_p in;
@@ -201,17 +200,14 @@ tpp tp_load (uint16_t *id, const char *name)
                                    "TREE ROOT: thing create order");
     }
 
-    if (thing_templates_chunk_count >= THING_MAX - 1) {
+    if (id >= THING_MAX - 1) {
         DIE("too many thing templates");
     }
 
-    t = &thing_templates_chunk[thing_templates_chunk_count];
+    t = &thing_templates_chunk[id];
     t->tree.key = dupstr(name, "TREE KEY: thing");
 
-    *id = thing_templates_chunk_count;
-    t->id = *id;
-
-    thing_templates_chunk_count++;
+    t->id = id;
 
     if (!tree_insert_static(thing_templates, &t->tree.node)) {
         DIE("thing template insert name [%s] failed", name);
@@ -574,7 +570,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
         GET_OPT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
         GET_OPT_NAMED_BITFIELD(ctx, "is_animation", t->is_animation);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_gas_cloud", t->is_gas_cloud);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_non_explosive_gas_cloud", t->is_non_explosive_gas_cloud);
         GET_OPT_NAMED_BITFIELD(ctx, "is_carryable", t->is_carryable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_valid_for_action_bar", t->is_valid_for_action_bar);
@@ -591,7 +587,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr7", t->is_rrr7);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr8", t->is_rrr8);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_ethereal", t->is_ethereal);
         GET_OPT_NAMED_BITFIELD(ctx, "is_variable_size", t->is_variable_size);
         GET_OPT_NAMED_BITFIELD(ctx, "is_variable_size", t->is_variable_size);
         GET_OPT_NAMED_BITFIELD(ctx, "is_magical_weapon", t->is_magical_weapon);
@@ -779,7 +775,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
     PUT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
     PUT_NAMED_BITFIELD(ctx, "is_animation", t->is_animation);
-    PUT_NAMED_BITFIELD(ctx, "is_gas_cloud", t->is_gas_cloud);
+    PUT_NAMED_BITFIELD(ctx, "is_non_explosive_gas_cloud", t->is_non_explosive_gas_cloud);
     PUT_NAMED_BITFIELD(ctx, "is_carryable", t->is_carryable);
     PUT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
     PUT_NAMED_BITFIELD(ctx, "is_valid_for_action_bar", t->is_valid_for_action_bar);
@@ -796,7 +792,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
     PUT_NAMED_BITFIELD(ctx, "is_rrr7", t->is_rrr7);
     PUT_NAMED_BITFIELD(ctx, "is_rrr8", t->is_rrr8);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
+    PUT_NAMED_BITFIELD(ctx, "is_ethereal", t->is_ethereal);
     PUT_NAMED_BITFIELD(ctx, "is_variable_size", t->is_variable_size);
     PUT_NAMED_BITFIELD(ctx, "is_variable_size", t->is_variable_size);
     PUT_NAMED_BITFIELD(ctx, "is_magical_weapon", t->is_magical_weapon);
