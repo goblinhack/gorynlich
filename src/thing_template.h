@@ -246,7 +246,7 @@ typedef struct tp_ {
     uint8_t is_ring:1;
     uint8_t is_animation:1;
     uint8_t is_shadow_caster_soft:1;
-    uint8_t is_gas_cloud:1;
+    uint8_t is_non_explosive_gas_cloud:1;
     uint8_t is_carryable:1;
     uint8_t is_item_unusable:1;
     uint8_t is_valid_for_action_bar:1;
@@ -263,7 +263,7 @@ typedef struct tp_ {
     uint8_t is_rrr6:1;
     uint8_t is_rrr7:1;
     uint8_t is_rrr8:1;
-    uint8_t is_rrr9:1;
+    uint8_t is_ethereal:1;
     uint8_t is_variable_size:1;
     uint8_t is_magical_weapon:1;
     uint8_t is_ranged_weapon:1;
@@ -351,7 +351,7 @@ typedef struct tpp_data_ {
 
 uint8_t tp_init(void);
 void tp_fini(void);
-tpp tp_load(uint16_t *id, const char *file);
+tpp tp_load(uint16_t id, const char *file);
 tpp tp_find(const char *name);
 tpp tp_find_short_name(const char *name);
 void demarshal_thing_template(demarshal_p ctx, tpp);
@@ -568,9 +568,9 @@ static inline uint8_t tp_is_collision_map_large (tpp t)
     return (t->is_collision_map_large);
 }
 
-static inline uint8_t tp_is_gas_cloud (tpp t)
+static inline uint8_t tp_is_non_explosive_gas_cloud (tpp t)
 {
-    return (t->is_gas_cloud);
+    return (t->is_non_explosive_gas_cloud);
 }
 
 static inline uint8_t tp_is_item_unusable (tpp t)
@@ -653,9 +653,9 @@ static inline uint8_t tp_is_rrr8 (tpp t)
     return (t->is_rrr8);
 }
 
-static inline uint8_t tp_is_rrr9 (tpp t)
+static inline uint8_t tp_is_ethereal (tpp t)
 {
-    return (t->is_rrr9);
+    return (t->is_ethereal);
 }
 
 static inline uint8_t tp_is_variable_size (tpp t)

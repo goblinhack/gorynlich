@@ -317,150 +317,153 @@ void thing_client_move(thingp t,
 void thing_set_owner_id(thingp t, uint32_t owner_id);
 void thing_set_owner(thingp t, thingp owner);
 
-extern uint16_t THING_WALL1;
-extern uint16_t THING_WALL_LIT1;
-extern uint16_t THING_ROCK1;
-extern uint16_t THING_WALL2;
-extern uint16_t THING_WALL3;
-extern uint16_t THING_WALL4;
-extern uint16_t THING_WALL5;
-extern uint16_t THING_WALL6;
-extern uint16_t THING_DOOR1;
-extern uint16_t THING_DOOR2;
-extern uint16_t THING_SAWBLADE1;
-extern uint16_t THING_SAWBLADE2;
-extern uint16_t THING_SAWBLADE3;
-extern uint16_t THING_SAWBLADE4;
-extern uint16_t THING_SAWBLADE5;
-extern uint16_t THING_NOENTRY;
-extern uint16_t THING_APPLE1;
-extern uint16_t THING_APPLE2;
-extern uint16_t THING_BANANA;
-extern uint16_t THING_CHEESE;
-extern uint16_t THING_BREAD;
-extern uint16_t THING_FLOOR1;
-extern uint16_t THING_FLOOR2;
-extern uint16_t THING_FLOOR3;
-extern uint16_t THING_FLOOR4;
-extern uint16_t THING_FLOOR5;
-extern uint16_t THING_FLOOR6;
-extern uint16_t THING_WARRIOR;
-extern uint16_t THING_VALKYRIE;
-extern uint16_t THING_WIZARD;
-extern uint16_t THING_ELF;
-extern uint16_t THING_DWARF;
-extern uint16_t THING_GHOST1;
-extern uint16_t THING_GHOST2;
-extern uint16_t THING_GHOST3;
-extern uint16_t THING_SLIME1;
-extern uint16_t THING_SLIME2;
-extern uint16_t THING_SLIME3;
-extern uint16_t THING_DEMON1;
-extern uint16_t THING_BABY_CTHULU;
-extern uint16_t THING_EYEBAWL;
-extern uint16_t THING_DEMON;
-extern uint16_t THING_MONK;
-extern uint16_t THING_LIZARD;
-extern uint16_t THING_DEATH;
-extern uint16_t THING_WAND1_ANIM;
-extern uint16_t THING_SWORD1_ANIM;
-extern uint16_t THING_SWORD2_ANIM;
-extern uint16_t THING_SWORD3_ANIM;
-extern uint16_t THING_BOW1_ANIM;
-extern uint16_t THING_AXE1_ANIM;
-extern uint16_t THING_AXE2_ANIM;
-extern uint16_t THING_SCYTHE1_ANIM;
-extern uint16_t THING_ANIM_MAN;
-extern uint16_t THING_ANIM_TREASURE_CHEST;
-extern uint16_t THING_ANIM_EYES;
-extern uint16_t THING_PIPE;
-extern uint16_t THING_WEAPON_HIT1;
-extern uint16_t THING_EXPLOSION1;
-extern uint16_t THING_EXPLOSION2;
-extern uint16_t THING_EXPLOSION3;
-extern uint16_t THING_EXPLOSION4;
-extern uint16_t THING_SHIELD1;
-extern uint16_t THING_POWERUP1;
-extern uint16_t THING_HIT_SUCCESS;
-extern uint16_t THING_HIT_MISS;
-extern uint16_t THING_HEART;
-extern uint16_t THING_BLOOD1;
-extern uint16_t THING_BLOOD2;
-extern uint16_t THING_ACTION_LEFT;
-extern uint16_t THING_ACTION_RIGHT;
-extern uint16_t THING_ACTION_UP;
-extern uint16_t THING_ACTION_DOWN;
-extern uint16_t THING_ACTION_TRIGGER_HERO;
-extern uint16_t THING_ACTION_TRIGGER_WALL;
-extern uint16_t THING_ACTION_TRIGGER_MONST;
-extern uint16_t THING_ACTION_SLEEP;
-extern uint16_t THING_ACTION_TEXT;
-extern uint16_t THING_ACTION_ZAP;
-extern uint16_t THING_POISON1;
-extern uint16_t THING_POISON2;
-extern uint16_t THING_CLOUDKILL1;
-extern uint16_t THING_SPAM;
-extern uint16_t THING_POTION_MONSTICIDE;
-extern uint16_t THING_POTION_FIRE;
-extern uint16_t THING_POTION_CLOUDKILL;
-extern uint16_t THING_POTION_LIFE;
-extern uint16_t THING_POTION_SHIELD;
-extern uint16_t THING_WATER;
-extern uint16_t THING_WATER_POISON;
-extern uint16_t THING_MASK1;
-extern uint16_t THING_RING2;
-extern uint16_t THING_RING3;
-extern uint16_t THING_GEM1;
-extern uint16_t THING_GEM2;
-extern uint16_t THING_GEM3;
-extern uint16_t THING_GEM4;
-extern uint16_t THING_GEM5;
-extern uint16_t THING_GEM6;
-extern uint16_t THING_GEM7;
-extern uint16_t THING_BRAZIER;
-extern uint16_t THING_EXIT1;
-extern uint16_t THING_EXIT2;
-extern uint16_t THING_EXIT3;
-extern uint16_t THING_EXIT4;
-extern uint16_t THING_EXIT5;
-extern uint16_t THING_EXIT6;
-extern uint16_t THING_EXIT7;
-extern uint16_t THING_GENERATOR1;
-extern uint16_t THING_BONEPILE1;
-extern uint16_t THING_BONEPILE2;
-extern uint16_t THING_BONEPILE3;
-extern uint16_t THING_GENERATOR5;
-extern uint16_t THING_GENERATOR6;
-extern uint16_t THING_GENERATOR7;
-extern uint16_t THING_BOMB;
-extern uint16_t THING_BOW1;
-extern uint16_t THING_BOW2;
-extern uint16_t THING_BOW3;
-extern uint16_t THING_BOW4;
-extern uint16_t THING_WAND_FIRE;
-extern uint16_t THING_SWORD1;
-extern uint16_t THING_SWORD2;
-extern uint16_t THING_SWORD3;
-extern uint16_t THING_SWORD4;
-extern uint16_t THING_SWORD5;
-extern uint16_t THING_SWORD6;
-extern uint16_t THING_AXE1;
-extern uint16_t THING_AXE2;
-extern uint16_t THING_AXE3;
-extern uint16_t THING_AXE4;
-extern uint16_t THING_AXE5;
-extern uint16_t THING_SCYTHE1;
-extern uint16_t THING_KEY;
-extern uint16_t THING_KEYS2;
-extern uint16_t THING_KEYS3;
-extern uint16_t THING_TORCH;
-extern uint16_t THING_TORCHES;
-extern uint16_t THING_COINS1;
-extern uint16_t THING_CHEST1;
-extern uint16_t THING_ARROW;
-extern uint16_t THING_FIREBALL1;
-extern uint16_t THING_FIREBALL2;
-extern uint16_t THING_PLASMABALL1;
+enum {
+    THING_NONE,
+    THING_WALL1,
+    THING_WALL_LIT1,
+    THING_ROCK1,
+    THING_WALL2,
+    THING_WALL3,
+    THING_WALL4,
+    THING_WALL5,
+    THING_WALL6,
+    THING_DOOR1,
+    THING_DOOR2,
+    THING_SAWBLADE1,
+    THING_SAWBLADE2,
+    THING_SAWBLADE3,
+    THING_SAWBLADE4,
+    THING_SAWBLADE5,
+    THING_NOENTRY,
+    THING_APPLE1,
+    THING_APPLE2,
+    THING_BANANA,
+    THING_CHEESE,
+    THING_BREAD,
+    THING_FLOOR1,
+    THING_FLOOR2,
+    THING_FLOOR3,
+    THING_FLOOR4,
+    THING_FLOOR5,
+    THING_FLOOR6,
+    THING_WARRIOR,
+    THING_VALKYRIE,
+    THING_WIZARD,
+    THING_ELF,
+    THING_DWARF,
+    THING_GHOST1,
+    THING_GHOST2,
+    THING_GHOST3,
+    THING_SLIME1,
+    THING_SLIME2,
+    THING_SLIME3,
+    THING_DEMON1,
+    THING_BABY_CTHULU,
+    THING_EYEBAWL,
+    THING_DEMON,
+    THING_MONK,
+    THING_LIZARD,
+    THING_DEATH,
+    THING_WAND1_ANIM,
+    THING_SWORD1_ANIM,
+    THING_SWORD2_ANIM,
+    THING_SWORD3_ANIM,
+    THING_BOW1_ANIM,
+    THING_AXE1_ANIM,
+    THING_AXE2_ANIM,
+    THING_SCYTHE1_ANIM,
+    THING_ANIM_MAN,
+    THING_ANIM_TREASURE_CHEST,
+    THING_ANIM_EYES,
+    THING_PIPE,
+    THING_WEAPON_HIT1,
+    THING_EXPLOSION1,
+    THING_EXPLOSION2,
+    THING_EXPLOSION3,
+    THING_EXPLOSION4,
+    THING_SHIELD1,
+    THING_POWERUP1,
+    THING_HIT_SUCCESS,
+    THING_HIT_MISS,
+    THING_HEART,
+    THING_BLOOD1,
+    THING_BLOOD2,
+    THING_ACTION_LEFT,
+    THING_ACTION_RIGHT,
+    THING_ACTION_UP,
+    THING_ACTION_DOWN,
+    THING_ACTION_TRIGGER_HERO,
+    THING_ACTION_TRIGGER_WALL,
+    THING_ACTION_TRIGGER_MONST,
+    THING_ACTION_SLEEP,
+    THING_ACTION_TEXT,
+    THING_ACTION_ZAP,
+    THING_POISON1,
+    THING_POISON2,
+    THING_CLOUDKILL1,
+    THING_SPAM,
+    THING_POTION_MONSTICIDE,
+    THING_POTION_FIRE,
+    THING_POTION_CLOUDKILL,
+    THING_POTION_LIFE,
+    THING_POTION_SHIELD,
+    THING_WATER,
+    THING_WATER_POISON,
+    THING_MASK1,
+    THING_RING2,
+    THING_RING3,
+    THING_GEM1,
+    THING_GEM2,
+    THING_GEM3,
+    THING_GEM4,
+    THING_GEM5,
+    THING_GEM6,
+    THING_GEM7,
+    THING_BRAZIER,
+    THING_EXIT1,
+    THING_EXIT2,
+    THING_EXIT3,
+    THING_EXIT4,
+    THING_EXIT5,
+    THING_EXIT6,
+    THING_EXIT7,
+    THING_GENERATOR1,
+    THING_BONEPILE1,
+    THING_BONEPILE2,
+    THING_BONEPILE3,
+    THING_GENERATOR5,
+    THING_GENERATOR6,
+    THING_GENERATOR7,
+    THING_BOMB,
+    THING_BOW1,
+    THING_BOW2,
+    THING_BOW3,
+    THING_BOW4,
+    THING_WAND_FIRE,
+    THING_SWORD1,
+    THING_SWORD2,
+    THING_SWORD3,
+    THING_SWORD4,
+    THING_SWORD5,
+    THING_SWORD6,
+    THING_AXE1,
+    THING_AXE2,
+    THING_AXE3,
+    THING_AXE4,
+    THING_AXE5,
+    THING_SCYTHE1,
+    THING_KEY,
+    THING_KEYS2,
+    THING_KEYS3,
+    THING_TORCH,
+    THING_TORCHES,
+    THING_COINS1,
+    THING_CHEST1,
+    THING_ARROW,
+    THING_FIREBALL1,
+    THING_FIREBALL2,
+    THING_PLASMABALL1,
+};
 
 typedef struct thing_ {
     tree_key_int tree;
@@ -988,11 +991,11 @@ static inline uint8_t thing_is_animation (thingp t)
     return (tp_is_animation(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_gas_cloud (thingp t)
+static inline uint8_t thing_is_non_explosive_gas_cloud (thingp t)
 {
     verify(t);
 
-    return (tp_is_gas_cloud(thing_tp(t)));
+    return (tp_is_non_explosive_gas_cloud(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_item_unusable (thingp t)
@@ -1093,11 +1096,11 @@ static inline uint8_t thing_is_rrr8 (thingp t)
     return (tp_is_rrr8(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr9 (thingp t)
+static inline uint8_t thing_is_ethereal (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr9(thing_tp(t)));
+    return (tp_is_ethereal(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_variable_size (thingp t)
@@ -1635,9 +1638,9 @@ static inline uint8_t thing_is_animation_noverify (thingp t)
     return (t->tp->is_animation);
 }
 
-static inline uint8_t thing_is_gas_cloud_noverify (thingp t)
+static inline uint8_t thing_is_non_explosive_gas_cloud_noverify (thingp t)
 {
-    return (t->tp->is_gas_cloud);
+    return (t->tp->is_non_explosive_gas_cloud);
 }
 
 static inline uint8_t thing_is_item_unusable_noverify (thingp t)
@@ -1710,9 +1713,9 @@ static inline uint8_t thing_is_rrr8_noverify (thingp t)
     return (t->tp->is_rrr8);
 }
 
-static inline uint8_t thing_is_rrr9_noverify (thingp t)
+static inline uint8_t thing_is_ethereal_noverify (thingp t)
 {
-    return (t->tp->is_rrr9);
+    return (t->tp->is_ethereal);
 }
 
 static inline uint8_t thing_is_variable_size_noverify (thingp t)
