@@ -295,7 +295,11 @@ void thing_server_fire (thingp t,
     thing_weapon_check_for_damage_on_firing(t, weapon);
 
     double dx, dy;
-    double dist_from_player = 0.1;
+
+    /*
+     * Any smaller than this and diagonal shots collide with adjoining walls.
+     */
+    double dist_from_player = 0.7;
 
     /*
      * Try current direction.
