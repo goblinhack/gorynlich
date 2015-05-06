@@ -1858,13 +1858,8 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     tpp weapon = 0;
 
 #if 0
-if (1)  {
-if (thing_is_powerup(t)) {
+if (hitter) {
 CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
-}
-if (thing_is_powerup(hitter)) {
-CON("%s is hitting %s",thing_logname(hitter), thing_logname(t));
-}
 }
 #endif
     verify(t);
