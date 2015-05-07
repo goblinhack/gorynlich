@@ -6,8 +6,8 @@
  speed=3
  max_hp=150
  damage=8
- bonus_xp_on_death=50
- vision_distance=20
+ bonus_xp_on_death=500
+ vision_distance=10
  hit_delay_tenths=10
  is_monst
  is_shadow_caster
