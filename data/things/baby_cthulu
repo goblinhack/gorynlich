@@ -18,7 +18,7 @@
  is_collision_map_large
  is_animated
  fires="data/things/plasmaball1"
- weapon_fire_delay_hundredths=1500
+ weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=5
  tiles={
   tile={ delay=150 tile="baby-cthulu1" }
