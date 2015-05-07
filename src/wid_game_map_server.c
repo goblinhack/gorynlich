@@ -245,7 +245,8 @@ wid_game_map_server_replace_tile (widp w,
          */
         if (tp_is_action_trigger(tp)) {
             if (!data) {
-                DIE("expecting data for %s", tp_name(tp));
+                ERR("expecting trigger data for %s", tp_name(tp));
+                return (0);
             }
 
             level_trigger_alloc(level, data->col_name);
@@ -331,13 +332,14 @@ wid_game_map_server_replace_tile (widp w,
      * Grow tl and br to fit the template thing. Use the first tile.
      */
     if (!tp) {
-        DIE("no thing template to place on server map");
+        ERR("no thing template to place on server map");
+        return (0);
     }
 
     thing_tiles = tp_get_tiles(tp);
     if (!thing_tiles) {
-        DIE("thing template [%s] has no tiles",
-            tp_short_name(tp));
+        ERR("thing template [%s] has no tiles", tp_short_name(tp));
+        return (0);
     }
 
     thing_tilep thing_tile;
@@ -354,9 +356,10 @@ wid_game_map_server_replace_tile (widp w,
     tile = tile_find(tilename);
 
     if (!tile) {
-        DIE("tile name %s from thing %s not found",
+        ERR("tile name %s from thing %s not found on server",
             tilename,
             tp_short_name(tp));
+        return (0);
     }
 
     /*
@@ -415,7 +418,7 @@ wid_game_map_server_replace_tile (widp w,
         t->item.quantity = 1;
 
         if (!item->id) {
-            DIE("trying to create thing %s with an item, "
+            ERR("trying to create thing %s with an item, "
                 "but the item has no id set in it", tp_name(tp));
         }
     }
