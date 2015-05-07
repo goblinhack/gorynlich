@@ -27,7 +27,14 @@ typedef struct {
 static thing_possible_hit thing_possible_hits[MAX_THING_POSSIBLE_HIT];
 static uint32_t thing_possible_hit_size;
 
-static void thing_fire_at (thingp t, thingp target)
+/*
+ * Used for players firing.
+ */
+void thing_server_fire (thingp t,
+                        const uint8_t up,
+                        const uint8_t down,
+                        const uint8_t left,
+                        const uint8_t right)
 {
     /*
      * Cannot fire until we're on a level.
@@ -58,6 +65,167 @@ static void thing_fire_at (thingp t, thingp target)
      */
     double dist_from_player = 0.7;
 
+    /*
+     * Try current direction.
+     */
+    dx = 0.0;
+    dy = 0.0;
+
+    /*
+     * If the player is moving too then the weapon has a bit more
+     * speed than if thrown when stationary.
+     */
+    if (down) {
+        dy = dist_from_player;
+    }
+
+    if (up) {
+        dy = -dist_from_player;
+    }
+
+    if (right) {
+        dx = dist_from_player;
+    }
+
+    if (left) {
+        dx = -dist_from_player;
+    }
+
+    /*
+     * If no dir, then try the last thing dir.
+     */
+    if ((dx == 0) && (dy == 0)) {
+        if (thing_is_dir_down(t)) {
+            dy = dist_from_player;
+        }
+
+        if (thing_is_dir_up(t)) {
+            dy = -dist_from_player;
+        }
+
+        if (thing_is_dir_right(t)) {
+            dx = dist_from_player;
+        }
+
+        if (thing_is_dir_left(t)) {
+            dx = -dist_from_player;
+        }
+
+        if (thing_is_dir_tl(t)) {
+            dx = -dist_from_player;
+            dy = -dist_from_player;
+        }
+
+        if (thing_is_dir_tr(t)) {
+            dx = dist_from_player;
+            dy = -dist_from_player;
+        }
+
+        if (thing_is_dir_bl(t)) {
+            dx = -dist_from_player;
+            dy = dist_from_player;
+        }
+
+        if (thing_is_dir_br(t)) {
+            dx = dist_from_player;
+            dy = dist_from_player;
+        }
+    }
+
+    /*
+     * Fire from the player position plus the initial delta so it looks like 
+     * it comes from outside of the body.
+     */
+    double x = t->x;
+    double y = t->y;
+
+    x += dx;
+    y += dy;
+
+    tpp projectile = tp_fires(weapon);
+    if (!projectile) {
+        /*
+         * Might be a sword.
+         */
+        thing_swing(t);
+        return;
+    }
+
+    widp w = wid_game_map_server_replace_tile(
+                                    wid_game_map_server_grid_container,
+                                    x,
+                                    y,
+                                    0, /* thing */
+                                    projectile,
+                                    0, /* tpp data */
+                                    0, /* item */
+                                    0 /* stats */);
+
+    thingp p = wid_get_thing(w);
+
+    /*
+     * Make sure we keep track of who fired so we can award scores.
+     */
+    thing_set_owner(p, t);
+
+    /*
+     * Set up the modifier damage if this is say a fireball or bow for ex.
+     */
+    p->damage = thing_stats_get_damage(t);
+
+    /*
+     * Round up say -0.7 to -1.0
+     */
+    dx *= 10.0;
+    dy *= 10.0;
+    dx /= (dist_from_player * 10.0);
+    dy /= (dist_from_player * 10.0);
+
+    p->dx = dx;
+    p->dy = dy;
+    p->dir = t->dir;
+
+    /*
+     * Check for immediate collision with a wall
+     */
+    thing_handle_collisions(wid_game_map_server_grid_container, p);
+    if (thing_is_dead_or_dying(p)) {
+        return;
+    }
+
+    double fnexthop_x = p->x + p->dx;
+    double fnexthop_y = p->y + p->dy;
+
+    thing_server_move(p,
+            fnexthop_x,
+            fnexthop_y,
+            fnexthop_y < p->y,
+            fnexthop_y > p->y,
+            fnexthop_x < p->x,
+            fnexthop_x > p->x,
+            false);
+}
+
+/*
+ * Used for monsters firing intrinsic weapons
+ */
+static void thing_fire_at (thingp t, thingp target)
+{
+    /*
+     * Cannot fire until we're on a level.
+     */
+    if (!t->wid) {
+        THING_LOG(t, "cannot fire yet, not on the level");
+        return;
+    }
+
+    double dx, dy;
+
+    /*
+     * Any smaller than this and diagonal shots collide with adjoining walls.
+     */
+    double dist_from_player = 0.7;
+
     double distance = DISTANCE(t->x, t->y, target->x, target->y);
     double sx = (target->x - t->x) / distance;
     double sy = (target->y - t->y) / distance;
@@ -72,10 +240,7 @@ static void thing_fire_at (thingp t, thingp target)
     double x = t->x;
     double y = t->y;
 
-    x += dx;
-    y += dy;
-
-    tpp projectile = tp_fires(weapon);
+    tpp projectile = tp_fires(t->tp);
     if (!projectile) {
         /*
          * Might be a sword.
@@ -148,7 +313,11 @@ thing_possible_hit_add (thingp me, thingp target)
     /*
      * Why do this ? Explosions can't bend around corners.
      */
-    if (!can_see(server_level, me->x, me->y, target->x, target->y)) {
+    if (!can_see(server_level, me->x, me->y, target->x, target->y) &&
+        !can_see(server_level, me->x, me->y, target->x - 1, target->y) &&
+        !can_see(server_level, me->x, me->y, target->x + 1, target->y) &&
+        !can_see(server_level, me->x, me->y, target->x, target->y - 1) &&
+        !can_see(server_level, me->x, me->y, target->x, target->y + 2)) {
         return;
     }
 
@@ -220,14 +389,9 @@ static void thing_fire_at_best_target (thingp hitter)
                 best = cand;
             }
         }
-//CON("hitter %s target 
-//%s",thing_logname(hitter),thing_logname(cand->target));
     }
 
     if (best) {
-//CON("hitter %s best %s and hitter_killed_on_hitting 
-//%d",thing_logname(hitter),thing_logname(best->target), 
-//best->hitter_killed_on_hitting);
         thing_fire_at(hitter, best->target);
     }
 
@@ -280,8 +444,7 @@ CON("  owner");
 
 
     if (thing_is_monst(me)) {
-        if (thing_is_player(it)                 ||
-            thing_is_monst(it)) {
+        if (thing_is_player(it)) {
             thing_possible_hit_add(me, it);
             return;
         }

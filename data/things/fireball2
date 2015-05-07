@@ -12,6 +12,8 @@
  is_animated
  is_light_source
  light_radius=2.0
+ is_effect_pulse
+ is_variable_size
  is_collision_map_medium
  tiles={
   tile={

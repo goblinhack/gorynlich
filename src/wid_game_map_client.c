@@ -889,19 +889,21 @@ wid_game_map_client_replace_tile (widp w,
     if (!tp) {
         tp = thing_tp(t);
         if (!tp) {
-            DIE("no thing template");
+            ERR("no thing template to replace on client");
+            return (0);
         }
     }
 
     if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_WIDTH)) {
-        DIE("client: thing template [%s] cannot be placed at %f %f",
+        ERR("client: thing template [%s] cannot be placed at %f %f",
             tp_short_name(tp), x, y);
+        return (0);
     }
 
     thing_tiles = tp_get_tiles(tp);
     if (!thing_tiles) {
-        DIE("thing template [%s] has no tiles",
-            tp_short_name(tp));
+        ERR("thing template [%s] has no tiles", tp_short_name(tp));
+        return (0);
     }
 
     thing_tilep thing_tile;
@@ -918,9 +920,10 @@ wid_game_map_client_replace_tile (widp w,
     tile = tile_find(tilename);
 
     if (!tile) {
-        DIE("tile name %s from thing %s not found",
+        ERR("tile name %s from thing %s not found on client",
             tilename,
             tp_short_name(tp));
+        return (0);
     }
 
     /*
