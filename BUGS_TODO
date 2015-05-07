@@ -7,7 +7,6 @@
 - speed must do something
 - vision must do something
 - healing must do something
-- add screaming fire skull monst?
 - magic attack - green fireball?
 - attack magical must do something
 - make cheese holy
@@ -25,6 +24,7 @@
 - pause character on spending point window - on single player?
 - tx socket thing loop is too slow could use a thing array to update
 --------------------------------------- plan for jul --------------------------------------
+  - add screaming fire skull monst?
 more monsters, ideas:
     * spider webs that slow you down and spiders that fire them, webs spawn spiders too
     * teleports
