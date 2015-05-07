@@ -125,6 +125,17 @@ static void thing_tick_server_all (void)
         }
 
         /*
+         * Is this a thing that fires at players?
+         */
+        uint32_t delay = tp_get_weapon_fire_delay_hundredths(tp);
+        if (delay) {
+            if (time_have_x_hundredths_passed_since(delay, t->timestamp_fired)) {
+                t->timestamp_fired = time_get_time_ms();
+                thing_fire_at_target(t);
+            }
+        }
+
+        /*
          * Need this for explosions and other non moving things to interact 
          * and KILL THINGS!
          */

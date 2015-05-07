@@ -68,7 +68,6 @@ uint8_t thing_z_order(thingp);
 tree_rootp thing_tile_tiles(thingp);
 tree_rootp thing_tile_tiles2(thingp);
 void thing_animate(thingp);
-void thing_handle_collisions(widp grid, thingp t);
 uint8_t thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
 uint8_t thing_hit_any_obstacle(widp grid, thingp t, double nx, double ny);
 uint8_t thing_server_hit_solid_obstacle(widp grid, 
@@ -649,6 +648,11 @@ typedef struct thing_ {
      * When did we last send our state to the client?
      */
     uint32_t timestamp_tx_map_update;
+
+    /*
+     * Last time it fired at a player.
+     */
+    uint32_t timestamp_fired;
 
     /*
      * A counter to indicate the number of times we want to update the client 
@@ -2271,3 +2275,12 @@ void level_place_blood_crit(levelp level,
 thingp level_place_bomb(levelp level, 
                         thingp owner,
                         double x, double y);
+/*
+ * thing_collision.c
+ */
+void thing_handle_collisions(widp grid, thingp t);
+
+/*
+ * thing_fire.c
+ */
+void thing_fire_at_target(thingp me);
