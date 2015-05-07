@@ -1,7 +1,7 @@
 {
- short_name="plasmaball2"
- raw_name="plasmaball2"
- tooltip="plasmaball2"
+ short_name="plasmaball1"
+ raw_name="plasmaball1"
+ tooltip="plasmaball1"
  is_hidden_from_editor
  z_depth=5
  speed=60
@@ -12,103 +12,105 @@
  is_animated
  is_light_source
  light_radius=2.0
+ is_effect_pulse
+ is_variable_size
  is_collision_map_medium
  tiles={
   tile={
-   tile="plasmaball2-1"
+   tile="plasmaball1-1"
   }
   tile={
-   tile="plasmaball2-2"
+   tile="plasmaball1-2"
   }
   tile={
-   tile="plasmaball2-3"
+   tile="plasmaball1-3"
   }
   tile={
-   tile="plasmaball2-4"
+   tile="plasmaball1-4"
   }
   tile={
-   tile="plasmaball2-5"
+   tile="plasmaball1-5"
   }
   tile={
-   tile="plasmaball2-6"
+   tile="plasmaball1-6"
   }
   tile={
-   tile="plasmaball2-7"
+   tile="plasmaball1-7"
   }
   tile={
-   tile="plasmaball2-8"
+   tile="plasmaball1-8"
   }
   tile={
-   tile="plasmaball2-9"
+   tile="plasmaball1-9"
   }
   tile={
-   tile="plasmaball2-10"
+   tile="plasmaball1-10"
   }
   tile={
-   tile="plasmaball2-11"
+   tile="plasmaball1-11"
   }
   tile={
-   tile="plasmaball2-12"
+   tile="plasmaball1-12"
   }
   tile={
-   tile="plasmaball2-13"
+   tile="plasmaball1-13"
   }
   tile={
-   tile="plasmaball2-14"
+   tile="plasmaball1-14"
   }
   tile={
-   tile="plasmaball2-15"
+   tile="plasmaball1-15"
   }
   tile={
-   tile="plasmaball2-16"
+   tile="plasmaball1-16"
   }
   tile={
-   tile="plasmaball2-17"
+   tile="plasmaball1-17"
   }
   tile={
-   tile="plasmaball2-18"
+   tile="plasmaball1-18"
   }
   tile={
-   tile="plasmaball2-19"
+   tile="plasmaball1-19"
   }
   tile={
-   tile="plasmaball2-20"
+   tile="plasmaball1-20"
   }
   tile={
-   tile="plasmaball2-21"
+   tile="plasmaball1-21"
   }
   tile={
-   tile="plasmaball2-22"
+   tile="plasmaball1-22"
   }
   tile={
-   tile="plasmaball2-23"
+   tile="plasmaball1-23"
   }
   tile={
-   tile="plasmaball2-24"
+   tile="plasmaball1-24"
   }
   tile={
-   tile="plasmaball2-25"
+   tile="plasmaball1-25"
   }
   tile={
-   tile="plasmaball2-26"
+   tile="plasmaball1-26"
   }
   tile={
-   tile="plasmaball2-27"
+   tile="plasmaball1-27"
   }
   tile={
-   tile="plasmaball2-28"
+   tile="plasmaball1-28"
   }
   tile={
-   tile="plasmaball2-29"
+   tile="plasmaball1-29"
   }
   tile={
-   tile="plasmaball2-30"
+   tile="plasmaball1-30"
   }
   tile={
-   tile="plasmaball2-31"
+   tile="plasmaball1-31"
   }
   tile={
-   tile="plasmaball2-32"
+   tile="plasmaball1-32"
   }
  }
 }

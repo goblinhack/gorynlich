@@ -19,7 +19,7 @@
  is_collision_map_large
  is_animated
  fires="data/things/fireball2"
- weapon_fire_delay_hundredths=500
+ weapon_fire_delay_hundredths=100
  d10000_chance_of_appearing=10
  tiles={
   tile={ delay=50 tile="demon1-1" }

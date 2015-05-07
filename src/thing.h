@@ -2156,11 +2156,6 @@ uint8_t thing_server_move(thingp t,
 void thing_server_action(thingp t,
                          uint8_t action,
                          uint32_t action_bar_index);
-void thing_server_fire(thingp t,
-                        const uint8_t up,
-                        const uint8_t down,
-                        const uint8_t left,
-                        const uint8_t right);
 
 /*
  * thing_effect.c
@@ -2284,3 +2279,9 @@ void thing_handle_collisions(widp grid, thingp t);
  * thing_fire.c
  */
 void thing_fire_at_target(thingp me);
+
+void thing_server_fire(thingp t,
+                       const uint8_t up,
+                       const uint8_t down,
+                       const uint8_t left,
+                       const uint8_t right);
