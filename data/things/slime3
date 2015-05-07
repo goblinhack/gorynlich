@@ -8,8 +8,8 @@
  damage=10
  jump_speed=30
  is_effect_rotate_2way
- bonus_xp_on_death=20
- vision_distance=20
+ bonus_xp_on_death=50
+ vision_distance=10
  hit_delay_tenths=10
  is_monst
  is_shadow_caster
