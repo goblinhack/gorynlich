@@ -3,6 +3,7 @@
  raw_name="wand_fire"
  tooltip="Wand of fire"
  fires="data/things/fireball1"
+ weapon_fire_delay_hundredths=20
  z_depth=3
  is_weapon
  is_magical_weapon
@@ -11,7 +12,6 @@
  hit_priority=0
  is_carryable
  is_given_randomly_at_start
- weapon_fire_delay_hundredths=20
  is_fragile
  is_damaged_on_firing
  d10000_chance_of_appearing=5
