@@ -17,11 +17,13 @@
  hit_priority=10
  is_ethereal
  is_cats_eyes
- is_collision_map_large
+ is_collision_map_medium
  is_animated
  fires="data/things/fireball2"
  weapon_fire_delay_hundredths=100
  d10000_chance_of_appearing=10
+ is_light_source
+ light_radius=3.5
  tiles={
   tile={ delay=50 tile="demon1-1" }
   tile={ delay=50 tile="demon1-2" }

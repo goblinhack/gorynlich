@@ -1,4 +1,6 @@
 --------------------------------------- plan for may --------------------------------------
+- need radial collision detection for sawblades
+- wizard fire a bit too fast
 - display attack/defense stats on screen
 - show little bars when hovering over an item as to its abilities, sho attack/defese/shield
 - shields should be additive when used
@@ -12,6 +14,7 @@
 - make cheese holy
 - change update to a loop, not tree walk
 --------------------------------------- plan for june --------------------------------------
+- spawn death after a long time
 - sound effects for weapons and hits http://www.bfxr.net/
 - sound on momey collect
 - sound on potion use
@@ -64,6 +67,8 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Thu May  7 07:30:26 EDT 2015
+- demon gets stuck in corridors
+- death can't get too close to walls
 - fireball and plasmaball firing
 
 Tue May  5 20:23:18 EDT 2015

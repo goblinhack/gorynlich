@@ -210,6 +210,17 @@ static uint8_t things_overlap (const thingp A,
     static double collision_map_tiny_y1;
     static double collision_map_tiny_y2;
 
+    tpp tpA = A->tp;
+    tpp tpB = B->tp;
+
+    if ((tpA->collision_radius > 0.0) || (tpB->collision_radius > 0.0)) {
+        double dist = DISTANCE(A->x, A->y, B->x, B->y);
+        if (dist < max(tpA->collision_radius, tpB->collision_radius)) {
+            return (true);
+        } else {
+            return (false);
+        }
+    }
     /*
      * The tiles are considered to be 1 unit wide. However the actual pixels
      * of each tile include shadows. px1/px2 are the bounds and exclude the
@@ -999,8 +1010,8 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
 
     uint8_t z;
 
-    for (dx = -1; dx <= 1; dx++) 
-    for (dy = -1; dy <= 1; dy++) {
+    for (dx = -2; dx <= 2; dx++) 
+    for (dy = -2; dy <= 2; dy++) {
     for (z = MAP_DEPTH_WALL; z < MAP_DEPTH; z++) {
             int32_t x = (int32_t)nx + dx;
             int32_t y = (int32_t)ny + dy;
