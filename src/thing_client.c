@@ -120,7 +120,6 @@ static void thing_client_wid_move (thingp t,
 
     x *= client_tile_width;
     y *= client_tile_height;
-
     x += client_tile_width / 2;
     y += client_tile_height / 2;
 
@@ -169,7 +168,12 @@ static void thing_client_wid_move (thingp t,
         br.x += tile_width / 4.0;
     }
 
+    /*
+     * Stretch vertically a bit and then recented.
+     */
     tl.y -= tile_height / 8.0;
+    tl.y += tile_height / 16.0;
+    br.y += tile_height / 16.0;
 
     /*
      * Off the map? Perhaps between levels.

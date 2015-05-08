@@ -3,7 +3,7 @@
  raw_name="wand_fire"
  tooltip="Wand of fire"
  fires="data/things/fireball1"
- weapon_fire_delay_hundredths=20
+ weapon_fire_delay_hundredths=30
  z_depth=3
  is_weapon
  is_magical_weapon
