@@ -317,7 +317,7 @@ thing_possible_hit_add (thingp me, thingp target)
         !can_see(server_level, me->x, me->y, target->x - 1, target->y) &&
         !can_see(server_level, me->x, me->y, target->x + 1, target->y) &&
         !can_see(server_level, me->x, me->y, target->x, target->y - 1) &&
-        !can_see(server_level, me->x, me->y, target->x, target->y + 2)) {
+        !can_see(server_level, me->x, me->y, target->x, target->y + 1)) {
         return;
     }
 
