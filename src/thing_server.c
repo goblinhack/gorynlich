@@ -294,20 +294,21 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
             ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
                 (double)global_config.video_gl_height);
 
-    /*
-     * Work out the tile size in a percentage of the screen.
-     */
-    br.x += base_tile_width;
-    br.y += base_tile_height;
+    tilep tile = wid_get_tile(t->wid);
+    double tw = tile_get_width(tile);
+    double th = tile_get_height(tile);
+    double scale_x = tw / TILE_WIDTH; 
+    double scale_y = th / TILE_HEIGHT; 
 
-    /*
-     * Now center the tile.
-     */
+    if (scale_x > 1) {
+        base_tile_width *= scale_x;
+        base_tile_height *= scale_y;
+    }
+
+    br.x += base_tile_width / 2.0;
+    br.y += base_tile_height / 2.0;
     tl.x -= base_tile_width / 2.0;
     tl.y -= base_tile_height / 2.0;
-
-    br.x -= base_tile_width / 2.0;
-    br.y -= base_tile_height / 2.0;
 
     /*
      * Now the tile itself has a shadow that is 1/4 of the pixels.
@@ -322,8 +323,17 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
                          (double)TILE_PIX_HEIGHT) * 
                             (double)TILE_PIX_WITH_SHADOW_HEIGHT;
 
-    tl.y -= tile_height / 4.0;
-    br.x += tile_width / 4.0;
+    if (scale_x == 1) {
+        tl.y -= tile_height / 4.0;
+        br.x += tile_width / 4.0;
+    }
+
+    /*
+     * Stretch vertically a bit and then recented.
+     */
+    tl.y -= tile_height / 8.0;
+    tl.y += tile_height / 16.0;
+    br.y += tile_height / 16.0;
 
     if (is_new || 
         thing_is_player(t) ||

@@ -214,6 +214,11 @@ typedef struct tp_ {
      */
     float explosion_radius;
 
+    /*
+     * How close for collision detection.
+     */
+    float collision_radius;
+
     uint32_t hit_priority;
     uint32_t weapon_fire_delay_hundredths;
     uint32_t swing_distance_from_player;
@@ -407,6 +412,7 @@ uint32_t tp_get_jump_speed(tpp);
 float tp_get_light_radius(tpp);
 float tp_get_scale(tpp);
 float tp_get_explosion_radius(tpp);
+float tp_get_collision_radius(tpp);
 uint32_t tp_get_quantity(tpp);
 uint32_t tp_get_hit_priority(tpp);
 uint32_t tp_get_weapon_fire_delay_hundredths(tpp);
