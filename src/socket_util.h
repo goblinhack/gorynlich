@@ -348,7 +348,7 @@ extern void socket_set_name(gsocketp s, const char *name);
 extern void socket_set_pclass(gsocketp s, const char *pclass);
 extern int socket_set_player_stats(gsocketp s, const thing_statsp stats);
 
-extern void socket_tx_ping(gsocketp s, uint8_t seq, uint32_t ts);
+extern void socket_tx_ping(gsocketp s, uint8_t *seq, uint32_t ts);
 extern void socket_tx_pong(gsocketp s, uint8_t seq, uint32_t ts);
 extern void socket_rx_ping(gsocketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_rx_pong(gsocketp s, UDPpacket *packet, uint8_t *data);

@@ -293,7 +293,8 @@
 #define DELAY_TENTHS_THING_DMAP                             5
 
 /*
- * Client <-> server keepalives
+ * Client <-> server keepalives. We want the ping to be short as we use that 
+ * to drive the start of the game, detecting client and server presence.
  */
 #define DELAY_TENTHS_PING                                   10
 #define DELAY_TENTHS_PING_WHEN_NO_RESPONSE                  20
