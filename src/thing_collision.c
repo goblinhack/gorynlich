@@ -27,6 +27,7 @@ typedef struct {
 
 static thing_possible_hit thing_possible_hits[MAX_THING_POSSIBLE_HIT];
 static uint32_t thing_possible_hit_size;
+static int collision_radius = 2;
 
 /*
  * Add a thing to the list of things that could be hit on this attack.
@@ -210,12 +211,43 @@ static uint8_t things_overlap (const thingp A,
     static double collision_map_tiny_y1;
     static double collision_map_tiny_y2;
 
-    tpp tpA = A->tp;
-    tpp tpB = B->tp;
+    tpp Atp = A->tp;
+    tpp Btp = B->tp;
 
-    if ((tpA->collision_radius > 0.0) || (tpB->collision_radius > 0.0)) {
-        double dist = DISTANCE(A->x, A->y, B->x, B->y);
-        if (dist < max(tpA->collision_radius, tpB->collision_radius)) {
+    widp Aw = thing_wid(A);
+    widp Bw = thing_wid(B);
+
+    if ((Atp->collision_radius > 0.0) || (Btp->collision_radius > 0.0)) {
+
+        double Ax;
+        double Ay;
+        double Bx;
+        double By;
+
+        if (Aw->first_tile) {
+            Ax = A->x + ((Aw->first_tile->px1 + Aw->first_tile->px2) / 2.0);
+            Ay = A->y + ((Aw->first_tile->py1 + Aw->first_tile->py2) / 2.0);
+        } else {
+            Ax = A->x;
+            Ay = A->y;
+        }
+
+        if (Bw->first_tile) {
+            Bx = B->x + ((Bw->first_tile->px1 + Bw->first_tile->px2) / 2.0);
+            By = B->y + ((Bw->first_tile->py1 + Bw->first_tile->py2) / 2.0);
+        } else {
+            Bx = B->x;
+            By = B->y;
+        }
+
+        double dist = DISTANCE(Ax, Ay, Bx, By);
+        if (dist < max(Atp->collision_radius, Btp->collision_radius)) {
+#if 0
+CON(" ");
+CON("%s", thing_logname(A));
+CON("%s", thing_logname(B));
+CON("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
+#endif
             return (true);
         } else {
             return (false);
@@ -300,9 +332,6 @@ static uint8_t things_overlap (const thingp A,
         By = B->y;
     }
 
-    widp widA = thing_wid(A);
-    widp widB = thing_wid(B);
-
     double Apx1;
     double Apx2;
     double Apy1;
@@ -337,7 +366,7 @@ static uint8_t things_overlap (const thingp A,
         /*
          * Just use pixel and alpha values.
          */
-        tilep tileA = wid_get_tile(widA);
+        tilep tileA = wid_get_tile(Aw);
 
         Apx1 = tileA->px1 * xscale;
         Apx2 = tileA->px2 * xscale;
@@ -369,7 +398,7 @@ static uint8_t things_overlap (const thingp A,
         /*
          * Just use pixel and alpha values.
          */
-        tilep tileB = wid_get_tile(widB);
+        tilep tileB = wid_get_tile(Bw);
 
         Bpx1 = tileB->px1 * xscale;
         Bpx2 = tileB->px2 * xscale;
@@ -444,7 +473,8 @@ static void thing_handle_collision (thingp me, thingp it,
     /*
      * Filter out boring things.
      */
-    if (thing_is_floor(it) ||
+    if (thing_is_floor(it)                  ||
+        thing_is_weapon_carry_anim(it)      ||
         thing_is_animation(it)) {
         return;
     }
@@ -788,7 +818,8 @@ CON("shield coll");
 #endif
     thing_map *map = thing_get_map(me);
 
-    for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
+    for (dx = -collision_radius; dx <= collision_radius; dx++) 
+    for (dy = -collision_radius; dy <= collision_radius; dy++) {
         int32_t x = (int32_t)me->x + dx;
         int32_t y = (int32_t)me->y + dy;
 
@@ -844,7 +875,8 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
 
     thing_map *map = thing_get_map(t);
 
-    for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
+    for (dx = -collision_radius; dx <= collision_radius; dx++) 
+    for (dy = -collision_radius; dy <= collision_radius; dy++) {
         int32_t x = (int32_t)nx + dx;
         int32_t y = (int32_t)ny + dy;
 
@@ -896,7 +928,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_weapon_swing_effect(it)    ||
                     thing_is_powerup(it)                ||
                     thing_is_explosion(it)              ||
-                    thing_is_non_explosive_gas_cloud(it)              ||
+                    thing_is_non_explosive_gas_cloud(it)||
                     thing_is_projectile(it)             ||
                     thing_is_treasure(it)               ||
                     thing_is_weapon(it)                 ||
@@ -1010,51 +1042,50 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
 
     uint8_t z;
 
-    for (dx = -2; dx <= 2; dx++) 
-    for (dy = -2; dy <= 2; dy++) {
+    for (dx = -collision_radius; dx <= collision_radius; dx++) 
+    for (dy = -collision_radius; dy <= collision_radius; dy++)
     for (z = MAP_DEPTH_WALL; z < MAP_DEPTH; z++) {
-            int32_t x = (int32_t)nx + dx;
-            int32_t y = (int32_t)ny + dy;
+        int32_t x = (int32_t)nx + dx;
+        int32_t y = (int32_t)ny + dy;
 
-            wid_it = wid_grid_find_first(grid, x, y, z);
-            while (wid_it) {
-                verify(wid_it);
+        wid_it = wid_grid_find_first(grid, x, y, z);
+        while (wid_it) {
+            verify(wid_it);
 
-                wid_next = wid_grid_find_next(grid, wid_it, x, y, z);
-                if (wid_me == wid_it) {
-                    wid_it = wid_next;
-                    continue;
-                }
-
-                it = wid_get_thing(wid_it);
-                if (!it) {
-                    wid_it = wid_next;
-                    continue;
-                }
-
-                /*
-                 * No collisions with the floor!
-                 */
-                if (thing_is_floor(it)) {
-                    wid_it = wid_next;
-                    continue;
-                }
-
-                /*
-                 * Allow dead ghosts to walk over each other!
-                 */
-                if (thing_is_dead_or_dying(it)) {
-                    wid_it = wid_next;
-                    continue;
-                }
-
-                if (!things_overlap(me, nx, ny, it)) {
-                    wid_it = wid_next;
-                    continue;
-                }
-
-                return (true);
+            wid_next = wid_grid_find_next(grid, wid_it, x, y, z);
+            if (wid_me == wid_it) {
+                wid_it = wid_next;
+                continue;
             }
+
+            it = wid_get_thing(wid_it);
+            if (!it) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            /*
+                * No collisions with the floor!
+                */
+            if (thing_is_floor(it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            /*
+                * Allow dead ghosts to walk over each other!
+                */
+            if (thing_is_dead_or_dying(it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            if (!things_overlap(me, nx, ny, it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            return (true);
         }
     }
 
