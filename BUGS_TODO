@@ -63,6 +63,9 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Sat May  9 08:51:54 EDT 2015
+- overlapping wall pixels
+- brightened up doors
+- added door pixels to avoid light leaking through
 - big delay on start game; faster map finding using cells
 
 Fri May  8 21:40:38 EDT 2015
