@@ -168,12 +168,15 @@ static void thing_client_wid_move (thingp t,
         br.x += tile_width / 4.0;
     }
 
+#if 0
     /*
-     * Stretch vertically a bit and then recented.
+     * Stretch vertically a bit and then recented. Don't do this. Overlapping 
+     * wall pixels with shadows mess up.
      */
     tl.y -= tile_height / 8.0;
     tl.y += tile_height / 16.0;
     br.y += tile_height / 16.0;
+#endif
 
     /*
      * Off the map? Perhaps between levels.
