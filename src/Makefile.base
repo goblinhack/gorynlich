@@ -54,6 +54,8 @@ GAME_OBJECTS=				\
     $(OBJDIR)/thing_ai.o 		\
     $(OBJDIR)/thing_anim.o 		\
     $(OBJDIR)/thing_speed.o 		\
+    $(OBJDIR)/thing_vision.o 		\
+    $(OBJDIR)/thing_defense.o 		\
     $(OBJDIR)/thing_blood.o 		\
     $(OBJDIR)/thing_bomb.o 		\
     $(OBJDIR)/thing_client.o 		\

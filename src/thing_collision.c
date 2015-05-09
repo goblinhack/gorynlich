@@ -564,8 +564,7 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
         /*
          * Player bumped into something.
          */
-        if (thing_is_monst(it)                  || 
-            thing_is_powerup(it)                ||
+        if (thing_is_powerup(it)                ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_cloud_effect(it)) {
             /*
