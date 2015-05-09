@@ -340,6 +340,20 @@ wid_player_action_button_joy_down (widp w,
     return (false);
 }
 
+static void wid_player_action_tooltip (widp w, widp tooltip)
+{
+    double px, py;
+
+    wid_get_pct(w, &px, &py);
+
+    wid_move_end(tooltip);
+    wid_move_to_pct_centered(tooltip, px + 0.1, py - 0.1);
+
+    color c = CYAN;
+    c.a = 50;
+    wid_set_color(tooltip, WID_COLOR_BG, c);
+}
+
 static void wid_player_action_create (thing_statsp s, int fast)
 {
     double left_ball_offset = -0.07;
@@ -723,6 +737,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
                                               false, /* inventory item */
                                               x);
 
+            wid_set_on_tooltip(w, wid_player_action_tooltip);
             wid_set_on_mouse_down(w, wid_player_action_button_mouse_down);
 
             wid_set_on_joy_down(w, wid_player_action_button_joy_down);
