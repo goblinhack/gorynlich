@@ -1,6 +1,4 @@
 --------------------------------------- plan for may --------------------------------------
-- wizard fire a bit too fast
-- display attack/defense stats on screen
 - show little bars when hovering over an item as to its abilities, sho attack/defese/shield
 - shields should be additive when used
 - xp level and hp increase per level
@@ -66,6 +64,7 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Fri May  8 21:40:38 EDT 2015
+- wizard fire a bit too fast
 - need radial collision detection for sawblades
 
 Thu May  7 07:30:26 EDT 2015
