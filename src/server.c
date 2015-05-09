@@ -414,22 +414,6 @@ static void server_alive_check (void)
 
 static void server_socket_tx_ping (void)
 {
-    static uint32_t ts;
-    static uint8_t seq;
-
-    if (!time_have_x_tenths_passed_since(DELAY_TENTHS_PING, ts)) {
-        return;
-    }
-
-    ts = time_get_time_ms();
-
-    /*
-     * Every few seconds check for dead peers.
-     */
-    if (ts && (!(seq % 3))) {
-        server_alive_check();
-    }
-
     gsocketp s;
 
     TREE_WALK(sockets, s) {
@@ -445,10 +429,15 @@ static void server_socket_tx_ping (void)
             continue;
         }
 
-        socket_tx_ping(s, seq, time_get_time_ms());
+        socket_tx_ping(s, &s->tx_ping_seq, time_get_time_ms());
     }
 
-    seq++;
+    static uint32_t ts;
+
+    if (time_have_x_tenths_passed_since(10, ts)) {
+        ts = time_get_time_ms();
+        server_alive_check();
+    }
 }
 
 static void server_socket_tx_map_updates (void)
@@ -460,9 +449,10 @@ static void server_socket_tx_map_updates (void)
                 DELAY_HUNDREDTHS_SERVER_TO_CLIENT_MAP_UPDATE_FAST, ts)) {
 
             ts = time_get_time_ms();
-        }
+
             socket_server_tx_map_update(0, server_active_things,
                                         "rx client join active things");
+        }
     }
 
     {
