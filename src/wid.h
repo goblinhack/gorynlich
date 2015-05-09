@@ -567,6 +567,13 @@ typedef struct wid_ {
     tree_root *tree2_children_unsorted;
 
     /*
+     * Used a lot, so keep at the head of the struct for speed.
+     */
+    uint8_t hidden;
+    uint8_t scaling_w;
+    uint8_t scaling_h;
+
+    /*
      * Optionally set to the previous wid in a list
      */
     widp prev;
@@ -578,7 +585,6 @@ typedef struct wid_ {
     /*
      * Flags.
      */
-    uint8_t hidden:1;
     uint8_t disable_scissors:1;
     uint8_t debug:1;
     uint8_t bevelled:1;
@@ -604,8 +610,6 @@ typedef struct wid_ {
     uint8_t ignore_for_events:1;
     uint8_t scaled_w:1;
     uint8_t scaled_h:1;
-    uint8_t scaling_w:1;
-    uint8_t scaling_h:1;
     uint8_t blit_scaled_w:1;
     uint8_t blit_scaled_h:1;
     uint8_t blit_scaling_w:1;

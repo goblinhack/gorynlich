@@ -144,12 +144,6 @@ static void client_alive_check (void)
 
 static void client_socket_tx_ping (void)
 {
-    static uint32_t ts;
-
-    if (!time_have_x_tenths_passed_since(DELAY_TENTHS_PING, ts)) {
-        return;
-    }
-
     gsocketp s;
 
     TREE_WALK(sockets, s) {
@@ -157,39 +151,18 @@ static void client_socket_tx_ping (void)
             continue;
         }
 
-        ts = time_get_time_ms();
-
-        /*
-         * If nothing is on the remote end then dont ping it relentlessly.
-         */
-        if (!s->rx) {
-            if (!time_have_x_tenths_passed_since(
-                        DELAY_TENTHS_PING_WHEN_NO_RESPONSE, s->tx_last_ping)) {
-                continue;
-            }
-        }
-
-        s->tx_last_ping = ts;
-        socket_tx_ping(s, s->tx_ping_seq++, ts);
+        socket_tx_ping(s, &s->tx_ping_seq, time_get_time_ms());
     }
 
     /*
      * Every few seconds check for dead peers.
      */
-    static int count;
-    count++;
-    if (ts && !(count % 5)) {
+    static uint32_t ts;
+
+    if (time_have_x_tenths_passed_since(10, ts)) {
+        ts = time_get_time_ms();
         client_alive_check();
-    }
-
-    {
-        static uint32_t ts;
-
-        if (time_have_x_tenths_passed_since(10, ts)) {
-            wid_server_join_redo(true /* soft refresh */);
-
-            ts = time_get_time_ms();
-        }
+        wid_server_join_redo(true /* soft refresh */);
     }
 }
 

@@ -48,6 +48,11 @@ static void socket_rx_queue_flush(gsocketp s);
 
 static uint8_t socket_init_done;
 
+/*
+ * Used when the server detects a client.
+ */
+int send_quick_ping;
+
 uint8_t socket_init (void)
 {
     if (socket_init_done) {
@@ -299,10 +304,10 @@ static void socket_destroy (gsocketp s)
     socket_set_connected(s, false);
 
     if (s->server) {
-        LOG("Socket destroy [listen %s]", socket_get_local_logname(s));
+        LOG("Socket destroy listen %s", socket_get_local_logname(s));
     } else {
-        LOG("Socket destroy [to %s]", socket_get_remote_logname(s));
-        LOG("               [from %s]", socket_get_local_logname(s));
+        LOG("Socket destroy to %s", socket_get_remote_logname(s));
+        LOG("               from %s", socket_get_local_logname(s));
     }
 
     socket_tx_queue_flush(s);
@@ -859,8 +864,8 @@ void sockets_alive_check (void)
         }
 
         if (s->quality < SOCKET_PING_FAIL_THRESHOLD) {
-            CON("Peer down [%s] qual %u percent",
-                socket_get_remote_logname(s), s->quality);
+            CON("%p: Peer down [%s] qual %u percent",
+                s, socket_get_remote_logname(s), s->quality);
 
             /*
              * Clients try forever. Server clients disconnect.
@@ -1030,21 +1035,23 @@ void socket_set_connected (gsocketp s, uint8_t c)
 
     if (socket_get_server(s)) {
         if (c) {
-            LOG("Server present %s", socket_get_remote_logname(s));
+            LOG("%p: SERVER PRESENT %s", s, socket_get_remote_logname(s));
         } else {
-            LOG("Server disconnect from %s", socket_get_remote_logname(s));
+            LOG("%p: SERVER DISCONNECT from %s", s, socket_get_remote_logname(s));
         }
     } else if (socket_get_client(s)) {
         if (c) {
-            LOG("Client: Server present %s", socket_get_remote_logname(s));
+            LOG("%p: SERVER PRESENT %s", s, socket_get_remote_logname(s));
         } else {
-            LOG("Client: Server disconnect from %s", socket_get_remote_logname(s));
+            LOG("%p: SERVER DISCONNECT from %s", s, socket_get_remote_logname(s));
         }
     } else {
         if (c) {
-            LOG("Server: Client present %s", socket_get_remote_logname(s));
+            LOG("%p: CLIENT PRESENT %s", s, socket_get_remote_logname(s));
+
+            send_quick_ping = 1;
         } else {
-            LOG("Server: Client disconnect from %s", socket_get_remote_logname(s));
+            LOG("%p: CLIENT DISCONNECT from %s", s, socket_get_remote_logname(s));
         }
     }
 
@@ -1226,12 +1233,34 @@ void packet_free (UDPpacket *packet)
     SDLNet_FreePacket(packet);
 }
 
-void socket_tx_ping (gsocketp s, uint8_t seq, uint32_t ts)
+void socket_tx_ping (gsocketp s, uint8_t *seq, uint32_t ts)
 {
     verify(s);
 
     if (!socket_get_udp_socket(s)) {
         return;
+    }
+
+    if (!s->rx) {
+        if (!time_have_x_tenths_passed_since(
+                    DELAY_TENTHS_PING_WHEN_NO_RESPONSE, s->tx_last_ping)) {
+            return;
+        }
+    } else {
+        if (s->rx < 20) {
+            /*
+             * Faster pings to get going with joining the level.
+             */
+            if (!time_have_x_tenths_passed_since(
+                        DELAY_TENTHS_PING / 4, s->tx_last_ping)) {
+                return;
+            }
+        } else {
+            if (!time_have_x_tenths_passed_since(
+                        DELAY_TENTHS_PING, s->tx_last_ping)) {
+                return;
+            }
+        }
     }
 
     UDPpacket *packet = packet_alloc();
@@ -1240,17 +1269,20 @@ void socket_tx_ping (gsocketp s, uint8_t seq, uint32_t ts)
     uint8_t *odata = data;
 
     *data++ = MSG_PING;
-    *data++ = seq;
+    *data++ = *seq;
 
     SDLNet_Write32(ts, data);               
     data += sizeof(uint32_t);
 
-    s->latency_rtt[seq % ARRAY_SIZE(s->latency_rtt)] = (uint32_t) -1;
+    s->latency_rtt[*seq % ARRAY_SIZE(s->latency_rtt)] = (uint32_t) -1;
 
     if (debug_socket_ping_enabled) {
-        CON("Tx Ping [to %s] seq %u, ts %u", 
-            socket_get_remote_logname(s), seq, ts);
+        CON("%p: Tx Ping to %s seq %u, ts %u", 
+            s, socket_get_remote_logname(s), *seq, ts);
     }
+
+    s->tx_last_ping = time_get_time_ms();
+    (*seq)++;
 
     packet->len = (int32_t)(data - odata);
 
@@ -1302,8 +1334,8 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
     msg.server_current_players = global_config.server_current_players;
 
     if (debug_socket_ping_enabled) {
-        CON("Tx Pong [to %s] seq %u, ts %u", 
-            socket_get_remote_logname(s), seq, ts);
+        CON("%p: Tx Pong to %s seq %u, ts %u", 
+            s, socket_get_remote_logname(s), seq, ts);
     }
 
     UDPpacket *packet = packet_alloc();
@@ -1326,7 +1358,7 @@ void socket_rx_ping (gsocketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        CON("Rx Ping from %s, seq %u", tmp, seq);
+        CON("%p: Rx Ping from %s, seq %u", s, tmp, seq);
         myfree(tmp);
     }
 
@@ -1353,7 +1385,7 @@ void socket_rx_pong (gsocketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        CON("Rx Pong from %s, seq %u, elapsed %d ms", tmp, seq,
+        CON("%p: Rx Pong from %s, seq %u, elapsed %d ms", s, tmp, seq,
             time_get_time_ms() - ts);
         myfree(tmp);
     }
@@ -1404,7 +1436,7 @@ void socket_tx_client_status (gsocketp s)
     memcpy(&msg.stats, &s->stats, sizeof(thing_stats));
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Client: Tx Client Status [to %s] \"%s\"", 
+    LOG("Client: Tx Client Status to %s \"%s\"", 
         socket_get_remote_logname(s), s->stats.pname);
     thing_stats_dump(&s->stats);
 // LOG("client, tx version: %d",s->stats.client_version);
@@ -1517,7 +1549,7 @@ uint8_t socket_tx_client_join (gsocketp s, uint32_t *key)
 
     if (!s->connected) {
         if (failed++ > 10) {
-            WARN("Server %s is not present, cannot join yet",
+            WARN("Client: Server %s is not present, cannot join yet",
                  socket_get_remote_logname(s));
         }
         return (false);
@@ -1537,7 +1569,7 @@ uint8_t socket_tx_client_join (gsocketp s, uint32_t *key)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Client: Tx Join [to %s] \"%s\"", 
+    LOG("Client: Tx Join to %s \"%s\"", 
         socket_get_remote_logname(s), s->stats.pname);
 
     packet->len = sizeof(msg);
@@ -1683,7 +1715,7 @@ void socket_tx_client_leave (gsocketp s)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Client: Tx leave [to %s] \"%s\"", 
+    LOG("Client: Tx leave to %s \"%s\"", 
         socket_get_remote_logname(s), s->stats.pname);
 
     packet->len = sizeof(msg);
@@ -1755,7 +1787,7 @@ void socket_tx_client_close (gsocketp s)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Client: Tx Close [to %s]", socket_get_remote_logname(s));
+    LOG("Client: Tx Close to %s", socket_get_remote_logname(s));
 
     packet->len = sizeof(msg);
 
@@ -1815,7 +1847,7 @@ static void socket_tx_client_shout_relay (gsocketp s,
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Client: Tx Shout [to %s] \"%s\"", 
+    LOG("Client: Tx Shout to %s \"%s\"", 
         socket_get_remote_logname(s), txt);
 
     packet->len = sizeof(msg);
@@ -1844,7 +1876,7 @@ void socket_tx_client_shout (gsocketp s,
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Client: Tx Shout [to %s] \"%s\"", 
+    LOG("Client: Tx Shout to %s \"%s\"", 
         socket_get_remote_logname(s), txt);
 
     packet->len = sizeof(msg);
@@ -2210,7 +2242,7 @@ void socket_tx_tell (gsocketp s,
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Tx Tell [to %s] from \"%s\" to \"%s\" msg \"%s\"", 
+    LOG("Tx Tell %s from \"%s\" to \"%s\" msg \"%s\"", 
         socket_get_remote_logname(s), from, to, txt);
 
     packet->len = sizeof(msg);
@@ -2326,7 +2358,7 @@ void socket_tx_server_status (gsocketp s_in)
 
 // LOG("server, tx version: %d",t->stats.client_version);
                 if (0) {
-                    LOG("Server: Tx Server Status [to %s]", socket_get_remote_logname(s));
+                    LOG("Server: Tx Server Status to %s", socket_get_remote_logname(s));
                     thing_dump(t);
                 }
 
@@ -2343,7 +2375,7 @@ void socket_tx_server_status (gsocketp s_in)
         memcpy(packet->data, &msg, sizeof(msg));
 
         if (0) {
-            LOG("Server: Tx Server Status [to %s]", socket_get_remote_logname(s));
+            LOG("Server: Tx Server Status to %s", socket_get_remote_logname(s));
         }
 
         packet->len = sizeof(msg);
@@ -2493,7 +2525,7 @@ void socket_tx_server_hiscore (gsocketp only,
                 continue;
             }
 
-            LOG("Server: Tx hiscore [to %s]", socket_get_remote_logname(s));
+            LOG("Server: Tx hiscore to %s", socket_get_remote_logname(s));
 
             UDPpacket *packet = packet_alloc();
 
@@ -2566,7 +2598,7 @@ void socket_tx_server_close (void)
             continue;
         }
 
-        LOG("Server: Tx down [to %s]",
+        LOG("Server: Tx down to %s",
             socket_get_remote_logname(s));
 
         msg_server_close msg = {0};
@@ -3151,7 +3183,7 @@ static int socket_tx_queue_send_packet (gsocketp s)
     packet = packet_finalize(s, packet);
 
 #ifdef ENABLE_PACKET_DUMP
-    LOG("%p Send slot %d", s, s->tx_queue_head - 1);
+    LOG("%p: Send slot %d", s, s->tx_queue_head - 1);
     hex_dump_CON(packet->data, 0, packet->len);
 #endif
 
