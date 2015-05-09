@@ -14,6 +14,8 @@
 #include "level.h"
 #include "bits.h"
 #include "socket_util.h"
+#include "./wid_game_map_server.h"
+#include "./wid_game_map_client.h"
 
 #ifdef GORY_DEBUG
 FILE *fp = 0;
@@ -1499,305 +1501,195 @@ tree_rootp map_all_things_is_exit_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_exit));
 }
 
-static tpp map_find_x_at_depth (levelp level,
-                                int32_t x, int32_t y,
-                                map_is_at_callback callback,
-                                uint8_t z,
-                                widp *wout)
-{
-    tpp tp;
-    widp grid_wid;
-    widp w;
-
-    grid_wid = level_get_map(level);
-    if (!grid_wid) {
-        DIE("no grid wid");
-    }
-
-    w = wid_grid_find_first(grid_wid, x, y, z);
-    while (w) {
-        thingp thing_it = wid_get_thing(w);
-
-        /*
-         * No things on level editor, just templates.
-         */
-        if (!level_is_editor(level)) {
-            /*
-             * Need to filter dead things so map fixup can no longer see wall 
-             * tiles that are in the process of being destroyed.
-             */
-            if (!thing_it) {
-                w = wid_grid_find_next(grid_wid, w, x, y, z);
-                continue;
-            }
-
-            if (thing_is_dead_or_dying(thing_it)) {
-                w = wid_grid_find_next(grid_wid, w, x, y, z);
-                continue;
-            }
-        }
-
-        tp = wid_get_thing_template(w);
-        if (tp) {
-            if ((*callback)(tp)) {
-                if (wout) {
-                    *wout = w;
-                }
-
-                return (tp);
-            }
-        }
-
-        w = wid_grid_find_next(grid_wid, w, x, y, z);
-    }
-
-    return (0);
-}
-
 static tpp map_find_x_at (levelp level,
-                                      int32_t x, int32_t y,
-                                      map_is_at_callback callback,
-                                      widp *wout)
+                          int32_t x, int32_t y,
+                          map_is_at_callback callback,
+                          widp *wout)
 {
-    tpp tp;
-    widp grid_wid;
-    widp w;
-
-    grid_wid = level_get_map(level);
-    if (!grid_wid) {
-        DIE("no grid wid");
+    if ((x >= MAP_WIDTH) || (x < 0) || (y >= MAP_HEIGHT) || (y < 0)) {
+        return (0);
     }
 
-    uint8_t z;
+    thing_map *map = level_get_thing_map(level);
+    thing_map_cell *cell = &map->cells[x][y];
 
-    for (z = 0; z < MAP_DEPTH; z++) {
-        w = wid_grid_find_first(grid_wid, x, y, z);
-        while (w) {
-            thingp thing_it = wid_get_thing(w);
+    uint32_t i;
+    for (i = 0; i < cell->count; i++) {
+        thingp thing_it;
+            
+        if (level == server_level) {
+            thing_it = thing_server_id(cell->id[i]);
+        } else {
+            thing_it = thing_client_id(cell->id[i]);
+        }
 
-            /*
-             * No things on level editor, just templates.
-             */
-            if (!level_is_editor(level)) {
-                /*
-                 * Need to filter dead things so map fixup can no longer see 
-                 * wall tiles that are in the process of being destroyed.
-                 */
-                if (!thing_it) {
-                    w = wid_grid_find_next(grid_wid, w, x, y, z);
-                    continue;
-                }
+        if (thing_is_dead_or_dying(thing_it)) {
+            continue;
+        }
 
-                if (thing_is_dead_or_dying(thing_it)) {
-                    w = wid_grid_find_next(grid_wid, w, x, y, z);
-                    continue;
-                }
+        if ((*callback)(thing_it->tp)) {
+            if (wout) {
+                *wout = thing_it->wid;
             }
 
-            tp = wid_get_thing_template(w);
-            if (tp) {
-                if ((*callback)(tp)) {
-                    if (wout) {
-                        *wout = w;
-                    }
-
-                    return (tp);
-                }
-            }
-
-            w = wid_grid_find_next(grid_wid, w, x, y, z);
+            return (thing_it->tp);
         }
     }
 
     return (0);
 }
 
-tpp map_find_player_at (levelp level,
-                                    int32_t x, int32_t y, widp *w)
+tpp map_find_player_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_player, w));
 }
 
-tpp map_find_monst_at (levelp level,
-                                   int32_t x, int32_t y, widp *w)
+tpp map_find_monst_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_monst, w));
 }
 
-tpp map_find_wall_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_wall_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at_depth(level, x, y, 
-                                tp_is_wall, 
-                                MAP_DEPTH_WALL, w));
+    return (map_find_x_at(level, x, y, tp_is_wall, w));
 }
 
-tpp map_find_rock_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at_depth(level, x, y, 
-                                tp_is_rock, 
-                                MAP_DEPTH_WALL, w));
-}
-
-tpp map_find_key_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_key, w));
-}
-
-tpp map_find_xxx3_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_rock_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_rock, w));
 }
 
-tpp map_find_blocks_light_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_key_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_key, w));
+}
+
+tpp map_find_xxx3_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rock, w));
+}
+
+tpp map_find_blocks_light_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_shadow_caster, w));
 }
 
-tpp map_find_xxx5_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_xxx5_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_weapon, w));
 }
 
-tpp map_find_xxx6_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_xxx6_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_treasure, w));
 }
 
-tpp map_find_xxx7_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_xxx7_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_wearable, w));
 }
 
-tpp map_find_is_fragile_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_is_fragile_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_fragile, w));
 }
 
-tpp map_find_is_star_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_is_star_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_star, w));
 }
 
-tpp map_find_key1_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_key1_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_weapon_swing_effect, w));
 }
 
-tpp map_find_light_source_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_light_source_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_light_source, w));
 }
 
-tpp map_find_candle_light_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_candle_light_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_candle_light, w));
 }
 
-tpp map_find_star_green_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_star_green_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_cats_eyes, w));
 }
 
-tpp map_find_star_cyan_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_star_cyan_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_fire, w));
 }
 
-tpp map_find_star_black_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_star_black_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_ring, w));
 }
 
-tpp map_find_star_purple_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_star_purple_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_animation, w));
 }
 
-tpp map_find_explosion_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_explosion_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_animation, w));
 }
 
-tpp map_find_spikes_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_spikes_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_non_explosive_gas_cloud, w));
 }
 
-tpp map_find_is_item_unusable_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_is_item_unusable_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_item_unusable, w));
 }
 
-tpp map_find_is_valid_for_action_bar_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_is_valid_for_action_bar_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_valid_for_action_bar, w));
 }
 
-tpp map_find_seedpod_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_seedpod_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_seedpod, w));
 }
 
-tpp map_find_spam_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_spam_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_spam, w));
 }
 
-tpp map_find_door_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_door_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_door, w));
 }
 
-tpp map_find_pipe_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_pipe_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_pipe, w));
 }
 
-tpp map_find_generator_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_generator_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_mob_spawner, w));
 }
 
-tpp map_find_rrr1_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_rrr1_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_rrr1, w));
 }
 
-tpp map_find_rrr2_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_rrr2_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_rrr2, w));
 }
 
-tpp map_find_rrr3_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_rrr3_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_rrr3, w));
 }
@@ -1932,110 +1824,92 @@ tpp map_find_action_right_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_action_right, w));
 }
 
-tpp map_find_can_walk_through_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_can_walk_through_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_can_walk_through, w));
 }
 
-tpp map_find_weapon_carry_anim_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_weapon_carry_anim_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_weapon_carry_anim, w));
 }
 
-tpp map_find_spell_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_spell_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_spell, w));
 }
 
-tpp map_find_given_randomly_at_start_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_given_randomly_at_start_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_given_randomly_at_start, w));
 }
 
-tpp map_find_magical_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_magical_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_magical, w));
 }
 
-tpp map_find_degradable_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_degradable_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_degradable, w));
 }
 
-tpp map_find_cursed_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_cursed_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_cursed, w));
 }
 
-tpp map_find_animate_only_when_moving_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_animate_only_when_moving_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_animate_only_when_moving, w));
 }
 
-tpp map_find_torch_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_torch_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_torch, w));
 }
 
-tpp map_find_is_explosion_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_is_explosion_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_explosion, w));
 }
 
-tpp map_find_hidden_from_editor_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_hidden_from_editor_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_hidden_from_editor, w));
 }
 
-tpp map_find_is_projectile_at (levelp level,
-                                   int32_t x, int32_t y, widp *w)
+tpp map_find_is_projectile_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_projectile, w));
 }
 
-tpp map_find_item_perma_at (levelp level,
-                                   int32_t x, int32_t y, widp *w)
+tpp map_find_item_perma_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_inactive, w));
 }
 
-tpp map_find_is_ring_at (levelp level,
-                                   int32_t x, int32_t y, widp *w)
+tpp map_find_is_ring_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_ring, w));
 }
 
-tpp map_find_plant_at (levelp level,
-                                   int32_t x, int32_t y, widp *w)
+tpp map_find_plant_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_plant, w));
 }
 
-tpp map_find_food_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_food_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_food, w));
 }
 
-tpp map_find_floor_at (levelp level,
-                                   int32_t x, int32_t y, widp *w)
+tpp map_find_floor_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_floor, w));
 }
 
-tpp map_find_exit_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_exit_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_exit, w));
 }

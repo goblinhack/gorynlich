@@ -784,7 +784,9 @@ tree_demarshal *demarshal (const char *filename)
 
     myfree(buf);
 
+#ifdef ENABLE_DEMARSHAL_DEBUG
     demarshal_print(ctx);
+#endif
 
     return (ctx);
 }

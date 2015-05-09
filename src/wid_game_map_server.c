@@ -448,7 +448,7 @@ wid_game_map_server_replace_tile (widp w,
     /*
      * Avoid doing the map fixup all the time as it is expensive.
      */
-    if (server_level_is_being_loaded == 2) {
+    if (server_level_is_being_loaded) {
         return (child);
     }
 

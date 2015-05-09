@@ -420,11 +420,17 @@ char *iptodynstr (IPaddress ip)
         return (dynprintf("0.0.0.0:%u", port));
     }
 
+    LOG("Resolve %d.%d.%d.%d",ip1,ip2,ip3,ip4);
+
     if (!(hostname = SDLNet_ResolveIP(&ip))) {
+        LOG("Resolved %d.%d.%d.%d, no host",ip1,ip2,ip3,ip4);
+
         return (dynprintf("IPv4 %u.%u.%u.%u:%u",
                           ip1, ip2, ip3, ip4, port));
 
     }
+
+    LOG("Resolved %d.%d.%d.%d as %s",ip1,ip2,ip3,ip4, hostname);
 
     if (strstr(hostname, "localhost")) {
         hostname = "lhost";
