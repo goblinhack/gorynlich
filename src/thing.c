@@ -1725,6 +1725,17 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
         }
     }
 
+    if (!damage) {
+        THING_ERR(t, "hit, hp %d, no damage, %d hitter, %s orig hitter %s", 
+                  thing_stats_get_hp(t), 
+                  damage,
+                  thing_logname(hitter),
+                  orig_hitter ? thing_logname(hitter) : "");
+        return (false);
+    }
+
+    damage = thing_stats_get_total_damage_minus_defense(t, hitter, damage);
+
     /*
      * Keep hitting until all damage is used up or the thing is dead.
      */
@@ -1739,20 +1750,23 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
              */
             thing_stats_set_hp(t, 0);
 
-            THING_LOG(t, "teriminal hit, hp %d, damage %d", thing_stats_get_hp(t), damage);
+            THING_LOG(t, "teriminal hit, hp %d, damage %d", 
+                      thing_stats_get_hp(t), damage);
 
             /*
              * Record who dun it.
              */
             if (thing_is_player(t)) {
                 if (orig_hitter) {
-                    thing_dying(t, orig_hitter, "%s", tp_short_name(orig_hitter->tp));
+                    thing_dying(t, orig_hitter, "%s", 
+                                tp_short_name(orig_hitter->tp));
                 } else {
                     thing_dying(t, orig_hitter, "hit");
                 }
             } else {
                 if (orig_hitter) {
-                    thing_dead(t, orig_hitter, "%s", tp_short_name(orig_hitter->tp));
+                    thing_dead(t, orig_hitter, "%s", 
+                               tp_short_name(orig_hitter->tp));
                 } else {
                     thing_dead(t, orig_hitter, "hit");
                 }

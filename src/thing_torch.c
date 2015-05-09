@@ -48,10 +48,12 @@ void thing_torch_calculate_light (thingp t)
      */
     float torch_light_radius = 
         (double) thing_is_carrying_thing_count(t, tp_is_torch) / 2.0;
-    if (torch_light_radius > 
-        tp_get_light_radius(t->tp)) {
+
+    if (torch_light_radius > tp_get_light_radius(t->tp)) {
         torch_light_radius = tp_get_light_radius(t->tp);
     }
+
+    torch_light_radius = thing_stats_get_total_vision(t, torch_light_radius);
 
     if (torch_light_radius != t->torch_light_radius) {
         t->torch_light_radius = torch_light_radius;

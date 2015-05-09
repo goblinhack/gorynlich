@@ -2304,3 +2304,15 @@ int32_t thing_stats_get_total_damage(thingp t);
  * thing_speed.c
  */
 double thing_stats_get_total_speed(thingp t);
+
+/*
+ * thing_damage.c
+ */
+int32_t thing_stats_get_total_damage_minus_defense(thingp t, 
+                                                   thingp hitter, 
+                                                   int32_t damage);
+
+/*
+ * thing_vision.c
+ */
+double thing_stats_get_total_vision(thingp t, double vision);

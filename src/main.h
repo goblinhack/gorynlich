@@ -259,6 +259,10 @@ void MSG_SERVER_SHOUT_OVER_THING(uint32_t level,
 
 void THING_LOG(thingp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
+void THING_CON(thingp, const char *fmt, ...)
+                     __attribute__ ((format (printf, 2, 3)));
+void THING_ERR(thingp, const char *fmt, ...)
+                     __attribute__ ((format (printf, 2, 3)));
 void THING_DBG(thingp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
 void ITEM_LOG(itemp, const char *fmt, ...)
