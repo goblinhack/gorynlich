@@ -1,5 +1,4 @@
 --------------------------------------- plan for may --------------------------------------
-- need radial collision detection for sawblades
 - wizard fire a bit too fast
 - display attack/defense stats on screen
 - show little bars when hovering over an item as to its abilities, sho attack/defese/shield
@@ -65,6 +64,9 @@ thief, kill thief to recover items
 mining?
 add bot to test out multiplayer ?
 different profiles for level generation
+
+Fri May  8 21:40:38 EDT 2015
+- need radial collision detection for sawblades
 
 Thu May  7 07:30:26 EDT 2015
 - demon gets stuck in corridors
