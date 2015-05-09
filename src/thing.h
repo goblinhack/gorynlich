@@ -2285,3 +2285,12 @@ void thing_server_fire(thingp t,
                        const uint8_t down,
                        const uint8_t left,
                        const uint8_t right);
+/*
+ * thing_damage.c
+ */
+int32_t thing_stats_get_total_damage(thingp t);
+
+/*
+ * thing_speed.c
+ */
+double thing_stats_get_total_speed(thingp t);
