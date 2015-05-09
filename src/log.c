@@ -634,6 +634,81 @@ void THING_LOG (thingp t, const char *fmt, ...)
     va_end(args);
 }
 
+static void thing_con_ (thingp t, const char *fmt, va_list args)
+{
+    char buf[MAXSTR];
+    uint32_t len;
+
+    buf[0] = '\0';
+    timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+    if (t->on_server) {
+        snprintf(buf + len, sizeof(buf) - len, "Server: Thing %s: ", 
+                 thing_logname(t));
+    } else {
+        snprintf(buf + len, sizeof(buf) - len, "Client: Thing %s: ", 
+                 thing_logname(t));
+    }
+    len = (uint32_t)strlen(buf);
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
+
+    wid_console_log(buf);
+    term_log(buf);
+}
+
+void THING_CON (thingp t, const char *fmt, ...)
+{
+    va_list args;
+
+    verify(t);
+
+    va_start(args, fmt);
+    thing_con_(t, fmt, args);
+    va_end(args);
+}
+
+static void thing_err_ (thingp t, const char *fmt, va_list args)
+{
+    char buf[MAXSTR];
+    uint32_t len;
+
+    buf[0] = '\0';
+    timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+    if (t->on_server) {
+        snprintf(buf + len, sizeof(buf) - len, "ERROR: Server: Thing %s: ", 
+                 thing_logname(t));
+    } else {
+        snprintf(buf + len, sizeof(buf) - len, "ERROR: Client: Thing %s: ", 
+                 thing_logname(t));
+    }
+    len = (uint32_t)strlen(buf);
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
+
+    backtrace_print();
+    fflush(MY_STDOUT);
+
+    wid_console_log(buf);
+    term_log(buf);
+}
+
+void THING_ERR (thingp t, const char *fmt, ...)
+{
+    va_list args;
+
+    verify(t);
+
+    va_start(args, fmt);
+    thing_err_(t, fmt, args);
+    va_end(args);
+}
+
 void THING_DBG (thingp t, const char *fmt, ...)
 {
     va_list args;
