@@ -142,6 +142,7 @@ void wid_mouse_up(uint32_t button, int32_t x, int32_t y);
 void wid_key_down(const struct SDL_KEYSYM *, int32_t x, int32_t y);
 void wid_key_up(const struct SDL_KEYSYM *, int32_t x, int32_t y);
 
+typedef void(*on_tooltip_t)(widp, widp);
 typedef void(*on_mouse_focus_begin_t)(widp);
 typedef void(*on_mouse_focus_end_t)(widp);
 typedef void(*on_mouse_over_begin_t)(widp,
@@ -338,6 +339,7 @@ void wid_set_movable_vert(widp, uint8_t val);
 void wid_set_movable_vert(widp, uint8_t val);
 void wid_set_name(widp, const char *string);
 void wid_set_offset(widp, fpoint offset);
+void wid_set_on_tooltip(widp, on_tooltip_t fn);
 void wid_set_on_key_down(widp, on_key_down_t fn);
 void wid_set_on_key_up(widp, on_key_up_t fn);
 void wid_set_on_joy_down(widp, on_joy_button_t fn);
@@ -569,18 +571,9 @@ typedef struct wid_ {
     /*
      * Used a lot, so keep at the head of the struct for speed.
      */
-    uint8_t hidden;
-    uint8_t scaling_w;
-    uint8_t scaling_h;
-
-    /*
-     * Optionally set to the previous wid in a list
-     */
-    widp prev;
-    widp next;
-    widp scrollbar_horiz;
-    widp scrollbar_vert;
-    widp scrollbar_owner;
+    uint8_t hidden:1;
+    uint8_t scaling_w:1;
+    uint8_t scaling_h:1;
 
     /*
      * Flags.
@@ -640,6 +633,14 @@ typedef struct wid_ {
     uint8_t can_be_atteched_now:1;
     uint8_t animate:1;
 
+    /*
+     * Optionally set to the previous wid in a list
+     */
+    widp prev;
+    widp next;
+    widp scrollbar_horiz;
+    widp scrollbar_vert;
+    widp scrollbar_owner;
     tree_rootp in_tree;
     tree_rootp in_tree2_unsorted;
     tree_rootp in_tree3_moving_wids;
@@ -723,25 +724,6 @@ typedef struct wid_ {
     double text_scaling;
     double text_advance;
     fpoint text_pos;
-
-    /*
-     * Action handlers
-     */
-    on_key_down_t on_key_down;
-    on_key_up_t on_key_up;
-    on_joy_button_t on_joy_button;
-    on_mouse_down_t on_mouse_down;
-    on_mouse_up_t on_mouse_up;
-    on_mouse_motion_t on_mouse_motion;
-    on_mouse_focus_begin_t on_mouse_focus_begin;
-    on_mouse_focus_end_t on_mouse_focus_end;
-    on_mouse_over_begin_t on_mouse_over_begin;
-    on_mouse_over_end_t on_mouse_over_end;
-    on_destroy_t on_destroy;
-    on_destroy_t on_destroy_begin;
-    on_tick_t on_tick;
-    on_display_t on_display;
-    on_display_top_level_t on_display_top_level;
 
     /*
      * Fade in/out/... effects.
@@ -886,6 +868,26 @@ typedef struct wid_ {
      */
     char *tooltip;
     fontp tooltip_font;
+
+    /*
+     * Action handlers
+     */
+    on_key_down_t on_key_down;
+    on_tooltip_t on_tooltip;
+    on_key_up_t on_key_up;
+    on_joy_button_t on_joy_button;
+    on_mouse_down_t on_mouse_down;
+    on_mouse_up_t on_mouse_up;
+    on_mouse_motion_t on_mouse_motion;
+    on_mouse_focus_begin_t on_mouse_focus_begin;
+    on_mouse_focus_end_t on_mouse_focus_end;
+    on_mouse_over_begin_t on_mouse_over_begin;
+    on_mouse_over_end_t on_mouse_over_end;
+    on_destroy_t on_destroy;
+    on_destroy_t on_destroy_begin;
+    on_tick_t on_tick;
+    on_display_t on_display;
+    on_display_top_level_t on_display_top_level;
 
 } wid;
 
