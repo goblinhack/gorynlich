@@ -81,8 +81,8 @@ static player_stats_row player_stats_arr[PLAYER_STATS_MAX] = {
     { /* STAT_ATTACK_MAGIC    */ "%%fmt=left$Magic damage",    "+", 1,
     "This modifier is the percentage damage gain you get in magical attacks." },
 
-    { /* STAT_DEFENSE         */ "%%fmt=left$Defense",         "+", 1,
-    "This modifier is the percentage gain you get in defense against attacks" },
+    { /* STAT_DEFENSE         */ "%%fmt=left$Damage deduce",   "+", 1,
+    "Damage is divided by modifier" },
 
     { /* STAT_SPEED           */ "%%fmt=left$Speed",           "+", 1,
     "This modifier is the percentage gain you get in running around like a nutter." },
