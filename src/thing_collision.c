@@ -870,9 +870,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
     verify(wid_me);
 
     int32_t dx, dy;
-
     me = wid_get_thing(wid_me);
-
     thing_map *map = thing_get_map(t);
 
     for (dx = -collision_radius; dx <= collision_radius; dx++) 
