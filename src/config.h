@@ -105,7 +105,7 @@
  * The number of tiles per screen.
  */
 #define TILES_SCREEN_WIDTH          26
-#define TILES_SCREEN_HEIGHT         20
+#define TILES_SCREEN_HEIGHT         17
 
 /*
  * Torchlight flickering parameters.

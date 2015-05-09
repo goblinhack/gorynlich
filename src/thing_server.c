@@ -328,12 +328,15 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
         br.x += tile_width / 4.0;
     }
 
+#if 0
     /*
-     * Stretch vertically a bit and then recented.
+     * Stretch vertically a bit and then recented. Don't do this. Overlapping 
+     * wall pixels with shadows mess up.
      */
     tl.y -= tile_height / 8.0;
     tl.y += tile_height / 16.0;
     br.y += tile_height / 16.0;
+#endif
 
     if (is_new || 
         thing_is_player(t) ||
