@@ -1993,10 +1993,20 @@ typedef struct {
 
 extern thing_map thing_server_map;
 extern thing_map thing_client_map;
+extern levelp server_level;
+extern levelp client_level;
 
 static inline thing_map *thing_get_map (thingp t)
 {
     if (t && t->on_server) {
+        return (&thing_server_map);
+    }
+    return (&thing_client_map);
+}
+
+static inline thing_map *level_get_thing_map (levelp level)
+{
+    if (level == server_level) {
         return (&thing_server_map);
     }
     return (&thing_client_map);
