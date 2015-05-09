@@ -451,16 +451,8 @@ void thing_tick_all (void)
     }
 
     if (player) {
-        static uint32_t ts;
-
-        if (time_have_x_thousandths_passed_since(
-                            DELAY_THOUSANDTHS_PLAYER_POLL, ts)) {
-
-            wid_game_map_client_player_move();
-
+        if (wid_game_map_client_player_move()) {
             wid_game_map_client_scroll_adjust(0);
-
-            ts = time_get_time_ms();
         }
     }
 

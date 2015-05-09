@@ -2020,7 +2020,7 @@ CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
          */
         if (!damage) {
             if (orig_hitter) {
-                damage = thing_stats_get_damage(orig_hitter);
+                damage = thing_stats_get_total_damage(orig_hitter);
             }
         }
 
@@ -2029,7 +2029,7 @@ CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
          */
         if (!damage) {
             if (hitter) {
-                damage = thing_stats_get_damage(hitter);
+                damage = thing_stats_get_total_damage(hitter);
             }
         }
     }
@@ -2855,7 +2855,7 @@ double thing_speed (thingp t)
         return (((double)tp_get_jump_speed(t->tp)));
     }
 
-    return (((double)tp_get_speed(t->tp)));
+    return (((double)thing_stats_get_total_speed(t)));
 }
 
 tree_rootp thing_tiles (thingp t)
