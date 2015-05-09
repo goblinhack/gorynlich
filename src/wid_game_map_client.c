@@ -377,6 +377,24 @@ uint8_t wid_game_map_client_player_move (void)
         }
     }
 
+    /*
+     * Check for not moving too fast. Yep, this needs to be done on the
+     * server. If the clients want to cheat, so be it!
+     */
+    static uint32_t last_moved = 0;
+
+    double speed = thing_stats_get_total_speed(player);
+    int delay = (60 - speed) / 2;
+    if (delay < 0) {
+        delay = 0;
+    }
+
+    if (!time_have_x_thousandths_passed_since(delay, last_moved)) {
+        return (false);
+    }
+
+    last_moved = time_get_time_ms();
+
     double x = player->x;
     double y = player->y;
 

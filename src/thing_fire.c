@@ -171,7 +171,7 @@ void thing_server_fire (thingp t,
     /*
      * Set up the modifier damage if this is say a fireball or bow for ex.
      */
-    p->damage = thing_stats_get_damage(t);
+    p->damage = thing_stats_get_total_damage(t);
 
     /*
      * Round up say -0.7 to -1.0
@@ -197,13 +197,13 @@ void thing_server_fire (thingp t,
     double fnexthop_y = p->y + p->dy;
 
     thing_server_move(p,
-            fnexthop_x,
-            fnexthop_y,
-            fnexthop_y < p->y,
-            fnexthop_y > p->y,
-            fnexthop_x < p->x,
-            fnexthop_x > p->x,
-            false);
+                      fnexthop_x,
+                      fnexthop_y,
+                      fnexthop_y < p->y,
+                      fnexthop_y > p->y,
+                      fnexthop_x < p->x,
+                      fnexthop_x > p->x,
+                      false);
 }
 
 /*
@@ -269,7 +269,7 @@ static void thing_fire_at (thingp t, thingp target)
     /*
      * Set up the modifier damage if this is say a fireball or bow for ex.
      */
-    p->damage = thing_stats_get_damage(t);
+    p->damage = thing_stats_get_total_damage(t);
 
     /*
      * Round up say -0.7 to -1.0

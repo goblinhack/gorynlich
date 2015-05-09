@@ -20,7 +20,7 @@
 #include "client.h"
 #include "socket_util.h"
 
-int32_t thing_stats_get_damage (thingp t)
+int32_t thing_stats_get_total_damage (thingp t)
 {
     double damage = t->damage;
 
