@@ -3,7 +3,6 @@
 - shields should be additive when used
 - xp level and hp increase per level
 - defense must do something
-- speed must do something
 - vision must do something
 - healing must do something
 - magic attack - green fireball?
@@ -63,7 +62,11 @@ mining?
 add bot to test out multiplayer ?
 different profiles for level generation
 
+Sat May  9 08:51:54 EDT 2015
+- big delay on start game; faster map finding using cells
+
 Fri May  8 21:40:38 EDT 2015
+- speed must do something
 - wizard fire a bit too fast
 - need radial collision detection for sawblades
 

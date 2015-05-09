@@ -32,7 +32,6 @@ extern widp wid_game_map_server_selected;
 extern widp wid_scoreline_container;
 extern widp wid_score;
 extern widp wid_level;
-extern levelp server_level;
 
 extern uint32_t server_tile_width;
 extern uint32_t server_tile_height;
