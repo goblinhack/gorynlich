@@ -390,6 +390,10 @@ uint8_t wid_game_map_client_player_move (void)
     }
 
     if (!time_have_x_thousandths_passed_since(delay, last_moved)) {
+        double x = player->x;
+        double y = player->y;
+
+        thing_client_move(player, x, y, false, false, false, false, fire);
         return (false);
     }
 

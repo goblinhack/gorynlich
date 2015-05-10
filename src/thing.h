@@ -2202,7 +2202,7 @@ void thing_dir(thingp t, double *dx, double *dy);
  * thing_torch.c
  */
 void thing_torch_update_count(thingp t, int force);
-void thing_torch_calculate_light(thingp t);
+void thing_torch_tick(thingp t);
 
 /*
  * thing_shield.c
@@ -2316,3 +2316,13 @@ int32_t thing_stats_get_total_damage_minus_defense(thingp t,
  * thing_vision.c
  */
 double thing_stats_get_total_vision(thingp t, double vision);
+
+/*
+ * thing_health.c
+ */
+void thing_health_tick(thingp t);
+
+/*
+ * thing_magic.c
+ */
+void thing_magic_tick(thingp t);
