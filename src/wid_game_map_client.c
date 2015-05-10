@@ -222,6 +222,7 @@ uint8_t wid_game_map_client_player_move (void)
     uint8_t up    = 0;
     uint8_t down  = 0;
     uint8_t fire  = 0;
+    uint8_t magic  = 0;
 
     if (!sdl_shift_held) {
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
@@ -233,7 +234,8 @@ uint8_t wid_game_map_client_player_move (void)
             up    = state[SDLK_UP] ? 1 : 0;
             down  = state[SDLK_DOWN] ? 1 : 0;
             fire  = state[SDLK_SPACE] ? 1 : 0;
-        }
+            magic = state[SDLK_M] ? 1 : 0;
+        M
 #else /* } { */
         {
             const uint8_t *state = SDL_GetKeyboardState(0);
@@ -243,6 +245,7 @@ uint8_t wid_game_map_client_player_move (void)
             up    = state[SDL_SCANCODE_UP] ? 1 : 0;
             down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
             fire  = state[SDL_SCANCODE_SPACE] ? 1 : 0;
+            magic = state[SDL_SCANCODE_M] ? 1 : 0;
         }
 #endif /* } */
     }
@@ -269,6 +272,8 @@ uint8_t wid_game_map_client_player_move (void)
         fire = true;
     } else if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         fire = true;
+    } else if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
+        magic = true;
     }
 
     if (sdl_joy_axes) {
@@ -330,7 +335,7 @@ uint8_t wid_game_map_client_player_move (void)
         return (false);
     }
 
-    if (!up && !down && !left && !right && !fire) {
+    if (!up && !down && !left && !right && !fire && !magic) {
         return (false);
     }
 
@@ -366,7 +371,7 @@ uint8_t wid_game_map_client_player_move (void)
             if (!time_have_x_hundredths_passed_since(delay, last_fired)) {
                 fire = 0;
 
-                if (!up && !down && !left && !right) {
+                if (!up && !down && !left && !right && !magic) {
                     return (false);
                 }
             }
@@ -393,7 +398,8 @@ uint8_t wid_game_map_client_player_move (void)
         double x = player->x;
         double y = player->y;
 
-        thing_client_move(player, x, y, false, false, false, false, fire);
+        thing_client_move(player, x, y, false, false, false, false, 
+                          fire, magic);
         return (false);
     }
 
@@ -409,12 +415,13 @@ uint8_t wid_game_map_client_player_move (void)
     y -= (double)up * delta;
     y += (double)down * delta;
 
-    thing_client_move(player, x, y, up, down, left, right, fire);
+    thing_client_move(player, x, y, up, down, left, right, 
+                      fire, magic);
 
     /*
      * If no key then we allow the console.
      */
-    return (up || down || left || right || fire);
+    return (up || down || left || right || fire || magic);
 }
 
 void wid_game_map_go_back_to_editor (void)

@@ -378,7 +378,8 @@ extern void socket_tx_player_move(gsocketp s,
                                   const uint8_t down,
                                   const uint8_t left,
                                   const uint8_t right,
-                                  const uint8_t fire);
+                                  const uint8_t fire,
+                                  const uint8_t magic);
 
 extern void socket_tx_player_action(gsocketp s, 
                                     thingp t,

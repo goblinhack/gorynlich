@@ -203,7 +203,8 @@ void thing_server_fire (thingp t,
                       fnexthop_y > p->y,
                       fnexthop_x < p->x,
                       fnexthop_x > p->x,
-                      false);
+                      false, /* fire */
+                      false  /* magic */);
 }
 
 /*
@@ -301,7 +302,8 @@ static void thing_fire_at (thingp t, thingp target)
                       fnexthop_y > p->y,
                       fnexthop_x < p->x,
                       fnexthop_x > p->x,
-                      false);
+                      false, /* fire */
+                      false  /* magic */);
 }
 
 /*
