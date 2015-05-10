@@ -8,7 +8,7 @@
  }
  z_depth=4
  speed=26
- max_hp=25
+ max_hp=250
  max_magic=20
  hp_per_level=12
  is_player

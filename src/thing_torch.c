@@ -41,7 +41,7 @@ void thing_torch_update_count (thingp t, int force)
     }
 }
 
-void thing_torch_calculate_light (thingp t)
+void thing_torch_tick (thingp t)
 {
     /*
      * Work out the torch light radius. Each torch lights 0.5 radius units.

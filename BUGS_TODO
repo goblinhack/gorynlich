@@ -1,7 +1,6 @@
 --------------------------------------- plan for may --------------------------------------
 - shields should be additive when used
 - xp level and hp increase per level
-- healing must do something
 - magic attack - green fireball?
 - attack magical must do something
 - change update to a loop, not tree walk
@@ -59,6 +58,8 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Sat May  9 08:51:54 EDT 2015
+- magic healing
+- healing must do something
 - make cheese holy
 - vision must do something
 - defense must do something
