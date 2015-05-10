@@ -37,7 +37,8 @@ uint8_t thing_server_move (thingp t,
                            const uint8_t down,
                            const uint8_t left,
                            const uint8_t right,
-                           const uint8_t fire)
+                           const uint8_t fire,
+                           const uint8_t magic)
 {
     if (thing_is_dead_or_dying(t)) {
         return (false);
