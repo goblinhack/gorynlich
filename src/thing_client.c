@@ -40,7 +40,8 @@ void thing_client_move (thingp t,
                         const uint8_t down,
                         const uint8_t left,
                         const uint8_t right,
-                        const uint8_t fire)
+                        const uint8_t fire,
+                        const uint8_t magic)
 {
     if (thing_is_dead_or_dying(t)) {
         return;
@@ -100,7 +101,7 @@ void thing_client_move (thingp t,
     }
 
     socket_tx_player_move(client_joined_server, t, up, down, left, right, 
-                          fire);
+                          fire, magic);
 }
 
 static void thing_client_wid_move (thingp t, 
