@@ -295,42 +295,15 @@ void thing_tick_server_player_slow_all (int force)
         if (force || time_have_x_secs_passed_since(1, t->timestamp_health)) {
             t->timestamp_health = time_get_time_ms();
 
-            /*
-             * Start to croak it
-             */
-            if (thing_stats_get_hp(t) <= 0) {
-                if (single_player_mode) {
-                    /*
-                     * Quicker death in single player mode as there is little 
-                     * chance of resurrection.
-                     */
-                    thing_stats_modify_hp(t, -2);
-                } else {
-                    thing_stats_modify_hp(t, -1);
-                }
+            thing_health_tick(t);
 
-                thing_update(t);
-
-                if (thing_stats_get_hp(t) <= THING_MIN_HEALTH) {
-                    thing_dead(t, 0, 0);
-                }
-            }
-
-            int delta = thing_stats_get_hp(t) - thing_stats_get_max_hp(t);
-            if (delta > 0) {
-                thing_stats_modify_hp(t, -delta / 10);
-            }
-
-            delta = thing_stats_get_magic(t) - thing_stats_get_max_magic(t);
-            if (delta > 0) {
-                thing_stats_modify_magic(t, -delta / 10);
-            }
+            thing_magic_tick(t);
 
             /*
              * Work out the torch light radius. Each torch lights 0.5 radius 
              * units.
              */
-            thing_torch_calculate_light(t);
+            thing_torch_tick(t);
         }
     }
 }
