@@ -311,7 +311,8 @@ void thing_client_move(thingp t,
                        const uint8_t down,
                        const uint8_t left,
                        const uint8_t right,
-                       const uint8_t fire);
+                       const uint8_t fire,
+                       const uint8_t magic);
 
 void thing_set_owner_id(thingp t, uint32_t owner_id);
 void thing_set_owner(thingp t, thingp owner);
@@ -2162,7 +2163,8 @@ uint8_t thing_server_move(thingp t,
                           const uint8_t down,
                           const uint8_t left,
                           const uint8_t right,
-                          const uint8_t fire);
+                          const uint8_t fire,
+                          const uint8_t magic);
 
 void thing_server_action(thingp t,
                          uint8_t action,

@@ -2731,7 +2731,8 @@ void socket_tx_player_move (gsocketp s,
                             const uint8_t down,
                             const uint8_t left, 
                             const uint8_t right,
-                            const uint8_t fire)
+                            const uint8_t fire,
+                            const uint8_t magic)
 {
     if (!socket_get_udp_socket(s)) {
         return;
@@ -2740,7 +2741,7 @@ void socket_tx_player_move (gsocketp s,
     /*
      * Allow firing to always be sent.
      */
-    if (!fire) {
+    if (!fire && !magic) {
         static uint32_t ts;
 
         if (!time_have_x_hundredths_passed_since(
@@ -2753,7 +2754,12 @@ void socket_tx_player_move (gsocketp s,
 
     msg_player_move msg = {0};
     msg.type = MSG_CLIENT_PLAYER_MOVE;
-    msg.dir = (fire << 4) | (up << 3) | (down << 2) | (left << 1) | right;
+    msg.dir = (magic << 5) | 
+              (fire << 4) |
+              (up << 3) |
+              (down << 2) |
+              (left << 1) |
+              right;
 
     SDLNet_Write16(t->x * THING_COORD_SCALE, &msg.x);               
     SDLNet_Write16(t->y * THING_COORD_SCALE, &msg.y);               
@@ -2787,6 +2793,7 @@ void socket_server_rx_player_move (gsocketp s, UDPpacket *packet, uint8_t *data)
         return;
     }
 
+    const uint8_t magic = (msg.dir & (1 << 5)) ? 1 : 0;
     const uint8_t fire  = (msg.dir & (1 << 4)) ? 1 : 0;
     const uint8_t up    = (msg.dir & (1 << 3)) ? 1 : 0;
     const uint8_t down  = (msg.dir & (1 << 2)) ? 1 : 0;
@@ -2804,7 +2811,7 @@ void socket_server_rx_player_move (gsocketp s, UDPpacket *packet, uint8_t *data)
     double x = ((double)msg.x) / THING_COORD_SCALE;
     double y = ((double)msg.y) / THING_COORD_SCALE;
 
-    thing_server_move(t, x, y, up, down, left, right, fire);
+    thing_server_move(t, x, y, up, down, left, right, fire, magic);
 }
 
 void socket_tx_player_action (gsocketp s, 

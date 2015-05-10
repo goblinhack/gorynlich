@@ -190,7 +190,8 @@ static void thing_tick_server_all (void)
                         fnexthop_y > t->y,
                         fnexthop_x < t->x,
                         fnexthop_x > t->x,
-                        false);
+                        false, /* fire */
+                        false  /* magic */);
             }
         }
 
