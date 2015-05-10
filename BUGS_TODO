@@ -1,11 +1,9 @@
 --------------------------------------- plan for may --------------------------------------
 - shields should be additive when used
 - xp level and hp increase per level
-- vision must do something
 - healing must do something
 - magic attack - green fireball?
 - attack magical must do something
-- make cheese holy
 - change update to a loop, not tree walk
 --------------------------------------- plan for june --------------------------------------
 - spawn death after a long time
@@ -61,6 +59,8 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Sat May  9 08:51:54 EDT 2015
+- make cheese holy
+- vision must do something
 - defense must do something
 - show little bars when hovering over an item as to its abilities, sho attack/defese/shield
 - overlapping wall pixels
