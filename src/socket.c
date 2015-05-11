@@ -21,6 +21,7 @@
 #include "server.h"
 #include "client.h"
 #include "wid_game_map_server.h"
+#include "wid_player_action.h"
 #include "thing.h"
 #include "mzip_lib.h"
 #include "wid_hiscore.h"
@@ -2773,6 +2774,13 @@ void socket_tx_player_move (gsocketp s,
     write_address(packet, socket_get_remote_ip(s));
 
     socket_tx_enqueue(s, &packet);
+
+    if (magic) {
+        t->stats.magic--;
+
+        wid_player_action_hide(true /* fast */);
+        wid_player_action_visible(&t->stats, true /* fast */);
+    }
 }
 
 void socket_server_rx_player_move (gsocketp s, UDPpacket *packet, uint8_t *data)

@@ -63,6 +63,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/thing_client.o 		\
     $(OBJDIR)/thing_collision.o 	\
     $(OBJDIR)/thing_fire.o 		\
+    $(OBJDIR)/thing_magic.o 		\
     $(OBJDIR)/thing_damage.o 		\
     $(OBJDIR)/thing_effect.o 		\
     $(OBJDIR)/thing_explosion.o 	\

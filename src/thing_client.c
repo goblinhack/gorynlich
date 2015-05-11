@@ -241,7 +241,8 @@ static void thing_client_wid_move (thingp t,
     }
 }
 
-void thing_client_wid_update (thingp t, double x, double y, 
+void thing_client_wid_update (thingp t, 
+                              double x, double y, 
                               uint8_t smooth,
                               uint8_t is_new)
 {
@@ -275,6 +276,6 @@ void thing_client_wid_update (thingp t, double x, double y,
     thingp shield_anim = thing_shield_anim(t);
     if (shield_anim) {
         shield_anim->dir = t->dir;
-        thing_client_wid_move(shield_anim, x, y + 0.5, smooth);
+        thing_client_wid_move(shield_anim, x, y, smooth);
     }
 }

@@ -110,7 +110,7 @@ static void thing_possible_hit_do (thingp hitter)
          */
         if (thing_is_animation(cand->target) ||
             thing_is_cloud_effect(cand->target) ||
-            thing_is_weapon_swing_effect(cand->target)) {
+            thing_is_weapon_carry_anim(cand->target)) {
             continue;
         }
 
@@ -976,6 +976,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                      */
                     thing_is_projectile(it)             ||
                     thing_is_weapon_swing_effect(it)    ||
+                    thing_is_weapon_carry_anim(it)      ||
                     thing_is_powerup(it)                ||
                     thing_is_explosion(it)              ||
                     thing_is_sawblade(it)               ||
