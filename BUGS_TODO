@@ -2,8 +2,6 @@
 - level completed shown twice
 - shields should be additive when used
 - xp level and hp increase per level
-- magic attack - green fireball?
-- attack magical must do something
 - change update to a loop, not tree walk
 --------------------------------------- plan for june --------------------------------------
 - spawn death after a long time
@@ -59,6 +57,11 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Sun May 10 12:03:11 EDT 2015
+- fixed light for scaled widgets
+- flag magic green on use
+- shield smooth anim
+- magic attack - green fireball?
+- attack magical must do something
 - magic firing
 
 Sat May  9 08:51:54 EDT 2015

@@ -79,6 +79,13 @@ static void thing_tick_server_all (void)
         }
 
         /*
+         * Time to fire a burst of magic?
+         */
+        if (t->magic_powerup) {
+            thing_server_magic_fire(t);
+        }
+
+        /*
          * Thing is out of life?
          */
         if (tp_get_lifespan(tp)) {
@@ -297,8 +304,6 @@ void thing_tick_server_player_slow_all (int force)
             t->timestamp_health = time_get_time_ms();
 
             thing_health_tick(t);
-
-            thing_magic_tick(t);
 
             /*
              * Work out the torch light radius. Each torch lights 0.5 radius 

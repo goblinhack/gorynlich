@@ -197,6 +197,11 @@ typedef struct {
      */
     uint8_t r, g, b;
 
+    /*
+     * THING_STATE_BIT_SHIFT_EXT2_SCALE
+     */
+    uint8_t scale;
+
 } __attribute__ ((packed)) msg_map_update;
 
 /*

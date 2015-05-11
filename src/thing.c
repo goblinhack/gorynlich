@@ -3209,6 +3209,8 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
                 THING_STATE_BIT_SHIFT_EXT2_IS_JUMPING)          |
             (((t->data && t->data->col_name)         ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_COLOR)               |
+            (((t->scale)                             ? 1 : 0) <<
+                THING_STATE_BIT_SHIFT_EXT2_SCALE)               |
             ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_RESYNC);
 
@@ -3329,6 +3331,10 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
             *data++ = t->data->col.g;
             *data++ = t->data->col.b;
 //CON("tx  color    %d,%d,%d -> %d",t->data->col.r, t->data->col.g, t->data->col.b, *(data - 1));
+        }
+
+        if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_SCALE)) {
+            *data++ = (uint8_t) (int) (((double)t->scale) * 32.0);
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT)) {
@@ -3571,6 +3577,11 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             c.b = *data++;
         }
 
+        double scale = 1.0;
+        if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_SCALE)) {
+            scale = ((double)((int)*data++)) / 32.0;
+        }
+
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT)) {
             effect = *data++;
         } else {
@@ -3779,6 +3790,12 @@ if (t->is_jumping) {
             if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_COLOR)) {
                 c.a = 255;
                 wid_set_color(w, WID_COLOR_BLIT, c);
+            }
+
+            if (scale != 1.0) {
+                t->scale = scale;
+
+                wid_scaling_blit_to_pct_in(w, scale, scale, 500, 9999999);
             }
         }
 
