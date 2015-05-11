@@ -130,6 +130,10 @@ uint8_t thing_server_move (thingp t,
         thing_server_fire(t, up, down, left, right);
     }
 
+    if (magic) {
+        thing_server_magic_powerup(t);
+    }
+
     thing_server_wid_update(t, x, y, false /* is_new */);
     thing_update(t);
 

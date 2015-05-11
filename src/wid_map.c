@@ -673,6 +673,9 @@ static void wid_map_cell_selected (widp w)
 static void wid_map_cell_cancelled (widp w)
 {
     wid_map_ctx *ctx = wid_map_window_ctx;
+    if (!wid_map_window_ctx) {
+        return;
+    }
 
     if (ctx->on_cancelled) {
         (*ctx->on_cancelled)();

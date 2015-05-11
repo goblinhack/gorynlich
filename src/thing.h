@@ -286,6 +286,7 @@ enum {
     THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS,
     THING_STATE_BIT_SHIFT_EXT2_IS_JUMPING,
     THING_STATE_BIT_SHIFT_EXT2_COLOR,
+    THING_STATE_BIT_SHIFT_EXT2_SCALE,
     /********************************************************************
      * Update msg_map_update if you add here
      ********************************************************************/
@@ -596,6 +597,11 @@ typedef struct thing_ {
     double dy;
 
     /*
+     * Thing to be shown scaled on the client
+     */
+    double scale;
+
+    /*
      * Last co-ords sent to the client
      */
     uint8_t last_tx;
@@ -657,6 +663,11 @@ typedef struct thing_ {
     uint32_t timestamp_fired;
 
     /*
+     * Last time we added magic to our build up of power!
+     */
+    uint32_t timestamp_magic_powerup;
+
+    /*
      * A counter to indicate the number of times we want to update the client 
      * with the state of this thing. To compensate for udp drops we might want 
      * to send a couple of updates for important events like death.
@@ -674,6 +685,11 @@ typedef struct thing_ {
      * How many rays of light are hitting this thing?
      */
     uint16_t lit;
+
+    /*
+     * Builds up as player holds down the magic key until it is fired.
+     */
+    uint16_t magic_powerup;
 
     /*
      * How much light is this thing emitting. This cannot exceed the light 
@@ -2328,4 +2344,5 @@ void thing_health_tick(thingp t);
 /*
  * thing_magic.c
  */
-void thing_magic_tick(thingp t);
+void thing_server_magic_powerup(thingp t);
+void thing_server_magic_fire(thingp t);
