@@ -178,6 +178,9 @@ void thing_wield_shield (thingp t, tpp shield)
 
     if (t->on_server) {
         thing_update(t);
+    } else {
+        thing_client_wid_update(t, t->x, t->y, true /* smooth */,
+                                false /* is new */);
     }
 }
 

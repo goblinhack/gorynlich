@@ -383,6 +383,32 @@ uint8_t wid_game_map_client_player_move (void)
     }
 
     /*
+     * If not able to fire any more magic, stop.
+     */
+    if (!player->stats.magic) {
+        magic = 0;
+    }
+
+    /*
+     * Check we don't send magic events too often to the server.
+     */
+    if (magic) {
+        static uint32_t last_fired = 0;
+
+        if (!time_have_x_hundredths_passed_since(2, last_fired)) {
+            magic = 0;
+
+            if (!up && !down && !left && !right && !fire) {
+                return (false);
+            }
+        }
+
+        if (magic) {
+            last_fired = time_get_time_ms();
+        }
+    }
+
+    /*
      * Check for not moving too fast. Yep, this needs to be done on the
      * server. If the clients want to cheat, so be it!
      */

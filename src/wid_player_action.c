@@ -529,7 +529,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
                     }
 
                     wid_set_mode(w, WID_MODE_ACTIVE);
-                    wid_set_color(w, WID_COLOR_TEXT, RED);
+                    wid_set_color(w, WID_COLOR_TEXT, LIGHT_GREEN);
                 }
             }
 
@@ -538,7 +538,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         if (s->magic < s->max_magic / 10) {
             wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_TEXT, RED);
+            wid_set_color(w, WID_COLOR_TEXT, LIME);
         }
     }
 
