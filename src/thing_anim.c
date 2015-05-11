@@ -4,7 +4,7 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
+// REMOVED #include <SDL.h>
 #include "slre.h"
 
 #include "main.h"
@@ -12,7 +12,7 @@
 #include "thing_tile.h"
 #include "thing_tile_private.h"
 #include "tile.h"
-#include "wid.h"
+// REMOVED #include "wid.h"
 #include "time_util.h"
 #include "command.h"
 

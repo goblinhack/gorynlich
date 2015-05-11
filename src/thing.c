@@ -4,31 +4,31 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
+// REMOVED #include <SDL.h>
 
 #include "main.h"
 #include "thing.h"
 #include "thing_timer.h"
-#include "wid.h"
+// REMOVED #include "wid.h"
 #include "wid_game_map_client.h"
 #include "wid_game_map_server.h"
 #include "map.h"
 #include "level.h"
 #include "time_util.h"
 #include "string_util.h"
-#include "wid_textbox.h"
+// REMOVED #include "wid_textbox.h"
 #include "sound.h"
 #include "socket_util.h"
 #include "client.h"
 #include "timer.h"
 #include "tile.h"
-#include "math_util.h"
+// REMOVED #include "math_util.h"
 #include "wid_hiscore.h"
-#include "wid_player_stats.h"
+// REMOVED #include "wid_player_stats.h"
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
-#include "string_ext.h"
+// REMOVED #include "string_ext.h"
 
 tree_root *server_player_things;
 tree_root *client_player_things;
