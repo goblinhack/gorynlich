@@ -6,8 +6,8 @@
 
 #define __STDC_LIMIT_MACROS
 #include <pthread.h>
-#include <unistd.h>
-#include <SDL.h>
+// REMOVED #include <unistd.h>
+// REMOVED #include <SDL.h>
 
 #include "main.h"
 #include "thing.h"

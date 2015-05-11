@@ -4,17 +4,17 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
-#include "slre.h"
+// REMOVED #include <SDL.h>
+// REMOVED #include "slre.h"
 
 #include "main.h"
-#include "math_util.h"
-#include "level.h"
+// REMOVED #include "math_util.h"
+// REMOVED #include "level.h"
 #include "thing.h"
-#include "wid_game_map_server.h"
-#include "map.h"
-#include "vision.h"
-#include "wid.h"
+// REMOVED #include "wid_game_map_server.h"
+// REMOVED #include "map.h"
+// REMOVED #include "vision.h"
+// REMOVED #include "wid.h"
 
 thingp level_place_bomb (levelp level, 
                          thingp owner,
