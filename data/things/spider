@@ -12,13 +12,16 @@
  hit_delay_tenths=200
  is_monst
  is_cats_eyes
- scale=0.5
+ scale=0.3
  is_shadow_caster
  is_shadow_caster_soft
  is_variable_size
  hit_priority=10
  is_collision_map_medium
  is_animated
+ fires="data/things/silkball"
+ weapon_fire_delay_hundredths=500
+ d10000_chance_of_appearing=50
  tiles={
 
   tile={ delay=200 is_dir_down tile="spider-down.1" }

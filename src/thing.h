@@ -465,6 +465,8 @@ enum {
     THING_ARROW,
     THING_FIREBALL1,
     THING_FIREBALL2,
+    THING_SILKBALL,
+    THING_COBWEB,
     THING_PLASMABALL1,
 };
 
@@ -1112,11 +1114,11 @@ static inline uint8_t thing_is_rrr7 (thingp t)
     return (tp_is_rrr7(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr8 (thingp t)
+static inline uint8_t thing_is_cobweb (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr8(thing_tp(t)));
+    return (tp_is_cobweb(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_ethereal (thingp t)
@@ -1731,9 +1733,9 @@ static inline uint8_t thing_is_rrr7_noverify (thingp t)
     return (t->tp->is_rrr7);
 }
 
-static inline uint8_t thing_is_rrr8_noverify (thingp t)
+static inline uint8_t thing_is_cobweb_noverify (thingp t)
 {
-    return (t->tp->is_rrr8);
+    return (t->tp->is_cobweb);
 }
 
 static inline uint8_t thing_is_ethereal_noverify (thingp t)
