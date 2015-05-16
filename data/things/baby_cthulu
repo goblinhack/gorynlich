@@ -4,7 +4,7 @@
  tooltip="Baby cthulu"
  z_depth=3
  speed=2
- max_hp=200
+ max_hp=500
  damage=11
  is_effect_rotate_2way
  bonus_xp_on_death=1500
