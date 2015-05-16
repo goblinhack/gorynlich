@@ -1,5 +1,9 @@
 --------------------------------------- plan for may --------------------------------------
-- cloud.png
+- small ghosts in a corridor all line up
+- sawblades hitting trigger incorrectly
+- cobwebs 
+- cobweb weapon
+- cloud.png grows when using magic
 - collision radius should not work for triggers
 - magic build up animation
 - level completed shown twice
@@ -59,6 +63,9 @@ thief, kill thief to recover items
 mining?
 add bot to test out multiplayer ?
 different profiles for level generation
+
+Sat May 16 15:13:18 EDT 2015
+- spiders
 
 Sun May 10 12:03:11 EDT 2015
 - press m for magic to build up magic attack
