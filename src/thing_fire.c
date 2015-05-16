@@ -259,6 +259,9 @@ static void thing_fire_at (thingp t, thingp target)
                                     0, /* tpp data */
                                     0, /* item */
                                     0 /* stats */);
+    if (!w) {
+        return;
+    }
 
     thingp p = wid_get_thing(w);
 
