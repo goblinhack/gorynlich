@@ -1541,9 +1541,9 @@ uint32_t level_count_is_rrr7 (levelp level)
     return (level_count_is_x(level, tp_is_rrr7));
 }
 
-uint32_t level_count_is_rrr8 (levelp level)
+uint32_t level_count_is_cobweb (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr8));
+    return (level_count_is_x(level, tp_is_cobweb));
 }
 
 uint32_t level_count_is_ethereal (levelp level)

@@ -1,0 +1,17 @@
+{
+ short_name="cobweb"
+ raw_name="cobweb"
+ tooltip="cobweb"
+ z_depth=4
+ is_monst
+ hit_priority=9
+ is_cobweb
+ damage=50
+ scale=0.5
+ can_be_hit_chance=50
+ tiles={
+  tile={
+   tile="cobweb1"
+  }
+ }
+}
