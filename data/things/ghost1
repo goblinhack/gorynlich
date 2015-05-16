@@ -15,7 +15,7 @@
  is_shadow_caster_soft
  hit_priority=10
  is_cats_eyes
- is_collision_map_medium
+ is_collision_map_tiny
  is_animated
  is_fragile
  tiles={
