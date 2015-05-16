@@ -4,7 +4,7 @@
  tooltip="Lesser demon"
  z_depth=3
  speed=3
- max_hp=150
+ max_hp=350
  damage=8
  bonus_xp_on_death=500
  is_effect_rotate_2way
