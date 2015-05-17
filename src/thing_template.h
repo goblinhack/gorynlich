@@ -119,6 +119,7 @@ typedef struct tp_ {
     char *weapon_carry_anim;
     char *weapon_swing_anim;
     char *shield_anim;
+    char *magic_anim;
 
     /*
      * What to shout when an item is used.
@@ -377,6 +378,7 @@ const char *tp_spawn_on_death(tpp);
 const char *tp_explodes_as(tpp);
 const char *tp_weapon_carry_anim(tpp);
 const char *tp_shield_anim(tpp);
+const char *tp_magic_anim(tpp);
 const char *tp_weapon_swing_anim(tpp);
 const char *tp_message_on_use(tpp);
 const char *tp_mob_spawn(tpp);

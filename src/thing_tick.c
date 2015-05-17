@@ -305,6 +305,8 @@ void thing_tick_server_player_slow_all (int force)
 
             thing_health_tick(t);
 
+            thing_magic_tick(t);
+
             /*
              * Work out the torch light radius. Each torch lights 0.5 radius 
              * units.
