@@ -2219,7 +2219,12 @@ thingp_get_interpolated_position(const thingp t, double *x, double *y);
 widp thing_place(thingp t, tpp tp, itemp item);
 widp thing_place_behind(thingp t, tpp tp, itemp item);
 widp thing_place_behind_or_under(thingp t, tpp tp, itemp item);
+
+/*
+ * thing_dir.c
+ */
 void thing_dir(thingp t, double *dx, double *dy);
+int thing_angle_to_dir(double dx, double dy);
 
 /*
  * thing_torch.c
