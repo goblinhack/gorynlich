@@ -6,7 +6,7 @@
  max_hp=10
  is_mob_spawner
  mob_spawn_delay_tenths=500
- mob_spawn="data/things/spider"
+ mob_spawn="data/things/spider1"
  hit_priority=9
  is_cobweb
  scale=0.5
