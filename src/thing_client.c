@@ -4,31 +4,14 @@
  * See the LICENSE file for license.
  */
 
-// REMOVED #include <SDL.h>
 
 #include "main.h"
 #include "thing.h"
-// REMOVED #include "thing_timer.h"
-// REMOVED #include "wid.h"
 #include "wid_game_map_client.h"
-// REMOVED #include "wid_game_map_server.h"
-// REMOVED #include "map.h"
-// REMOVED #include "level.h"
-// REMOVED #include "time_util.h"
-// REMOVED #include "string_util.h"
-// REMOVED #include "wid_textbox.h"
-// REMOVED #include "sound.h"
 #include "socket_util.h"
 #include "client.h"
-// REMOVED #include "timer.h"
 #include "tile.h"
 #include "math_util.h"
-// REMOVED #include "wid_hiscore.h"
-// REMOVED #include "wid_player_stats.h"
-// REMOVED #include "wid_player_info.h"
-// REMOVED #include "wid_player_inventory.h"
-// REMOVED #include "wid_player_action.h"
-// REMOVED #include "string_ext.h"
 
 /*
  * This is movement on the client of the player initiated by the player.
