@@ -1,0 +1,59 @@
+{
+ short_name="happy skull"
+ raw_name="skull1"
+ tooltip="happy skull"
+ z_depth=3
+ speed=3
+ max_hp=20
+ damage=3
+ bonus_xp_on_death=50
+ is_effect_rotate_2way
+ vision_distance=8
+ hit_delay_tenths=10
+ is_monst
+ is_shadow_caster
+ is_shadow_caster_soft
+ hit_priority=10
+ scale=0.5
+ is_ethereal
+ is_cats_eyes
+ is_collision_map_medium
+ is_animated
+ fires="data/things/energy1"
+ weapon_fire_delay_hundredths=50
+ d10000_chance_of_appearing=30
+ tiles={
+  tile={ delay=50 tile="skull1-1" }
+  tile={ delay=50 tile="skull1-2" }
+  tile={ delay=50 tile="skull1-3" }
+  tile={ delay=50 tile="skull1-4" }
+  tile={ delay=50 tile="skull1-5" }
+  tile={ delay=50 tile="skull1-6" }
+  tile={ delay=50 tile="skull1-7" }
+  tile={ delay=50 tile="skull1-8" }
+  tile={ delay=50 tile="skull1-9" }
+  tile={ delay=50 tile="skull1-10" }
+  tile={ delay=50 tile="skull1-11" }
+  tile={ delay=50 tile="skull1-12" }
+  tile={ delay=50 tile="skull1-13" }
+  tile={ delay=50 tile="skull1-14" }
+  tile={ delay=50 tile="skull1-15" }
+  tile={ delay=50 tile="skull1-16" }
+  tile={ delay=50 tile="skull1-17" }
+  tile={ delay=50 tile="skull1-18" }
+  tile={ delay=50 tile="skull1-19" }
+  tile={ delay=50 tile="skull1-20" }
+  tile={ delay=50 tile="skull1-21" }
+  tile={ delay=50 tile="skull1-22" }
+  tile={ delay=50 tile="skull1-23" }
+  tile={ delay=50 tile="skull1-24" }
+  tile={ delay=50 tile="skull1-25" }
+  tile={ delay=50 tile="skull1-26" }
+  tile={ delay=50 tile="skull1-27" }
+  tile={ delay=50 tile="skull1-28" }
+  tile={ delay=50 tile="skull1-29" }
+  tile={ delay=50 tile="skull1-30" }
+  tile={ delay=50 tile="skull1-31" }
+  tile={ delay=50 tile="skull1-32" }
+ }
+}
