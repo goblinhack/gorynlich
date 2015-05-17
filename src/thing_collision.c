@@ -1038,7 +1038,8 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * No spiders stuck in their own web
                  */
-                if (tp_to_id(t->tp) == THING_SPIDER) {
+                if ((tp_to_id(t->tp) == THING_SPIDER1) ||
+                    (tp_to_id(t->tp) == THING_SPIDER2)) {
                     continue;
                 }
 

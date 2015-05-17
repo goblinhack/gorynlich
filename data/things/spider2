@@ -1,25 +1,25 @@
 {
- short_name="spider"
- raw_name="spider"
- tooltip="spider"
+ short_name="giant spider"
+ raw_name="giant spider"
+ tooltip="giant spider"
  z_depth=3
  speed=1
- max_hp=100
+ max_hp=200
  damage=25
- bonus_xp_on_death=200
+ bonus_xp_on_death=250
  jump_speed=20
- vision_distance=5
- hit_delay_tenths=50
+ vision_distance=8
+ hit_delay_tenths=30
  is_monst
  is_cats_eyes
- scale=0.3
+ scale=0.7
  is_variable_size
  hit_priority=10
  is_collision_map_medium
  is_animated
  fires="data/things/silkball"
- weapon_fire_delay_hundredths=200
- d10000_chance_of_appearing=50
+ weapon_fire_delay_hundredths=100
+ d10000_chance_of_appearing=10
  tiles={
 
   tile={ delay=200 is_dir_down tile="spider-down.1" }
