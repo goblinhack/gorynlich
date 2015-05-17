@@ -10,6 +10,7 @@
  jump_speed=20
  vision_distance=8
  hit_delay_tenths=30
+ is_warm_blooded
  is_monst
  is_cats_eyes
  scale=0.7
