@@ -139,8 +139,8 @@ thingp thing_mob_spawn_on_death (thingp t)
         }
 
         if (first) {
-            x = 0;
-            y = 0;
+            x = t->x;
+            y = t->y;
             first = 0;
         }
 
@@ -165,7 +165,8 @@ thingp thing_mob_spawn_on_death (thingp t)
             }
         }
 
-        widp w = wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
+        widp w = wid_game_map_server_replace_tile(
+                                         wid_game_map_server_grid_container,
                                          x,
                                          y,
                                          0, /* thing */
@@ -173,8 +174,9 @@ thingp thing_mob_spawn_on_death (thingp t)
                                          0, /* tpp data */
                                          0 /* item */,
                                          0 /* stats */);
-THING_CON(t, "place %s on death", mob_spawn);
-THING_CON(wid_get_thing(w), "place ");
+
+        THING_CON(t, "place %s on death", mob_spawn);
+
         return (wid_get_thing(w));
     }
 

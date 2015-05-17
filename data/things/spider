@@ -13,8 +13,6 @@
  is_monst
  is_cats_eyes
  scale=0.3
- is_shadow_caster
- is_shadow_caster_soft
  is_variable_size
  hit_priority=10
  is_collision_map_medium

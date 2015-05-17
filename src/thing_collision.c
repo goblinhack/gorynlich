@@ -993,6 +993,29 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 }
             }
 
+            /*
+             * You can walk closer to a cobweb, but not back out...
+             */
+            if (thing_is_cobweb(it)) {
+                double dist_now = DISTANCE(t->x, t->y, it->x, it->y);
+                double dist_then = DISTANCE(nx, ny, it->x, it->y);
+
+                /*
+                 * No spiders stuck in their own web
+                 */
+                if (tp_to_id(t->tp) == THING_SPIDER) {
+                    continue;
+                }
+
+                if (dist_then < dist_now) {
+                    CON("%f %f",dist_then,dist_now);
+                    continue;
+                } else {
+                    CON("%s stuck in web",thing_logname(t));
+                    return (true);
+                }
+            }
+
             if (thing_is_wall(me)) {
                 /*
                  * Allow moving walls to crush!
@@ -1063,8 +1086,16 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
             }
 
             /*
-                * No collisions with the floor!
-                */
+             * You can walk closer to a cobweb, but not back out...
+             */
+            if (thing_is_cobweb(it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            /*
+             * No collisions with the floor!
+             */
             if (thing_is_floor(it)) {
                 wid_it = wid_next;
                 continue;

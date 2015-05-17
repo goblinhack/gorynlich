@@ -88,7 +88,9 @@ uint8_t thing_server_move (thingp t,
                 THING_LOG(t, "  client %f %f", x, y);
             }
 
-            return (false);
+            if (!fire) {
+                return (false);
+            }
         }
     }
 
@@ -105,7 +107,9 @@ uint8_t thing_server_move (thingp t,
             thing_update(t);
             t->needs_tx_refresh_xy_and_template_id = 1;
 
-            return (false);
+            if (!fire) {
+                return (false);
+            }
         }
     }
 
