@@ -1019,7 +1019,7 @@ wid_game_map_client_replace_tile (widp w,
      * no effect on hp on the server yet.
      */
     if (thing_is_variable_size(t)) {
-        scale += gaussrand(0.0, 0.1);
+        scale += gaussrand(0.0, 0.05);
     }
 
     if (scale != 1.0) {

@@ -246,6 +246,7 @@ void thing_client_wid_update (thingp t,
                               uint8_t smooth,
                               uint8_t is_new)
 {
+//CON("%s %f %f",thing_logname(t),x,y);
     thing_client_wid_move(t, x, y, smooth);
 
     /*
