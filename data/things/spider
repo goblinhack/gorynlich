@@ -9,7 +9,7 @@
  bonus_xp_on_death=200
  jump_speed=20
  vision_distance=5
- hit_delay_tenths=200
+ hit_delay_tenths=50
  is_monst
  is_cats_eyes
  scale=0.3
@@ -18,7 +18,7 @@
  is_collision_map_medium
  is_animated
  fires="data/things/silkball"
- weapon_fire_delay_hundredths=500
+ weapon_fire_delay_hundredths=200
  d10000_chance_of_appearing=50
  tiles={
 

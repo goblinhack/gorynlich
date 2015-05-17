@@ -10,7 +10,7 @@
  hit_priority=9
  is_cobweb
  scale=0.5
- collision_radius=1.5
+ is_collision_map_large
  tiles={
   tile={
    tile="cobweb1"

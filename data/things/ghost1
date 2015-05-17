@@ -6,13 +6,11 @@
  speed=5
  max_hp=1
  damage=2
- scale=0.5
+ scale=0.7
  bonus_xp_on_death=5
  vision_distance=20
  hit_delay_tenths=5
  is_monst
- is_shadow_caster
- is_shadow_caster_soft
  hit_priority=10
  is_cats_eyes
  is_collision_map_tiny
