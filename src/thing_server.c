@@ -15,7 +15,6 @@
 #include "map.h"
 #include "level.h"
 #include "time_util.h"
-// REMOVED #include "string_util.h"
 #include "wid_textbox.h"
 #include "sound.h"
 #include "socket_util.h"
