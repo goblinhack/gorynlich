@@ -161,6 +161,13 @@ thingp thing_mob_spawn_on_death (thingp t)
                 map_is_exit_at(server_level, x, y)) {
                 continue;
             }
+        } else {
+            /*
+             * Don't want too many cobwebs in the same place.
+             */
+            if (map_is_cobweb_at(server_level, x, y)) {
+                continue;
+            }
         }
 
         widp w = wid_game_map_server_replace_tile(

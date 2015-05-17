@@ -11,48 +11,6 @@
 #include "wid_game_map_server.h"
 #include "map.h"
 
-void thing_dir (thingp t, double *dx, double *dy)
-{
-    *dx = 0;
-    *dy = 0;
-
-    if (thing_is_dir_down(t)) {
-        *dy = 1.0;
-    }
-
-    if (thing_is_dir_up(t)) {
-        *dy = -1.0;
-    }
-
-    if (thing_is_dir_right(t)) {
-        *dx = 1.0;
-    }
-
-    if (thing_is_dir_left(t)) {
-        *dx = -1.0;
-    }
-
-    if (thing_is_dir_tl(t)) {
-        *dx = -1.0;
-        *dy = -1.0;
-    }
-
-    if (thing_is_dir_tr(t)) {
-        *dx = 1.0;
-        *dy = -1.0;
-    }
-
-    if (thing_is_dir_bl(t)) {
-        *dx = -1.0;
-        *dy = 1.0;
-    }
-
-    if (thing_is_dir_br(t)) {
-        *dx = 1.0;
-        *dy = 1.0;
-    }
-}
-
 static widp thing_place_ (thingp t, 
                           tpp tp, 
                           itemp item_in, 
