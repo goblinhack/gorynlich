@@ -1384,6 +1384,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
     verify(t);
 
+//CON("%s %f %f",thing_logname(t),t->x,t->y);
     tpp tp = thing_tp(t);
 
     /*
