@@ -65,18 +65,16 @@ uint8_t thing_mob_spawn (thingp t)
         /*
          * Things not to spawn onto.
          */
-        if (!tp_is_cobweb(t->tp)) {
-            if (map_is_wall_at(server_level, x, y)          ||
-                map_is_monst_at(server_level, x, y)         ||
-                map_is_pipe_at(server_level, x, y)          ||
-                map_is_door_at(server_level, x, y)          ||
-                map_is_player_at(server_level, x, y)        ||
-                map_is_treasure_at(server_level, x, y)      ||
-                map_is_food_at(server_level, x, y)          ||
-                map_is_mob_spawner_at(server_level, x, y)   ||
-                map_is_exit_at(server_level, x, y)) {
-                continue;
-            }
+        if (map_is_wall_at(server_level, x, y)          ||
+            map_is_monst_at(server_level, x, y)         ||
+            map_is_pipe_at(server_level, x, y)          ||
+            map_is_door_at(server_level, x, y)          ||
+            map_is_player_at(server_level, x, y)        ||
+            map_is_treasure_at(server_level, x, y)      ||
+            map_is_food_at(server_level, x, y)          ||
+            map_is_mob_spawner_at(server_level, x, y)   ||
+            map_is_exit_at(server_level, x, y)) {
+            continue;
         }
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
@@ -175,7 +173,7 @@ thingp thing_mob_spawn_on_death (thingp t)
                                          0 /* item */,
                                          0 /* stats */);
 
-        THING_CON(t, "place %s on death", mob_spawn);
+        THING_LOG(t, "place %s on death", mob_spawn);
 
         return (wid_get_thing(w));
     }
