@@ -17,6 +17,7 @@
  is_variable_size
  hit_priority=10
  is_collision_map_medium
+ d10000_chance_of_appearing=70
  is_animated
  is_fragile
  tiles={

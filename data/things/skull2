@@ -1,12 +1,12 @@
 {
- short_name="bouncy skull"
- raw_name="skull1"
- tooltip="bouncy skull"
+ short_name="skull lord"
+ raw_name="skull2"
+ tooltip="skull lord"
  z_depth=3
  speed=3
  max_hp=20
- damage=3
- bonus_xp_on_death=50
+ damage=5
+ bonus_xp_on_death=200
  is_effect_rotate_2way
  vision_distance=8
  hit_delay_tenths=10
@@ -14,12 +14,13 @@
  is_shadow_caster
  is_shadow_caster_soft
  hit_priority=10
- scale=0.5
  is_ethereal
  is_cats_eyes
  is_collision_map_medium
  is_animated
- d10000_chance_of_appearing=80
+ fires="data/things/energy1"
+ weapon_fire_delay_hundredths=50
+ d10000_chance_of_appearing=50
  tiles={
   tile={ delay=50 tile="skull1-1" }
   tile={ delay=50 tile="skull1-2" }
