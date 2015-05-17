@@ -1,5 +1,4 @@
 --------------------------------------- plan for may --------------------------------------
-- too many cobwebs in one place
 - spiders should turn direction when firing
 - cloud.png grows when using magic
 - magic build up animation
@@ -21,10 +20,8 @@
 - pause character on spending point window - on single player?
 - tx socket thing loop is too slow could use a thing array to update
 --------------------------------------- plan for jul --------------------------------------
-  - add screaming fire skull monst?
 more monsters, ideas:
     * teleports
-    * screaming skulls that fire fireballs
     * mushroom clouds / game of life generator for growing mould spores ?
     * giant worm like creature?
 dungeon decorations
@@ -58,6 +55,10 @@ thief, kill thief to recover items
 mining?
 add bot to test out multiplayer ?
 different profiles for level generation
+
+Sun May 17 15:52:27 EDT 2015
+- too many cobwebs in one place
+- skull monster
 
 Sat May 16 15:13:18 EDT 2015
 - spider webs that slow you down and spiders that fire them, webs spawn spiders too

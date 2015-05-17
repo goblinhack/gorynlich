@@ -307,6 +307,12 @@ static void thing_fire_at (thingp t, thingp target)
                       fnexthop_x > p->x,
                       false, /* fire */
                       false  /* magic */);
+
+    /*
+     * Point the shooter at the target.
+     */
+    t->dir = thing_angle_to_dir(p->dx, p->dy);
+    thing_update(t);
 }
 
 /*
