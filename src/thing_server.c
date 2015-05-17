@@ -65,6 +65,11 @@ uint8_t thing_server_move (thingp t,
         thing_move_set_dir(shield_anim, &x, &y, up, down, left, right);
     }
 
+    thingp magic_anim = thing_magic_anim(t);
+    if (magic_anim) {
+        thing_move_set_dir(magic_anim, &x, &y, up, down, left, right);
+    }
+
     /*
      * A thing can move diagonally and may not have a collision at the
      * destination, but it might half way through the move; so check for that 
@@ -87,7 +92,7 @@ uint8_t thing_server_move (thingp t,
                 THING_LOG(t, "  client %f %f", x, y);
             }
 
-            if (!fire) {
+            if (!fire && !magic) {
                 return (false);
             }
         }
@@ -106,7 +111,7 @@ uint8_t thing_server_move (thingp t,
             thing_update(t);
             t->needs_tx_refresh_xy_and_template_id = 1;
 
-            if (!fire) {
+            if (!fire && !magic) {
                 return (false);
             }
         }
@@ -127,6 +132,10 @@ uint8_t thing_server_move (thingp t,
 
     if (shield_anim) {
         thing_move_set_dir(shield_anim, &x, &y, up, down, left, right);
+    }
+
+    if (magic_anim) {
+        thing_move_set_dir(magic_anim, &x, &y, up, down, left, right);
     }
 
     if (fire) {
@@ -395,5 +404,13 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
     thingp shield_anim = thing_shield_anim(t);
     if (shield_anim) {
         thing_server_wid_move(shield_anim, x, y, is_new);
+    }
+
+    /*
+     * Make the magic follow the thing.
+     */
+    thingp magic_anim = thing_magic_anim(t);
+    if (magic_anim) {
+        thing_server_wid_move(magic_anim, x, y, is_new);
     }
 }

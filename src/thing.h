@@ -286,6 +286,7 @@ enum {
     THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS,
     THING_STATE_BIT_SHIFT_EXT2_IS_JUMPING,
     THING_STATE_BIT_SHIFT_EXT2_COLOR,
+    THING_STATE_BIT_SHIFT_EXT2_MAGIC_ID_PRESENT,
     THING_STATE_BIT_SHIFT_EXT2_SCALE,
     /********************************************************************
      * Update msg_map_update if you add here
@@ -301,7 +302,6 @@ enum {
     THING_STATE_EFFECT_IS_HIT_MISS,
     THING_STATE_EFFECT_IS_HIT_SUCCESS,
     THING_STATE_EFFECT_IS_POWER_UP,
-    THING_STATE_EFFECT_IS_SHIELD,
     THING_STATE_EFFECT_IS_HIT_CRIT,
 };
 
@@ -385,6 +385,7 @@ enum {
     THING_EXPLOSION4,
     THING_SHIELD1,
     THING_MAGIC1,
+    THING_MAGIC_CLOUD,
     THING_POWERUP1,
     THING_HIT_SUCCESS,
     THING_HIT_MISS,
@@ -496,6 +497,7 @@ typedef struct thing_ {
     uint16_t weapon_carry_anim_thing_id;
     uint16_t weapon_swing_anim_thing_id;
     uint16_t shield_anim_thing_id;
+    uint16_t magic_anim_thing_id;
 
     /*
      * Weapon thing template.
@@ -503,9 +505,10 @@ typedef struct thing_ {
     tpp weapon;
 
     /*
-     * Current shield
+     * Current shield or magic effect
      */
-    tpp shield;
+    tpp shield_anim;
+    tpp magic_anim;
 
     /*
      * Pointer to common settings for this thing.
@@ -2142,7 +2145,12 @@ static inline tpp thing_weapon (const thingp t)
 
 static inline tpp thing_shield (const thingp t)
 {
-    return (t->shield);
+    return (t->shield_anim);
+}
+
+static inline tpp thing_magic (const thingp t)
+{
+    return (t->magic_anim);
 }
 
 /*
@@ -2355,3 +2363,11 @@ void thing_health_tick(thingp t);
  */
 void thing_server_magic_powerup(thingp t);
 void thing_server_magic_fire(thingp t);
+thingp thing_magic_anim(thingp t);
+void thing_unwield_magic(thingp t);
+void thing_wield_magic(thingp t, tpp magic);
+widp thing_get_magic_anim_wid(thingp t);
+void thing_set_magic_anim_id(thingp t, uint32_t magic_anim_id);
+void thing_set_magic_anim(thingp t, thingp magic_anim);
+void thing_magic_sheath(thingp t);
+void thing_magic_tick(thingp t);

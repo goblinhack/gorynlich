@@ -180,7 +180,12 @@ typedef struct {
     /*
      * THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT
      */
-    uint8_t owner_id;
+    uint8_t shield_id;
+
+    /*
+     * THING_STATE_BIT_SHIFT_EXT2_MAGIC_ID_PRESENT
+     */
+    uint8_t magic_id;
 
     /*
      * THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT

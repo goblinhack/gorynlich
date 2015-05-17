@@ -63,6 +63,6 @@ void thing_health_tick (thingp t)
      */
     int delta = thing_stats_get_hp(t) - thing_stats_get_max_hp(t);
     if (delta > 0) {
-        thing_stats_modify_hp(t, -delta / 10);
+        thing_stats_modify_hp(t, -1);
     }
 }
