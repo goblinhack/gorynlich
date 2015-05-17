@@ -1,5 +1,4 @@
 --------------------------------------- plan for may --------------------------------------
-- spiders should turn direction when firing
 - cloud.png grows when using magic
 - magic build up animation
 - level completed shown twice
@@ -57,6 +56,7 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Sun May 17 15:52:27 EDT 2015
+- spiders should turn direction when firing
 - too many cobwebs in one place
 - skull monster
 
