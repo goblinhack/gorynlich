@@ -114,7 +114,12 @@ void thing_animate (thingp t)
         } else if (thing_tile_is_dying(tile)) {
             tile = thing_tile_next(tiles, tile);
             continue;
-        } else if (thing_is_jumping(t)) {
+        } else if (thing_is_jumping(t) && 
+                   thing_is_effect_rotate_2way(t)) {
+            /*
+             * Jumping and doesn't use directions, so just stick to jump 
+             * animation frames/
+             */
             if (!thing_tile_is_jumping(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;

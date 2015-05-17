@@ -691,6 +691,9 @@ static void thing_err_ (thingp t, const char *fmt, va_list args)
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
 
+    putf(MY_STDERR, buf);
+    fflush(MY_STDERR);
+
     backtrace_print();
     fflush(MY_STDOUT);
 
