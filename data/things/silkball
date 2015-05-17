@@ -12,6 +12,7 @@
  is_effect_pulse
  is_variable_size
  is_collision_map_medium
+ scale=0.5
  spawn_on_death="data/things/cobweb"
  tiles={
   tile={

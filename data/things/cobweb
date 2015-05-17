@@ -2,13 +2,15 @@
  short_name="cobweb"
  raw_name="cobweb"
  tooltip="cobweb"
- z_depth=4
- is_monst
+ z_depth=2
+ max_hp=10
+ is_mob_spawner
+ mob_spawn_delay_tenths=500
+ mob_spawn="data/things/spider"
  hit_priority=9
  is_cobweb
- damage=50
  scale=0.5
- can_be_hit_chance=50
+ collision_radius=1.5
  tiles={
   tile={
    tile="cobweb1"
