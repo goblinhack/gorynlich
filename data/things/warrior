@@ -12,6 +12,7 @@
  max_magic=10
  hp_per_level=10
  is_player
+ magic_anim="data/things/magic_cloud"
  hit_priority=20
  stats_attack_melee=13
  stats_attack_ranged=10

@@ -155,12 +155,22 @@ void thing_update (thingp t)
     }
 
     /*
-     * Update the weapon being carried.
+     * Update the shield being used.
      */
     thingp shield_anim = thing_shield_anim(t);
     if (shield_anim) {
         if (!thing_is_dead_or_dying(shield_anim)) {
             thing_update(shield_anim);
+        }
+    }
+
+    /*
+     * Update the mawic being used.
+     */
+    thingp magic_anim = thing_magic_anim(t);
+    if (magic_anim) {
+        if (!thing_is_dead_or_dying(magic_anim)) {
+            thing_update(magic_anim);
         }
     }
 }
@@ -367,6 +377,11 @@ void thing_sanity (thingp t)
     }
 
     tmp = thing_shield_anim(t);
+    if (tmp) {
+        verify(tmp);
+    }
+
+    tmp = thing_magic_anim(t);
     if (tmp) {
         verify(tmp);
     }
@@ -1099,6 +1114,12 @@ static void thing_remove_hooks (thingp t)
             thing_set_shield_anim(owner, 0);
         }
 
+        if (t->thing_id == owner->magic_anim_thing_id) {
+            thing_unwield_magic(owner);
+
+            thing_set_magic_anim(owner, 0);
+        }
+
         thing_set_owner(t, 0);
     }
 
@@ -1127,6 +1148,14 @@ static void thing_remove_hooks (thingp t)
         verify(item);
         thing_set_owner(item, 0);
         thing_dead(item, 0, "shield anim owner killed");
+    }
+
+    if (t->magic_anim_thing_id) {
+        thingp item = thing_magic_anim(t);
+        thing_set_magic_anim(t, 0);
+        verify(item);
+        thing_set_owner(item, 0);
+        thing_dead(item, 0, "magic anim owner killed");
     }
 
     /*
@@ -1910,7 +1939,7 @@ CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
     /*
      * If the player has a shield, let the shield take the hit.
      */
-    if (t->shield) {
+    if (t->shield_anim) {
         t = thing_shield_anim(t);
         if (!t) {
             DIE("no shield anim set but has shield");
@@ -2299,6 +2328,11 @@ void thing_leave_level (thingp t)
     if (shield_anim) {
         thing_leave_level(shield_anim);
     }
+
+    thingp magic_anim = thing_magic_anim(t);
+    if (magic_anim) {
+        thing_leave_level(magic_anim);
+    }
 }
 
 void thing_join_level (thingp t)
@@ -2325,6 +2359,11 @@ void thing_join_level (thingp t)
     thingp shield_anim = thing_shield_anim(t);
     if (shield_anim) {
         thing_join_level(shield_anim);
+    }
+
+    thingp magic_anim = thing_magic_anim(t);
+    if (magic_anim) {
+        thing_join_level(magic_anim);
     }
 }
 
@@ -2446,6 +2485,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
 
                     thing_weapon_sheath(player);
                     thing_shield_sheath(player);
+                    thing_magic_sheath(player);
                     thing_map_remove(t);
                     thing_set_wid(t, 0);
                     continue;
@@ -3193,41 +3233,39 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
          * WARING: Keep the above and below in sync.
          */
         uint8_t ext1 =
-            ((t->is_dead        ? 1 : 0) <<
+            ((t->is_dead                              ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)             |
-            ((t->on_active_list ? 1 : 0) <<
+            ((t->on_active_list                       ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_IS_ACTIVE)           |
-            ((t->is_sleeping ? 1 : 0) <<
+            ((t->is_sleeping                          ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_IS_SLEEPING)         |
-            ((t->has_left_level ? 1 : 0) <<
+            ((t->has_left_level                       ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL)      |
+            ((t->weapon                               ? 1 : 0) <<
+                THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT)   |
+            ((t->shield_anim                          ? 1 : 0) <<
+                THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT)   |
             ((t->effect         ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT);
 
         uint8_t ext2 =
-            ((t->torch_light_radius_set              ? 1 : 0) <<
+            ((t->torch_light_radius_set               ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)  |
-            ((t->is_jumping                          ? 1 : 0) <<
+            ((t->is_jumping                           ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_IS_JUMPING)          |
-            (((t->data && t->data->col_name)         ? 1 : 0) <<
+            (((t->data && t->data->col_name)          ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_COLOR)               |
-            (((t->scale)                             ? 1 : 0) <<
+            (((t->scale)                              ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_SCALE)               |
-            ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) <<
+            ((t->magic_anim                           ? 1 : 0) <<
+                THING_STATE_BIT_SHIFT_EXT2_MAGIC_ID_PRESENT)    |
+            ((t->needs_tx_refresh_xy_and_template_id  ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT2_RESYNC);
 
         /*
          * Once the jump is sent to the client, turn it off.
          */
         t->is_jumping = false;
-
-        if (t->weapon) {
-            ext1 |= 1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT;
-        }
-
-        if (t->shield) {
-            ext1 |= 1 << THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT;
-        }
 
         if (t->needs_tx_weapon_swung) {
             t->needs_tx_weapon_swung = false;
@@ -3319,7 +3357,12 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT)) {
-            *data++ = tp_to_id(t->shield);
+            *data++ = tp_to_id(t->shield_anim);
+//CON("  owner    0x%04x", t->owner_thing_id);
+        }
+
+        if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_MAGIC_ID_PRESENT)) {
+            *data++ = tp_to_id(t->magic_anim);
 //CON("  owner    0x%04x", t->owner_thing_id);
         }
 
@@ -3462,6 +3505,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
         uint8_t template_id;
         uint8_t weapon_id;
         uint8_t shield_id;
+        uint8_t magic_id;
         uint8_t weapon_swung;
         uint8_t torch_light_radius_present;
         uint8_t effect;
@@ -3558,10 +3602,20 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             shield_id = *data++;
 //CON("  owner    0x%04x", owner_id);
             if (!shield_id) {
-                DIE("THING_STATE_BIT_SHIFT_EXT1_OWNER_ID_PRESENT set but no owner");
+                DIE("THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT set but no owner");
             }
         } else {
             shield_id = 0;
+        }
+
+        if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_MAGIC_ID_PRESENT)) {
+            magic_id = *data++;
+//CON("  owner    0x%04x", owner_id);
+            if (!magic_id) {
+                DIE("THING_STATE_BIT_SHIFT_EXT2_MAGIC_ID_PRESENT set but no owner");
+            }
+        } else {
+            magic_id = 0;
         }
 
         if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)) {
@@ -3686,8 +3740,14 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 
         if (shield_id) {
             thing_wield_shield(t, id_to_tp(shield_id));
-        } else if (t->shield) {
+        } else if (t->shield_anim) {
             thing_unwield_shield(t);
+        }
+
+        if (magic_id) {
+            thing_wield_magic(t, id_to_tp(magic_id));
+        } else if (t->magic_anim) {
+            thing_unwield_magic(t);
         }
 
         if (weapon_swung) {

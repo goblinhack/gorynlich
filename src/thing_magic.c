@@ -14,6 +14,7 @@
 #include "math_util.h"
 #include "level.h"
 #include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 #include "time_util.h"
 
 /*
@@ -36,6 +37,16 @@ void thing_server_magic_powerup (thingp t)
     thing_stats_modify_magic(t, -magic);
 
     t->timestamp_magic_powerup = time_get_time_ms();
+
+    const char *magic_anim = tp_magic_anim(t->tp);
+
+    tpp what = tp_find(magic_anim);
+    if (!what) {
+        THING_ERR(t, "cannot use magic effect %s", magic_anim);
+        return;
+    }
+
+    thing_wield_magic(t, what);
 }
 
 /*
@@ -201,4 +212,222 @@ void thing_server_magic_fire (thingp t)
                       fnexthop_x > p->x,
                       false, /* magic */
                       false  /* magic */);
+
+    thing_unwield_magic(t);
+}
+
+void thing_set_magic_anim_id (thingp t, uint32_t magic_anim_id)
+{
+    thingp magic_anim;
+
+    if (!magic_anim_id) {
+        thing_set_magic_anim(t, 0);
+        return;
+    }
+
+    if (t->on_server) {
+        magic_anim = thing_server_find(magic_anim_id);
+    } else {
+        magic_anim = thing_client_find(magic_anim_id);
+    }
+
+    thing_set_magic_anim(t, magic_anim);
+}
+
+void thing_set_magic_anim (thingp t, thingp magic_anim)
+{
+    if (magic_anim) {
+        verify(magic_anim);
+    }
+
+    thingp old_magic_anim = thing_magic_anim(t);
+
+    if (old_magic_anim) {
+        if (old_magic_anim == magic_anim) {
+            return;
+        }
+
+        if (magic_anim) {
+            THING_LOG(t, "magic carry changed, %s->%s",
+                      thing_logname(old_magic_anim),
+                      thing_logname(magic_anim));
+        } else {
+            THING_LOG(t, "remove magic carry animation, %s",
+                      thing_logname(old_magic_anim));
+        }
+    } else {
+        if (magic_anim) {
+            THING_LOG(t, "magic carry anim now, %s",
+                      thing_logname(magic_anim));
+        }
+    }
+
+    if (magic_anim) {
+        t->magic_anim_thing_id = magic_anim->thing_id;
+    } else {
+        t->magic_anim_thing_id = 0;
+    }
+}
+
+thingp thing_magic_anim (thingp t)
+{
+    thingp magic_anim = 0;
+
+    if (t->on_server) {
+        if (t->magic_anim_thing_id) {
+            magic_anim = thing_server_id(t->magic_anim_thing_id);
+        }
+    } else {
+        if (t->magic_anim_thing_id) {
+            magic_anim = thing_client_id(t->magic_anim_thing_id);
+        }
+    }
+
+    return (magic_anim);
+}
+
+void thing_magic_sheath (thingp t)
+{
+    tpp magic = thing_magic(t);
+    if (!magic) {
+        return;
+    }
+
+    THING_LOG(t, "sheathing magic %s", tp_short_name(magic));
+
+    /*
+     * If this magic has its own thing id for animations then destroy that.
+     */
+    thingp magic_anim = thing_magic_anim(t);
+    if (magic_anim) {
+        THING_LOG(t, "unwield, carry anim magic %s", 
+                  thing_logname(magic_anim));
+        thing_dead(magic_anim, 0, "owner magic");
+        thing_set_magic_anim(t, 0);
+    }
+
+    t->magic_anim = 0;
+}
+
+void thing_unwield_magic (thingp t)
+{
+    tpp magic = thing_magic(t);
+    if (!magic) {
+        return;
+    }
+
+    THING_LOG(t, "unwielding weapon magic %s", tp_short_name(magic));
+
+    thing_magic_sheath(t);
+}
+
+void thing_wield_magic (thingp t, tpp magic)
+{
+    if (t->magic_anim == magic) {
+        return;
+    }
+
+    thing_unwield_magic(t);
+
+    if (thing_is_player(t)) {
+        THING_LOG(t, "unwield weapon magic %s", tp_short_name(magic));
+    }
+
+    /*
+     * Find out what to use as the sheild.
+     */
+    tpp what = 0;
+    const char *as = tp_magic_anim(magic);
+    if (!as) {
+        as = tp_magic_anim(t->tp);
+        if (!as) {
+            what = magic;
+        } else {
+            what = tp_find(as);
+            if (!what) {
+                THING_ERR(t, "Could not find %s to wield", as);
+                return;
+            }
+        }
+    } else {
+        what = tp_find(as);
+        if (!what) {
+            THING_ERR(t, "Could not find %s to wield", as);
+            return;
+        }
+    }
+
+    if (!what) {
+        THING_ERR(t, "Could not use magic");
+        return;
+    }
+
+    t->magic_anim = magic;
+
+    widp magic_anim_wid;
+
+    if (t->on_server) {
+        magic_anim_wid = wid_game_map_server_replace_tile(
+                                wid_game_map_server_grid_container,
+                                t->x,
+                                t->y,
+                                0, /* thing */
+                                what,
+                                0, /* tpp data */
+                                0 /* item */,
+                                0 /* stats */);
+    } else {
+        magic_anim_wid = wid_game_map_client_replace_tile(
+                                wid_game_map_client_grid_container,
+                                t->x, t->y, 0, what);
+    }
+
+    /*
+     * Save the thing id so the client wid can keep track of the magic.
+     */
+    thingp child = wid_get_thing(magic_anim_wid);
+    thing_set_magic_anim(t, child);
+
+    child->dir = t->dir;
+
+    /*
+     * Attach to the thing.
+     */
+    thing_set_owner(child, t);
+
+    if (t->on_server) {
+        thing_update(t);
+    } else {
+        thing_client_wid_update(t, t->x, t->y, false /* smooth */,
+                                false /* is new */);
+    }
+}
+
+widp thing_get_magic_anim_wid (thingp t)
+{
+    thingp magic = thing_magic_anim(t);
+    if (!magic) {
+        return (0);
+    }
+
+    return (thing_wid(magic));
+}
+
+void thing_magic_tick (thingp t)
+{
+    /*
+     * Auto heal
+     */
+    if (thing_stats_get_hp(t) < thing_stats_get_max_hp(t)) {
+        int delta = thing_stats_val_to_modifier(thing_stats_get_healing(t));
+        thing_stats_modify_hp(t, delta);
+    }
+
+    /*
+     * If over max magic, return to max.
+     */
+    int delta = thing_stats_get_hp(t) - thing_stats_get_max_hp(t);
+    if (delta > 0) {
+        thing_stats_modify_hp(t, -1);
+    }
 }

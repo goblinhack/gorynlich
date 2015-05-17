@@ -356,7 +356,7 @@ wid_game_map_server_replace_tile (widp w,
     tile = tile_find(tilename);
 
     if (!tile) {
-        ERR("tile name %s from thing %s not found on server",
+        DIE("tile name %s from thing %s not found on server",
             tilename,
             tp_short_name(tp));
         return (0);
