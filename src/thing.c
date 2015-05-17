@@ -1727,11 +1727,9 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
     }
 
     if (!damage) {
-        THING_ERR(t, "hit, hp %d, no damage, %d hitter, %s orig hitter %s", 
-                  thing_stats_get_hp(t), 
-                  damage,
-                  thing_logname(hitter),
-                  orig_hitter ? thing_logname(hitter) : "");
+        /*
+         * Could be a spider silkball
+         */
         return (false);
     }
 
@@ -1873,7 +1871,9 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     tpp weapon = 0;
 
 #if 0
-if (hitter) {
+if (orig_hitter) {
+CON("%s is being hit by %s orig %s",thing_logname(t), thing_logname(hitter), thing_logname(orig_hitter));
+} else {
 CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
 }
 #endif
@@ -2030,21 +2030,28 @@ CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
             return (false);
         }
 
-        /*
-         * Take the damage from the weapon that hits first.
-         */
-        if (!damage) {
-            if (orig_hitter) {
-                damage = thing_stats_get_total_damage(orig_hitter);
+        if (orig_hitter &&
+            tp_to_id(orig_hitter->tp) == THING_SILKBALL) {
+            /*
+             * No inherited spider damage from silk ball.
+             */
+        } else {
+            /*
+             * Take the damage from the weapon that hits first.
+             */
+            if (!damage) {
+                if (orig_hitter) {
+                    damage = thing_stats_get_total_damage(orig_hitter);
+                }
             }
-        }
 
-        /*
-         * If still no damage, use the thing that did the hitting.
-         */
-        if (!damage) {
-            if (hitter) {
-                damage = thing_stats_get_total_damage(hitter);
+            /*
+             * If still no damage, use the thing that did the hitting.
+             */
+            if (!damage) {
+                if (hitter) {
+                    damage = thing_stats_get_total_damage(hitter);
+                }
             }
         }
     }

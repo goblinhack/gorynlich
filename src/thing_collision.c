@@ -435,9 +435,7 @@ CON("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
 
 #if 0
 if (debug) {
-    if ((thing_is_powerup(A) || 
-         thing_is_powerup(B))) {
-    if ((thing_is_monst(A) || 
+    if ((thing_is_monst(A) &&
          thing_is_monst(B))) {
 CON("    A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
 CON("      %f %f",Ax,Ay);
@@ -445,7 +443,6 @@ CON("      %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
 CON("    B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
 CON("      %f %f",Bx,By);
 CON("      %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
-    }
     }
 }
 #endif
@@ -468,7 +465,8 @@ CON("      %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
  * handle a single collision between two things
  */
 static void thing_handle_collision (thingp me, thingp it, 
-                                    int32_t x, int32_t y)
+                                    int32_t x, int32_t y,
+                                    int32_t dx, int32_t dy)
 {
     /*
      * Filter out boring things.
@@ -589,8 +587,14 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
          * initiator of a collision.
          */
         if (thing_is_action_trigger_on_hero(it)) {
-            level_trigger_activate(server_level, 
-                                   it->data ? it->data->col_name: 0);
+            /*
+             * Giant sawblades should only activate on the center tile of 
+             * collisions.
+             */
+            if ((dx == 0) && (dy == 0)) {
+                level_trigger_activate(server_level, 
+                                    it->data ? it->data->col_name: 0);
+            }
         }
     }
 
@@ -616,8 +620,14 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         }
 
         if (thing_is_action_trigger_on_monst(it)) {
-            level_trigger_activate(server_level, 
-                                   it->data ? it->data->col_name: 0);
+            /*
+             * Giant sawblades should only activate on the center tile of 
+             * collisions.
+             */
+            if ((dx == 0) && (dy == 0)) {
+                level_trigger_activate(server_level, 
+                                    it->data ? it->data->col_name: 0);
+            }
         }
     }
 
@@ -681,8 +691,14 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         }
 
         if (thing_is_action_trigger_on_wall(it)) {
-            level_trigger_activate(server_level, 
-                                   it->data ? it->data->col_name: 0);
+            /*
+             * Giant sawblades should only activate on the center tile of 
+             * collisions.
+             */
+            if ((dx == 0) && (dy == 0)) {
+                level_trigger_activate(server_level, 
+                                       it->data ? it->data->col_name: 0);
+            }
         }
 
         /*
@@ -695,9 +711,11 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_action_up(it)                  ||
             thing_is_action_down(it)) {
 
-            if (level_trigger_is_activated(server_level, 
-                                           it->data ? it->data->col_name : 0)) {
-                level_trigger_move_thing(thing_tp(it), me);
+            if ((dx == 0) && (dy == 0)) {
+                if (level_trigger_is_activated(server_level, 
+                                            it->data ? it->data->col_name : 0)) {
+                    level_trigger_move_thing(thing_tp(it), me);
+                }
             }
         }
     }
@@ -847,7 +865,7 @@ CON("%d %d [%d] %s",x,y,i, thing_logname(it));
                 continue;
             }
 
-            thing_handle_collision(me, it, x, y);
+            thing_handle_collision(me, it, x, y, dx, dy);
         }
     }
 
@@ -993,29 +1011,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 }
             }
 
-            /*
-             * You can walk closer to a cobweb, but not back out...
-             */
-            if (thing_is_cobweb(it)) {
-                double dist_now = DISTANCE(t->x, t->y, it->x, it->y);
-                double dist_then = DISTANCE(nx, ny, it->x, it->y);
-
-                /*
-                 * No spiders stuck in their own web
-                 */
-                if (tp_to_id(t->tp) == THING_SPIDER) {
-                    continue;
-                }
-
-                if (dist_then < dist_now) {
-                    CON("%f %f",dist_then,dist_now);
-                    continue;
-                } else {
-                    CON("%s stuck in web",thing_logname(t));
-                    return (true);
-                }
-            }
-
             if (thing_is_wall(me)) {
                 /*
                  * Allow moving walls to crush!
@@ -1031,6 +1026,27 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
 
             if (!things_overlap(me, nx, ny, it)) {
                 continue;
+            }
+
+            /*
+             * You can walk closer to a cobweb, but not back out...
+             */
+            if (thing_is_cobweb(it)) {
+                double dist_now = DISTANCE(t->x, t->y, it->x, it->y);
+                double dist_then = DISTANCE(nx, ny, it->x, it->y);
+
+                /*
+                 * No spiders stuck in their own web
+                 */
+                if (tp_to_id(t->tp) == THING_SPIDER) {
+                    continue;
+                }
+
+                if (dist_then < dist_now) {
+                    continue;
+                } else {
+                    return (true);
+                }
             }
 
             return (true);
@@ -1086,14 +1102,6 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
             }
 
             /*
-             * You can walk closer to a cobweb, but not back out...
-             */
-            if (thing_is_cobweb(it)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            /*
              * No collisions with the floor!
              */
             if (thing_is_floor(it)) {
@@ -1102,14 +1110,22 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
             }
 
             /*
-                * Allow dead ghosts to walk over each other!
-                */
+             * Allow dead ghosts to walk over each other!
+             */
             if (thing_is_dead_or_dying(it)) {
                 wid_it = wid_next;
                 continue;
             }
 
             if (!things_overlap(me, nx, ny, it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            /*
+             * You can walk closer to a cobweb, but not back out...
+             */
+            if (thing_is_cobweb(it)) {
                 wid_it = wid_next;
                 continue;
             }

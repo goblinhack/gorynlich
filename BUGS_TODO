@@ -1,17 +1,11 @@
 --------------------------------------- plan for may --------------------------------------
-- small ghosts in a corridor all line up
-- sawblades hitting trigger incorrectly
-- cobwebs 
-- cobweb weapon
 - cloud.png grows when using magic
-- collision radius should not work for triggers
 - magic build up animation
 - level completed shown twice
 - shields should be additive when used
 - xp level and hp increase per level
 - change update to a loop, not tree walk
 - spawn death after a long time
-- larger death image
 --------------------------------------- plan for june --------------------------------------
 - sound effects for weapons and hits http://www.bfxr.net/
 - add money
@@ -65,7 +59,13 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Sat May 16 15:13:18 EDT 2015
+- larger death image
+- small ghosts in a corridor all line up - can't fix, as ai only calcs whole number net hops
 - spiders
+- collision radius should not work for triggers
+- sawblades hitting trigger incorrectly
+- cobwebs 
+- cobweb weapon
 
 Sun May 10 12:03:11 EDT 2015
 - press m for magic to build up magic attack
