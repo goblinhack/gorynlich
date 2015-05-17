@@ -103,7 +103,7 @@ void thing_shield_sheath (thingp t)
         thing_set_shield_anim(t, 0);
     }
 
-    t->shield = 0;
+    t->shield_anim = 0;
 }
 
 void thing_unwield_shield (thingp t)
@@ -120,7 +120,7 @@ void thing_unwield_shield (thingp t)
 
 void thing_wield_shield (thingp t, tpp shield)
 {
-    if (t->shield == shield) {
+    if (t->shield_anim == shield) {
         return;
     }
 
@@ -130,20 +130,36 @@ void thing_wield_shield (thingp t, tpp shield)
         THING_LOG(t, "unwield weapon shield %s", tp_short_name(shield));
     }
 
+    /*
+     * Find out what to use as the sheild.
+     */
+    tpp what = 0;
     const char *as = tp_shield_anim(shield);
-
     if (!as) {
-        ERR("%s could not wield shield %s", thing_logname(t), tp_short_name(shield));
-        return;
+        as = tp_shield_anim(t->tp);
+        if (!as) {
+            what = shield;
+        } else {
+            what = tp_find(as);
+            if (!what) {
+                THING_ERR(t, "Could not find %s to wield", as);
+                return;
+            }
+        }
+    } else {
+        what = tp_find(as);
+        if (!what) {
+            THING_ERR(t, "Could not find %s to wield", as);
+            return;
+        }
     }
 
-    tpp what = tp_find(as);
     if (!what) {
-        ERR("Could not find %s to wield for %s", as, thing_logname(t));
+        THING_ERR(t, "Could not use shield");
         return;
     }
 
-    t->shield = shield;
+    t->shield_anim = shield;
 
     widp shield_anim_wid;
 
@@ -179,7 +195,7 @@ void thing_wield_shield (thingp t, tpp shield)
     if (t->on_server) {
         thing_update(t);
     } else {
-        thing_client_wid_update(t, t->x, t->y, true /* smooth */,
+        thing_client_wid_update(t, t->x, t->y, false /* smooth */,
                                 false /* is new */);
     }
 }

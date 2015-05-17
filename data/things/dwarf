@@ -9,8 +9,9 @@
  z_depth=4
  speed=26
  max_hp=250
- max_magic=20
+ max_magic=2000
  hp_per_level=12
+ magic_anim="data/things/magic_cloud"
  is_player
  hit_priority=20
  stats_attack_melee=14

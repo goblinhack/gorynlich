@@ -282,6 +282,10 @@ static void tp_destroy_internal (tpp t)
         myfree(t->shield_anim);
     }
 
+    if (t->magic_anim) {
+        myfree(t->magic_anim);
+    }
+
     if (t->message_on_use) {
         myfree(t->message_on_use);
     }
@@ -457,6 +461,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
         GET_OPT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
         GET_OPT_NAMED_STRING(ctx, "shield_anim", t->shield_anim);
+        GET_OPT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
         GET_OPT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
         GET_OPT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
         GET_OPT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
@@ -701,6 +706,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
     PUT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
     PUT_NAMED_STRING(ctx, "shield_anim", t->shield_anim);
+    PUT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
     PUT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
     PUT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
     PUT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
@@ -923,6 +929,11 @@ const char *tp_weapon_swing_anim (tpp t)
 const char *tp_shield_anim (tpp t)
 {
     return (t->shield_anim);
+}
+
+const char *tp_magic_anim (tpp t)
+{
+    return (t->magic_anim);
 }
 
 const char *tp_message_on_use (tpp t)

@@ -65,6 +65,11 @@ void thing_client_move (thingp t,
         thing_move_set_dir(shield_anim, &x, &y, up, down, left, right);
     }
 
+    thingp magic_anim = thing_magic_anim(t);
+    if (magic_anim) {
+        thing_move_set_dir(magic_anim, &x, &y, up, down, left, right);
+    }
+
     /*
      * If no widget yet then this can be a dummy move during thing creation
      * just to set the weapon anim correctly.
@@ -255,11 +260,20 @@ void thing_client_wid_update (thingp t,
     }
 
     /*
-     * Update the weapon being carried.
+     * Update the shield being used.
      */
     thingp shield_anim = thing_shield_anim(t);
     if (shield_anim) {
         shield_anim->dir = t->dir;
         thing_client_wid_move(shield_anim, x, y, smooth);
+    }
+
+    /*
+     * Update the magic being used.
+     */
+    thingp magic_anim = thing_magic_anim(t);
+    if (magic_anim) {
+        magic_anim->dir = t->dir;
+        thing_client_wid_move(magic_anim, x, y, smooth);
     }
 }
