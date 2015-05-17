@@ -19,6 +19,7 @@
  scale=1.5
  is_collision_map_medium
  is_ethereal
+ d10000_chance_of_appearing=5
  explodes_as="data/things/explosion3"
  is_animated
  tiles={
