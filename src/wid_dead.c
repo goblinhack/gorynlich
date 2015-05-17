@@ -151,7 +151,7 @@ static void wid_dead_gravestone_appeared (void *context)
         "You went to the restaurant at the end of the universe",
         "You came to a sticky and pointless end",
         "You popped your clogs",
-        "You went off to make your maker. It was not impressed.",
+        "You went to meet your maker. It was not impressed.",
         "You joined the choir invisible",
         "Your god told you to slow down",
         "You are six feet under",
@@ -176,7 +176,7 @@ static void wid_dead_gravestone_appeared (void *context)
         "Epic fail",
         "Just stop playing. You'll never win",
         "Believe in yourself more. Someone has to",
-        "Don't give up. In general. But please give up on this game",
+        "Don't give up. But please give up on this game",
         "Goodbye cruel world",
     };
 

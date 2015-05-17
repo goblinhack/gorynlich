@@ -26,9 +26,14 @@ void thing_health_tick (thingp t)
      * Auto heal
      */
     if (thing_stats_get_hp(t) < thing_stats_get_max_hp(t)) {
-        int delta = thing_stats_val_to_modifier(thing_stats_get_healing(t));
-        if (delta > 0) {
-            thing_stats_modify_hp(t, delta);
+        /*
+         * Need to allow the player to die!
+         */
+        if (thing_stats_get_hp(t) > 0) {
+            int delta = thing_stats_val_to_modifier(thing_stats_get_healing(t));
+            if (delta > 0) {
+                thing_stats_modify_hp(t, delta);
+            }
         }
     }
 
