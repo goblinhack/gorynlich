@@ -1111,11 +1111,11 @@ static inline uint8_t thing_is_rrr6 (thingp t)
     return (tp_is_rrr6(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr7 (thingp t)
+static inline uint8_t thing_is_death (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr7(thing_tp(t)));
+    return (tp_is_death(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_cobweb (thingp t)
@@ -1732,9 +1732,9 @@ static inline uint8_t thing_is_rrr6_noverify (thingp t)
     return (t->tp->is_rrr6);
 }
 
-static inline uint8_t thing_is_rrr7_noverify (thingp t)
+static inline uint8_t thing_is_death_noverify (thingp t)
 {
-    return (t->tp->is_rrr7);
+    return (t->tp->is_death);
 }
 
 static inline uint8_t thing_is_cobweb_noverify (thingp t)
@@ -2239,6 +2239,12 @@ int thing_angle_to_dir(double dx, double dy);
  */
 void thing_torch_update_count(thingp t, int force);
 void thing_torch_tick(thingp t);
+
+/*
+ * thing_death.c
+ */
+void thing_death_tick(void);
+uint8_t thing_death_spawn(void);
 
 /*
  * thing_shield.c

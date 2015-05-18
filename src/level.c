@@ -955,18 +955,32 @@ void level_set_timestamp_started (levelp level, uint32_t val)
     level->timestamp_started = val;
 }
 
-uint8_t level_is_hurryup (levelp level)
+uint8_t level_death_is_coming (levelp level)
 {
     verify(level);
 
-    return (level->is_hurryup);
+    return (level->death_is_coming);
 }
 
-void level_set_is_hurryup (levelp level, uint8_t val)
+void level_set_death_is_coming (levelp level, uint8_t val)
 {
     verify(level);
 
-    level->is_hurryup = val;
+    level->death_is_coming = val;
+}
+
+uint8_t level_death_is_coming_soon (levelp level)
+{
+    verify(level);
+
+    return (level->death_is_coming_soon);
+}
+
+void level_set_death_is_coming_soon (levelp level, uint8_t val)
+{
+    verify(level);
+
+    level->death_is_coming_soon = val;
 }
 
 uint8_t level_is_zzz1 (levelp level)
@@ -1536,9 +1550,9 @@ uint32_t level_count_is_rrr6 (levelp level)
     return (level_count_is_x(level, tp_is_rrr6));
 }
 
-uint32_t level_count_is_rrr7 (levelp level)
+uint32_t level_count_is_death (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr7));
+    return (level_count_is_x(level, tp_is_death));
 }
 
 uint32_t level_count_is_cobweb (levelp level)

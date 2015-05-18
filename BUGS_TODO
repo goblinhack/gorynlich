@@ -1,6 +1,6 @@
 --------------------------------------- plan for may --------------------------------------
-- level completed shown twice
-- first to exit level gets 2 spending points, else get 1
+- spending points on level end
+- print shield status
 - xp level and hp increase per level
 - spawn death after a long time
 --------------------------------------- plan for june --------------------------------------
@@ -13,6 +13,7 @@
 - press m for magic to give life to other players
 - pop bouncing m and arrow over player to give them a clue what to do
 - pause character on spending point window - on single player?
+- increase move granulariy on server so projectiles line up with player more
 --------------------------------------- plan for jul --------------------------------------
 more monsters, ideas:
     * teleports
@@ -52,6 +53,7 @@ add bot to test out multiplayer ?
 different profiles for level generation
 
 Sun May 17 15:52:27 EDT 2015
+- level completed shown twice
 - shields should be additive when used
 - magic is off center when fired
 - magic build up animation

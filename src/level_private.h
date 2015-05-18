@@ -125,9 +125,10 @@ typedef struct level_t_ {
     uint8_t is_map_editor:1;
 
     /*
-     * Make things go faster.
+     * Death...
      */
-    uint8_t is_hurryup:1;
+    uint8_t death_is_coming_soon:1;
+    uint8_t death_is_coming:1;
 
     /*
      * Usually level 66.66

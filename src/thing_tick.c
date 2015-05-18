@@ -314,6 +314,8 @@ void thing_tick_server_player_slow_all (int force)
             thing_torch_tick(t);
         }
     }
+
+    thing_death_tick();
 }
 
 static void thing_tick_client_all (void)
