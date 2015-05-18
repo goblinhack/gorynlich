@@ -890,6 +890,13 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
     me = wid_get_thing(wid_me);
     thing_map *map = thing_get_map(t);
 
+    /*
+     * Death knows no bounds!
+     */
+    if (thing_is_death(t)) {
+        return (false);
+    }
+
     for (dx = -collision_radius; dx <= collision_radius; dx++) 
     for (dy = -collision_radius; dy <= collision_radius; dy++) {
         int32_t x = (int32_t)nx + dx;
@@ -1079,6 +1086,13 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
     me = wid_get_thing(wid_me);
 
     uint8_t z;
+
+    /*
+     * Death knows no bounds!
+     */
+    if (thing_is_death(t)) {
+        return (false);
+    }
 
     for (dx = -collision_radius; dx <= collision_radius; dx++) 
     for (dy = -collision_radius; dy <= collision_radius; dy++)

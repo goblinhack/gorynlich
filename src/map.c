@@ -311,9 +311,9 @@ uint8_t map_is_rrr6_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr6));
 }
 
-uint8_t map_is_rrr7_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_death_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr7));
+    return (map_is_x_at(level, x, y, tp_is_death));
 }
 
 uint8_t map_is_cobweb_at (levelp level, int32_t x, int32_t y)
@@ -773,9 +773,9 @@ thingp map_thing_is_rrr6_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr6));
 }
 
-thingp map_thing_is_rrr7_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_death_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr7));
+    return (map_thing_is_x_at(level, x, y, tp_is_death));
 }
 
 thingp map_thing_is_cobweb_at (levelp level, int32_t x, int32_t y)
@@ -1251,9 +1251,9 @@ tree_rootp map_all_things_is_rrr6_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr6));
 }
 
-tree_rootp map_all_things_is_rrr7_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_death_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr7));
+    return (map_all_things_is_x_at(level, x, y, tp_is_death));
 }
 
 tree_rootp map_all_things_is_cobweb_at (levelp level, int32_t x, int32_t y)
@@ -1709,9 +1709,9 @@ tpp map_find_rrr6_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr6, w));
 }
 
-tpp map_find_rrr7_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_death_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr7, w));
+    return (map_find_x_at(level, x, y, tp_is_death, w));
 }
 
 tpp map_find_cobweb_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2512,9 +2512,9 @@ tree_rootp map_all_things_is_rrr6 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr6));
 }
 
-tree_rootp map_all_things_is_rrr7 (levelp level)
+tree_rootp map_all_things_is_death (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr7));
+    return (map_all_things_is_x(level, tp_is_death));
 }
 
 tree_rootp map_all_things_is_cobweb (levelp level)
