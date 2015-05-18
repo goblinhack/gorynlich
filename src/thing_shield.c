@@ -120,8 +120,19 @@ void thing_unwield_shield (thingp t)
 
 void thing_wield_shield (thingp t, tpp shield)
 {
+    int32_t existing_shield = 0;
+
     if (t->shield_anim == shield) {
-        return;
+        thingp p = thing_shield_anim(t);
+        if (p) {
+            if (t->on_server) {
+                existing_shield = thing_stats_get_hp(p);
+            }
+        }
+
+        if (!t->on_server) {
+            return;
+        }
     }
 
     thing_unwield_shield(t);
@@ -131,7 +142,7 @@ void thing_wield_shield (thingp t, tpp shield)
     }
 
     /*
-     * Find out what to use as the sheild.
+     * Find out what to use as the shield.
      */
     tpp what = 0;
     const char *as = tp_shield_anim(shield);
@@ -186,6 +197,11 @@ void thing_wield_shield (thingp t, tpp shield)
     thing_set_shield_anim(t, child);
 
     child->dir = t->dir;
+
+    thing_stats_modify_hp(child, existing_shield);
+    if (t->on_server) {
+        THING_LOG(t, "shielded with %d hp", thing_stats_get_hp(child));
+    }
 
     /*
      * Attach to the thing.
