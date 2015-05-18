@@ -307,6 +307,10 @@ void thing_magic_sheath (thingp t)
     }
 
     t->magic_anim = 0;
+
+    if (t->on_server) {
+        thing_update(t);
+    }
 }
 
 void thing_unwield_magic (thingp t)
@@ -323,10 +327,6 @@ void thing_unwield_magic (thingp t)
 
 void thing_wield_magic (thingp t, tpp magic)
 {
-    if (t->magic_anim == magic) {
-        return;
-    }
-
     thing_unwield_magic(t);
 
     if (thing_is_player(t)) {
@@ -390,15 +390,18 @@ void thing_wield_magic (thingp t, tpp magic)
 
     child->dir = t->dir;
 
+    child->scale = ((double)t->magic_powerup) * 0.02;
+
     /*
      * Attach to the thing.
      */
     thing_set_owner(child, t);
 
-    if (t->on_server) {
-        thing_update(t);
+    if (child->on_server) {
+        thing_update(child);
     } else {
-        thing_client_wid_update(t, t->x, t->y, false /* smooth */,
+        thing_client_wid_update(child, child->x, child->y, 
+                                false /* smooth */,
                                 false /* is new */);
     }
 }
