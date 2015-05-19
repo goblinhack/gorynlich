@@ -67,6 +67,7 @@ uint8_t thing_mob_spawn (thingp t)
          */
         if (map_is_wall_at(server_level, x, y)          ||
             map_is_monst_at(server_level, x, y)         ||
+            map_is_cobweb_at(server_level, x, y)        ||
             map_is_pipe_at(server_level, x, y)          ||
             map_is_door_at(server_level, x, y)          ||
             map_is_player_at(server_level, x, y)        ||
@@ -151,21 +152,21 @@ thingp thing_mob_spawn_on_death (thingp t)
         x = floor(x);
         y = floor(y);
 
-        /*
-         * Things not to spawn onto.
-         */
-        if (!tp_is_cobweb(t->tp)) {
-            if (map_is_wall_at(server_level, x, y)          ||
-                map_is_pipe_at(server_level, x, y)          ||
-                map_is_door_at(server_level, x, y)          ||
-                map_is_exit_at(server_level, x, y)) {
-                continue;
-            }
-        } else {
+        if (tp_is_cobweb(what)) {
             /*
              * Don't want too many cobwebs in the same place.
              */
             if (map_is_cobweb_at(server_level, x, y)) {
+                continue;
+            }
+        } else {
+            /*
+             * Things not to spawn onto.
+             */
+            if (map_is_wall_at(server_level, x, y)          ||
+                map_is_pipe_at(server_level, x, y)          ||
+                map_is_door_at(server_level, x, y)          ||
+                map_is_exit_at(server_level, x, y)) {
                 continue;
             }
         }
