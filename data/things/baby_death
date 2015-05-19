@@ -1,26 +1,24 @@
 {
- short_name="The Reaper"
- raw_name="death"
- tooltip="The Reaper"
+ short_name="Mini Reaper"
+ raw_name="minideath"
+ tooltip="Mini Reaper"
  carrying={
     "data/things/scythe1"
  }
  z_depth=3
  speed=5
- max_hp=50000
- damage=30
- bonus_xp_on_death=10000
+ max_hp=5000
+ damage=10
+ bonus_xp_on_death=1000
  vision_distance=60
  hit_delay_tenths=1
  is_monst
  is_shadow_caster
  hit_priority=10
  is_combustable
- is_death
- scale=2.5
  is_collision_map_medium
  is_ethereal
- d10000_chance_of_appearing=0
+ d10000_chance_of_appearing=5
  explodes_as="data/things/explosion3"
  is_animated
  tiles={
