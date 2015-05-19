@@ -63,6 +63,10 @@ uint8_t thing_death_spawn (void)
 
 void thing_death_tick (void)
 {
+    if (!server_level) {
+        return;
+    }
+
     if (!level_death_is_coming_soon(server_level)) {
         if (time_have_x_tenths_passed_since(10 * 300,
                                             level_get_timestamp_started(server_level))) {
