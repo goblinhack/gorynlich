@@ -237,7 +237,10 @@ static void wid_choose_stats_callback (widp w)
 
     if (!s->spending_points) {
         wid_choose_stats_hide();
-        wid_choose_game_type_visible();
+
+        if (!player) {
+            wid_choose_game_type_visible();
+        }
         return;
     }
 
@@ -249,7 +252,13 @@ static uint8_t
 wid_choose_stats_go_back (void)
 {
     wid_choose_stats_hide();
-    wid_choose_name_visible();
+
+    /*
+     * If invoked from in-game, just go back to the game.
+     */
+    if (!player) {
+        wid_choose_name_visible();
+    }
 
     return (true);
 }
@@ -259,7 +268,13 @@ static uint8_t wid_choose_stats_play_key_event (widp w, const SDL_KEYSYM *key)
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_choose_stats_hide();
-            wid_intro_visible();
+
+            /*
+             * If invoked from in-game, just go back to the game.
+             */
+            if (!player) {
+                wid_intro_visible();
+            }
             return (true);
 
         default:
@@ -293,6 +308,11 @@ static void wid_choose_stats_bg_create (void)
 
         color c;
         c = WHITE;
+
+        if (player) {
+            c.a = 0;
+        }
+
         wid_set_mode(wid, WID_MODE_NORMAL);
         wid_set_color(wid, WID_COLOR_TL, c);
         wid_set_color(wid, WID_COLOR_BR, c);
