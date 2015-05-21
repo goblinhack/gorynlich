@@ -699,7 +699,7 @@ static void client_rx_server_status (gsocketp s,
             LOG("Client: Hide level");
 
             wid_hide(wid_game_map_client_grid_container, 
-                        wid_hide_delay);
+                     wid_hide_delay);
         } else {
             /*
              * Reveal the level and re-equip players.
@@ -873,8 +873,8 @@ static void client_poll (void)
                     wid_game_map_go_back_to_editor();
                 } else {
                     wid_dead_visible(latest_hiscores.players[0].player_name,
-                                    latest_hiscores.players[0].death_reason,
-                                    latest_hiscores.rejoin_allowed);
+                                     latest_hiscores.players[0].death_reason,
+                                     latest_hiscores.rejoin_allowed);
                 }
                 break;
             }
