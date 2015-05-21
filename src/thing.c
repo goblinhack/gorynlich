@@ -23,6 +23,7 @@
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
+#include "wid_choose_stats.h"
 
 tree_root *server_player_things;
 tree_root *client_player_things;
@@ -1168,6 +1169,7 @@ static void thing_remove_hooks (thingp t)
             wid_player_info_hide(true /* fast */);
             wid_player_inventory_hide(true /* fast */);
             wid_player_action_hide(true /* fast */);
+            wid_choose_stats_hide();
 
             memcpy(&global_config.dead_stats, &t->stats, sizeof(thing_stats));
 
