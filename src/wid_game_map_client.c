@@ -32,6 +32,7 @@
 #include "math_util.h"
 #include "thing_template.h"
 #include "wid_editor.h"
+#include "wid_choose_stats.h"
 
 levelp client_level;
 widp wid_game_map_client_window;
@@ -607,6 +608,9 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
             }
             return (true);
         }
+        case 's':
+            wid_choose_stats_visible();
+            return (true);
 
         case 'q':
             if (client_level->is_test_level) {
@@ -616,6 +620,10 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
             wid_game_quit_visible();
             return (true);
+
+        case SDLK_RETURN:
+        case ' ':
+            return (false);
 
         default:
             return (false);
