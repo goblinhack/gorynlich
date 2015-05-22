@@ -90,11 +90,13 @@ static void thing_client_effect_hit_success (thingp t)
         wid_set_color(w, WID_COLOR_BLIT, RED);
 
         /*
-         * Shake the player.
+         * Shake the screen.
          */
-        wid_shake_to_pct_in(w, 0.1, 0.9, 100, 5);
+        if (thing_is_player(t)) {
+            sdl_joy_rumble(1.0, 2000);
+        }
 
-        sdl_joy_rumble(0.5, 200);
+        wid_shake_to_pct_in(w, 0.1, 0.9, 100, 5);
 
         if (thing_is_warm_blooded(t)) {
             level_place_blood(client_level,
@@ -121,16 +123,13 @@ static void thing_client_effect_hit_crit (thingp t)
          * Shake the screen.
          */
         if (thing_is_player(t)) {
-            wid_shake_to_pct_in(wid_game_map_client_grid_container, 0.03, 0.9, 100, 5);
+            wid_shake_to_pct_in(wid_game_map_client_grid_container, 
+                                0.01, 0.9, 100, 5);
 
             sdl_joy_rumble(1.0, 1000);
+        } else {
+            wid_shake_to_pct_in(w, 0.2, 0.9, 100, 5);
         }
-
-
-        /*
-         * Shake the player.
-         */
-        wid_shake_to_pct_in(w, 0.3, 0.9, 100, 5);
 
         if (thing_is_warm_blooded(t)) {
             level_place_blood_crit(client_level,
