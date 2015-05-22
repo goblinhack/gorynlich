@@ -517,6 +517,11 @@ wid_player_inventory_button_style_mouse_down (widp w,
 
     stats_bump_version(player_stats);
 
+    /*
+     * Send an update now.
+     */
+    thing_stats_client_modified(player_stats);
+
     wid_player_stats_redraw(true /* fast */);
 
     return (true);
