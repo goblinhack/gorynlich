@@ -47,6 +47,12 @@
 - add bot to test out multiplayer ?
 - different profiles for level generation
 
+Thu May 21 21:34:02 EDT 2015
+- better looking death
+- s for spending points working
+- on level shake, still see light leak
+- monster shake was not working
+
 Mon May 18 21:43:26 EDT 2015
 - spawn death after a long time
 
