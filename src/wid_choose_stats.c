@@ -4,7 +4,6 @@
  * See the LICENSE file for license.
  */
 
-
 #include "wid.h"
 #include "wid_player_stats.h"
 #include "wid_choose_name.h"
@@ -198,6 +197,11 @@ static void wid_choose_stats_callback (widp w)
     }
 
     if (!s->spending_points) {
+        wid_choose_stats_hide();
+
+        if (!player) {
+            wid_choose_game_type_visible();
+        }
         return;
     }
 
@@ -233,6 +237,15 @@ static void wid_choose_stats_callback (widp w)
     case 9:
         s->healing++;
         break;
+    }
+
+    if (player) {
+        stats_bump_version(s);
+
+        /*
+         * Send an update now.
+         */
+        thing_stats_client_modified(s);
     }
 
     if (!s->spending_points) {
@@ -350,7 +363,12 @@ static void wid_choose_stats_create (void)
     }
 
     thing_statsp s;
-    s = &global_config.stats;
+
+    if (player) {
+        s = &player->stats;
+    } else {
+        s = &global_config.stats;
+    }
 
     int focus = PLAYER_STATS_MAX / 2;
 

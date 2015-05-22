@@ -62,7 +62,7 @@ static void wid_game_map_client_set_thing_template (widp w, tpp t)
     wid_set_thing_template(w, t);
 
     if (tp_is_effect_pulse(t)) {
-        wid_scaling_to_pct_in(w, 1.0, 1.2, 500, 9999999);
+        wid_scaling_to_pct_in(w, 1.0, 1.2, gauss(500, 10), 9999999);
     }
 
     if (tp_is_effect_sway(t)) {
@@ -1012,10 +1012,6 @@ wid_game_map_client_replace_tile (widp w,
 
     double dx = 0;
     double dy = 0;
-
-    if (thing_is_effect_pulse(t)) {
-        wid_scaling_blit_to_pct_in(child, 1.0, 1.1, 1000, 10000);
-    }
 
     /*
      * Does it appear as a different size on screen?

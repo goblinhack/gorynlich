@@ -1742,13 +1742,14 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
 
     /*
      * Take note of the hit so we can send an event to the client.
+     *
+     * Send this for both players and monsters so we see monsters being 
+     * pumelled!
      */
-    if (thing_is_player(t)) {
-        thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_SUCCESS);
+    thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_SUCCESS);
 
-        if (damage > thing_stats_get_hp(t) / 10) {
-            thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_CRIT);
-        }
+    if (damage > thing_stats_get_hp(t) / 10) {
+        thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_CRIT);
     }
 
     if (!damage) {
