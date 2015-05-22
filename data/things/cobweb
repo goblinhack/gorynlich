@@ -2,7 +2,7 @@
  short_name="cobweb"
  raw_name="cobweb"
  tooltip="cobweb"
- z_depth=2
+ z_depth=5
  max_hp=10
  is_mob_spawner
  mob_spawn_delay_tenths=500
