@@ -4,7 +4,6 @@
  * See the LICENSE file for license.
  */
 
-
 #include "main.h"
 #include "thing.h"
 #include "thing_timer.h"
@@ -1749,7 +1748,7 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
         return (false);
     }
 
-    t->timestamp_hit = time_get_time_ms();
+    t->timestamp_last_attacked = time_get_time_ms();
 
     /*
      * Take note of the hit so we can send an event to the client.
@@ -2097,13 +2096,13 @@ CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
             tp_get_hit_delay_tenths(orig_hitter->tp);
 
         if (delay) {
-            if (!time_have_x_tenths_passed_since(delay,
-                                                 orig_hitter->timestamp_hit)) {
+            if (!time_have_x_tenths_passed_since(
+                    delay, orig_hitter->timestamp_i_attacked)) {
 
                 return (false);
             }
 
-            orig_hitter->timestamp_hit = time_get_time_ms();
+            orig_hitter->timestamp_i_attacked = time_get_time_ms();
         }
 
         /*

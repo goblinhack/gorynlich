@@ -630,7 +630,7 @@ typedef struct thing_ {
     /*
      * Last time we were attacked.
      */
-    uint32_t timestamp_last_hit;
+    uint32_t timestamp_last_attacked;
 
     /*
      * When to change frame for animation.
@@ -665,7 +665,7 @@ typedef struct thing_ {
     /*
      * When did I last hit?
      */
-    uint32_t timestamp_hit;
+    uint32_t timestamp_i_attacked;
 
     /*
      * When did we last send our state to the client?
