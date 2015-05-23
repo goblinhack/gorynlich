@@ -44,7 +44,20 @@ static void thing_tick_server_all (void)
         if (w) {
             verify(w);
         } else {
-            ERR("thing %s has no widget", thing_logname(t));
+            THING_ERR(t, "has no widget");
+            thingp owner = thing_owner(t);
+            if (owner) {
+                THING_ERR(t, "has no widget, owner %s", thing_logname(owner));
+                THING_ERR(t, "owner weapon_carry_anim_thing_id %d",
+                          owner->weapon_carry_anim_thing_id);
+                THING_ERR(t, "owner weapon_swing_anim_thing_id %d",
+                          owner->weapon_swing_anim_thing_id);
+                THING_ERR(t, "owner shield_anim_thing_id %d",
+                          owner->shield_anim_thing_id);
+                THING_ERR(t, "owner magic_anim_thing_id %d",
+                          owner->magic_anim_thing_id);
+            }
+
             continue;
         }
 
