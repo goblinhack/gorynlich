@@ -123,6 +123,11 @@ static void thing_client_wid_move (thingp t,
             ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
                 (double)global_config.video_gl_height);
 
+    if (!t->wid) {
+        THING_ERR(t, "trying to move but has no widget");
+        return;
+    }
+
     tilep tile = wid_get_tile(t->wid);
     double tw = tile_get_width(tile);
     double th = tile_get_height(tile);

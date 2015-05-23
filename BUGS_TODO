@@ -1,7 +1,9 @@
 --------------------------------------- plan for may --------------------------------------
+- allow player to walk through monsters?
 - spending points on level end
 - print shield status
 - xp level and hp increase per level
+- health recovers too fast - should only be if not hit
 --------------------------------------- plan for june --------------------------------------
 - sound effects for weapons and hits http://www.bfxr.net/
 - add money
@@ -46,6 +48,12 @@
 - mining?
 - add bot to test out multiplayer ?
 - different profiles for level generation
+
+Sat May 23 10:47:31 EDT 2015
+- 32x32 editor template
+- blood only from warm blooded monsters
+- x,y in level ed
+- level title not shown
 
 Thu May 21 21:34:02 EDT 2015
 - better looking death

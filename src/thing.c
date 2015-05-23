@@ -1291,7 +1291,8 @@ void thing_destroy (thingp t, const char *why)
             THING_LOG(t, "player died: \"%s\"", t->stats.pname);
 
             char *tmp = dynprintf("%s died", t->stats.pname);
-            socket_tx_server_shout_at_all_players_except(p->socket, CRITICAL, tmp);
+            socket_tx_server_shout_at_all_players_except(p->socket, 
+                                                         CRITICAL, tmp);
             myfree(tmp);
 
             break;
@@ -1381,7 +1382,8 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         aplayer *p = t->player;
         if (p) {
             char *tmp = dynprintf("%s Killed by %s", t->stats.pname, reason);
-            socket_tx_server_shout_at_all_players_except(p->socket, CRITICAL, tmp);
+            socket_tx_server_shout_at_all_players_except(p->socket, 
+                                                         CRITICAL, tmp);
             myfree(tmp);
         }
 
@@ -1740,6 +1742,15 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
         return (false);
     }
 
+    if (!damage) {
+        /*
+         * Could be a spider silkball
+         */
+        return (false);
+    }
+
+    t->timestamp_hit = time_get_time_ms();
+
     /*
      * Take note of the hit so we can send an event to the client.
      *
@@ -1750,13 +1761,6 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
 
     if (damage > thing_stats_get_hp(t) / 10) {
         thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_CRIT);
-    }
-
-    if (!damage) {
-        /*
-         * Could be a spider silkball
-         */
-        return (false);
     }
 
     damage = thing_stats_get_total_damage_minus_defense(t, hitter, damage);
