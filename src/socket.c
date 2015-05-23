@@ -1331,6 +1331,14 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
         p++;
     }
 
+    if (server_level) {
+        const char *title = level_get_title(server_level);
+        if (title) {
+            strncpy(msg.level_name, title,
+                    min(sizeof(msg.level_name), strlen(title) + 1)); 
+        }
+    }
+
     msg.server_max_players = global_config.server_max_players;
     msg.server_current_players = global_config.server_current_players;
 
@@ -1404,6 +1412,10 @@ void socket_rx_pong (gsocketp s, UDPpacket *packet, uint8_t *data)
         strncpy(s->player_name[p], msg->player_name[p],
                 min(sizeof(s->player_name[p]), 
                     strlen(msg->player_name[p]) + 1)); 
+    }
+
+    if (client_level) {
+        level_set_title(client_level, msg->level_name);
     }
 
     s->server_max_players = msg->server_max_players;
