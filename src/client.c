@@ -689,6 +689,12 @@ static void client_rx_server_status (gsocketp s,
             things_level_destroyed(client_level,
                                     true /* keep players */);
         }
+
+        /*
+         * To allow the player to be centered in the new level if it is a 
+         * different size.
+         */
+        wid_game_map_client_grid_container->grid->bounds_locked = 0;
     }
 
     /*
