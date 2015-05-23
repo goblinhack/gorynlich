@@ -10,7 +10,7 @@
  scale=0.4
  explosion_radius=7.0
  is_collision_map_large
- damage=5
+ damage=30
  hit_delay_tenths=1
  tiles={
   tile={
