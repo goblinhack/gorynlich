@@ -13,7 +13,7 @@
  light_radius=10.0
  is_collision_map_large
  scale=0.4
- damage=3
+ damage=20
  hit_delay_tenths=1
  tiles={
   tile={
