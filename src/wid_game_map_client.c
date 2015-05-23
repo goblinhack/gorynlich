@@ -1235,7 +1235,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
          * Just print the name, don't need the class as well.
          */
         if (p->stats.pname[0]) {
-            name_title = dynprintf("%s", p->stats.pname);
+            name_title = dynprintf("%%%%fg=cyan$%s", p->stats.pname);
         } else {
             name_title = 0;
         }
@@ -1278,18 +1278,16 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     if (level_get_title(level) &&
         strcasecmp(level_get_title(level), "(null)")) {
 
-        widp wid_title_container;
+        widp wid_level_container;
 
-        wid_title_container = wid_textbox(
-                    wid_scoreline_container_top,
-                    &wid_title,
-                    level_get_title(level), 0.5, 0.07, med_font);
+        wid_level_container = wid_textbox(wid_scoreline_container_top,
+                                          &wid_level,
+                                          level_get_title(level),
+                                          (score_x + cash_x) / 2.0, 0.02, 
+                                          med_font);
 
-        wid_set_no_shape(wid_title_container);
-
-        wid_raise(wid_title_container);
-        wid_set_do_not_lower(wid_title_container, true);
-        wid_set_color(wid_title, WID_COLOR_TEXT, WHITE);
+        wid_set_no_shape(wid_level_container);
+        wid_set_color(wid_level, WID_COLOR_TEXT, WHITE);
     }
 
     /*
@@ -1298,7 +1296,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     if (client_level) {
         level_pos_t level_pos = level_get_level_pos(client_level);
 
-        char *tmp = dynprintf("Level %d.%d", level_pos.y, level_pos.x);
+        char *tmp = 
+            dynprintf("%%%%fg=green$Level %d.%d", level_pos.y, level_pos.x);
 
         widp wid_level_container;
 
@@ -1310,7 +1309,6 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         myfree(tmp);
 
         wid_set_no_shape(wid_level_container);
-
         wid_set_color(wid_level, WID_COLOR_TEXT, WHITE);
     }
 

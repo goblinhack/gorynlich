@@ -134,6 +134,7 @@ typedef struct {
     uint32_t ts;
     char server_name[SMALL_STRING_LEN_MAX];
     char player_name[MAX_PLAYERS][SMALL_STRING_LEN_MAX];
+    char level_name[SMALL_STRING_LEN_MAX];
     uint8_t server_max_players;
     uint8_t server_current_players;
 } __attribute__ ((packed)) msg_pong;
