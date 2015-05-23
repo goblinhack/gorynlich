@@ -3,7 +3,7 @@
  raw_name="cobweb"
  tooltip="cobweb"
  z_depth=5
- max_hp=10
+ max_hp=3
  is_mob_spawner
  mob_spawn_delay_tenths=500
  mob_spawn="data/things/spider1"
