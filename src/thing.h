@@ -626,6 +626,11 @@ typedef struct thing_ {
     thing_template_data *data;
 
     /*
+     * Last time we were attacked.
+     */
+    uint32_t timestamp_last_hit;
+
+    /*
      * When to change frame for animation.
      */
     uint32_t timestamp_change_to_next_frame;
