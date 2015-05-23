@@ -138,7 +138,7 @@ void thing_wield_shield (thingp t, tpp shield)
     thing_unwield_shield(t);
 
     if (thing_is_player(t)) {
-        THING_LOG(t, "unwield weapon shield %s", tp_short_name(shield));
+        THING_LOG(t, "wield shield %s", tp_short_name(shield));
     }
 
     /*

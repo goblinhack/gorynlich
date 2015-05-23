@@ -124,7 +124,10 @@ static void thing_client_wid_move (thingp t,
                 (double)global_config.video_gl_height);
 
     if (!t->wid) {
-        THING_ERR(t, "trying to move but has no widget");
+        /*
+         * Player has left the level?
+         */
+        THING_LOG(t, "trying to move but has no widget");
         return;
     }
 

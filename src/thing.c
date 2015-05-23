@@ -2447,6 +2447,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
                 if (keep_players &&
                     thing_is_player_or_owned_by_player(t) &&
                     !thing_is_animation(t) &&
+                    !thing_is_powerup_anim(t) &&
                     !thing_is_weapon_swing_effect(t)) {
 
                     thing_map_remove(t);
@@ -2485,14 +2486,19 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
     if (level == client_level) {
         {
             TREE_WALK(client_active_things, t) {
+                if (thing_is_player(t)) {
+                    THING_LOG(t, "cleaning up player for end of level");
+                    thing_weapon_sheath(t);
+                    thing_shield_sheath(t);
+                    thing_magic_sheath(t);
+                }
+
                 if (keep_players &&
                     thing_is_player_or_owned_by_player(t) &&
                     !thing_is_animation(t) &&
+                    !thing_is_powerup_anim(t) &&
                     !thing_is_weapon_swing_effect(t)) {
 
-                    thing_weapon_sheath(player);
-                    thing_shield_sheath(player);
-                    thing_magic_sheath(player);
                     thing_map_remove(t);
                     thing_set_wid(t, 0);
                     continue;
