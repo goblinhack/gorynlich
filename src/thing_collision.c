@@ -591,10 +591,8 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
              * Giant sawblades should only activate on the center tile of 
              * collisions.
              */
-            if ((dx == 0) && (dy == 0)) {
-                level_trigger_activate(server_level, 
-                                    it->data ? it->data->col_name: 0);
-            }
+            level_trigger_activate(server_level,
+                                   it->data ? it->data->col_name: 0);
         }
     }
 
@@ -695,10 +693,8 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
              * Giant sawblades should only activate on the center tile of 
              * collisions.
              */
-            if ((dx == 0) && (dy == 0)) {
-                level_trigger_activate(server_level, 
-                                       it->data ? it->data->col_name: 0);
-            }
+            level_trigger_activate(server_level, 
+                                    it->data ? it->data->col_name: 0);
         }
 
         /*
@@ -711,11 +707,9 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_action_up(it)                  ||
             thing_is_action_down(it)) {
 
-            if ((dx == 0) && (dy == 0)) {
-                if (level_trigger_is_activated(server_level, 
-                                            it->data ? it->data->col_name : 0)) {
-                    level_trigger_move_thing(thing_tp(it), me);
-                }
+            if (level_trigger_is_activated(server_level, 
+                                        it->data ? it->data->col_name : 0)) {
+                level_trigger_move_thing(thing_tp(it), me);
             }
         }
     }
