@@ -1257,11 +1257,6 @@ void thing_destroy (thingp t, const char *why)
         thing_set_wid(t, 0);
     }
 
-    if (t->logname) {
-        myfree(t->logname);
-        t->logname = 0;
-    }
-
     if (t->on_server) {
         thing_server_ids[t->thing_id] = 0;
     } else {
@@ -1323,6 +1318,11 @@ void thing_destroy (thingp t, const char *why)
 
     if (t->data) {
         myfree(t->data);
+    }
+
+    if (t->logname) {
+        myfree(t->logname);
+        t->logname = 0;
     }
 
     myfree(t);
