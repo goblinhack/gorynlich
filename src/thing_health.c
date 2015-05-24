@@ -30,7 +30,8 @@ void thing_health_tick (thingp t)
         /*
          * Only heal if not being actively attacked.
          */
-        if (time_have_x_tenths_passed_since(50, t->timestamp_last_attacked)) {
+        if (time_have_x_tenths_passed_since(100,
+                                            t->timestamp_last_attacked)) {
             /*
              * Need to allow the player to die!
              */

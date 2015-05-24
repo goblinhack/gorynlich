@@ -1728,7 +1728,8 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
     }
 }
 
-static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t damage)
+static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, 
+                       int32_t damage)
 {
     int32_t orig_damage = damage;
 
