@@ -12,58 +12,58 @@
  tiles={
   tile={
    tile="magic_cloud.1"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.2"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.3"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.4"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.5"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.8"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.9"
   }
   tile={
    tile="magic_cloud.10"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.11"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.12"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.13"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.14"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.15"
-   delay=50
+   delay=100
   }
   tile={
    tile="magic_cloud.16"
-   delay=50
+   delay=100
   }
  }
 }

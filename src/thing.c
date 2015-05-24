@@ -145,22 +145,22 @@ void thing_update (thingp t)
     }
 
     /*
+     * Update the shield being carried.
+     */
+    thingp shield_carry_anim = thing_shield_carry_anim(t);
+    if (shield_carry_anim) {
+        if (!thing_is_dead_or_dying(shield_carry_anim)) {
+            thing_update(shield_carry_anim);
+        }
+    }
+
+    /*
      * Update the weapon being swung.
      */
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
     if (weapon_swing_anim) {
         if (!thing_is_dead_or_dying(weapon_swing_anim)) {
             thing_update(weapon_swing_anim);
-        }
-    }
-
-    /*
-     * Update the shield being used.
-     */
-    thingp shield_anim = thing_shield_anim(t);
-    if (shield_anim) {
-        if (!thing_is_dead_or_dying(shield_anim)) {
-            thing_update(shield_anim);
         }
     }
 
@@ -371,12 +371,12 @@ void thing_sanity (thingp t)
         verify(tmp);
     }
 
-    tmp = thing_weapon_swing_anim(t);
+    tmp = thing_shield_carry_anim(t);
     if (tmp) {
         verify(tmp);
     }
 
-    tmp = thing_shield_anim(t);
+    tmp = thing_weapon_swing_anim(t);
     if (tmp) {
         verify(tmp);
     }
@@ -788,9 +788,9 @@ thingp thing_server_new (const char *name,
     /*
      * Too boring to log about?
      */
-    if (!thing_is_inactive_noverify(t) &&
-        !thing_is_cloud_effect(t) &&
-        !thing_is_weapon_swing_effect(t) &&
+    if (!thing_is_inactive_noverify(t)      &&
+        !thing_is_cloud_effect(t)           &&
+        !thing_is_weapon_swing_effect(t)    &&
         !thing_is_weapon_carry_anim(t)) {
 
         if (t->on_server) {
@@ -910,9 +910,9 @@ thingp thing_client_new (uint32_t id, tpp tp)
     /*
      * Too boring to log about?
      */
-    if (!thing_is_inactive_noverify(t) &&
-        !thing_is_cloud_effect(t) &&
-        !thing_is_weapon_swing_effect(t) &&
+    if (!thing_is_inactive_noverify(t)      &&
+        !thing_is_cloud_effect(t)           &&
+        !thing_is_weapon_swing_effect(t)    &&
         !thing_is_weapon_carry_anim(t)) {
         THING_LOG(t, "created");
     }
@@ -1108,10 +1108,14 @@ static void thing_remove_hooks (thingp t)
             }
         }
 
-        if (t->thing_id == owner->shield_anim_thing_id) {
+        if (t->thing_id == owner->shield_carry_anim_thing_id) {
             thing_unwield_shield(owner);
 
-            thing_set_shield_anim(owner, 0);
+            if (0) {
+                THING_LOG(t, "detach from carry anim owner %s", thing_logname(owner));
+            }
+
+            thing_set_shield_carry_anim(owner, 0);
         }
 
         if (t->thing_id == owner->magic_anim_thing_id) {
@@ -1134,20 +1138,20 @@ static void thing_remove_hooks (thingp t)
         thing_dead(item, 0, "weapon carry anim owner killed");
     }
 
+    if (t->shield_carry_anim_thing_id) {
+        thingp item = thing_shield_carry_anim(t);
+        thing_set_shield_carry_anim(t, 0);
+        verify(item);
+        thing_set_owner(item, 0);
+        thing_dead(item, 0, "shield carry anim owner killed");
+    }
+
     if (t->weapon_swing_anim_thing_id) {
         thingp item = thing_weapon_swing_anim(t);
         thing_set_weapon_swing_anim(t, 0);
         verify(item);
         thing_set_owner(item, 0);
         thing_dead(item, 0, "weapon swing anim owner killed");
-    }
-
-    if (t->shield_anim_thing_id) {
-        thingp item = thing_shield_anim(t);
-        thing_set_shield_anim(t, 0);
-        verify(item);
-        thing_set_owner(item, 0);
-        thing_dead(item, 0, "shield anim owner killed");
     }
 
     if (t->magic_anim_thing_id) {
@@ -1187,9 +1191,9 @@ void thing_destroy (thingp t, const char *why)
 {
     verify(t);
 
-    if (!thing_is_inactive_noverify(t) &&
-        !thing_is_cloud_effect(t) &&
-        !thing_is_weapon_swing_effect(t) &&
+    if (!thing_is_inactive_noverify(t)      &&
+        !thing_is_cloud_effect(t)           &&
+        !thing_is_weapon_swing_effect(t)    &&
         !thing_is_weapon_carry_anim(t)) {
         THING_LOG(t, "destroyed, why(%s)", why);
     }
@@ -1244,8 +1248,8 @@ void thing_destroy (thingp t, const char *why)
      * Destroy the things weapon. Eventually drop a backpack.
      */
     thing_unwield(t);
-
     thing_unwield_shield(t);
+    thing_unwield_magic(t);
 
     if (t->dead_reason) {
         myfree(t->dead_reason);
@@ -1946,12 +1950,7 @@ CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
     /*
      * If the player has a shield, let the shield take the hit.
      */
-    if (t->shield_anim) {
-        t = thing_shield_anim(t);
-        if (!t) {
-            DIE("no shield anim set but has shield");
-        }
-
+    if (t->shield) {
         thing_server_effect(t, THING_STATE_EFFECT_IS_HIT_MISS);
     }
 
@@ -2253,6 +2252,14 @@ void thing_hide (thingp t)
     if (weapon_carry_anim) {
         thing_hide(weapon_carry_anim);
     }
+
+    /*
+     * Hide the shield too or it just floats in the air.
+     */
+    thingp shield_carry_anim = thing_shield_carry_anim(t);
+    if (shield_carry_anim) {
+        thing_hide(shield_carry_anim);
+    }
 }
 
 void thing_visible (thingp t)
@@ -2299,6 +2306,14 @@ void thing_visible (thingp t)
     if (weapon_carry_anim) {
         thing_visible(weapon_carry_anim);
     }
+
+    /*
+     * Reveal the shield again too.
+     */
+    thingp shield_carry_anim = thing_shield_carry_anim(t);
+    if (shield_carry_anim) {
+        thing_visible(shield_carry_anim);
+    }
 }
 
 uint8_t thing_is_visible (thingp t)
@@ -2331,9 +2346,9 @@ void thing_leave_level (thingp t)
         thing_leave_level(weapon_carry_anim);
     }
 
-    thingp shield_anim = thing_shield_anim(t);
-    if (shield_anim) {
-        thing_leave_level(shield_anim);
+    thingp shield_carry_anim = thing_shield_carry_anim(t);
+    if (shield_carry_anim) {
+        thing_leave_level(shield_carry_anim);
     }
 
     thingp magic_anim = thing_magic_anim(t);
@@ -2363,9 +2378,9 @@ void thing_join_level (thingp t)
         thing_join_level(weapon_carry_anim);
     }
 
-    thingp shield_anim = thing_shield_anim(t);
-    if (shield_anim) {
-        thing_join_level(shield_anim);
+    thingp shield_carry_anim = thing_shield_carry_anim(t);
+    if (shield_carry_anim) {
+        thing_join_level(shield_carry_anim);
     }
 
     thingp magic_anim = thing_magic_anim(t);
@@ -2447,7 +2462,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
                 if (keep_players &&
                     thing_is_player_or_owned_by_player(t) &&
                     !thing_is_animation(t) &&
-                    !thing_is_powerup_anim(t) &&
+                    !thing_is_weapon_carry_anim(t) &&
                     !thing_is_weapon_swing_effect(t)) {
 
                     thing_map_remove(t);
@@ -2488,7 +2503,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
             TREE_WALK(client_active_things, t) {
                 if (thing_is_player(t)) {
                     THING_LOG(t, "cleaning up player for end of level");
-                    thing_weapon_sheath(t);
+                    thing_sheath(t);
                     thing_shield_sheath(t);
                     thing_magic_sheath(t);
                 }
@@ -2496,7 +2511,8 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
                 if (keep_players &&
                     thing_is_player_or_owned_by_player(t) &&
                     !thing_is_animation(t) &&
-                    !thing_is_powerup_anim(t) &&
+                    !thing_is_shield_carry_anim(t) &&
+                    !thing_is_weapon_carry_anim(t) &&
                     !thing_is_weapon_swing_effect(t)) {
 
                     thing_map_remove(t);
@@ -3184,6 +3200,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
          */
         if (tp_is_weapon_swing_effect(tp)   ||
             tp_is_powerup_anim(tp)          ||
+            tp_is_shield_carry_anim(tp)     ||
             tp_is_weapon_carry_anim(tp)) {
             t->updated--;
             continue;
@@ -3256,7 +3273,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
                 THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL)      |
             ((t->weapon                               ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT)   |
-            ((t->shield_anim                          ? 1 : 0) <<
+            ((t->shield                               ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT)   |
             ((t->effect         ? 1 : 0) <<
                 THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT);
@@ -3370,7 +3387,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT)) {
-            *data++ = tp_to_id(t->shield_anim);
+            *data++ = tp_to_id(t->shield);
 //CON("  owner    0x%04x", t->owner_thing_id);
         }
 
@@ -3753,7 +3770,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 
         if (shield_id) {
             thing_wield_shield(t, id_to_tp(shield_id));
-        } else if (t->shield_anim) {
+        } else if (t->shield) {
             thing_unwield_shield(t);
         }
 

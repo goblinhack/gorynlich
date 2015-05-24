@@ -60,9 +60,9 @@ uint8_t thing_server_move (thingp t,
         thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
-    thingp shield_anim = thing_shield_anim(t);
-    if (shield_anim) {
-        thing_move_set_dir(shield_anim, &x, &y, up, down, left, right);
+    thingp shield_carry_anim = thing_shield_carry_anim(t);
+    if (shield_carry_anim) {
+        thing_move_set_dir(shield_carry_anim, &x, &y, up, down, left, right);
     }
 
     thingp magic_anim = thing_magic_anim(t);
@@ -130,8 +130,8 @@ uint8_t thing_server_move (thingp t,
         thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
-    if (shield_anim) {
-        thing_move_set_dir(shield_anim, &x, &y, up, down, left, right);
+    if (shield_carry_anim) {
+        thing_move_set_dir(shield_carry_anim, &x, &y, up, down, left, right);
     }
 
     if (magic_anim) {
@@ -219,7 +219,7 @@ void thing_server_action (thingp t,
             thing_server_effect(t, THING_STATE_EFFECT_IS_POWER_UP);
             break;
         } else if (item->id == THING_POTION_SHIELD) {
-            thing_wield_shield(t, tp);
+            thing_wield_shield(t, tp_find("data/things/shield1"));
             break;
         } else if (item->id == THING_BOMB) {
             if (level_place_bomb(server_level, t, t->x + 1, t->y)) {
@@ -401,9 +401,9 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
     /*
      * Make the shield follow the thing.
      */
-    thingp shield_anim = thing_shield_anim(t);
-    if (shield_anim) {
-        thing_server_wid_move(shield_anim, x, y, is_new);
+    thingp shield_carry_anim = thing_shield_carry_anim(t);
+    if (shield_carry_anim) {
+        thing_server_wid_move(shield_carry_anim, x, y, is_new);
     }
 
     /*

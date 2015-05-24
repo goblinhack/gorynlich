@@ -15,99 +15,131 @@
  tiles={
   tile={
    tile="magic1-1"
+   delay=100
   }
   tile={
    tile="magic1-2"
+   delay=100
   }
   tile={
    tile="magic1-3"
+   delay=100
   }
   tile={
    tile="magic1-4"
+   delay=100
   }
   tile={
    tile="magic1-5"
+   delay=100
   }
   tile={
    tile="magic1-6"
+   delay=100
   }
   tile={
    tile="magic1-7"
+   delay=100
   }
   tile={
    tile="magic1-8"
+   delay=100
   }
   tile={
    tile="magic1-9"
+   delay=100
   }
   tile={
    tile="magic1-10"
+   delay=100
   }
   tile={
    tile="magic1-11"
+   delay=100
   }
   tile={
    tile="magic1-12"
+   delay=100
   }
   tile={
    tile="magic1-13"
+   delay=100
   }
   tile={
    tile="magic1-14"
+   delay=100
   }
   tile={
    tile="magic1-15"
+   delay=100
   }
   tile={
    tile="magic1-16"
+   delay=100
   }
   tile={
    tile="magic1-17"
+   delay=100
   }
   tile={
    tile="magic1-18"
+   delay=100
   }
   tile={
    tile="magic1-19"
+   delay=100
   }
   tile={
    tile="magic1-20"
+   delay=100
   }
   tile={
    tile="magic1-21"
+   delay=100
   }
   tile={
    tile="magic1-22"
+   delay=100
   }
   tile={
    tile="magic1-23"
+   delay=100
   }
   tile={
    tile="magic1-24"
+   delay=100
   }
   tile={
    tile="magic1-25"
+   delay=100
   }
   tile={
    tile="magic1-26"
+   delay=100
   }
   tile={
    tile="magic1-27"
+   delay=100
   }
   tile={
    tile="magic1-28"
+   delay=100
   }
   tile={
    tile="magic1-29"
+   delay=100
   }
   tile={
    tile="magic1-30"
+   delay=100
   }
   tile={
    tile="magic1-31"
+   delay=100
   }
   tile={
    tile="magic1-32"
+   delay=100
   }
  }
 }

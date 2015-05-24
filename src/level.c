@@ -665,11 +665,19 @@ void level_reset_players (levelp level)
     /*
      * Rewield weapons at start.
      */
+    LEVEL_LOG(level, "Reset players at start of level");
+
     TREE_WALK(server_active_things, t) {
         if (thing_is_player(t)) {
             tpp weapon = thing_weapon(t);
             if (weapon) {
                 thing_wield(t, weapon);
+                thing_update(t);
+            }
+
+            tpp shield = thing_shield(t);
+            if (shield) {
+                thing_wield_shield(t, shield);
                 thing_update(t);
             }
         }
@@ -767,16 +775,17 @@ static void level_finished (levelp level)
      * Force the death of all things on the level.
      */
     { TREE_WALK(server_active_things, t) {
-        if (!thing_is_player(t)) {
+        if (!thing_is_player(t) &&
+            !thing_is_shield_carry_anim(t)) {
             thing_leave_level(t);
-            t->is_dead = true;
+            thing_set_is_dead(t, true);
             thing_update(t);
         }
     } }
 
     { TREE_WALK(server_boring_things, t) {
         thing_leave_level(t);
-        t->is_dead = true;
+        thing_set_is_dead(t, true);
         thing_update(t);
     } }
 
@@ -1547,9 +1556,9 @@ uint32_t level_count_is_rrr5 (levelp level)
     return (level_count_is_x(level, tp_is_rrr5));
 }
 
-uint32_t level_count_is_rrr6 (levelp level)
+uint32_t level_count_is_shield (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr6));
+    return (level_count_is_x(level, tp_is_shield));
 }
 
 uint32_t level_count_is_death (levelp level)

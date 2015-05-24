@@ -278,8 +278,8 @@ static void tp_destroy_internal (tpp t)
         myfree(t->weapon_swing_anim);
     }
 
-    if (t->shield_anim) {
-        myfree(t->shield_anim);
+    if (t->shield_carry_anim) {
+        myfree(t->shield_carry_anim);
     }
 
     if (t->magic_anim) {
@@ -460,7 +460,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
         GET_OPT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
         GET_OPT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
-        GET_OPT_NAMED_STRING(ctx, "shield_anim", t->shield_anim);
+        GET_OPT_NAMED_STRING(ctx, "shield_carry_anim", t->shield_carry_anim);
         GET_OPT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
         GET_OPT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
         GET_OPT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
@@ -590,7 +590,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr5", t->is_rrr5);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_shield", t->is_shield);
         GET_OPT_NAMED_BITFIELD(ctx, "is_death", t->is_death);
         GET_OPT_NAMED_BITFIELD(ctx, "is_cobweb", t->is_cobweb);
         GET_OPT_NAMED_BITFIELD(ctx, "is_ethereal", t->is_ethereal);
@@ -622,6 +622,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_action_right", t->is_action_right);
         GET_OPT_NAMED_BITFIELD(ctx, "can_walk_through", t->can_walk_through);
         GET_OPT_NAMED_BITFIELD(ctx, "is_weapon_carry_anim", t->is_weapon_carry_anim);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_shield_carry_anim", t->is_shield_carry_anim);
         GET_OPT_NAMED_BITFIELD(ctx, "is_powerup_anim", t->is_powerup_anim);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spell", t->is_spell);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hand_item", t->is_hand_item);
@@ -705,7 +706,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
     PUT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
     PUT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
-    PUT_NAMED_STRING(ctx, "shield_anim", t->shield_anim);
+    PUT_NAMED_STRING(ctx, "shield_carry_anim", t->shield_carry_anim);
     PUT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
     PUT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
     PUT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
@@ -797,7 +798,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
     PUT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
     PUT_NAMED_BITFIELD(ctx, "is_rrr5", t->is_rrr5);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
+    PUT_NAMED_BITFIELD(ctx, "is_shield", t->is_shield);
     PUT_NAMED_BITFIELD(ctx, "is_death", t->is_death);
     PUT_NAMED_BITFIELD(ctx, "is_cobweb", t->is_cobweb);
     PUT_NAMED_BITFIELD(ctx, "is_ethereal", t->is_ethereal);
@@ -926,9 +927,9 @@ const char *tp_weapon_swing_anim (tpp t)
     return (t->weapon_swing_anim);
 }
 
-const char *tp_shield_anim (tpp t)
+const char *tp_shield_carry_anim (tpp t)
 {
-    return (t->shield_anim);
+    return (t->shield_carry_anim);
 }
 
 const char *tp_magic_anim (tpp t)
