@@ -702,20 +702,9 @@ static void client_rx_server_status (gsocketp s,
      */
     if (server_status.level_hide != latest_status.level_hide) {
         if (latest_status.level_hide) {
-            LOG("Client: Hide level");
-
-            wid_hide(wid_game_map_client_grid_container, 
-                     wid_hide_delay);
+            client_level_ending();
         } else {
-            /*
-             * Reveal the level and re-equip players.
-             */
-            LOG("Client: Reveal level");
-
-            wid_visible(wid_game_map_client_grid_container, 
-                        wid_visible_delay);
-
-            wid_game_map_client_scroll_adjust(1);
+            client_level_starting();
         }
     }
 
@@ -877,18 +866,7 @@ static void client_poll (void)
 
                 socket_rx_server_hiscore(s, packet, data, &latest_hiscores);
 
-                if (client_level->is_test_level) {
-                    LEVEL_LOG(client_level,
-                              "Test level finished, back to editor");
-
-                    wid_game_map_go_back_to_editor();
-                } else {
-                    LEVEL_LOG(client_level, "Raise gravestone");
-
-                    wid_dead_visible(latest_hiscores.players[0].player_name,
-                                     latest_hiscores.players[0].death_reason,
-                                     latest_hiscores.rejoin_allowed);
-                }
+                client_player_fully_dead(&latest_hiscores);
                 break;
             }
 

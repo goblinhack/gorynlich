@@ -8,6 +8,7 @@ GAME_OBJECTS=				\
     $(RAMDISK_OBJ)			\
     $(OBJDIR)/backtrace.o 		\
     $(OBJDIR)/client.o 			\
+    $(OBJDIR)/client_hooks.o 		\
     $(OBJDIR)/color.o			\
     $(OBJDIR)/command.o 		\
     $(OBJDIR)/config.o			\

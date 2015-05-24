@@ -145,7 +145,7 @@ typedef struct msg_player_hiscore_ {
     uint32_t score;
 } __attribute__ ((packed)) msg_player_hiscore;
 
-typedef struct {
+typedef struct msg_server_hiscores_ {
     uint8_t type;
     uint8_t rejoin_allowed;
     msg_player_hiscore players[MAX_HISCORES+1];
