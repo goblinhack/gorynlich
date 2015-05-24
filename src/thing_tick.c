@@ -50,10 +50,10 @@ static void thing_tick_server_all (void)
                 THING_ERR(t, "has no widget, owner %s", thing_logname(owner));
                 THING_ERR(t, "owner weapon_carry_anim_thing_id %d",
                           owner->weapon_carry_anim_thing_id);
+                THING_ERR(t, "owner shield_carry_anim_thing_id %d",
+                          owner->shield_carry_anim_thing_id);
                 THING_ERR(t, "owner weapon_swing_anim_thing_id %d",
                           owner->weapon_swing_anim_thing_id);
-                THING_ERR(t, "owner shield_anim_thing_id %d",
-                          owner->shield_anim_thing_id);
                 THING_ERR(t, "owner magic_anim_thing_id %d",
                           owner->magic_anim_thing_id);
             }

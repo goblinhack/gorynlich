@@ -108,8 +108,8 @@ static void thing_possible_hit_do (thingp hitter)
         /*
          * Skip things that aren't really hitable.
          */
-        if (thing_is_animation(cand->target) ||
-            thing_is_cloud_effect(cand->target) ||
+        if (thing_is_animation(cand->target)            ||
+            thing_is_cloud_effect(cand->target)         ||
             thing_is_weapon_carry_anim(cand->target)) {
             continue;
         }
@@ -562,8 +562,8 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
         /*
          * Player bumped into something.
          */
-        if (thing_is_powerup(it)                ||
-            thing_is_weapon_swing_effect(it)    ||
+        if (thing_is_shield(it)                ||
+            thing_is_weapon_swing_effect(it)   ||
             thing_is_cloud_effect(it)) {
             /*
              * I'm hit!
@@ -601,7 +601,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
          * Monster bumped into something.
          */
         if (thing_is_player(it)                 ||
-            thing_is_powerup(it)                ||
+            thing_is_shield(it)                 ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_cloud_effect(it)) {
             /*
@@ -673,7 +673,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_food(it)                   ||
             thing_is_door(it)                   ||
             thing_is_mob_spawner(it)            ||
-            thing_is_powerup(it)                ||
+            thing_is_shield(it)                 ||
             thing_is_monst(it)) {
             /*
              * I'm hit!
@@ -788,7 +788,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
     /*
      * Shield hits a bad guy?
      */
-    if (thing_is_powerup(me)) {
+    if (thing_is_shield(me)) {
         if (thing_is_monst(it) ||
             thing_is_mob_spawner(it)) {
             /*
@@ -942,7 +942,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_can_walk_through(it)          ||
                     thing_is_carryable(it)              ||
                     thing_is_weapon_swing_effect(it)    ||
-                    thing_is_powerup(it)                ||
+                    thing_is_shield(it)                 ||
                     thing_is_explosion(it)              ||
                     thing_is_non_explosive_gas_cloud(it)||
                     thing_is_projectile(it)             ||
@@ -956,7 +956,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
 
             if (thing_is_projectile(me)                 ||
                 thing_is_cloud_effect(me)               ||
-                thing_is_powerup(me)                    ||
+                thing_is_shield(me)                     ||
                 thing_is_weapon_swing_effect(me)) {
                 /*
                  * Allow these to pass through anything.
@@ -995,8 +995,9 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                      */
                     thing_is_projectile(it)             ||
                     thing_is_weapon_swing_effect(it)    ||
+                    thing_is_shield_carry_anim(it)      ||
                     thing_is_weapon_carry_anim(it)      ||
-                    thing_is_powerup(it)                ||
+                    thing_is_shield(it)                 ||
                     thing_is_explosion(it)              ||
                     thing_is_sawblade(it)               ||
                     thing_is_cloud_effect(it)) {

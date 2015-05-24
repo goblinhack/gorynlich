@@ -255,7 +255,7 @@ void thing_unwield (thingp t)
 
     THING_LOG(t, "unwielding %s", tp_short_name(weapon));
 
-    thing_weapon_sheath(t);
+    thing_sheath(t);
 
     /*
      * Update the thing stats so the weapon inventory changes.
@@ -263,7 +263,7 @@ void thing_unwield (thingp t)
     thing_stats_set_action_bar_index(t, 0);
 }
 
-void thing_weapon_sheath (thingp t)
+void thing_sheath (thingp t)
 {
     tpp weapon = thing_weapon(t);
     if (!weapon) {

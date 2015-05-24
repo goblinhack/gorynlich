@@ -117,8 +117,8 @@ typedef struct tp_ {
      * How this weapon appears on screen when it is used.
      */
     char *weapon_carry_anim;
+    char *shield_carry_anim;
     char *weapon_swing_anim;
-    char *shield_anim;
     char *magic_anim;
 
     /*
@@ -266,7 +266,7 @@ typedef struct tp_ {
     uint8_t is_rrr3:1;
     uint8_t is_rrr4:1;
     uint8_t is_rrr5:1;
-    uint8_t is_rrr6:1;
+    uint8_t is_shield:1;
     uint8_t is_death:1;
     uint8_t is_cobweb:1;
     uint8_t is_ethereal:1;
@@ -297,6 +297,7 @@ typedef struct tp_ {
     uint8_t is_action_right:1;
     uint8_t can_walk_through:1;
     uint8_t is_weapon_carry_anim:1;
+    uint8_t is_shield_carry_anim:1;
     uint8_t is_powerup_anim:1;
     uint8_t is_spell:1;
     uint8_t is_hand_item:1;
@@ -377,7 +378,7 @@ color tp_light_color(tpp);
 const char *tp_spawn_on_death(tpp);
 const char *tp_explodes_as(tpp);
 const char *tp_weapon_carry_anim(tpp);
-const char *tp_shield_anim(tpp);
+const char *tp_shield_carry_anim(tpp);
 const char *tp_magic_anim(tpp);
 const char *tp_weapon_swing_anim(tpp);
 const char *tp_message_on_use(tpp);
@@ -646,9 +647,9 @@ static inline uint8_t tp_is_rrr5 (tpp t)
     return (t->is_rrr5);
 }
 
-static inline uint8_t tp_is_rrr6 (tpp t)
+static inline uint8_t tp_is_shield (tpp t)
 {
-    return (t->is_rrr6);
+    return (t->is_shield);
 }
 
 static inline uint8_t tp_is_death (tpp t)
@@ -799,6 +800,11 @@ static inline uint8_t tp_can_walk_through (tpp t)
 static inline uint8_t tp_is_weapon_carry_anim (tpp t)
 {
     return (t->is_weapon_carry_anim);
+}
+
+static inline uint8_t tp_is_shield_carry_anim (tpp t)
+{
+    return (t->is_shield_carry_anim);
 }
 
 static inline uint8_t tp_is_powerup_anim (tpp t)
