@@ -60,9 +60,9 @@ void thing_client_move (thingp t,
         thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
-    thingp shield_anim = thing_shield_anim(t);
-    if (shield_anim) {
-        thing_move_set_dir(shield_anim, &x, &y, up, down, left, right);
+    thingp shield_carry_anim = thing_shield_carry_anim(t);
+    if (shield_carry_anim) {
+        thing_move_set_dir(shield_carry_anim, &x, &y, up, down, left, right);
     }
 
     thingp magic_anim = thing_magic_anim(t);
@@ -270,10 +270,10 @@ void thing_client_wid_update (thingp t,
     /*
      * Update the shield being used.
      */
-    thingp shield_anim = thing_shield_anim(t);
-    if (shield_anim) {
-        shield_anim->dir = t->dir;
-        thing_client_wid_move(shield_anim, x, y, smooth);
+    thingp shield_carry_anim = thing_shield_carry_anim(t);
+    if (shield_carry_anim) {
+        shield_carry_anim->dir = t->dir;
+        thing_client_wid_move(shield_carry_anim, x, y, smooth);
     }
 
     /*

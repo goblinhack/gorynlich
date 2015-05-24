@@ -252,7 +252,7 @@ void thing_used (thingp t, tpp tp)
     if (thing_stats_get_hp(t) > thing_stats_get_max_hp(t)) {
         if (tp_is_magical(tp)) {
             /*
-             * Allow temorary over max.
+             * Allow temporary over max.
              */
         } else {
             thing_stats_set_hp(t, thing_stats_get_max_hp(t));
@@ -279,7 +279,7 @@ void thing_used (thingp t, tpp tp)
     if (thing_stats_get_magic(t) > thing_stats_get_max_magic(t)) {
         if (tp_is_magical(tp)) {
             /*
-             * Allow temorary over max.
+             * Allow temporary over max.
              */
         } else {
             thing_stats_set_magic(t, thing_stats_get_max_magic(t));

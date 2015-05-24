@@ -375,6 +375,7 @@ enum {
     THING_SWORD3_ANIM,
     THING_BOW1_ANIM,
     THING_AXE1_ANIM,
+    THING_SHIELD1_ANIM,
     THING_AXE2_ANIM,
     THING_SCYTHE1_ANIM,
     THING_ANIM_MAN,
@@ -499,7 +500,7 @@ typedef struct thing_ {
      */
     uint16_t weapon_carry_anim_thing_id;
     uint16_t weapon_swing_anim_thing_id;
-    uint16_t shield_anim_thing_id;
+    uint16_t shield_carry_anim_thing_id;
     uint16_t magic_anim_thing_id;
 
     /*
@@ -510,7 +511,7 @@ typedef struct thing_ {
     /*
      * Current shield or magic effect
      */
-    tpp shield_anim;
+    tpp shield;
     tpp magic_anim;
 
     /*
@@ -1112,11 +1113,11 @@ static inline uint8_t thing_is_rrr5 (thingp t)
     return (tp_is_rrr5(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr6 (thingp t)
+static inline uint8_t thing_is_shield (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr6(thing_tp(t)));
+    return (tp_is_shield(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_death (thingp t)
@@ -1341,6 +1342,13 @@ static inline uint8_t thing_is_weapon_carry_anim (thingp t)
     verify(t);
 
     return (tp_is_weapon_carry_anim(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_shield_carry_anim (thingp t)
+{
+    verify(t);
+
+    return (tp_is_shield_carry_anim(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_powerup_anim (thingp t)
@@ -1735,9 +1743,9 @@ static inline uint8_t thing_is_rrr5_noverify (thingp t)
     return (t->tp->is_rrr5);
 }
 
-static inline uint8_t thing_is_rrr6_noverify (thingp t)
+static inline uint8_t thing_is_shield_noverify (thingp t)
 {
-    return (t->tp->is_rrr6);
+    return (t->tp->is_shield);
 }
 
 static inline uint8_t thing_is_death_noverify (thingp t)
@@ -1883,6 +1891,11 @@ static inline uint8_t thing_can_walk_through_noverify (thingp t)
 static inline uint8_t thing_is_weapon_carry_anim_noverify (thingp t)
 {
     return (t->tp->is_weapon_carry_anim);
+}
+
+static inline uint8_t thing_is_shield_carry_anim_noverify (thingp t)
+{
+    return (t->tp->is_shield_carry_anim);
 }
 
 static inline uint8_t thing_is_powerup_anim_noverify (thingp t)
@@ -2153,7 +2166,7 @@ static inline tpp thing_weapon (const thingp t)
 
 static inline tpp thing_shield (const thingp t)
 {
-    return (t->shield_anim);
+    return (t->shield);
 }
 
 static inline tpp thing_magic (const thingp t)
@@ -2257,21 +2270,23 @@ uint8_t thing_death_spawn(void);
 /*
  * thing_shield.c
  */
-thingp thing_shield_anim(thingp t);
 void thing_unwield_shield(thingp t);
-void thing_wield_shield(thingp t, tpp shield);
-widp thing_get_shield_anim_wid(thingp t);
-void thing_set_shield_anim_id(thingp t, uint32_t shield_anim_id);
-void thing_set_shield_anim(thingp t, thingp shield_anim);
 void thing_shield_sheath(thingp t);
+void thing_wield_shield(thingp t, tpp tp);
+thingp thing_shield_carry_anim(thingp t);
+void thing_set_shield_placement(thingp t);
+widp thing_get_shield_carry_anim_wid(thingp t);
+void thing_set_shield_carry_anim_id(thingp t, uint32_t shield_carry_anim_id);
+void thing_set_shield_carry_anim(thingp t, thingp shield_carry_anim);
 
 /*
  * thing_weapon.c
  */
 void thing_unwield(thingp t);
-void thing_weapon_sheath(thingp t);
-void thing_wield(thingp t, tpp tp);
+void thing_sheath(thingp t);
 void thing_swing(thingp t);
+void thing_wield(thingp t, tpp tp);
+void thing_weapon_sheath(thingp t);
 void thing_weapon_swing_offset(thingp t, double *dx, double *dy);
 thingp thing_weapon_carry_anim(thingp t);
 thingp thing_weapon_swing_anim(thingp t);
