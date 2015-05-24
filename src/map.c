@@ -306,9 +306,9 @@ uint8_t map_is_rrr5_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr5));
 }
 
-uint8_t map_is_rrr6_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_shield_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr6));
+    return (map_is_x_at(level, x, y, tp_is_shield));
 }
 
 uint8_t map_is_death_at (levelp level, int32_t x, int32_t y)
@@ -768,9 +768,9 @@ thingp map_thing_is_rrr5_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr5));
 }
 
-thingp map_thing_is_rrr6_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_shield_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr6));
+    return (map_thing_is_x_at(level, x, y, tp_is_shield));
 }
 
 thingp map_thing_is_death_at (levelp level, int32_t x, int32_t y)
@@ -1246,9 +1246,9 @@ tree_rootp map_all_things_is_rrr5_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr5));
 }
 
-tree_rootp map_all_things_is_rrr6_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_shield_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr6));
+    return (map_all_things_is_x_at(level, x, y, tp_is_shield));
 }
 
 tree_rootp map_all_things_is_death_at (levelp level, int32_t x, int32_t y)
@@ -1704,9 +1704,9 @@ tpp map_find_rrr5_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr5, w));
 }
 
-tpp map_find_rrr6_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_shield_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr6, w));
+    return (map_find_x_at(level, x, y, tp_is_shield, w));
 }
 
 tpp map_find_death_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2507,9 +2507,9 @@ tree_rootp map_all_things_is_rrr5 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr5));
 }
 
-tree_rootp map_all_things_is_rrr6 (levelp level)
+tree_rootp map_all_things_is_shield (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr6));
+    return (map_all_things_is_x(level, tp_is_shield));
 }
 
 tree_rootp map_all_things_is_death (levelp level)

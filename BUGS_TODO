@@ -1,9 +1,9 @@
 --------------------------------------- plan for may --------------------------------------
-- on new level, walls need fixed up quicker
-- exit on editor test levels does not work
+- shields need to accumulate again
 - spending points on level end
 - print shield status
 - xp level and hp increase per level
+- shield lost on level end
 --------------------------------------- plan for june --------------------------------------
 - sound effects for weapons and hits http://www.bfxr.net/
 - add money
@@ -52,6 +52,8 @@
 - different profiles for level generation
 
 Sat May 23 20:49:42 EDT 2015
+- on new level, walls need fixed up quicker
+- exit on editor test levels does not work
 - bomb did not kill webs right under player
 - can see through purple doors when too close
 - ghost sitting under you does no damage

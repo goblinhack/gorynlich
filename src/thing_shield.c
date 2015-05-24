@@ -13,97 +13,75 @@
 #include "wid_game_map_client.h"
 #include "math_util.h"
 
-void thing_set_shield_anim_id (thingp t, uint32_t shield_anim_id)
+thingp thing_shield_carry_anim (thingp t)
 {
-    thingp shield_anim;
+    thingp shield_carry_anim = 0;
 
-    if (!shield_anim_id) {
-        thing_set_shield_anim(t, 0);
+    if (t->on_server) {
+        if (t->shield_carry_anim_thing_id) {
+            shield_carry_anim = thing_server_id(t->shield_carry_anim_thing_id);
+        }
+    } else {
+        if (t->shield_carry_anim_thing_id) {
+            shield_carry_anim = thing_client_id(t->shield_carry_anim_thing_id);
+        }
+    }
+
+    return (shield_carry_anim);
+}
+
+void thing_set_shield_carry_anim_id (thingp t,
+                                     uint32_t shield_carry_anim_id)
+{
+    thingp shield_carry_anim;
+
+    if (!shield_carry_anim_id) {
+        thing_set_shield_carry_anim(t, 0);
         return;
     }
 
     if (t->on_server) {
-        shield_anim = thing_server_find(shield_anim_id);
+        shield_carry_anim = thing_server_find(shield_carry_anim_id);
     } else {
-        shield_anim = thing_client_find(shield_anim_id);
+        shield_carry_anim = thing_client_find(shield_carry_anim_id);
     }
 
-    thing_set_shield_anim(t, shield_anim);
+    thing_set_shield_carry_anim(t, shield_carry_anim);
 }
 
-void thing_set_shield_anim (thingp t, thingp shield_anim)
+void thing_set_shield_carry_anim (thingp t, thingp shield_carry_anim)
 {
-    if (shield_anim) {
-        verify(shield_anim);
+    if (shield_carry_anim) {
+        verify(shield_carry_anim);
     }
 
-    thingp old_shield_anim = thing_shield_anim(t);
+    thingp old_shield_carry_anim = thing_shield_carry_anim(t);
 
-    if (old_shield_anim) {
-        if (old_shield_anim == shield_anim) {
+    if (old_shield_carry_anim) {
+        if (old_shield_carry_anim == shield_carry_anim) {
             return;
         }
 
-        if (shield_anim) {
+        if (shield_carry_anim) {
             THING_LOG(t, "shield carry changed, %s->%s",
-                      thing_logname(old_shield_anim),
-                      thing_logname(shield_anim));
+                      thing_logname(old_shield_carry_anim),
+                      thing_logname(shield_carry_anim));
         } else {
             THING_LOG(t, "remove shield carry animation, %s",
-                      thing_logname(old_shield_anim));
+                      thing_logname(old_shield_carry_anim));
         }
     } else {
-        if (shield_anim) {
+        if (shield_carry_anim) {
             THING_LOG(t, "shield carry anim now, %s",
-                      thing_logname(shield_anim));
+                      thing_logname(shield_carry_anim));
         }
     }
 
-    if (shield_anim) {
-        t->shield_anim_thing_id = shield_anim->thing_id;
+    if (shield_carry_anim) {
+        t->shield_carry_anim_thing_id = shield_carry_anim->thing_id;
     } else {
-        t->shield_anim_thing_id = 0;
+        t->shield_carry_anim_thing_id = 0;
     }
-}
-
-thingp thing_shield_anim (thingp t)
-{
-    thingp shield_anim = 0;
-
-    if (t->on_server) {
-        if (t->shield_anim_thing_id) {
-            shield_anim = thing_server_id(t->shield_anim_thing_id);
-        }
-    } else {
-        if (t->shield_anim_thing_id) {
-            shield_anim = thing_client_id(t->shield_anim_thing_id);
-        }
-    }
-
-    return (shield_anim);
-}
-
-void thing_shield_sheath (thingp t)
-{
-    tpp shield = thing_shield(t);
-    if (!shield) {
-        return;
-    }
-
-    THING_LOG(t, "sheathing shield %s", tp_short_name(shield));
-
-    /*
-     * If this shield has its own thing id for animations then destroy that.
-     */
-    thingp shield_anim = thing_shield_anim(t);
-    if (shield_anim) {
-        THING_LOG(t, "unwield, carry anim shield %s", 
-                  thing_logname(shield_anim));
-        thing_dead(shield_anim, 0, "owner shield");
-        thing_set_shield_anim(t, 0);
-    }
-
-    t->shield_anim = 0;
 }
 
 void thing_unwield_shield (thingp t)
@@ -113,79 +91,93 @@ void thing_unwield_shield (thingp t)
         return;
     }
 
-    THING_LOG(t, "unwielding weapon shield %s", tp_short_name(shield));
+    THING_LOG(t, "unwielding shield %s", tp_short_name(shield));
 
     thing_shield_sheath(t);
+
+    t->shield = 0;
+}
+
+void thing_shield_sheath (thingp t)
+{
+    tpp shield = thing_shield(t);
+    if (!shield) {
+        return;
+    }
+
+    THING_LOG(t, "sheathing %s", tp_short_name(shield));
+
+    /*
+     * If this shield has its own thing id for animations then destroy that.
+     */
+    thingp shield_carry_anim = thing_shield_carry_anim(t);
+    if (shield_carry_anim) {
+        THING_LOG(t, "unwield, carry anim %s", 
+                  thing_logname(shield_carry_anim));
+        thing_dead(shield_carry_anim, 0, "owner shield");
+        thing_set_shield_carry_anim(t, 0);
+    }
+
+    /*
+     * Else if vanishes on level changes.
+     */
+    if (!t->on_server) {
+        t->shield = 0;
+    }
 }
 
 void thing_wield_shield (thingp t, tpp shield)
 {
-    int32_t existing_shield = 0;
+    thingp existing_shield = thing_shield_carry_anim(t);
 
-    if (t->shield_anim == shield) {
-        thingp p = thing_shield_anim(t);
-        if (p) {
-            if (t->on_server) {
-                existing_shield = thing_stats_get_hp(p);
+    if (existing_shield) {
+        THING_LOG(t, "wield with existing shield %s",
+                  thing_logname(existing_shield));
+    }
+
+    if (t->shield == shield) {
+        if (t->on_server) {
+            if (thing_wid(existing_shield)) {
+                return;
             }
-        }
-
-        if (!t->on_server) {
+        } else {
             return;
         }
     }
-
-    thing_unwield_shield(t);
 
     if (thing_is_player(t)) {
         THING_LOG(t, "wield shield %s", tp_short_name(shield));
     }
 
-    /*
-     * Find out what to use as the shield.
-     */
-    tpp what = 0;
-    const char *as = tp_shield_anim(shield);
-    if (!as) {
-        as = tp_shield_anim(t->tp);
-        if (!as) {
-            what = shield;
-        } else {
-            what = tp_find(as);
-            if (!what) {
-                THING_ERR(t, "Could not find %s to wield", as);
-                return;
-            }
-        }
-    } else {
-        what = tp_find(as);
-        if (!what) {
-            THING_ERR(t, "Could not find %s to wield", as);
-            return;
-        }
-    }
+    const char *carry_as = tp_shield_carry_anim(shield);
 
-    if (!what) {
-        THING_ERR(t, "Could not use shield");
+    if (!carry_as) {
+        THING_ERR(t, "could not wield shield %s", tp_short_name(shield));
         return;
     }
 
-    t->shield_anim = shield;
+    tpp what = tp_find(carry_as);
+    if (!what) {
+        THING_ERR(t, "Could not find %s to wield", carry_as);
+        return;
+    }
 
-    widp shield_anim_wid;
+    t->shield = shield;
+
+    widp shield_carry_anim_wid;
 
     if (t->on_server) {
-        shield_anim_wid = wid_game_map_server_replace_tile(
+        shield_carry_anim_wid = wid_game_map_server_replace_tile(
                                 wid_game_map_server_grid_container,
                                 t->x,
                                 t->y,
-                                0, /* thing */
+                                existing_shield, /* thing */
                                 what,
                                 0, /* tpp data */
                                 0 /* item */,
                                 0 /* stats */);
     } else {
-        shield_anim_wid = wid_game_map_client_replace_tile(
+        shield_carry_anim_wid = wid_game_map_client_replace_tile(
                                 wid_game_map_client_grid_container,
                                 t->x, t->y, 0, what);
     }
@@ -193,15 +185,10 @@ void thing_wield_shield (thingp t, tpp shield)
     /*
      * Save the thing id so the client wid can keep track of the shield.
      */
-    thingp child = wid_get_thing(shield_anim_wid);
-    thing_set_shield_anim(t, child);
+    thingp child = wid_get_thing(shield_carry_anim_wid);
+    thing_set_shield_carry_anim(t, child);
 
     child->dir = t->dir;
-
-    thing_stats_modify_hp(child, existing_shield);
-    if (t->on_server) {
-        THING_LOG(t, "shielded with %d hp", thing_stats_get_hp(child));
-    }
 
     /*
      * Attach to the thing.
@@ -210,15 +197,12 @@ void thing_wield_shield (thingp t, tpp shield)
 
     if (t->on_server) {
         thing_update(t);
-    } else {
-        thing_client_wid_update(t, t->x, t->y, false /* smooth */,
-                                false /* is new */);
     }
 }
 
-widp thing_get_shield_anim_wid (thingp t)
+widp thing_get_shield_carry_anim_wid (thingp t)
 {
-    thingp shield = thing_shield_anim(t);
+    thingp shield = thing_shield_carry_anim(t);
     if (!shield) {
         return (0);
     }
