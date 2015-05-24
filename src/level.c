@@ -919,16 +919,14 @@ void level_client_tick (levelp level)
         return;
     }
 
-    static uint32_t ts;
-
-    if (!time_have_x_tenths_passed_since(10, ts)) {
+    if (!time_have_x_tenths_passed_since(10, level->timestamp_last_fixup)) {
         return;
     }
 
     map_fixup(level);
     level_set_needs_fixup(level, false);
 
-    ts = time_get_time_ms();
+    level->timestamp_last_fixup = time_get_time_ms();
 }
 
 level_pos_t level_get_level_pos (levelp level)

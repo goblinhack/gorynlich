@@ -93,6 +93,11 @@ typedef struct level_t_ {
      */
     int32_t timestamp_started;
 
+    /*
+     * Last time we fixed up the walls
+     */
+    int32_t timestamp_last_fixup;
+
 #define MAX_TRIGGERS 256
     level_trigger trigger[MAX_TRIGGERS];
 

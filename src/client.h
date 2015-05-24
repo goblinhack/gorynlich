@@ -20,3 +20,11 @@ msg_player_statep client_get_player(void);
 
 extern gsocketp client_joined_server;
 extern uint32_t client_player_died;
+
+/*
+ * client_hooks.c
+ */
+void client_level_starting(void);
+void client_level_ending(void);
+struct msg_server_hiscores_;
+void client_player_fully_dead(struct msg_server_hiscores_ *);
