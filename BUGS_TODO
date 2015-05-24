@@ -1,5 +1,6 @@
 --------------------------------------- plan for may --------------------------------------
-- bomb did not kill webs right under player
+- on new level, walls need fixed up quicker
+- exit on editor test levels does not work
 - spending points on level end
 - print shield status
 - xp level and hp increase per level
@@ -32,6 +33,8 @@
 - manually generate lots of levels
 - picture of keyboard and keys to use at start
 - tx socket thing loop is too slow could use a thing array to update
+- minor: colission map tiny not used
+- minor: lifespan code not used
 --------------------------------------- plan for sep --------------------------------------
 - boss baddies every 10 levels
 - first baddy, large ghost, drops bone piles
@@ -49,6 +52,10 @@
 - different profiles for level generation
 
 Sat May 23 20:49:42 EDT 2015
+- bomb did not kill webs right under player
+- can see through purple doors when too close
+- ghost sitting under you does no damage
+- damage of 1 from fireball
 - health recovers too fast - should only be if not hit
 
 Sat May 23 10:47:31 EDT 2015

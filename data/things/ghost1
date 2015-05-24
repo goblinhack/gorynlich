@@ -6,14 +6,13 @@
  speed=5
  max_hp=1
  damage=2
- scale=0.9
  bonus_xp_on_death=5
  vision_distance=20
  hit_delay_tenths=5
  is_monst
  hit_priority=10
  is_cats_eyes
- is_collision_map_tiny
+ is_collision_map_medium
  is_animated
  is_fragile
  d10000_chance_of_appearing=100
