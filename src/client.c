@@ -873,11 +873,18 @@ static void client_poll (void)
 
                 memset(&latest_hiscores, 0, sizeof(latest_hiscores));
 
+                LEVEL_LOG(client_level, "Received hiscores from server");
+
                 socket_rx_server_hiscore(s, packet, data, &latest_hiscores);
 
                 if (client_level->is_test_level) {
+                    LEVEL_LOG(client_level,
+                              "Test level finished, back to editor");
+
                     wid_game_map_go_back_to_editor();
                 } else {
+                    LEVEL_LOG(client_level, "Raise gravestone");
+
                     wid_dead_visible(latest_hiscores.players[0].player_name,
                                      latest_hiscores.players[0].death_reason,
                                      latest_hiscores.rejoin_allowed);

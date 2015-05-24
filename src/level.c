@@ -754,9 +754,12 @@ static void level_finished (levelp level)
     level->end_level_first_phase_fade_out_timer = 0;
 
     if (level->is_test_level) {
+        LEVEL_LOG(level, "test level finished");
         level_destroy(&server_level, false /* keep players */);
         return;
     }
+
+    LEVEL_LOG(level, "level finished");
 
     thingp t;
 
@@ -879,6 +882,7 @@ void level_server_tick (levelp level)
      */
     if (level_is_ready_to_be_destroyed(level)) {
         level_finished(level);
+        return;
     }
 
     /*
