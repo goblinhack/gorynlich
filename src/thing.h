@@ -589,6 +589,11 @@ typedef struct thing_ {
     double anim_y;
 
     /*
+     * How close for collision detection.
+     */
+    double collision_radius;
+
+    /*
      * Map grid co-ordinates.
      */
     int16_t map_x;
@@ -1006,6 +1011,17 @@ static inline uint8_t thing_is_fire (thingp t)
     verify(t);
 
     return (tp_is_fire(thing_tp(t)));
+}
+
+static inline uint8_t thing_collision_radius (thingp t)
+{
+    verify(t);
+
+    if (t->collision_radius > 0) {
+        return (t->collision_radius);
+    }
+
+    return (tp_get_collision_radius(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_cats_eyes (thingp t)

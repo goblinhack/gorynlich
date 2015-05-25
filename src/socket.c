@@ -2369,6 +2369,11 @@ void socket_tx_server_status (gsocketp s_in)
             if (t) {
                 memcpy(&msg_tx->stats, &t->stats, sizeof(thing_stats));
 
+                thingp shield_carry_anim = thing_shield_carry_anim(t);
+                if (shield_carry_anim) {
+                    msg_tx->stats.shield = thing_stats_get_hp(shield_carry_anim);
+                }
+
 // LOG("server, tx version: %d",t->stats.client_version);
                 if (0) {
                     LOG("Server: Tx Server Status to %s", socket_get_remote_logname(s));
