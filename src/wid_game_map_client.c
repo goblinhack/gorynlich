@@ -235,8 +235,8 @@ uint8_t wid_game_map_client_player_move (void)
             up    = state[SDLK_UP] ? 1 : 0;
             down  = state[SDLK_DOWN] ? 1 : 0;
             fire  = state[SDLK_SPACE] ? 1 : 0;
-            magic = state[SDLK_M] ? 1 : 0;
-        M
+            magic = state[SDLK_m] ? 1 : 0;
+        }
 #else /* } { */
         {
             const uint8_t *state = SDL_GetKeyboardState(0);
