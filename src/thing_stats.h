@@ -83,6 +83,11 @@ typedef struct thing_stats_ {
     uint8_t action_bar_index;;
 
     /*
+     * If carrying a shield, how powerful is it?
+     */
+    uint16_t shield;
+
+    /*
      * Where this stats structure is used
      */
     uint8_t on_server:1;

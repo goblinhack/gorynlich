@@ -52,6 +52,8 @@
 - different profiles for level generation
 
 Sat May 23 20:49:42 EDT 2015
+- shield progress
+- magic ploughs through multiple baddies
 - on new level, walls need fixed up quicker
 - exit on editor test levels does not work
 - bomb did not kill webs right under player
