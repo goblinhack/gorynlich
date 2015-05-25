@@ -1850,7 +1850,7 @@ static void socket_tx_client_shout_relay (gsocketp s,
     msg.level = level;
     strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
-    if (from && from->stats.pname) {
+    if (from && from->stats.pname[0]) {
         char *name = from->stats.pname;
         strncpy(msg.from, name, min(sizeof(msg.from) - 1, strlen(name))); 
     } else {

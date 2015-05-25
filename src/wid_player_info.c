@@ -368,7 +368,7 @@ static void wid_player_info_create (thing_statsp s, int fast)
 
         wid_set_no_shape(w);
 
-        if (player_stats->pclass) {
+        if (player_stats->pclass[0]) {
             tpp tp = thing_stats_to_tp(player_stats);
 
             const char *tooltip = tp_get_tooltip(tp);
