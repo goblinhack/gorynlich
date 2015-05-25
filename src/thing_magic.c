@@ -176,7 +176,9 @@ void thing_server_magic_fire (thingp t)
     /*
      * Set up the modifier damage if this is say a magicball or bow for ex.
      */
-    p->damage = t->magic_powerup;;
+    p->damage = t->magic_powerup;
+    p->stats.hp = t->magic_powerup;
+    t->collision_radius = 1.0 + 0.01 * (double)t->magic_powerup;
 
     t->magic_powerup = 0;
 

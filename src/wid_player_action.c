@@ -542,6 +542,34 @@ static void wid_player_action_create (thing_statsp s, int fast)
         }
     }
 
+    if (player->shield) {
+        widp w =
+            wid_new_square_button(wid_player_action,
+                                  "wid player_stats container");
+
+        fpoint tl = {0.85, 0.2};
+        fpoint br = {0.95, 1.0};
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_raise(w);
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        wid_set_color(w, WID_COLOR_BG, WHITE);
+        wid_set_color(w, WID_COLOR_TL, WHITE);
+        wid_set_color(w, WID_COLOR_BR, WHITE);
+        wid_set_text_outline(w, true);
+        wid_set_font(w, large_font);
+        wid_set_no_shape(w);
+
+        char tmp[40];
+
+        snprintf(tmp, sizeof(tmp) - 1, "%d", s->shield);
+        wid_set_text(w, tmp);
+        wid_set_thing_template(w, player->shield);
+    }
+
     widp left_ball_stats;
 
     {

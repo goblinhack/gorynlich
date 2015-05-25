@@ -9,7 +9,7 @@
  z_depth=4
  speed=28
  max_hp=190
- max_magic=15
+ max_magic=180
  hp_per_level=8
  is_player
  magic_anim="data/things/magic_cloud"
