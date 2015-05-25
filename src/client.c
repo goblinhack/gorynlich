@@ -123,7 +123,7 @@ static void client_alive_check (void)
         /*
          * Don't kill off new born connections.
          */
-        if (socket_get_tx(s) < 10) {
+        if (socket_get_tx(s) < 100) {
             continue;
         }
 
@@ -131,6 +131,8 @@ static void client_alive_check (void)
             /*
              * Clients try forever. Server clients disconnect.
              */
+            LOG("Client: Quality lower than ping threshold");
+
             socket_set_connected(s, false);
 
             if (client_joined_server == s) {

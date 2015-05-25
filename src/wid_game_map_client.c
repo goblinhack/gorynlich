@@ -318,7 +318,7 @@ uint8_t wid_game_map_client_player_move (void)
     }
 
     if (!player) {
-        LOG("No player, cannot move");
+        LOG("Client: No player, cannot move");
         return (false);
     }
 
@@ -332,7 +332,7 @@ uint8_t wid_game_map_client_player_move (void)
     }
 
     if (!client_joined_server) {
-        LOG("Have not joined server, cannot move");
+        LOG("Client: Have not joined server, cannot move");
         return (false);
     }
 
@@ -349,7 +349,7 @@ uint8_t wid_game_map_client_player_move (void)
      * waiting for others to finish.
      */
     if (!thing_is_visible(player)) {
-        LOG("Player is not visible, cannot move");
+        LOG("Client: Player is not visible, cannot move");
         return (false);
     }
 
