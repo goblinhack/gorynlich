@@ -847,7 +847,7 @@ static void wid_server_join_menu_create (void)
 
         row_server[i] = s;
 
-        if (s->name && s->name[0]) {
+        if (s->name[0]) {
             col_name[i] = dynprintf("%%%%fmt=left$%s", s->name);
         }
 
