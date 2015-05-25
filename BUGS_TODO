@@ -1,7 +1,6 @@
 --------------------------------------- plan for may --------------------------------------
 - spending points on level end
 - xp level and hp increase per level
-- test level halts on start sometimes
 --------------------------------------- plan for june --------------------------------------
 - sound effects for weapons and hits http://www.bfxr.net/
 - add money
@@ -50,6 +49,7 @@
 - different profiles for level generation
 
 Mon May 25 08:27:19 EDT 2015
+- test level halts on start sometimes
 - level
 - crash on editor changing title and test mode at same time
 
