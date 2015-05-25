@@ -196,6 +196,12 @@ int thing_stats_diff (const thing_statsp old_stats,
         changed = 1;
     }
 
+    if (old_stats->shield != new_stats->shield) {
+        LOG("%sshield changed from %d to %d", indent, 
+            old_stats->shield, new_stats->shield);
+        changed = 1;
+    }
+
     if (old_stats->magic != new_stats->magic) {
         LOG("%sMagic changed from %d to %d", indent, 
             old_stats->magic, new_stats->magic);

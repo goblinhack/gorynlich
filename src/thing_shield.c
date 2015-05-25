@@ -135,20 +135,6 @@ void thing_wield_shield (thingp t, tpp shield)
                   thing_logname(existing_shield));
     }
 
-    if (t->shield == shield) {
-        if (t->on_server) {
-            if (thing_wid(existing_shield)) {
-                return;
-            }
-        } else {
-            return;
-        }
-    }
-
-    if (thing_is_player(t)) {
-        THING_LOG(t, "wield shield %s", tp_short_name(shield));
-    }
-
     const char *carry_as = tp_shield_carry_anim(shield);
 
     if (!carry_as) {
@@ -160,6 +146,25 @@ void thing_wield_shield (thingp t, tpp shield)
     if (!what) {
         THING_ERR(t, "Could not find %s to wield", carry_as);
         return;
+    }
+
+    if (t->shield == shield) {
+        if (t->on_server) {
+            if (thing_wid(existing_shield)) {
+                /*
+                 * Add onto existing shield.
+                 */
+                thing_stats_modify_hp(existing_shield, 
+                                      tp_get_stats_max_hp(what));
+                return;
+            }
+        } else {
+            return;
+        }
+    }
+
+    if (thing_is_player(t)) {
+        THING_LOG(t, "wield shield %s", tp_short_name(shield));
     }
 
     t->shield = shield;

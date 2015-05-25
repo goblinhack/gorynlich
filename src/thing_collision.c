@@ -211,13 +211,10 @@ static uint8_t things_overlap (const thingp A,
     static double collision_map_tiny_y1;
     static double collision_map_tiny_y2;
 
-    tpp Atp = A->tp;
-    tpp Btp = B->tp;
-
     widp Aw = thing_wid(A);
     widp Bw = thing_wid(B);
 
-    if ((Atp->collision_radius > 0.0) || (Btp->collision_radius > 0.0)) {
+    if ((thing_collision_radius(A) > 0.0) || (thing_collision_radius(B) > 0.0)) {
 
         double Ax;
         double Ay;
@@ -241,7 +238,8 @@ static uint8_t things_overlap (const thingp A,
         }
 
         double dist = DISTANCE(Ax, Ay, Bx, By);
-        if (dist < max(Atp->collision_radius, Btp->collision_radius)) {
+        if (dist < max(thing_collision_radius(A), 
+                       thing_collision_radius(B))) {
 #if 0
 CON(" ");
 CON("%s", thing_logname(A));
@@ -723,10 +721,6 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         if (thing_is_monst(it)                  || 
             thing_is_fragile(it)                ||
             thing_is_combustable(it)            ||
-            thing_is_door(it)                   ||
-            thing_is_player(it)                 ||
-            thing_is_wall(it)                   ||
-            thing_is_sawblade(it)               ||
             thing_is_mob_spawner(it)) {
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             if (thing_owner(me) == it) {
@@ -737,8 +731,34 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
                 /*
                  * Weapon hits monster or generator
                  */
+                if (thing_stats_get_hp(it) < thing_stats_get_total_damage(me)) {
+
+                    thing_stats_modify_hp(me, -thing_stats_get_hp(it));
+
+                    thing_possible_hit_add(it, "projection hit");
+                } else {
+                    thing_possible_hit_add_hitter_killed_on_hit_or_miss(
+                                                    it, "projectile hit");
+                }
+                return;
+            }
+        }
+
+        if (thing_is_door(it)                   ||
+            thing_is_player(it)                 ||
+            thing_is_wall(it)                   ||
+            thing_is_sawblade(it)) {
+//CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
+            if (thing_owner(me) == it) {
+                /*
+                 * Don't hit your owner.
+                 */
+            } else {
+                /*
+                 * Weapon hits monster or generator
+                 */
                 thing_possible_hit_add_hitter_killed_on_hit_or_miss(
-                                                it, "projection hit thing");
+                                                it, "projectile hit");
                 return;
             }
         }

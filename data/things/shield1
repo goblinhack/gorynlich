@@ -2,6 +2,7 @@
  short_name="shield1"
  raw_name="shield1"
  z_depth=5
+ is_animated
  is_animated_no_dir
  shield_carry_anim="data/things/shield1_anim"
  tiles={
