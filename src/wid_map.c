@@ -23,6 +23,7 @@
 #include "wid_intro.h"
 #include "tile.h"
 #include "string_util.h"
+#include "wid_tooltip.h"
 
 static widp wid_map_window;
 static wid_map_ctx *wid_map_window_ctx;
@@ -223,6 +224,13 @@ static void wid_map_focus_right (wid_map_ctx *ctx)
         ctx->focusx = 0;
     }
 
+    levelp l = ctx->levels[ctx->focusy][ctx->focusx].level;
+    if (l) {
+        char *tmp = dynprintf("%d.%d %s", ctx->focusy, ctx->focusx, level_get_title(l));
+        wid_tooltip_transient(tmp, 500);
+        myfree(tmp);
+    }
+
     wid_map_update_buttons();
 }
 
@@ -231,6 +239,13 @@ static void wid_map_focus_left (wid_map_ctx *ctx)
     ctx->focusx--;
     if (ctx->focusx < 0) {
         ctx->focusx = LEVELS_DOWN - 1;
+    }
+
+    levelp l = ctx->levels[ctx->focusy][ctx->focusx].level;
+    if (l) {
+        char *tmp = dynprintf("%d.%d %s", ctx->focusy, ctx->focusx, level_get_title(l));
+        wid_tooltip_transient(tmp, 500);
+        myfree(tmp);
     }
 
     wid_map_update_buttons();
@@ -243,6 +258,13 @@ static void wid_map_focus_down (wid_map_ctx *ctx)
         ctx->focusy = 0;
     }
 
+    levelp l = ctx->levels[ctx->focusy][ctx->focusx].level;
+    if (l) {
+        char *tmp = dynprintf("%d.%d %s", ctx->focusy, ctx->focusx, level_get_title(l));
+        wid_tooltip_transient(tmp, 500);
+        myfree(tmp);
+    }
+
     wid_map_update_buttons();
 }
 
@@ -251,6 +273,13 @@ static void wid_map_focus_up (wid_map_ctx *ctx)
     ctx->focusy--;
     if (ctx->focusy < 0) {
         ctx->focusy = LEVELS_ACROSS - 1;
+    }
+
+    levelp l = ctx->levels[ctx->focusy][ctx->focusx].level;
+    if (l) {
+        char *tmp = dynprintf("%d.%d %s", ctx->focusy, ctx->focusx, level_get_title(l));
+        wid_tooltip_transient(tmp, 500);
+        myfree(tmp);
     }
 
     wid_map_update_buttons();
@@ -1360,7 +1389,14 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
 
         widp b = ctx->buttons[y][x];
 
-        wid_set_tooltip(b, level_get_title(l), med_font);
+        char *tmp = dynprintf("%d.%d %s",
+                              y,
+                              x,
+                              level_get_title(l));
+
+        wid_set_tooltip(b, tmp, med_font);
+        myfree(tmp);
+
         wid_set_font(b, vsmall_font);
 
         wid_map_find_player_start(x, y);
