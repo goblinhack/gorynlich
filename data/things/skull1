@@ -4,7 +4,7 @@
  tooltip="bouncy skull"
  z_depth=3
  speed=3
- max_hp=20
+ max_hp=10
  damage=3
  bonus_xp_on_death=50
  is_effect_rotate_2way
@@ -19,6 +19,8 @@
  is_cats_eyes
  is_collision_map_medium
  is_animated
+ fires="data/things/energy1"
+ weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=80
  tiles={
   tile={ delay=50 tile="skull1-1" }
