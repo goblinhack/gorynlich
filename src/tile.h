@@ -68,8 +68,13 @@ void tile_blit_fat_black_and_white (tile *tile, char *name, fpoint tl, fpoint br
     }
 #endif
 
-    blit(tile->gl_surface_binding_black_and_white,
-         tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
+    if (!tile->gl_surface_binding_black_and_white) {
+        blit(tile->gl_surface_binding,
+            tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
+    } else {
+        blit(tile->gl_surface_binding_black_and_white,
+            tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
+    }
 }
 
 /*
