@@ -547,8 +547,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_new_square_button(wid_player_action,
                                   "wid player_stats container");
 
-        fpoint tl = {0.85, 0.2};
-        fpoint br = {0.95, 1.0};
+        fpoint tl = {0.85, 0.1};
+        fpoint br = {0.95, 0.9};
 
         wid_set_tl_br_pct(w, tl, br);
 
