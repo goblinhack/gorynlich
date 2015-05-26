@@ -1,0 +1,22 @@
+{
+ short_name="Eyebawl mob"
+ raw_name="eyebawlmob"
+ tooltip="Eyebawl generator"
+ z_depth=3
+ is_mob_spawner
+ is_effect_pulse
+ is_light_source
+ light_radius=1.0
+ light_tint="red"
+ is_candle_light
+ hit_priority=22
+ is_collision_map_medium
+ damage=1
+ mob_spawn_delay_tenths=50
+ mob_spawn="data/things/eyebawl"
+ tiles={
+  tile={
+   tile="eyebawlmob"
+  }
+ }
+}

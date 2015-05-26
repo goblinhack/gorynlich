@@ -248,7 +248,18 @@ void level_load_new (void)
     /*
      * Mostly random levels.
      */
+    int fixed = false;
+
+    if ((global_config.server_level_pos.x == 66) && 
+        (global_config.server_level_pos.y == 66)) {
+        fixed = true;
+    }
+
     if (((myrand() % 100) < 75) && file_exists(tmp)) {
+        fixed = true;
+    }
+
+    if (fixed) {
         server_level = level_load(global_config.server_level_pos,
                                   wid_game_map_server_grid_container,
                                   false /* is_editor */,
