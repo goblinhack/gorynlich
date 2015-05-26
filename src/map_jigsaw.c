@@ -2999,7 +2999,7 @@ static tpp random_monst (int depth)
 
         tpp tp = id_to_tp(id);
 
-        if (!tp_is_monst(tp) && !tp_is_mob_spawner(tp)) {
+        if (!tp_is_monst(tp) || !tp_is_mob_spawner(tp)) {
             continue;
         }
 
