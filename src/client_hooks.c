@@ -57,6 +57,14 @@ void client_player_fully_dead (msg_server_hiscores *latest_hiscores)
 {
     LEVEL_LOG(client_level, "Player dead");
 
+    if (client_level->is_test_level) {
+        LEVEL_LOG(client_level,
+                    "Test level finished, back to editor");
+
+        wid_game_map_go_back_to_editor();
+        return;
+    }
+
     wid_dead_visible(latest_hiscores->players[0].player_name,
                      latest_hiscores->players[0].death_reason,
                      latest_hiscores->rejoin_allowed);

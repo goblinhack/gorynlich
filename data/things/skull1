@@ -11,6 +11,8 @@
  vision_distance=8
  hit_delay_tenths=10
  is_monst
+ min_appear_depth=1
+ max_appear_depth=20
  is_shadow_caster
  is_shadow_caster_soft
  hit_priority=10
@@ -21,7 +23,7 @@
  is_animated
  fires="data/things/energy1"
  weapon_fire_delay_hundredths=50
- d10000_chance_of_appearing=80
+ d10000_chance_of_appearing=800
  tiles={
   tile={ delay=50 tile="skull1-1" }
   tile={ delay=50 tile="skull1-2" }

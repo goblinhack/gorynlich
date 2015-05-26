@@ -795,7 +795,7 @@ void player_inventory_sort (thing_statsp player_stats)
             base = THING_INVENTORY_MAGICAL_BASE;
         } else if (tp_is_weapon(tp)) {
             base = THING_INVENTORY_WEAPON_BASE;
-        } else if (tp_is_spell(tp)) {
+        } else if (tp_is_spell(tp) || tp_is_potion(tp)) {
             base = THING_INVENTORY_MAGICAL_BASE;
         } else if (tp_is_food(tp)) {
             base = THING_INVENTORY_FOOD_BASE;

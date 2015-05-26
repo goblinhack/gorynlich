@@ -301,9 +301,9 @@ uint8_t map_is_rrr4_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr4));
 }
 
-uint8_t map_is_rrr5_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_potion_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr5));
+    return (map_is_x_at(level, x, y, tp_is_potion));
 }
 
 uint8_t map_is_shield_at (levelp level, int32_t x, int32_t y)
@@ -763,9 +763,9 @@ thingp map_thing_is_rrr4_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr4));
 }
 
-thingp map_thing_is_rrr5_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_potion_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr5));
+    return (map_thing_is_x_at(level, x, y, tp_is_potion));
 }
 
 thingp map_thing_is_shield_at (levelp level, int32_t x, int32_t y)
@@ -1241,9 +1241,9 @@ tree_rootp map_all_things_is_rrr4_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr4));
 }
 
-tree_rootp map_all_things_is_rrr5_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_potion_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr5));
+    return (map_all_things_is_x_at(level, x, y, tp_is_potion));
 }
 
 tree_rootp map_all_things_is_shield_at (levelp level, int32_t x, int32_t y)
@@ -1699,9 +1699,9 @@ tpp map_find_rrr4_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr4, w));
 }
 
-tpp map_find_rrr5_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_potion_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr5, w));
+    return (map_find_x_at(level, x, y, tp_is_potion, w));
 }
 
 tpp map_find_shield_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2502,9 +2502,9 @@ tree_rootp map_all_things_is_rrr4 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr4));
 }
 
-tree_rootp map_all_things_is_rrr5 (levelp level)
+tree_rootp map_all_things_is_potion (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr5));
+    return (map_all_things_is_x(level, tp_is_potion));
 }
 
 tree_rootp map_all_things_is_shield (levelp level)

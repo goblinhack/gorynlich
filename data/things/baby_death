@@ -18,7 +18,9 @@
  is_combustable
  is_collision_map_medium
  is_ethereal
- d10000_chance_of_appearing=5
+ d10000_chance_of_appearing=20
+ min_appear_depth=5
+ max_appear_depth=100
  explodes_as="data/things/explosion3"
  is_animated
  tiles={
