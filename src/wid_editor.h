@@ -86,6 +86,7 @@ enum {
     WID_TILE_MODE_PLAYER,
     WID_TILE_MODE_EXITS,
     WID_TILE_MODE_ACTIONS,
+    WID_TILE_MODE_LAST,
     /*
      * Add to here, update WID_TILE_POOL_MAX
      */
