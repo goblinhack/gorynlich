@@ -69,13 +69,19 @@ enum {
 enum {
     WID_TILE_MODE_NONE,
     WID_TILE_MODE_WALLS,
-    WID_TILE_MODE_FLOORS,
     WID_TILE_MODE_DOORS,
+    WID_TILE_MODE_FLOORS,
     WID_TILE_MODE_MOB_SPAWNERS,
     WID_TILE_MODE_MONST,
     WID_TILE_MODE_WEAPONS,
     WID_TILE_MODE_FOOD,
     WID_TILE_MODE_TREASURE,
+    WID_TILE_MODE_POTION,
+    /*
+     * Add to here, update WID_TILE_POOL_MAX
+     */
+    WID_TILE_MODE_KEYS,
+    WID_TILE_MODE_TRAP,
     WID_TILE_MODE_ITEMS,
     WID_TILE_MODE_PLAYER,
     WID_TILE_MODE_EXITS,
@@ -84,7 +90,7 @@ enum {
      * Add to here, update WID_TILE_POOL_MAX
      */
 };
-#define WID_TILE_POOL_MAX 13
+#define WID_TILE_POOL_MAX 16
 
 typedef struct wid_editor_tile_ {
     int x;

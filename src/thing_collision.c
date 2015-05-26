@@ -530,6 +530,7 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
         if (thing_is_treasure(it)               ||
             thing_is_weapon(it)                 ||
             thing_is_carryable(it)              ||
+            thing_is_potion(it)                 ||
             thing_is_food(it)) {
 
             if (thing_is_bomb(it) && thing_is_awake(it)) {
@@ -668,6 +669,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
          */
         if (thing_is_player(it)                 ||
             thing_is_treasure(it)               ||
+            thing_is_potion(it)                 ||
             thing_is_food(it)                   ||
             thing_is_door(it)                   ||
             thing_is_mob_spawner(it)            ||
@@ -969,6 +971,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_treasure(it)               ||
                     thing_is_weapon(it)                 ||
                     thing_is_sawblade(it)               ||
+                    thing_is_potion(it)                 ||
                     thing_is_food(it)) {
                     continue;
                 }
@@ -1005,6 +1008,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  */
                 if (thing_is_carryable(it)              ||
                     thing_can_walk_through(it)          ||
+                    thing_is_potion(it)                 ||
                     thing_is_food(it)                   ||
                     thing_is_treasure(it)               ||
                     thing_is_weapon(it)                 ||

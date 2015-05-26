@@ -482,8 +482,8 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_UINT32(ctx, "ppp5", t->ppp5);
         GET_OPT_NAMED_UINT32(ctx, "ppp6", t->ppp6);
         GET_OPT_NAMED_UINT32(ctx, "ppp7", t->ppp7);
-        GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
-        GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
+        GET_OPT_NAMED_UINT32(ctx, "min_appear_depth", t->min_appear_depth);
+        GET_OPT_NAMED_UINT32(ctx, "max_appear_depth", t->max_appear_depth);
         GET_OPT_NAMED_UINT32(ctx, "jump_speed", t->jump_speed);
 
         int16_t tmp_int16 = 0;
@@ -589,7 +589,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr5", t->is_rrr5);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_potion", t->is_potion);
         GET_OPT_NAMED_BITFIELD(ctx, "is_shield", t->is_shield);
         GET_OPT_NAMED_BITFIELD(ctx, "is_death", t->is_death);
         GET_OPT_NAMED_BITFIELD(ctx, "is_cobweb", t->is_cobweb);
@@ -726,8 +726,8 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "ppp5", t->ppp5);
     PUT_NAMED_INT32(ctx, "ppp6", t->ppp6);
     PUT_NAMED_INT32(ctx, "ppp7", t->ppp7);
-    PUT_NAMED_INT32(ctx, "ppp8", t->ppp8);
-    PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
+    PUT_NAMED_INT32(ctx, "min_appear_depth", t->min_appear_depth);
+    PUT_NAMED_INT32(ctx, "max_appear_depth", t->max_appear_depth);
     PUT_NAMED_INT32(ctx, "jump_speed", t->jump_speed);
     PUT_NAMED_INT32(ctx, "max_hp", t->stats.max_hp);
     PUT_NAMED_INT32(ctx, "max_magic", t->stats.max_magic);
@@ -797,7 +797,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
     PUT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
     PUT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr5", t->is_rrr5);
+    PUT_NAMED_BITFIELD(ctx, "is_potion", t->is_potion);
     PUT_NAMED_BITFIELD(ctx, "is_shield", t->is_shield);
     PUT_NAMED_BITFIELD(ctx, "is_death", t->is_death);
     PUT_NAMED_BITFIELD(ctx, "is_cobweb", t->is_cobweb);
@@ -1027,14 +1027,14 @@ uint32_t tp_get_ppp7 (tpp t)
     return (t->ppp7);
 }
 
-uint32_t tp_get_ppp8 (tpp t)
+uint32_t tp_get_min_appear_depth (tpp t)
 {
-    return (t->ppp8);
+    return (t->min_appear_depth);
 }
 
-uint32_t tp_get_ppp9 (tpp t)
+uint32_t tp_get_max_appear_depth (tpp t)
 {
-    return (t->ppp9);
+    return (t->max_appear_depth);
 }
 
 uint32_t tp_get_jump_speed (tpp t)
