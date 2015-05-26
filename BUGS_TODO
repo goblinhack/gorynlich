@@ -1,11 +1,11 @@
 --------------------------------------- plan for may --------------------------------------
+- eyebawl generator
 - spending points on level end
 - xp level and hp increase per level
 - need more dungeony floor tiles
 - poison slime spawns too fast and hurts too much
 - more wall types
 - brick wall not very good looking
-- add charlottes maze
 --------------------------------------- plan for june --------------------------------------
 - sound effects for weapons and hits http://www.bfxr.net/
 - add money
@@ -53,9 +53,12 @@
 - different profiles for level generation
 
 Mon May 25 08:27:19 EDT 2015
+- add potion block to editor
 - test level halts on start sometimes
 - level
 - crash on editor changing title and test mode at same time
+- do not use lit walls in themeing levels; to many lights
+- add charlottes maze
 
 Sun May 24 22:05:34 EDT 2015
 - 4 levels

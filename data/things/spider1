@@ -20,7 +20,9 @@
  is_animated
  fires="data/things/silkball"
  weapon_fire_delay_hundredths=500
- d10000_chance_of_appearing=50
+ d10000_chance_of_appearing=600
+ min_appear_depth=1
+ max_appear_depth=100
  tiles={
 
   tile={ delay=200 is_dir_down tile="spider-down.1" }

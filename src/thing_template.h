@@ -193,8 +193,8 @@ typedef struct tp_ {
     uint32_t ppp5;
     uint32_t ppp6;
     uint32_t ppp7;
-    uint32_t ppp8;
-    uint32_t ppp9;
+    uint32_t min_appear_depth;
+    uint32_t max_appear_depth;
     uint32_t jump_speed;
 
     uint32_t hp_per_level;
@@ -265,7 +265,7 @@ typedef struct tp_ {
     uint8_t is_rrr2:1;
     uint8_t is_rrr3:1;
     uint8_t is_rrr4:1;
-    uint8_t is_rrr5:1;
+    uint8_t is_potion:1;
     uint8_t is_shield:1;
     uint8_t is_death:1;
     uint8_t is_cobweb:1;
@@ -409,8 +409,8 @@ uint32_t tp_get_ppp4(tpp);
 uint32_t tp_get_ppp5(tpp);
 uint32_t tp_get_ppp6(tpp);
 uint32_t tp_get_ppp7(tpp);
-uint32_t tp_get_ppp8(tpp);
-uint32_t tp_get_ppp9(tpp);
+uint32_t tp_get_min_appear_depth(tpp);
+uint32_t tp_get_max_appear_depth(tpp);
 uint32_t tp_get_jump_speed(tpp);
 float tp_get_light_radius(tpp);
 float tp_get_scale(tpp);
@@ -642,9 +642,9 @@ static inline uint8_t tp_is_rrr4 (tpp t)
     return (t->is_rrr4);
 }
 
-static inline uint8_t tp_is_rrr5 (tpp t)
+static inline uint8_t tp_is_potion (tpp t)
 {
-    return (t->is_rrr5);
+    return (t->is_potion);
 }
 
 static inline uint8_t tp_is_shield (tpp t)

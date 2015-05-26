@@ -18,7 +18,9 @@
  is_collision_map_medium
  is_animated
  is_fragile
- d10000_chance_of_appearing=90
+ d10000_chance_of_appearing=1000
+ min_appear_depth=1
+ max_appear_depth=10
  tiles={
   tile={
    delay=200

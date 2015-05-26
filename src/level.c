@@ -245,7 +245,16 @@ void level_load_new (void)
                           global_config.server_level_pos.y, 
                           global_config.server_level_pos.x);
 
-    if (!file_exists(tmp)) {
+    /*
+     * Mostly random levels.
+     */
+    if (((myrand() % 100) < 75) && file_exists(tmp)) {
+        server_level = level_load(global_config.server_level_pos,
+                                  wid_game_map_server_grid_container,
+                                  false /* is_editor */,
+                                  false /* is_map_editor */,
+                                  true /* server */);
+    } else {
         LOG("Level %s does not exist, create random level", tmp);
 
         server_level = level_load_random(global_config.server_level_pos,
@@ -253,13 +262,8 @@ void level_load_new (void)
                                          false /* is_editor */,
                                          false /* is_map_editor */,
                                          true /* server */);
-    } else {
-        server_level = level_load(global_config.server_level_pos,
-                                  wid_game_map_server_grid_container,
-                                  false /* is_editor */,
-                                  false /* is_map_editor */,
-                                  true /* server */);
     }
+
     myfree(tmp);
 
     if (!server_level) {
@@ -406,7 +410,9 @@ levelp level_load_random (level_pos_t level_pos,
 
     LEVEL_LOG(level, "Level generating");
 
-    map_jigsaw_generate(wid, wid_game_map_server_replace_tile);
+    map_jigsaw_generate(wid, 
+                        (level_pos.y * LEVELS_ACROSS) | level_pos.x, 
+                        wid_game_map_server_replace_tile);
 
     level_update_now(level);
 
@@ -1551,9 +1557,9 @@ uint32_t level_count_is_rrr4 (levelp level)
     return (level_count_is_x(level, tp_is_rrr4));
 }
 
-uint32_t level_count_is_rrr5 (levelp level)
+uint32_t level_count_is_potion (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr5));
+    return (level_count_is_x(level, tp_is_potion));
 }
 
 uint32_t level_count_is_shield (levelp level)

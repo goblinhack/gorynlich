@@ -72,6 +72,7 @@ uint8_t thing_mob_spawn (thingp t)
             map_is_door_at(server_level, x, y)          ||
             map_is_player_at(server_level, x, y)        ||
             map_is_treasure_at(server_level, x, y)      ||
+            map_is_potion_at(server_level, x, y)        ||
             map_is_food_at(server_level, x, y)          ||
             map_is_mob_spawner_at(server_level, x, y)   ||
             map_is_exit_at(server_level, x, y)) {
