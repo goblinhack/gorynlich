@@ -99,11 +99,13 @@ enum {
     MAP_START           = 'S',
     MAP_PADDING         = 'Z',
     MAP_DOOR            = 'D',
+    MAP_POTION          = 'p',
+    MAP_WEAPON          = 'w',
     MAP_MAX             = 255,
 };
 
 uint8_t map_jigsaw_buffer_getchar(int32_t x, int32_t y);
 uint8_t map_jigsaw_buffer2_getchar(int32_t x, int32_t y);
-void map_jigsaw_generate(widp wid, grid_wid_replace_t);
+void map_jigsaw_generate(widp wid, int depth, grid_wid_replace_t);
 
 extern int32_t opt_seed;

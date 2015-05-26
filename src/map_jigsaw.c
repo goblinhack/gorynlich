@@ -733,6 +733,8 @@ static int32_t jigpiece_char_is_passable (char c)
            (c == MAP_TRAPDOOR) ||
            (c == MAP_MOB_SPAWN) ||
            (c == MAP_DOOR) ||
+           (c == MAP_WEAPON) ||
+           (c == MAP_POTION) ||
            (c == MAP_TREASURE);
 }
 
@@ -2724,6 +2726,8 @@ static void init (void)
     map_fg[MAP_START]          = TERM_COLOR_BLUE;
     map_fg[MAP_PADDING]        = TERM_COLOR_WHITE;
     map_fg[MAP_DOOR]           = TERM_COLOR_CYAN;
+    map_fg[MAP_WEAPON]         = TERM_COLOR_RED;
+    map_fg[MAP_POTION]         = TERM_COLOR_RED;
 
     map_bg[MAP_EMPTY]          = TERM_COLOR_BLACK;
     map_bg[MAP_SPACE]          = TERM_COLOR_BLACK;
@@ -2750,6 +2754,8 @@ static void init (void)
     map_bg[MAP_START]          = TERM_COLOR_BLACK;
     map_bg[MAP_PADDING]        = TERM_COLOR_BLACK;
     map_bg[MAP_DOOR]           = TERM_COLOR_CYAN;
+    map_fg[MAP_WEAPON]         = TERM_COLOR_CYAN;
+    map_fg[MAP_POTION]         = TERM_COLOR_CYAN;
 
     valid_frag_char[MAP_EMPTY]          = true;
     valid_frag_char[MAP_SPACE]          = true;
@@ -2776,6 +2782,8 @@ static void init (void)
     valid_frag_char[MAP_START]          = false;
     valid_frag_char[MAP_PADDING]        = false;
     valid_frag_char[MAP_DOOR]           = true;
+    valid_frag_char[MAP_POTION]         = true;
+    valid_frag_char[MAP_WEAPON]         = true;
 
     valid_frag_alt_char[MAP_EMPTY]          = true;
     valid_frag_alt_char[MAP_SPACE]          = false;
@@ -2802,6 +2810,8 @@ static void init (void)
     valid_frag_alt_char[MAP_START]          = false;
     valid_frag_alt_char[MAP_PADDING]        = false;
     valid_frag_alt_char[MAP_DOOR]           = true;
+    valid_frag_alt_char[MAP_POTION]         = true;
+    valid_frag_alt_char[MAP_WEAPON]         = true;
 }
 
 /*
@@ -2843,10 +2853,181 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
 #include "thing_template.h"
 #include "wid_game_map_server.h"
 
+static tpp random_wall (void)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_wall(tp)) {
+            /*
+             * Exclude lit walls as we run out of light sources
+             */
+            if (tp_is_light_source(tp)) {
+                continue;
+            }
+
+            return (tp);
+        }
+    }
+}
+
+static tpp random_door (void)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_door(tp)) {
+            return (tp);
+        }
+    }
+}
+
+static tpp random_floor (void)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_floor(tp)) {
+            return (tp);
+        }
+    }
+}
+
+static tpp random_player (void)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_player(tp)) {
+            return (tp);
+        }
+    }
+}
+
+static tpp random_exit (void)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_exit(tp)) {
+            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+                return (tp);
+            }
+        }
+    }
+}
+
+static tpp random_food (void)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_food(tp)) {
+            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+                return (tp);
+            }
+        }
+    }
+}
+
+static tpp random_treasure (void)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_treasure(tp)) {
+            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+                return (tp);
+            }
+        }
+    }
+}
+
+static tpp random_weapon (void)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_weapon(tp)) {
+            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+                return (tp);
+            }
+        }
+    }
+}
+
+static tpp random_potion (void)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_potion(tp)) {
+            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+                return (tp);
+            }
+        }
+    }
+}
+
+static tpp random_rock (void)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_rock(tp)) {
+            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+                return (tp);
+            }
+        }
+    }
+}
+
+static tpp random_monst (int depth)
+{
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+
+        if (!tp_is_monst(tp) && !tp_is_mob_spawner(tp)) {
+            continue;
+        }
+
+        /*
+         * Unique? like death?
+         */
+        if (!tp_get_d10000_chance_of_appearing(tp)) {
+            continue;
+        }
+
+        if (depth < tp_get_min_appear_depth(tp)) {
+            continue;
+        }
+
+        if (depth > tp_get_max_appear_depth(tp)) {
+            continue;
+        }
+
+        if ((tp_get_d10000_chance_of_appearing(tp) + depth) < myrand() % 10000) {
+            return (tp);
+        }
+    }
+}
+
 /*
  * map_jigsaw_generate
  */
-void map_jigsaw_generate (widp wid, grid_wid_replace_t callback)
+void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 {
     const char *jigsaw_map;
 
@@ -2863,6 +3044,10 @@ void map_jigsaw_generate (widp wid, grid_wid_replace_t callback)
     int32_t x;
     int32_t y;
 
+    tpp wall = 0;
+    tpp door = 0;
+    tpp floor = 0;
+
     for (y = 0; y < MAP_HEIGHT; y++) {
         for (x = 0; x < MAP_WIDTH; x++) {
             tpp tp;
@@ -2870,7 +3055,11 @@ void map_jigsaw_generate (widp wid, grid_wid_replace_t callback)
             char c = map_jigsaw_buffer[x][y];
 
             if (c != ' ') {
-                tp = tp_find("data/things/floor3");
+                if (!floor) {
+                    floor = random_floor();
+                }
+                tp = floor;
+
 
                 (*callback)(wid, x, y, 
                             0, /* thing */
@@ -2883,13 +3072,27 @@ void map_jigsaw_generate (widp wid, grid_wid_replace_t callback)
             tp = 0;
 
             switch (c) {
-            case 'x': tp = tp_find("data/things/wall1"); break;
-            case 'S': tp = tp_find("data/things/warrior"); break;
-            case 'E': tp = tp_find("data/things/exit1"); break;
-            case 'O': tp = tp_find("data/things/rock1"); break;
-            case 'r': tp = tp_find("data/things/rock1"); break;
-            case 'D': tp = tp_find("data/things/door2"); break;
+            case 'x': 
+                if (!wall) {
+                    wall = random_wall();
+                }
+                tp = wall;
+                break;
 
+            case 'D': 
+                if (!door) {
+                    door = random_door();
+                }
+                tp = door;
+                break;
+
+            case 'S': tp = random_player(); break;
+            case 'E': tp = random_exit(); break;
+            case 'w': tp = random_weapon(); break;
+            case 'f': tp = random_food(); break;
+            case 'p': tp = random_potion(); break;
+            case 'M': tp = random_monst(depth); break;
+            case 'r': tp = random_rock(); break;
             case '$': {
                 int r = myrand() % 100;
 
@@ -2897,19 +3100,11 @@ void map_jigsaw_generate (widp wid, grid_wid_replace_t callback)
                     tp = tp_find("data/things/brazier");
                 } else if (r < 40) {
                     tp = tp_find("data/things/key");
-                } else if (r < 50) {
-                    tp = tp_find("data/things/potion_fire");
                 } else {
-                    tp = tp_find("data/things/coins1");
+                    tp = random_treasure(); break;
                 }
                 break;
             }
-
-            case 'M': 
-                if ((myrand() % 100) < 90) {
-                    tp = tp_find("data/things/bonepile3");
-                }
-                break;
 
             default:
                 break;

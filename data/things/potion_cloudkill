@@ -4,7 +4,7 @@
  tooltip="Potion of purply death"
  z_depth=3
  is_inactive
- is_food
+ is_potion
  is_stackable
  hit_priority=5
  is_carryable
