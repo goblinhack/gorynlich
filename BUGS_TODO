@@ -1,4 +1,5 @@
 --------------------------------------- plan for may --------------------------------------
+- the cage
 - spending points on level end
 - xp level and hp increase per level
 - need more dungeony floor tiles
@@ -49,6 +50,9 @@
 - mining?
 - add bot to test out multiplayer ?
 - different profiles for level generation
+
+Tue May 26 19:08:44 EDT 2015
+- crash on editor off end of map
 
 Mon May 25 08:27:19 EDT 2015
 - eyebawl generator for charlottes maze
