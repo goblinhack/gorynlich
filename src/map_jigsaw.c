@@ -2855,7 +2855,15 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
 
 static tpp random_wall (void)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
@@ -2874,7 +2882,15 @@ static tpp random_wall (void)
 
 static tpp random_door (void)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
@@ -2886,7 +2902,15 @@ static tpp random_door (void)
 
 static tpp random_floor (void)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
@@ -2898,7 +2922,15 @@ static tpp random_floor (void)
 
 static tpp random_player (void)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
@@ -2910,7 +2942,15 @@ static tpp random_player (void)
 
 static tpp random_exit (void)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
@@ -2924,7 +2964,15 @@ static tpp random_exit (void)
 
 static tpp random_food (void)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
@@ -2938,7 +2986,15 @@ static tpp random_food (void)
 
 static tpp random_treasure (void)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
@@ -2952,7 +3008,15 @@ static tpp random_treasure (void)
 
 static tpp random_weapon (void)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
@@ -2966,7 +3030,15 @@ static tpp random_weapon (void)
 
 static tpp random_potion (void)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
@@ -2975,12 +3047,25 @@ static tpp random_potion (void)
                 return (tp);
             }
         }
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
     }
 }
 
 static tpp random_rock (void)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
@@ -2994,12 +3079,20 @@ static tpp random_rock (void)
 
 static tpp random_monst (int depth)
 {
+    int loop = 0;
+
     for (;;) {
+
+        if (loop++ > 1000) {
+            ERR("couldn't find random potion");
+            return (0);
+        }
+
         uint16_t id = myrand() % THING_MAX;
 
         tpp tp = id_to_tp(id);
 
-        if (!tp_is_monst(tp) || !tp_is_mob_spawner(tp)) {
+        if (!tp_is_monst(tp) && !tp_is_mob_spawner(tp)) {
             continue;
         }
 
@@ -3101,7 +3194,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 } else if (r < 40) {
                     tp = tp_find("data/things/key");
                 } else {
-                    tp = random_treasure(); break;
+                    tp = random_treasure();
                 }
                 break;
             }
