@@ -255,7 +255,7 @@ void level_load_new (void)
         fixed = true;
     }
 
-    if (((myrand() % 100) < 75) && file_exists(tmp)) {
+    if (((myrand() % 100) < 25) && file_exists(tmp)) {
         fixed = true;
     }
 
@@ -945,11 +945,12 @@ void level_client_tick (levelp level)
         return;
     }
 
-    if (!time_have_x_tenths_passed_since(10, level->timestamp_last_fixup)) {
+    if (!time_have_x_tenths_passed_since(1, level->timestamp_last_fixup)) {
         return;
     }
 
     map_fixup(level);
+
     level_set_needs_fixup(level, false);
 
     level->timestamp_last_fixup = time_get_time_ms();
