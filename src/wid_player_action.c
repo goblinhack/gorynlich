@@ -89,7 +89,8 @@ wid_player_action_button_mouse_down (widp w,
 
         socket_tx_player_action(client_joined_server, player, 
                                 PLAYER_ACTION_USE,
-                                action_bar_index);
+                                action_bar_index,
+                                false /* change_selection_only */);
         return (true);
     }
 
@@ -124,7 +125,8 @@ wid_player_action_button_mouse_down (widp w,
 
                     socket_tx_player_action(client_joined_server, player, 
                                             PLAYER_ACTION_STOP_USE,
-                                            current_action_bar_index);
+                                            current_action_bar_index,
+                                            false /* change_selection_only */);
                 }
             }
         }
@@ -148,7 +150,8 @@ wid_player_action_button_mouse_down (widp w,
             if (tp_is_weapon(weapon)) {
                 socket_tx_player_action(client_joined_server, player, 
                                         PLAYER_ACTION_USE,
-                                        current_action_bar_index);
+                                        current_action_bar_index,
+                                        false /* change_selection_only */);
             }
         }
     } else {
@@ -288,7 +291,8 @@ wid_player_action_button_mouse_down (widp w,
         if (tp_is_weapon(weapon)) {
             socket_tx_player_action(client_joined_server, player, 
                                     PLAYER_ACTION_USE,
-                                    current_action_bar_index);
+                                    current_action_bar_index,
+                                    false /* change_selection_only */);
         }
     }
 

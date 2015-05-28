@@ -466,6 +466,9 @@ void wid_game_map_go_back_to_editor (void)
 
 static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
+    int action = PLAYER_ACTION_USE;
+    int change_selection_only = false;
+
     if (wid_menu_visible) {
         return (false);
     }
@@ -527,13 +530,10 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
                 continue;
             }
 
-            if (!tp_is_weapon(tp)) {
-                continue;
-            }
-
             /*
              * Found a weapon, switch to it.
              */
+            change_selection_only = true;
             break;
         }
 
@@ -584,9 +584,14 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
             action_bar_index = 9; 
             redraw_action_bar = 1;
             break;
-        case 'd':
+        case 'z':
             debug = !debug;
             CON("debug %d", debug);
+            return (true);
+        case 'd':
+            action = PLAYER_ACTION_DROP;
+            break;
+        case 'u':
             break;
 
         case '\t': {
@@ -651,24 +656,21 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         /*
          * Assume the server will accept the change and update locally else it 
          * looks laggy.
-         *
-         * If potions and the like then we do not switch to them.
          */
-        if (tp_is_weapon(tp)) {
-            player_action_bar_changed_at = time_get_time_ms();
+        player_action_bar_changed_at = time_get_time_ms();
 
-            thing_stats_set_action_bar_index(player, action_bar_index);
+        thing_stats_set_action_bar_index(player, action_bar_index);
 
-            wid_player_action_hide(true /* fast */);
-            wid_player_action_visible(&player->stats, true /* fast */);
-        }
+        wid_player_action_hide(true /* fast */);
+        wid_player_action_visible(&player->stats, true /* fast */);
 
         wid_player_stats_redraw(true /* fast */);
     }
 
     socket_tx_player_action(client_joined_server, player, 
-                            PLAYER_ACTION_USE,
-                            action_bar_index);
+                            action,
+                            action_bar_index,
+                            change_selection_only);
 
     return (true);
 }
@@ -680,6 +682,9 @@ static uint8_t wid_game_map_joy_event (widp w, int x, int y)
     }
 
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
+        SDL_KEYSYM key = {0};
+        key.sym = 'u';
+        return (wid_game_map_key_event(w, &key));
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
         SDL_KEYSYM key = {0};
@@ -688,6 +693,9 @@ static uint8_t wid_game_map_joy_event (widp w, int x, int y)
         return (true);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
+        SDL_KEYSYM key = {0};
+        key.sym = 'd';
+        return (wid_game_map_key_event(w, &key));
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
         SDL_KEYSYM key = {0};
