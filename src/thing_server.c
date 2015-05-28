@@ -161,7 +161,8 @@ uint8_t thing_server_move (thingp t,
 
 void thing_server_action (thingp t,
                           uint8_t action,
-                          uint32_t action_bar_index)
+                          uint32_t action_bar_index,
+                          int change_selection_only)
 {
     if (action_bar_index >= THING_ACTION_BAR_MAX) {
         ERR("invalid action bar slot %u", action_bar_index);
@@ -200,6 +201,11 @@ void thing_server_action (thingp t,
 
     switch (action) {
     case PLAYER_ACTION_USE: {
+        if (change_selection_only) {
+            thing_stats_set_action_bar_index(t, action_bar_index);
+            return;
+        }
+
         if (tp_is_weapon(tp)) {
             thing_wield(t, tp);
 
@@ -274,7 +280,9 @@ void thing_server_action (thingp t,
 
     switch (action) {
     case PLAYER_ACTION_USE:
-        thing_used(t, tp);
+        if (!change_selection_only) {
+            thing_used(t, tp);
+        }
         break;
 
     case PLAYER_ACTION_DROP:

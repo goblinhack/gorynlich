@@ -2859,8 +2859,8 @@ static tpp random_wall (void)
 
     for (;;) {
 
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 100000) {
+            ERR("couldn't find random wall");
             return (0);
         }
 
@@ -2886,8 +2886,8 @@ static tpp random_door (void)
 
     for (;;) {
 
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 100000) {
+            ERR("couldn't find random door");
             return (0);
         }
 
@@ -2906,8 +2906,8 @@ static tpp random_floor (void)
 
     for (;;) {
 
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 100000) {
+            ERR("couldn't find random floor");
             return (0);
         }
 
@@ -2926,8 +2926,8 @@ static tpp random_player (void)
 
     for (;;) {
 
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 100000) {
+            ERR("couldn't find random player");
             return (0);
         }
 
@@ -2946,8 +2946,8 @@ static tpp random_exit (void)
 
     for (;;) {
 
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 100000) {
+            ERR("couldn't find random exit");
             return (0);
         }
 
@@ -2968,8 +2968,8 @@ static tpp random_food (void)
 
     for (;;) {
 
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 100000) {
+            ERR("couldn't find random food");
             return (0);
         }
 
@@ -2990,8 +2990,8 @@ static tpp random_treasure (void)
 
     for (;;) {
 
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 100000) {
+            ERR("couldn't find random treasure");
             return (0);
         }
 
@@ -3012,8 +3012,8 @@ static tpp random_weapon (void)
 
     for (;;) {
 
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 100000) {
+            ERR("couldn't find random weapon");
             return (0);
         }
 
@@ -3034,7 +3034,7 @@ static tpp random_potion (void)
 
     for (;;) {
 
-        if (loop++ > 1000) {
+        if (loop++ > 100000) {
             ERR("couldn't find random potion");
             return (0);
         }
@@ -3047,11 +3047,6 @@ static tpp random_potion (void)
                 return (tp);
             }
         }
-
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
-            return (0);
-        }
     }
 }
 
@@ -3061,8 +3056,8 @@ static tpp random_rock (void)
 
     for (;;) {
 
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 100000) {
+            ERR("couldn't find random rock");
             return (0);
         }
 
@@ -3083,8 +3078,8 @@ static tpp random_monst (int depth)
 
     for (;;) {
 
-        if (loop++ > 1000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 100000) {
+            ERR("couldn't find random monst");
             return (0);
         }
 
@@ -3140,6 +3135,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
     tpp wall = 0;
     tpp door = 0;
     tpp floor = 0;
+    tpp rock = 0;
 
     for (y = 0; y < MAP_HEIGHT; y++) {
         for (x = 0; x < MAP_WIDTH; x++) {
@@ -3179,13 +3175,19 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 tp = door;
                 break;
 
+            case 'r': 
+                if (!rock) {
+                    rock = random_rock();
+                }
+                tp = rock;
+                break;
+
             case 'S': tp = random_player(); break;
             case 'E': tp = random_exit(); break;
             case 'w': tp = random_weapon(); break;
             case 'f': tp = random_food(); break;
             case 'p': tp = random_potion(); break;
             case 'M': tp = random_monst(depth); break;
-            case 'r': tp = random_rock(); break;
             case '$': {
                 int r = myrand() % 100;
 

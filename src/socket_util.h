@@ -91,6 +91,7 @@ typedef struct {
     uint8_t type;
     uint8_t action;
     uint8_t action_bar_index;
+    uint8_t change_selection_only;
 } __attribute__ ((packed)) msg_player_action;
 
 typedef struct {
@@ -395,7 +396,8 @@ extern void socket_tx_player_move(gsocketp s,
 extern void socket_tx_player_action(gsocketp s, 
                                     thingp t,
                                     const uint8_t action,
-                                    const uint32_t action_bar_index);
+                                    const uint32_t action_bar_index,
+                                    const int change_selection_only);
 
 extern void socket_server_rx_player_move(gsocketp s, 
                                          UDPpacket *packet, 
