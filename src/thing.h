@@ -2234,7 +2234,8 @@ uint8_t thing_server_move(thingp t,
 
 void thing_server_action(thingp t,
                          uint8_t action,
-                         uint32_t action_bar_index);
+                         const uint32_t action_bar_index,
+                         const int change_selection_only);
 
 /*
  * thing_effect.c

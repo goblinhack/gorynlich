@@ -32,7 +32,7 @@ uint8_t thing_mob_spawn (thingp t)
         double y = t->y;
         uint32_t r = myrand() % 100;
 
-        if (r < 25) {
+        if (r < 12) {
             x -= 1.0;
         } else if (r < 50) {
             x += 1.0;
@@ -76,7 +76,33 @@ uint8_t thing_mob_spawn (thingp t)
             map_is_food_at(server_level, x, y)          ||
             map_is_mob_spawner_at(server_level, x, y)   ||
             map_is_exit_at(server_level, x, y)) {
-            continue;
+
+            uint32_t r = myrand() % 100;
+
+            if (r < 12) {
+                x -= 1.0;
+            } else if (r < 50) {
+                x += 1.0;
+            } else if (r < 75) {
+                y -= 1.0;
+            } else {
+                y += 1.0;
+            }
+
+            if (map_is_wall_at(server_level, x, y)          ||
+                map_is_monst_at(server_level, x, y)         ||
+                map_is_cobweb_at(server_level, x, y)        ||
+                map_is_pipe_at(server_level, x, y)          ||
+                map_is_door_at(server_level, x, y)          ||
+                map_is_player_at(server_level, x, y)        ||
+                map_is_treasure_at(server_level, x, y)      ||
+                map_is_potion_at(server_level, x, y)        ||
+                map_is_food_at(server_level, x, y)          ||
+                map_is_mob_spawner_at(server_level, x, y)   ||
+                map_is_exit_at(server_level, x, y)) {
+
+                continue;
+            }
         }
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,

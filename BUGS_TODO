@@ -1,5 +1,4 @@
 --------------------------------------- plan for may --------------------------------------
-- xbox cannot select potions
 - inifinite loop in level create
 - spending points on level end
 - xp level and hp increase per level
@@ -51,6 +50,11 @@
 - mining?
 - add bot to test out multiplayer ?
 - different profiles for level generation
+
+Wed May 27 07:44:25 EDT 2015
+- xbox cannot select potions
+- seperate selecf of items on action bar
+- diagonal spawning
 
 Tue May 26 19:08:44 EDT 2015
 - crash on editor off end of map

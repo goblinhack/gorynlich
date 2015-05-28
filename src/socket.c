@@ -2842,7 +2842,8 @@ void socket_server_rx_player_move (gsocketp s, UDPpacket *packet, uint8_t *data)
 void socket_tx_player_action (gsocketp s, 
                               thingp t,
                               const uint8_t action,
-                              const uint32_t action_bar_index)
+                              const uint32_t action_bar_index,
+                              const int change_selection_only)
 {
     if (!s) {
         ERR("no socket");
@@ -2857,6 +2858,7 @@ void socket_tx_player_action (gsocketp s,
     msg.type = MSG_CLIENT_PLAYER_ACTION;
     msg.action = action;
     msg.action_bar_index = (uint8_t) action_bar_index;
+    msg.change_selection_only = (uint8_t) change_selection_only;
 
     UDPpacket *packet = packet_alloc();
 
@@ -2898,8 +2900,9 @@ void socket_server_rx_player_action (gsocketp s, UDPpacket *packet,
 
     uint8_t action = msg.action;
     uint32_t action_bar_index = msg.action_bar_index;
+    uint32_t change_selection_only = msg.change_selection_only;
 
-    thing_server_action(t, action, action_bar_index);
+    thing_server_action(t, action, action_bar_index, change_selection_only);
 }
 
 static UDPpacket *packet_finalize (gsocketp s, UDPpacket *packet)
