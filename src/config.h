@@ -74,7 +74,7 @@
  * Light sources
  */
 #define MAX_LIGHT_RAYS              360
-#define MAX_LIGHTS                  200
+#define MAX_LIGHTS                  2000
 
 /*
  * Screen sizes.

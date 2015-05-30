@@ -453,51 +453,6 @@ typedef struct {
 } color;
 
 /*
- * resource.c
- */
-extern tpp PLAYER_0;
-extern uint16_t PLAYER_0_ID;
-
-extern tpp BRICK_0;
-extern uint16_t BRICK_0_ID;
-
-extern tpp BRICK_1;
-extern uint16_t BRICK_1_ID;
-
-extern tpp BRICK_2;
-extern uint16_t BRICK_2_ID;
-
-extern tpp BRICK_3;
-extern uint16_t BRICK_3_ID;
-
-extern tpp BRICK_4;
-extern uint16_t BRICK_4_ID;
-
-extern tpp BRICK_5;
-extern uint16_t BRICK_5_ID;
-
-extern tpp BRICK_6;
-extern uint16_t BRICK_6_ID;
-
-extern tpp BRICK_7;
-extern uint16_t BRICK_7_ID;
-
-extern tpp BRICK_8;
-extern uint16_t BRICK_8_ID;
-
-extern tpp ROCK_0;
-extern uint16_t ROCK_0_ID;
-
-extern tpp ROCK_1;
-extern uint16_t ROCK_1_ID;
-
-extern tpp LAVA_0;
-extern uint16_t LAVA_0_ID;
-
-extern tpp WATER_0;
-extern uint16_t WATER_0_ID;
-
-/*
  * mazegen.c
  */
 int32_t map_jigsaw_test(int32_t argc, char **argv);

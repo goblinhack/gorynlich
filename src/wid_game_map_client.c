@@ -62,7 +62,13 @@ static void wid_game_map_client_set_thing_template (widp w, tpp t)
     wid_set_thing_template(w, t);
 
     if (tp_is_effect_pulse(t)) {
-        wid_scaling_to_pct_in(w, 1.0, 1.2, gauss(500, 10), 9999999);
+        if (tp_is_lava(t)) {
+            wid_scaling_to_pct_in(w, 1.2, 1.25, gauss(500, 10), 9999999);
+        } else if (tp_is_acid(t)) {
+            wid_scaling_to_pct_in(w, 1.2, 1.25, gauss(500, 10), 9999999);
+        } else {
+            wid_scaling_to_pct_in(w, 1.0, 1.2, gauss(500, 10), 9999999);
+        }
     }
 
     if (tp_is_effect_sway(t)) {

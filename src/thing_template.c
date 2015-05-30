@@ -586,7 +586,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
         GET_OPT_NAMED_BITFIELD(ctx, "is_mob_spawner", t->is_mob_spawner);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr1", t->is_rrr1);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_acid", t->is_acid);
         GET_OPT_NAMED_BITFIELD(ctx, "is_lava", t->is_lava);
         GET_OPT_NAMED_BITFIELD(ctx, "is_teleport", t->is_teleport);
         GET_OPT_NAMED_BITFIELD(ctx, "is_potion", t->is_potion);
@@ -794,7 +794,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
     PUT_NAMED_BITFIELD(ctx, "is_mob_spawner", t->is_mob_spawner);
     PUT_NAMED_BITFIELD(ctx, "is_rrr1", t->is_rrr1);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
+    PUT_NAMED_BITFIELD(ctx, "is_acid", t->is_acid);
     PUT_NAMED_BITFIELD(ctx, "is_lava", t->is_lava);
     PUT_NAMED_BITFIELD(ctx, "is_teleport", t->is_teleport);
     PUT_NAMED_BITFIELD(ctx, "is_potion", t->is_potion);
