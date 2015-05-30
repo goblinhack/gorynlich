@@ -183,8 +183,13 @@ static void thing_client_wid_move (thingp t,
     }
 
     /*
-     * Make the weapon follow the thing.
+     * For teleporting things, no smooth move!
      */
+    if (dist > 2.0) {
+        wid_move_end(t->wid);
+        smooth = false;
+    }
+
     if (smooth) {
         double time_step = dist;
         double speed = thing_speed(t);

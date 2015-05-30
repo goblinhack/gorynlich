@@ -1,6 +1,6 @@
 --------------------------------------- plan for june --------------------------------------
-- inifinite loop in level create
-- lava and teleports
+- non moving walls in level
+- lava 
 - wildcard treasure types
 - spending points on level end
 - xp level and hp increase per level
@@ -18,7 +18,6 @@
 - pause character on spending point window - on single player?
 - increase move granulariy on server so projectiles line up with player more
 --------------------------------------- plan for jul --------------------------------------
-- teleports
 - giant worm like creature?
 - disintegrating floors that change into lava pools ?
 - water ?
@@ -53,6 +52,7 @@
 - different profiles for level generation
 
 Wed May 27 07:44:25 EDT 2015
+- teleports
 - xbox cannot select potions
 - seperate selecf of items on action bar
 - diagonal spawning
