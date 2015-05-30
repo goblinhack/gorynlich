@@ -2389,47 +2389,6 @@ void thing_join_level (thingp t)
     }
 }
 
-void thing_reached_exit (thingp t, thingp exit)
-{
-    verify(t);
-
-    /*
-     * First to the exit?
-     */
-    if (!level_exit_reached_when_open(server_level)) {
-        level_set_exit_reached_when_open(server_level, true);
-
-        thing_set_got_to_exit_first(t, true);
-
-        THING_LOG(t, "reached exit first");
-    } else {
-        THING_LOG(t, "reached exit");
-    }
-
-    if (exit->data && exit->data->exit_set) {
-        global_config.server_level_pos.y = exit->data->exit.y;
-        global_config.server_level_pos.x = exit->data->exit.x;
-
-        THING_LOG(t, "exit jump to level %d.%d",
-                  global_config.server_level_pos.y,
-                  global_config.server_level_pos.x);
-    } else {
-        global_config.server_level_pos.x++;
-        if (global_config.server_level_pos.x >= LEVELS_ACROSS) {
-            global_config.server_level_pos.x = 1;
-            global_config.server_level_pos.y++;
-        }
-
-        THING_LOG(t, "exit to next consecutive level %d.%d",
-                  global_config.server_level_pos.y,
-                  global_config.server_level_pos.x);
-    }
-
-    thing_leave_level(t);
-
-    sound_play_level_end();
-}
-
 int thing_is_player_or_owned_by_player (thingp t)
 {
     if (thing_is_player(t)) {
