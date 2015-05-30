@@ -428,6 +428,7 @@ enum {
     THING_GEM7,
     THING_BRAZIER,
     THING_TELEPORT1,
+    THING_LAVA1,
     THING_EXIT1,
     THING_EXIT2,
     THING_EXIT3,
@@ -1114,11 +1115,11 @@ static inline uint8_t thing_is_rrr2 (thingp t)
     return (tp_is_rrr2(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr3 (thingp t)
+static inline uint8_t thing_is_lava (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr3(thing_tp(t)));
+    return (tp_is_lava(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_teleport (thingp t)
@@ -1750,9 +1751,9 @@ static inline uint8_t thing_is_rrr2_noverify (thingp t)
     return (t->tp->is_rrr2);
 }
 
-static inline uint8_t thing_is_rrr3_noverify (thingp t)
+static inline uint8_t thing_is_lava_noverify (thingp t)
 {
-    return (t->tp->is_rrr3);
+    return (t->tp->is_lava);
 }
 
 static inline uint8_t thing_is_teleport_noverify (thingp t)

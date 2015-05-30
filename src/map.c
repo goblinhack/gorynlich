@@ -291,9 +291,9 @@ uint8_t map_is_rrr2_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr2));
 }
 
-uint8_t map_is_rrr3_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_lava_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr3));
+    return (map_is_x_at(level, x, y, tp_is_lava));
 }
 
 uint8_t map_is_teleport_at (levelp level, int32_t x, int32_t y)
@@ -753,9 +753,9 @@ thingp map_thing_is_rrr2_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr2));
 }
 
-thingp map_thing_is_rrr3_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_lava_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr3));
+    return (map_thing_is_x_at(level, x, y, tp_is_lava));
 }
 
 thingp map_thing_is_teleport_at (levelp level, int32_t x, int32_t y)
@@ -1231,9 +1231,9 @@ tree_rootp map_all_things_is_rrr2_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr2));
 }
 
-tree_rootp map_all_things_is_rrr3_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_lava_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr3));
+    return (map_all_things_is_x_at(level, x, y, tp_is_lava));
 }
 
 tree_rootp map_all_things_is_teleport_at (levelp level, int32_t x, int32_t y)
@@ -1689,9 +1689,9 @@ tpp map_find_rrr2_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr2, w));
 }
 
-tpp map_find_rrr3_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_lava_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr3, w));
+    return (map_find_x_at(level, x, y, tp_is_lava, w));
 }
 
 tpp map_find_teleport_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2492,9 +2492,9 @@ tree_rootp map_all_things_is_rrr2 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr2));
 }
 
-tree_rootp map_all_things_is_rrr3 (levelp level)
+tree_rootp map_all_things_is_lava (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr3));
+    return (map_all_things_is_x(level, tp_is_lava));
 }
 
 tree_rootp map_all_things_is_teleport (levelp level)
