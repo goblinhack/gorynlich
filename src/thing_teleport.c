@@ -52,7 +52,7 @@ void thing_reached_teleport (thingp t, thingp teleport)
                 continue;
             }
 
-            if (DISTANCE(t->x, t->y, teleport->x, teleport->y) < 2.0) {
+            if (DISTANCE(t->x, t->y, x, y) < 2.0) {
                 continue;
             }
 
@@ -60,15 +60,15 @@ void thing_reached_teleport (thingp t, thingp teleport)
             const char *col = tile->data.col_name;
 
             if (!col || !tcol) {
-                tx[poss] = teleport->x;
-                ty[poss] = teleport->y;
+                tx[poss] = x;
+                ty[poss] = y;
                 poss++;
                 continue;
             }
 
             if (!strcmp(col, tcol)) {
-                tx[poss] = teleport->x;
-                ty[poss] = teleport->y;
+                tx[poss] = x;
+                ty[poss] = y;
                 poss++;
                 continue;
             }
@@ -79,17 +79,17 @@ void thing_reached_teleport (thingp t, thingp teleport)
         return;
     }
 
+    t->timestamp_last_teleport = time_get_time_ms();
     poss = myrand() % poss;
 
     double nx = tx[poss];
     double ny = ty[poss];
 
-    thing_server_wid_update(t, nx, ny, false /* is_new */);
-    thing_update(t);
+    wid_move_end(t->wid);
+
+    thing_server_wid_update(t, nx, ny, true /* is_new */);
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
 
     sound_play_level_end();
-
-    t->timestamp_last_teleport = time_get_time_ms();
 }
