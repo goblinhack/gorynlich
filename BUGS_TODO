@@ -1,6 +1,4 @@
 --------------------------------------- plan for june --------------------------------------
-- non moving walls in level
-- lava 
 - wildcard treasure types
 - spending points on level end
 - xp level and hp increase per level
@@ -51,8 +49,11 @@
 - add bot to test out multiplayer ?
 - different profiles for level generation
 
-Wed May 27 07:44:25 EDT 2015
+Sat May 30 12:46:25 EDT 2015
+- lava 
 - teleports
+
+Wed May 27 07:44:25 EDT 2015
 - xbox cannot select potions
 - seperate selecf of items on action bar
 - diagonal spawning

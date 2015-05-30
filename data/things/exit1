@@ -10,47 +10,47 @@
  tiles={
   tile={
    tile="tunnel1.1"
-   delay=200
+   delay=5
   }
   tile={
    tile="tunnel1.2"
-   delay=200
+   delay=5
   }
   tile={
    tile="tunnel1.1"
-   delay=200
+   delay=5
   }
   tile={
    tile="tunnel1.3"
-   delay=200
+   delay=5
   }
   tile={
    tile="tunnel1.1"
-   delay=200
+   delay=5
   }
   tile={
    tile="tunnel1.1"
-   delay=200
+   delay=5
   }
   tile={
    tile="tunnel1.4"
-   delay=200
+   delay=5
   }
   tile={
    tile="tunnel1.1"
-   delay=200
+   delay=5
   }
   tile={
    tile="tunnel1.5"
-   delay=200
+   delay=5
   }
   tile={
    tile="tunnel1.6"
-   delay=200
+   delay=5
   }
   tile={
    tile="tunnel1.1"
-   delay=200
+   delay=5
   }
  }
 }
