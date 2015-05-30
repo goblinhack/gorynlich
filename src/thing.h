@@ -156,7 +156,6 @@ tree_rootp thing_tiles(thingp);
 tree_rootp thing_tiles2(thingp);
 
 thing_tilep thing_current_tile(thingp t);
-void thing_reached_exit(thingp t, thingp exit);
 void thing_place_timed(tpp t, 
                        double x,
                        double y,
@@ -428,6 +427,7 @@ enum {
     THING_GEM6,
     THING_GEM7,
     THING_BRAZIER,
+    THING_TELEPORT1,
     THING_EXIT1,
     THING_EXIT2,
     THING_EXIT3,
@@ -633,6 +633,11 @@ typedef struct thing_ {
      * Data we read in along with the thing template.
      */
     thing_template_data *data;
+
+    /*
+     * Last time we were teleported.
+     */
+    uint32_t timestamp_last_teleport;
 
     /*
      * Last time we were attacked.
@@ -1116,11 +1121,11 @@ static inline uint8_t thing_is_rrr3 (thingp t)
     return (tp_is_rrr3(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr4 (thingp t)
+static inline uint8_t thing_is_teleport (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr4(thing_tp(t)));
+    return (tp_is_teleport(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_potion (thingp t)
@@ -1750,9 +1755,9 @@ static inline uint8_t thing_is_rrr3_noverify (thingp t)
     return (t->tp->is_rrr3);
 }
 
-static inline uint8_t thing_is_rrr4_noverify (thingp t)
+static inline uint8_t thing_is_teleport_noverify (thingp t)
 {
-    return (t->tp->is_rrr4);
+    return (t->tp->is_teleport);
 }
 
 static inline uint8_t thing_is_potion_noverify (thingp t)
@@ -2418,3 +2423,13 @@ void thing_set_magic_anim_id(thingp t, uint32_t magic_anim_id);
 void thing_set_magic_anim(thingp t, thingp magic_anim);
 void thing_magic_sheath(thingp t);
 void thing_magic_tick(thingp t);
+
+/*
+ * thing_teleport.c
+ */
+void thing_reached_teleport(thingp t, thingp teleport);
+
+/*
+ * thing_exit.c
+ */
+void thing_reached_exit(thingp t, thingp exit);

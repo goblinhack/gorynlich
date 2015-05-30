@@ -719,7 +719,7 @@ static int32_t jigpiece_char_is_occupiable (char c)
 {
     return (c == MAP_FLOOR) ||
            (c == MAP_MONST) ||
-           (c == MAP_TRAPDOOR) ||
+           (c == MAP_TELEPORT) ||
            (c == MAP_MOB_SPAWN) ||
            (c == MAP_TREASURE);
 }
@@ -730,7 +730,7 @@ static int32_t jigpiece_char_is_passable (char c)
            (c == MAP_MONST) ||
            (c == MAP_START) ||
            (c == MAP_END) ||
-           (c == MAP_TRAPDOOR) ||
+           (c == MAP_TELEPORT) ||
            (c == MAP_MOB_SPAWN) ||
            (c == MAP_DOOR) ||
            (c == MAP_WEAPON) ||
@@ -2714,7 +2714,7 @@ static void init (void)
     map_fg[MAP_MONST]          = TERM_COLOR_BLUE;
     map_fg[MAP_MOB_SPAWN]      = TERM_COLOR_BLACK;
     map_fg[MAP_TRAP]           = TERM_COLOR_BLUE;
-    map_fg[MAP_TRAPDOOR]       = TERM_COLOR_BLUE;
+    map_fg[MAP_TELEPORT]       = TERM_COLOR_BLUE;
     map_fg[MAP_TREASURE]       = TERM_COLOR_WHITE;
     map_fg[MAP_FOOD]           = TERM_COLOR_GREEN;
     map_fg[MAP_LAVA]           = TERM_COLOR_YELLOW;
@@ -2742,7 +2742,7 @@ static void init (void)
     map_bg[MAP_MONST]          = TERM_COLOR_BLACK;
     map_bg[MAP_MOB_SPAWN]      = TERM_COLOR_RED;
     map_bg[MAP_TRAP]           = TERM_COLOR_BLACK;
-    map_bg[MAP_TRAPDOOR]       = TERM_COLOR_BLACK;
+    map_bg[MAP_TELEPORT]       = TERM_COLOR_BLACK;
     map_bg[MAP_TREASURE]       = TERM_COLOR_YELLOW;
     map_bg[MAP_FOOD]           = TERM_COLOR_BLACK;
     map_bg[MAP_LAVA]           = TERM_COLOR_BLUE;
@@ -2770,7 +2770,7 @@ static void init (void)
     valid_frag_char[MAP_MONST]          = true;
     valid_frag_char[MAP_MOB_SPAWN]      = true;
     valid_frag_char[MAP_TRAP]           = true;
-    valid_frag_char[MAP_TRAPDOOR]       = true;
+    valid_frag_char[MAP_TELEPORT]       = true;
     valid_frag_char[MAP_TREASURE]       = true;
     valid_frag_char[MAP_FOOD]           = true;
     valid_frag_char[MAP_LAVA]           = true;
@@ -2798,7 +2798,7 @@ static void init (void)
     valid_frag_alt_char[MAP_MONST]          = true;
     valid_frag_alt_char[MAP_MOB_SPAWN]      = true;
     valid_frag_alt_char[MAP_TRAP]           = true;
-    valid_frag_alt_char[MAP_TRAPDOOR]       = true;
+    valid_frag_alt_char[MAP_TELEPORT]       = true;
     valid_frag_alt_char[MAP_TREASURE]       = true;
     valid_frag_alt_char[MAP_FOOD]           = true;
     valid_frag_alt_char[MAP_LAVA]           = true;

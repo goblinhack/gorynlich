@@ -87,7 +87,7 @@ enum {
     MAP_MONST           = 'm',
     MAP_MOB_SPAWN       = 'M',
     MAP_TRAP            = '!',
-    MAP_TRAPDOOR        = 'T',
+    MAP_TELEPORT        = 'T',
     MAP_TREASURE        = '$',
     MAP_FOOD            = 'f',
     MAP_LAVA            = 'L',

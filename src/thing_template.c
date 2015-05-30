@@ -588,7 +588,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr1", t->is_rrr1);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_teleport", t->is_teleport);
         GET_OPT_NAMED_BITFIELD(ctx, "is_potion", t->is_potion);
         GET_OPT_NAMED_BITFIELD(ctx, "is_shield", t->is_shield);
         GET_OPT_NAMED_BITFIELD(ctx, "is_death", t->is_death);
@@ -796,7 +796,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr1", t->is_rrr1);
     PUT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
     PUT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
+    PUT_NAMED_BITFIELD(ctx, "is_teleport", t->is_teleport);
     PUT_NAMED_BITFIELD(ctx, "is_potion", t->is_potion);
     PUT_NAMED_BITFIELD(ctx, "is_shield", t->is_shield);
     PUT_NAMED_BITFIELD(ctx, "is_death", t->is_death);
