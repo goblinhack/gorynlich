@@ -263,7 +263,7 @@ typedef struct tp_ {
     uint8_t is_mob_spawner:1;
     uint8_t is_rrr1:1;
     uint8_t is_rrr2:1;
-    uint8_t is_rrr3:1;
+    uint8_t is_lava:1;
     uint8_t is_teleport:1;
     uint8_t is_potion:1;
     uint8_t is_shield:1;
@@ -632,9 +632,9 @@ static inline uint8_t tp_is_rrr2 (tpp t)
     return (t->is_rrr2);
 }
 
-static inline uint8_t tp_is_rrr3 (tpp t)
+static inline uint8_t tp_is_lava (tpp t)
 {
-    return (t->is_rrr3);
+    return (t->is_lava);
 }
 
 static inline uint8_t tp_is_teleport (tpp t)

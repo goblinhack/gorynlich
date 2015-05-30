@@ -2,12 +2,13 @@
  short_name="teleport"
  raw_name="teleport1"
  tooltip="Level teleport"
- z_depth=3
+ z_depth=5
  is_teleport
  is_light_source
  light_radius=1.0
  scale=0.4
  is_animated
+ is_effect_pulse
  tiles={
   tile={
    tile="teleport1.1"

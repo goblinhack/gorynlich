@@ -3182,6 +3182,9 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 tp = rock;
                 break;
 
+            case 'L': tp = tp_find("data/things/lava1"); break;
+            case 'T': tp = tp_find("data/things/teleport1"); break;
+
             case 'S': tp = random_player(); break;
             case 'E': tp = random_exit(); break;
             case 'w': tp = random_weapon(); break;

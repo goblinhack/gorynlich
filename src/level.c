@@ -541,6 +541,7 @@ void level_set_walls (levelp level)
                      */
                     if (thing_is_wall(t) ||
                         thing_is_teleport(t) ||
+                        thing_is_lava(t) ||
                         thing_is_exit(t)) {
                         level->map_treat_doors_as_passable.walls[x][y] = '+';
                     }
@@ -1512,9 +1513,9 @@ uint32_t level_count_is_rrr2 (levelp level)
     return (level_count_is_x(level, tp_is_rrr2));
 }
 
-uint32_t level_count_is_rrr3 (levelp level)
+uint32_t level_count_is_lava (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr3));
+    return (level_count_is_x(level, tp_is_lava));
 }
 
 uint32_t level_count_is_teleport (levelp level)

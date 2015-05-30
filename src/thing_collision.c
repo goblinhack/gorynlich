@@ -523,7 +523,10 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
 }
 #endif
 
-    if (!thing_is_teleport(me)) {
+    if (!thing_is_teleport(me)        &&
+        !thing_is_floor(me)           &&
+        !thing_is_mob_spawner(me)) {
+
         if (thing_is_teleport(it)) {
             thing_reached_teleport(me, it);
             return;
@@ -570,6 +573,7 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
          */
         if (thing_is_shield(it)                ||
             thing_is_weapon_swing_effect(it)   ||
+            thing_is_lava(it)                  ||
             thing_is_cloud_effect(it)) {
             /*
              * I'm hit!
@@ -606,9 +610,10 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         /*
          * Monster bumped into something.
          */
-        if (thing_is_player(it)                 ||
-            thing_is_shield(it)                 ||
-            thing_is_weapon_swing_effect(it)    ||
+        if (thing_is_player(it)                ||
+            thing_is_shield(it)                ||
+            thing_is_lava(it)                  ||
+            thing_is_weapon_swing_effect(it)   ||
             thing_is_cloud_effect(it)) {
             /*
              * I'm hit!
@@ -1021,6 +1026,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_weapon(it)                 ||
                     thing_is_exit(it)                   ||
                     thing_is_teleport(it)               ||
+                    thing_is_lava(it)                   ||
                     thing_is_monst(it)                  ||
                     /*
                      * Walk through friendly fire.
