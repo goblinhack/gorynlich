@@ -286,9 +286,9 @@ uint8_t map_is_rrr1_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr1));
 }
 
-uint8_t map_is_rrr2_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_acid_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr2));
+    return (map_is_x_at(level, x, y, tp_is_acid));
 }
 
 uint8_t map_is_lava_at (levelp level, int32_t x, int32_t y)
@@ -748,9 +748,9 @@ thingp map_thing_is_rrr1_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr1));
 }
 
-thingp map_thing_is_rrr2_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_acid_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr2));
+    return (map_thing_is_x_at(level, x, y, tp_is_acid));
 }
 
 thingp map_thing_is_lava_at (levelp level, int32_t x, int32_t y)
@@ -1226,9 +1226,9 @@ tree_rootp map_all_things_is_rrr1_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr1));
 }
 
-tree_rootp map_all_things_is_rrr2_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_acid_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr2));
+    return (map_all_things_is_x_at(level, x, y, tp_is_acid));
 }
 
 tree_rootp map_all_things_is_lava_at (levelp level, int32_t x, int32_t y)
@@ -1684,9 +1684,9 @@ tpp map_find_rrr1_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr1, w));
 }
 
-tpp map_find_rrr2_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_acid_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr2, w));
+    return (map_find_x_at(level, x, y, tp_is_acid, w));
 }
 
 tpp map_find_lava_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2487,9 +2487,9 @@ tree_rootp map_all_things_is_rrr1 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr1));
 }
 
-tree_rootp map_all_things_is_rrr2 (levelp level)
+tree_rootp map_all_things_is_acid (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr2));
+    return (map_all_things_is_x(level, tp_is_acid));
 }
 
 tree_rootp map_all_things_is_lava (levelp level)

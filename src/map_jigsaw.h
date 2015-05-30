@@ -91,6 +91,7 @@ enum {
     MAP_TREASURE        = '$',
     MAP_FOOD            = 'f',
     MAP_LAVA            = 'L',
+    MAP_ACID            = 'A',
     MAP_EXIT_WEST       = '<',
     MAP_EXIT_EAST       = '>',
     MAP_EXIT_SOUTH      = 'v',
