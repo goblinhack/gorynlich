@@ -581,6 +581,11 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             return;
         }
 
+        if (thing_is_teleport(it)) {
+            thing_reached_teleport(me, it);
+            return;
+        }
+
         /*
          * An action trigger is only ever used to start an object off as the 
          * initiator of a collision.
@@ -1013,6 +1018,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_treasure(it)               ||
                     thing_is_weapon(it)                 ||
                     thing_is_exit(it)                   ||
+                    thing_is_teleport(it)               ||
                     thing_is_monst(it)                  ||
                     /*
                      * Walk through friendly fire.
