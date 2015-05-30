@@ -531,6 +531,7 @@ void level_set_walls (levelp level)
                     if (thing_is_wall(t) ||
                         thing_is_door(t) ||
                         thing_is_mob_spawner(t) ||
+                        thing_is_teleport(t) ||
                         thing_is_exit(t)) {
                         level->map_treat_doors_as_walls.walls[x][y] = '+';
                     }
@@ -539,6 +540,7 @@ void level_set_walls (levelp level)
                      * Same as above, but treat doors as passable.
                      */
                     if (thing_is_wall(t) ||
+                        thing_is_teleport(t) ||
                         thing_is_exit(t)) {
                         level->map_treat_doors_as_passable.walls[x][y] = '+';
                     }
@@ -620,55 +622,6 @@ void level_pipe_find_ends (levelp level)
                 level->end_pipe.walls[x][y] = '+';
             }
         }
-    }
-}
-
-/*
- * Place a plant pod
- */
-void level_place_plant_pod (levelp level)
-{
-    tpp tp = 0;
-    uint32_t i;
-    int32_t x;
-    int32_t y;
-
-    for (i = 0;
-         i < MAP_HEIGHT * MAP_WIDTH; i++) {
-
-        x = myrand() % MAP_WIDTH;
-        y = myrand() % MAP_HEIGHT;
-
-        if (map_is_wall_at(level, x, y)) {
-            continue;
-        }
-
-        if (map_is_pipe_at(level, x, y)) {
-            continue;
-        }
-
-        if (map_is_player_at(level, x, y)) {
-            continue;
-        }
-
-        if (map_is_exit_at(level, x, y)) {
-            continue;
-        }
-
-        tp = tp_find("data/things/seedpod");
-
-        wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
-                                         x,
-                                         y,
-                                         0, /* thing */
-                                         tp,
-                                         0 /* tpp_data */,
-                                         0 /* item */,
-                                         0 /* stats */);
-
-        sound_play_slime();
-
-        return;
     }
 }
 
@@ -1564,9 +1517,9 @@ uint32_t level_count_is_rrr3 (levelp level)
     return (level_count_is_x(level, tp_is_rrr3));
 }
 
-uint32_t level_count_is_rrr4 (levelp level)
+uint32_t level_count_is_teleport (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr4));
+    return (level_count_is_x(level, tp_is_teleport));
 }
 
 uint32_t level_count_is_potion (levelp level)
