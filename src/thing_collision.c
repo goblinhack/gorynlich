@@ -523,6 +523,13 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
 }
 #endif
 
+    if (!thing_is_teleport(me)) {
+        if (thing_is_teleport(it)) {
+            thing_reached_teleport(me, it);
+            return;
+        }
+    }
+
     if (thing_is_player(me)) {
         /*
          * Player collects keys and other items
@@ -578,11 +585,6 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 
         if (thing_is_exit(it)) {
             thing_reached_exit(me, it);
-            return;
-        }
-
-        if (thing_is_teleport(it)) {
-            thing_reached_teleport(me, it);
             return;
         }
 
