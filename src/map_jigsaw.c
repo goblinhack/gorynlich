@@ -2718,6 +2718,7 @@ static void init (void)
     map_fg[MAP_TREASURE]       = TERM_COLOR_WHITE;
     map_fg[MAP_FOOD]           = TERM_COLOR_GREEN;
     map_fg[MAP_LAVA]           = TERM_COLOR_YELLOW;
+    map_fg[MAP_ACID]           = TERM_COLOR_GREEN;
     map_fg[MAP_EXIT_WEST]      = TERM_COLOR_BLUE;
     map_fg[MAP_EXIT_EAST]      = TERM_COLOR_BLUE;
     map_fg[MAP_EXIT_SOUTH]     = TERM_COLOR_BLUE;
@@ -2746,6 +2747,7 @@ static void init (void)
     map_bg[MAP_TREASURE]       = TERM_COLOR_YELLOW;
     map_bg[MAP_FOOD]           = TERM_COLOR_BLACK;
     map_bg[MAP_LAVA]           = TERM_COLOR_BLUE;
+    map_bg[MAP_ACID]           = TERM_COLOR_BLUE;
     map_bg[MAP_EXIT_WEST]      = TERM_COLOR_BLACK;
     map_bg[MAP_EXIT_EAST]      = TERM_COLOR_BLACK;
     map_bg[MAP_EXIT_SOUTH]     = TERM_COLOR_BLACK;
@@ -2773,7 +2775,7 @@ static void init (void)
     valid_frag_char[MAP_TELEPORT]       = true;
     valid_frag_char[MAP_TREASURE]       = true;
     valid_frag_char[MAP_FOOD]           = true;
-    valid_frag_char[MAP_LAVA]           = true;
+    valid_frag_char[MAP_ACID]           = true;
     valid_frag_char[MAP_EXIT_WEST]      = false;
     valid_frag_char[MAP_EXIT_EAST]      = false;
     valid_frag_char[MAP_EXIT_SOUTH]     = false;
@@ -2802,6 +2804,7 @@ static void init (void)
     valid_frag_alt_char[MAP_TREASURE]       = true;
     valid_frag_alt_char[MAP_FOOD]           = true;
     valid_frag_alt_char[MAP_LAVA]           = true;
+    valid_frag_alt_char[MAP_ACID]           = true;
     valid_frag_alt_char[MAP_EXIT_WEST]      = false;
     valid_frag_alt_char[MAP_EXIT_EAST]      = false;
     valid_frag_alt_char[MAP_EXIT_SOUTH]     = false;
