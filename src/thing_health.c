@@ -49,6 +49,8 @@ void thing_health_tick (thingp t)
      * Start to croak it if below 0 in health.
      */
     if (thing_stats_get_hp(t) <= 0) {
+        THING_LOG(t, "running out of life");
+
         if (single_player_mode) {
             /*
              * Quicker death in single player mode as there is little chance 
@@ -62,7 +64,7 @@ void thing_health_tick (thingp t)
         thing_update(t);
 
         if (thing_stats_get_hp(t) <= THING_MIN_HEALTH) {
-            thing_dead(t, 0, 0);
+            thing_dead(t, 0, "croaked it");
         }
     }
 
@@ -71,6 +73,8 @@ void thing_health_tick (thingp t)
      */
     int delta = thing_stats_get_hp(t) - thing_stats_get_max_hp(t);
     if (delta > 0) {
+        THING_LOG(t, "over max hp");
+
         thing_stats_modify_hp(t, -1);
     }
 }
