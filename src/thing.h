@@ -429,6 +429,7 @@ enum {
     THING_BRAZIER,
     THING_TELEPORT1,
     THING_LAVA1,
+    THING_ACID1,
     THING_EXIT1,
     THING_EXIT2,
     THING_EXIT3,
@@ -1108,11 +1109,11 @@ static inline uint8_t thing_is_rrr1 (thingp t)
     return (tp_is_rrr1(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr2 (thingp t)
+static inline uint8_t thing_is_acid (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr2(thing_tp(t)));
+    return (tp_is_acid(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_lava (thingp t)
@@ -1746,9 +1747,9 @@ static inline uint8_t thing_is_rrr1_noverify (thingp t)
     return (t->tp->is_rrr1);
 }
 
-static inline uint8_t thing_is_rrr2_noverify (thingp t)
+static inline uint8_t thing_is_acid_noverify (thingp t)
 {
-    return (t->tp->is_rrr2);
+    return (t->tp->is_acid);
 }
 
 static inline uint8_t thing_is_lava_noverify (thingp t)

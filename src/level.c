@@ -528,10 +528,10 @@ void level_set_walls (levelp level)
                     /*
                      * Identify obstacles.
                      */
-                    if (thing_is_wall(t) ||
-                        thing_is_door(t) ||
+                    if (thing_is_wall(t)        ||
+                        thing_is_door(t)        ||
                         thing_is_mob_spawner(t) ||
-                        thing_is_teleport(t) ||
+                        thing_is_teleport(t)    ||
                         thing_is_exit(t)) {
                         level->map_treat_doors_as_walls.walls[x][y] = '+';
                     }
@@ -539,9 +539,10 @@ void level_set_walls (levelp level)
                     /*
                      * Same as above, but treat doors as passable.
                      */
-                    if (thing_is_wall(t) ||
-                        thing_is_teleport(t) ||
-                        thing_is_lava(t) ||
+                    if (thing_is_wall(t)        ||
+                        thing_is_teleport(t)    ||
+                        thing_is_lava(t)        ||
+                        thing_is_acid(t)        ||
                         thing_is_exit(t)) {
                         level->map_treat_doors_as_passable.walls[x][y] = '+';
                     }
@@ -1508,9 +1509,9 @@ uint32_t level_count_is_rrr1 (levelp level)
     return (level_count_is_x(level, tp_is_rrr1));
 }
 
-uint32_t level_count_is_rrr2 (levelp level)
+uint32_t level_count_is_acid (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr2));
+    return (level_count_is_x(level, tp_is_acid));
 }
 
 uint32_t level_count_is_lava (levelp level)
