@@ -741,7 +741,11 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
     if (thing_is_projectile(me)                 || 
         thing_is_explosion(me)) {
 
-        if (thing_is_monst(it)                  || 
+        if (thing_is_lava(it)) {
+            /*
+             * No hitting this.
+             */
+        } else if (thing_is_monst(it)           || 
             thing_is_fragile(it)                ||
             thing_is_combustable(it)            ||
             thing_is_mob_spawner(it)) {
