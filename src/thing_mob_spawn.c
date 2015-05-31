@@ -53,14 +53,8 @@ uint8_t thing_mob_spawn (thingp t)
             continue;
         }
 
-        /*
-         * Round down so mob spawners on an in between position will not
-         * get mixed up. This can happen when we place a mob spawner where
-         * a player died, overlapping a wall and we then try to spawn into
-         * a cell we cannot move in.
-         */
-        x = floor(x);
-        y = floor(y);
+        x = t->x;
+        y = t->y;
 
         /*
          * Things not to spawn onto.
@@ -74,11 +68,15 @@ uint8_t thing_mob_spawn (thingp t)
 
                 if (r < 12) {
                     x -= 1.0;
+                    y -= 1.0;
                 } else if (r < 50) {
                     x += 1.0;
+                    y += 1.0;
                 } else if (r < 75) {
-                    y -= 1.0;
+                    x -= 1.0;
+                    y += 1.0;
                 } else {
+                    x -= 1.0;
                     y += 1.0;
                 }
 
@@ -105,11 +103,15 @@ uint8_t thing_mob_spawn (thingp t)
 
                 if (r < 12) {
                     x -= 1.0;
+                    y -= 1.0;
                 } else if (r < 50) {
                     x += 1.0;
+                    y += 1.0;
                 } else if (r < 75) {
-                    y -= 1.0;
+                    x -= 1.0;
+                    y += 1.0;
                 } else {
+                    x -= 1.0;
                     y += 1.0;
                 }
 
@@ -142,6 +144,15 @@ uint8_t thing_mob_spawn (thingp t)
         if (y >= MAP_HEIGHT-1) {
             continue;
         }
+
+        /*
+         * Round down so mob spawners on an in between position will not
+         * get mixed up. This can happen when we place a mob spawner where
+         * a player died, overlapping a wall and we then try to spawn into
+         * a cell we cannot move in.
+         */
+        x = floor(x);
+        y = floor(y);
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          x,

@@ -27,7 +27,7 @@
  max_appear_depth=100
  is_mob_spawner
  mob_spawn_delay_tenths=300
- mob_spawn="data/things/slime2"
+ mob_spawn="data/things/slime3"
  tiles={
   tile={ delay=50 tile="slime-3-1-4" }
   tile={ delay=50 tile="slime-3-2-4" }
