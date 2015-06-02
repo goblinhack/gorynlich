@@ -3109,7 +3109,10 @@ static tpp random_monst (int depth)
             continue;
         }
 
-        if ((tp_get_d10000_chance_of_appearing(tp) + depth) < myrand() % 10000) {
+        int r = myrand() % 10000;
+
+        if (r < (tp_get_d10000_chance_of_appearing(tp) + depth)) {
+CON("%d %s",r,tp_name(tp));
             return (tp);
         }
     }

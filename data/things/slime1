@@ -21,7 +21,7 @@
  is_mob_spawner
  mob_spawn_delay_tenths=300
  mob_spawn="data/things/slime1"
- d10000_chance_of_appearing=400
+ d10000_chance_of_appearing=200
  min_appear_depth=1
  max_appear_depth=100
  tiles={

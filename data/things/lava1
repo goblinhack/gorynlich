@@ -7,7 +7,7 @@
  is_lava
  is_monst
  hit_delay_tenths=5
- speed=0
+ speed=1
  light_radius=0.5
  light_tint="orange"
  is_light_source
@@ -17,6 +17,7 @@
  mob_spawn_delay_tenths=50
  mob_spawn="data/things/lava1"
  can_be_hit_chance=2000000
+ weapon_fire_delay_hundredths=100
  is_effect_pulse
  tiles={
   tile={

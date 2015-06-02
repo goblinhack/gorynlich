@@ -741,7 +741,8 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
     if (thing_is_projectile(me)                 || 
         thing_is_explosion(me)) {
 
-        if (thing_is_lava(it)) {
+        if (thing_is_lava(it) ||
+            thing_is_acid(it)) {
             /*
              * No hitting this.
              */
