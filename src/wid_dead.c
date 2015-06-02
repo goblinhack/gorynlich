@@ -121,6 +121,7 @@ static void wid_dead_gravestone_appeared (void *context)
     LOG("Client: Gravestone raised");
 
     static const char *messages[] = {
+        "LOL",
         "I hate to inquire, but are you dead?",
         "You bit the dust",
         "You snuffed it",
@@ -159,7 +160,8 @@ static void wid_dead_gravestone_appeared (void *context)
         "You fell off the perch",
         "You are as lifeless as a Norweigian blue",
         "I had such high hopes for you",
-        "You dissapoint me",
+        "You disssapoint me",
+        "Sinner, you are expired",
         "Pathetic",
         "Good try I suppose",
         "Well, that could have been worse",

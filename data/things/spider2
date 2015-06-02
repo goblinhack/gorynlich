@@ -20,7 +20,7 @@
  is_animated
  fires="data/things/silkball"
  weapon_fire_delay_hundredths=200
- d10000_chance_of_appearing=400
+ d10000_chance_of_appearing=90
  min_appear_depth=10
  max_appear_depth=100
  tiles={

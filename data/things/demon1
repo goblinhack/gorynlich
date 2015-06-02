@@ -20,8 +20,8 @@
  is_collision_map_medium
  is_animated
  fires="data/things/fireball2"
- weapon_fire_delay_hundredths=100
- d10000_chance_of_appearing=50
+ weapon_fire_delay_hundredths=20
+ d10000_chance_of_appearing=20
  min_appear_depth=5
  max_appear_depth=100
  is_light_source

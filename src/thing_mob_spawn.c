@@ -59,9 +59,12 @@ uint8_t thing_mob_spawn (thingp t)
         /*
          * Things not to spawn onto.
          */
-        if (thing_is_lava(t)) {
+        if (thing_is_lava(t) ||
+            thing_is_acid(t)) {
+
             if (map_is_wall_at(server_level, x, y)   ||
                 map_is_lava_at(server_level, x, y)   ||
+                map_is_acid_at(server_level, x, y)   ||
                 map_is_exit_at(server_level, x, y)) {
 
                 uint32_t r = myrand() % 100;
@@ -82,6 +85,7 @@ uint8_t thing_mob_spawn (thingp t)
 
                 if (map_is_wall_at(server_level, x, y)   ||
                     map_is_lava_at(server_level, x, y)   ||
+                    map_is_acid_at(server_level, x, y)   ||
                     map_is_exit_at(server_level, x, y)) {
                     continue;
                 }
