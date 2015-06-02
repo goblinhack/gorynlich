@@ -6,111 +6,149 @@
  is_acid
  is_monst
  hit_delay_tenths=5
- speed=0
- light_radius=0.2
+ speed=1
+ light_radius=1.0
  light_tint="green"
+ is_animated
+ scale=1.2
  is_light_source
  is_candle_light
  hit_priority=20
  damage=10
- can_be_hit_chance=2000000
  is_effect_pulse
+ can_be_hit_chance=2000000
+ d10000_chance_of_appearing=100
+ is_mob_spawner
+ mob_spawn_delay_tenths=100
+ mob_spawn="data/things/acid1"
  tiles={
   tile={
    tile="acid1.1"
+   delay=100
   }
   tile={
    tile="acid1.2"
+   delay=100
   }
   tile={
    tile="acid1.3"
+   delay=100
   }
   tile={
    tile="acid1.4"
+   delay=100
   }
   tile={
    tile="acid1.5"
+   delay=100
   }
   tile={
    tile="acid1.6"
+   delay=100
   }
   tile={
    tile="acid1.7"
+   delay=100
   }
   tile={
    tile="acid1.8"
+   delay=100
   }
   tile={
    tile="acid1.9"
+   delay=100
   }
   tile={
    tile="acid1.10"
+   delay=100
   }
   tile={
    tile="acid1.11"
+   delay=100
   }
   tile={
    tile="acid1.12"
+   delay=100
   }
   tile={
    tile="acid1.13"
+   delay=100
   }
   tile={
    tile="acid1.14"
+   delay=100
   }
   tile={
    tile="acid1.15"
+   delay=100
   }
   tile={
    tile="acid1.16"
+   delay=100
   }
   tile={
    tile="acid1.17"
+   delay=100
   }
   tile={
    tile="acid1.18"
+   delay=100
   }
   tile={
    tile="acid1.19"
+   delay=100
   }
   tile={
    tile="acid1.20"
+   delay=100
   }
   tile={
    tile="acid1.21"
+   delay=100
   }
   tile={
    tile="acid1.22"
+   delay=100
   }
   tile={
    tile="acid1.23"
+   delay=100
   }
   tile={
    tile="acid1.24"
+   delay=100
   }
   tile={
    tile="acid1.25"
+   delay=100
   }
   tile={
    tile="acid1.26"
+   delay=100
   }
   tile={
    tile="acid1.27"
+   delay=100
   }
   tile={
    tile="acid1.28"
+   delay=100
   }
   tile={
    tile="acid1.29"
+   delay=100
   }
   tile={
    tile="acid1.30"
+   delay=100
   }
   tile={
    tile="acid1.31"
+   delay=100
   }
   tile={
    tile="acid1.32"
+   delay=100
   }
  }
 }

@@ -22,7 +22,7 @@
  is_cats_eyes
  is_collision_map_medium
  is_animated
- d10000_chance_of_appearing=100
+ d10000_chance_of_appearing=60 
  min_appear_depth=3
  max_appear_depth=100
  is_mob_spawner
