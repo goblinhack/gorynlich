@@ -53,9 +53,6 @@ uint8_t thing_mob_spawn (thingp t)
             continue;
         }
 
-        x = t->x;
-        y = t->y;
-
         /*
          * Things not to spawn onto.
          */
@@ -66,6 +63,9 @@ uint8_t thing_mob_spawn (thingp t)
                 map_is_lava_at(server_level, x, y)   ||
                 map_is_acid_at(server_level, x, y)   ||
                 map_is_exit_at(server_level, x, y)) {
+
+                x = t->x;
+                y = t->y;
 
                 uint32_t r = myrand() % 100;
 
@@ -104,6 +104,9 @@ uint8_t thing_mob_spawn (thingp t)
                 map_is_exit_at(server_level, x, y)) {
 
                 uint32_t r = myrand() % 100;
+
+                x = t->x;
+                y = t->y;
 
                 if (r < 12) {
                     x -= 1.0;

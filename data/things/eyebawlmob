@@ -12,7 +12,7 @@
  hit_priority=22
  is_collision_map_medium
  damage=1
- mob_spawn_delay_tenths=50
+ mob_spawn_delay_tenths=30
  mob_spawn="data/things/eyebawl"
  tiles={
   tile={
