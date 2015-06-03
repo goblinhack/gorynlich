@@ -1,4 +1,6 @@
 --------------------------------------- plan for june --------------------------------------
+- projectile going through shield
+- takes 2 presses to eat food
 - wildcard treasure types
 - spending points on level end
 - xp level and hp increase per level
@@ -14,8 +16,6 @@
 - pause character on spending point window - on single player?
 - increase move granulariy on server so projectiles line up with player more
 --------------------------------------- plan for jul --------------------------------------
-- giant worm like creature?
-- disintegrating floors that change into lava pools ?
 - water ?
 - dart and rock traps
 - rolling boulders?
@@ -23,7 +23,9 @@
 - money/xp doubler amulet
 - amulet of resurrection?
 - double fire double arrows
+- fire and acid boots
 --------------------------------------- plan for aug --------------------------------------
+- giant worm like creature?
 - change DIE to ERR in most cases
 - lit levels gauntlet old style
 - manually generate lots of levels
@@ -48,6 +50,7 @@
 - different profiles for level generation
 
 Tue Jun  2 21:28:17 EDT 2015
+- editor yank of floor failed
 - acid
 - map_depth as string
 - need more dungeony floor tiles
