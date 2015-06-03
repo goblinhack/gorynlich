@@ -2,7 +2,7 @@
  short_name="Deathstone"
  raw_name="gem6"
  tooltip="Deathstone"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_treasure
  is_stackable

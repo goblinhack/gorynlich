@@ -6,7 +6,7 @@
     "data/things/wand_fire"
     "data/things/torches"
  }
- z_depth=4
+ z_depth="player"
  speed=25
  max_hp=100
  max_magic=200

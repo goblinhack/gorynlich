@@ -2,7 +2,7 @@
  short_name="Shiny topaz"
  raw_name="gem3"
  tooltip="Yellow topaz"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_treasure
  is_stackable

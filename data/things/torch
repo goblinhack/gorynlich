@@ -2,7 +2,7 @@
  short_name="Torch"
  raw_name="torch"
  tooltip="Torch to see the monsters better"
- z_depth=3
+ z_depth="monst"
  is_torch
  is_carryable
  is_stackable

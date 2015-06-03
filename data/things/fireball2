@@ -3,7 +3,7 @@
  raw_name="fireball2"
  tooltip="fireball2"
  is_hidden_from_editor
- z_depth=5
+ z_depth="explosion_top"
  speed=60
  damage=15
  hit_delay_tenths=1

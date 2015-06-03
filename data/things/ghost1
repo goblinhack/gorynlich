@@ -2,7 +2,7 @@
  short_name="Weak spirit"
  raw_name="ghost1"
  tooltip="Minor phantom"
- z_depth=3
+ z_depth="monst"
  speed=5
  max_hp=1
  damage=2

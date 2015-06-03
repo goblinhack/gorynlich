@@ -2,7 +2,7 @@
  short_name="sparks"
  raw_name="hit_miss"
  tooltip="sparks!"
- z_depth=3
+ z_depth="monst"
  is_animated
  is_hidden_from_editor
  is_light_source

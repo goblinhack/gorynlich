@@ -2,7 +2,7 @@
  short_name="EyeBawl"
  raw_name="eyebawl"
  tooltip="EyeBawl"
- z_depth=3
+ z_depth="monst"
  speed=30
  max_hp=1
  damage=10

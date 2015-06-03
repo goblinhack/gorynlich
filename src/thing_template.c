@@ -427,6 +427,8 @@ static void demarshal_thing_carrying (demarshal_p ctx, tpp t)
     GET_KET(ctx);
 }
 
+ENUM_DEF_C(MAP_DEPTH, map_depth)
+
 void demarshal_thing_template (demarshal_p ctx, tpp t)
 {
     char *name;
@@ -465,7 +467,13 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
         GET_OPT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
         GET_OPT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
-        GET_OPT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
+
+        if (GET_PEEK_NAME(ctx, "z_depth")) {
+            map_depth en = 0;
+            GET_OPT_NAMED_ENUM(ctx, "z_depth", en, map_depth_str2val);
+            t->z_depth = en;
+        }
+
         GET_OPT_NAMED_UINT8(ctx, "z_order", t->z_order);
         GET_OPT_NAMED_UINT16(ctx, "speed", t->speed);
         GET_OPT_NAMED_UINT16(ctx, "damage", t->damage);

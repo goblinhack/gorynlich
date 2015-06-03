@@ -2,7 +2,7 @@
  short_name="Key"
  raw_name="key"
  tooltip="It's a key..."
- z_depth=3
+ z_depth="monst"
  is_key
  is_stackable
  is_inactive

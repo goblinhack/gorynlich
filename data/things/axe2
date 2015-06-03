@@ -2,7 +2,7 @@
  short_name="Steel Axe"
  raw_name="axe2"
  tooltip="Steel Axe"
- z_depth=3
+ z_depth="monst"
  is_weapon
  is_melee_weapon
  can_be_enchanted

@@ -2,7 +2,7 @@
  short_name="Key chain"
  raw_name="keys3"
  tooltip="It's a key chain"
- z_depth=3
+ z_depth="monst"
  quantity=3
  is_key
  carried_as="data/things/key"

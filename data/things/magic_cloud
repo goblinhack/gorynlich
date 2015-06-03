@@ -1,7 +1,7 @@
 {
  short_name="magic_cloud"
  raw_name="magic_cloud"
- z_depth=5
+ z_depth="explosion_top"
  is_animated
  is_hidden_from_editor
  scale=0.20

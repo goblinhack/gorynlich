@@ -2,7 +2,7 @@
  short_name="Pink slime"
  raw_name="slime-2"
  tooltip="Pink slime"
- z_depth=3
+ z_depth="monst"
  speed=1
  max_hp=10
  damage=2

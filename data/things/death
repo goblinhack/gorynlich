@@ -5,7 +5,7 @@
  carrying={
     "data/things/scythe1"
  }
- z_depth=3
+ z_depth="monst"
  speed=5
  max_hp=50000
  damage=30

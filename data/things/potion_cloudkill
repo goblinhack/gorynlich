@@ -2,7 +2,7 @@
  short_name="Cloudkill potion"
  raw_name="potion_cloudkill"
  tooltip="Potion of purply death"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_potion
  is_stackable
