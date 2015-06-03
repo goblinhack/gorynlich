@@ -2,7 +2,7 @@
  short_name="Monsticide"
  raw_name="potion_monsticide"
  tooltip="Monsticide"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_potion
  is_stackable

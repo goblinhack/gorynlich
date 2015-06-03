@@ -2,7 +2,7 @@
  short_name="Lit Wall"
  raw_name="wall_lit1"
  tooltip="Wall_lit1"
- z_depth=2
+ z_depth="wall"
  is_hard
  speed=20
  is_inactive

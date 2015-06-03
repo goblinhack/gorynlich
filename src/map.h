@@ -555,3 +555,19 @@ uint8_t map_count_x_at(levelp level,
                        map_is_at_callback callback);
 
 thingp map_is_tp_at(levelp level, int32_t x, int32_t y, tpp tp);
+
+#include "enum.h"
+
+#define MAP_DEPTH(list_macro)                                   \
+    list_macro(MAP_DEPTH_FLOOR = 0,         "floor"),           \
+    list_macro(MAP_DEPTH_FLOOR2,            "floor2"),          \
+    list_macro(MAP_DEPTH_WALL,              "wall"),            \
+    list_macro(MAP_DEPTH_MONST_AND_OBJ,     "monst"),           \
+    list_macro(MAP_DEPTH_PLAYER,            "player"),          \
+    list_macro(MAP_DEPTH_EXPLOSION_TOP,     "explosion_top"),   \
+    list_macro(MAP_DEPTH_ACTIONS,           "actions"),         \
+
+#define MAP_DEPTH_MAX 7
+
+ENUM_DEF_H(MAP_DEPTH, map_depth)
+#define MAP_BORDER                  3

@@ -4,7 +4,7 @@
  tooltip="Wand of fire"
  fires="data/things/fireball1"
  weapon_fire_delay_hundredths=30
- z_depth=3
+ z_depth="monst"
  is_weapon
  is_magical_weapon
  can_be_enchanted

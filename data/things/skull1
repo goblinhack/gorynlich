@@ -2,7 +2,7 @@
  short_name="bouncy skull"
  raw_name="skull1"
  tooltip="bouncy skull"
- z_depth=3
+ z_depth="monst"
  speed=3
  max_hp=10
  damage=3

@@ -2,8 +2,6 @@
 - wildcard treasure types
 - spending points on level end
 - xp level and hp increase per level
-- need more dungeony floor tiles
-- more wall types
 - brick wall not very good looking
 - sound effects for weapons and hits http://www.bfxr.net/
 - add money
@@ -48,6 +46,12 @@
 - mining?
 - add bot to test out multiplayer ?
 - different profiles for level generation
+
+Tue Jun  2 21:28:17 EDT 2015
+- acid
+- map_depth as string
+- need more dungeony floor tiles
+- more wall types
 
 Sat May 30 12:46:25 EDT 2015
 - lava 

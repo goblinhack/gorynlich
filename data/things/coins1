@@ -2,7 +2,7 @@
  short_name="Loose change"
  raw_name="coins1"
  tooltip="Pile of coins"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_treasure
  is_stackable

@@ -2,7 +2,7 @@
  short_name="Ring"
  raw_name="ring2"
  tooltip="Generic magical ring tm"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_treasure
  is_stackable

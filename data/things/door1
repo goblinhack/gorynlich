@@ -2,7 +2,7 @@
  short_name="Door"
  raw_name="door1"
  tooltip="Door1"
- z_depth=2
+ z_depth="wall"
  is_inactive
  is_door
  is_shadow_caster

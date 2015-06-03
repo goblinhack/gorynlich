@@ -2,7 +2,7 @@
  short_name="rock"
  raw_name="rock1"
  tooltip="Rock"
- z_depth=2
+ z_depth="wall"
  is_hard
  is_inactive
  is_wall

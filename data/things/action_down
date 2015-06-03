@@ -3,7 +3,7 @@
  raw_name="action_down"
  tooltip="Moves object down"
  is_collision_map_small
- z_depth=6
+ z_depth="actions"
  is_action
  is_visible_on_debug_only
  is_action_down

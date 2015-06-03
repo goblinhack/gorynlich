@@ -2,7 +2,7 @@
  short_name="floor"
  raw_name="floor5"
  tooltip="Floor5"
- z_depth=1
+ z_depth="floor"
  is_inactive
  is_floor
  tiles={

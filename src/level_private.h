@@ -22,7 +22,7 @@ typedef struct level_map_tile_ {
 } level_map_tile;
 
 typedef struct level_map_grid_ {
-    level_map_tile tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+    level_map_tile tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH_MAX];
 } level_map_grid;
 
 typedef struct level_trigger_ {

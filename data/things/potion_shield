@@ -2,7 +2,7 @@
  short_name="Shield potion"
  raw_name="potion_shield"
  tooltip="Magic potion"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_potion
  is_stackable

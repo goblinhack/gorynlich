@@ -2,7 +2,7 @@
  short_name="Lava"
  raw_name="lava1"
  tooltip="Lava"
- z_depth=2
+ z_depth="floor2"
  is_mob_spawner
  is_lava
  is_monst

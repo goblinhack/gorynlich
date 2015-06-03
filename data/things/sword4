@@ -2,7 +2,7 @@
  short_name="Longish sword"
  raw_name="sword4"
  tooltip="Longish sword"
- z_depth=3
+ z_depth="monst"
  is_weapon
  is_melee_weapon
  can_be_enchanted

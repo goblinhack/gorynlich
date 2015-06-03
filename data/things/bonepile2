@@ -2,7 +2,7 @@
  short_name="Bone pile"
  raw_name="bonepile2"
  tooltip="Bone pile"
- z_depth=3
+ z_depth="monst"
  is_mob_spawner
  is_effect_pulse
  is_light_source
