@@ -2,7 +2,7 @@
  short_name="Purple slime"
  raw_name="slime-1"
  tooltip="Purple slime"
- z_depth=3
+ z_depth="monst"
  max_hp=5
  damage=1
  jump_speed=30

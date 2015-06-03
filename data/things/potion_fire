@@ -2,7 +2,7 @@
  short_name="Fire potion"
  raw_name="potion_fire"
  tooltip="Burny fire fire potion"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_potion
  is_stackable

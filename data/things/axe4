@@ -2,7 +2,7 @@
  short_name="Golden Axe"
  raw_name="axe4"
  tooltip="Golden Axe"
- z_depth=3
+ z_depth="monst"
  is_weapon
  is_melee_weapon
  can_be_enchanted

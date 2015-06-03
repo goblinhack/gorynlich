@@ -2,7 +2,7 @@
  short_name="Dark gem"
  raw_name="gem4"
  tooltip="Dark amethyst"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_treasure
  is_stackable

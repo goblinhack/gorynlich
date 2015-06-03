@@ -2,7 +2,7 @@
  short_name="Large bone pile"
  raw_name="bonepile3"
  tooltip="Large bone pile"
- z_depth=3
+ z_depth="monst"
  is_mob_spawner
  is_effect_pulse
  is_light_source

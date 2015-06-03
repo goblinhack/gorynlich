@@ -765,7 +765,7 @@ static void wid_map_find_exits (int x, int y)
 
     for (mx = 0; mx < MAP_WIDTH; mx++)
     for (my = 0; my < MAP_HEIGHT; my++) 
-    for (mz = 0; mz < MAP_DEPTH; mz++) {
+    for (mz = 0; mz < MAP_DEPTH_MAX; mz++) {
         wid_map_tile *tile = &map->tiles[mx][my][mz];
         if (!tile) {
             continue;
@@ -813,7 +813,7 @@ static void wid_map_find_player_start (int x, int y)
 
     for (mx = 0; mx < MAP_WIDTH; mx++) 
     for (my = 0; my < MAP_HEIGHT; my++) 
-    for (mz = 0; mz < MAP_DEPTH; mz++) {
+    for (mz = 0; mz < MAP_DEPTH_MAX; mz++) {
         wid_map_tile *tile = &map->tiles[mx][my][mz];
         if (!tile) {
             continue;
@@ -949,7 +949,7 @@ static void wid_map_preview_do (int thumbnail)
 
     for (x = 0; x < MAP_WIDTH; x++) 
     for (y = 0; y < MAP_HEIGHT; y++) 
-    for (z = 0; z < MAP_DEPTH; z++) {
+    for (z = 0; z < MAP_DEPTH_MAX; z++) {
         tilep tile = map->tiles[x][y][z].tile;
         if (!tile) {
             tpp tp = map->tiles[x][y][z].tp;
@@ -1077,7 +1077,7 @@ static void wid_map_preview_do (int thumbnail)
 
     for (x = 0; x < MAP_WIDTH; x++) 
     for (y = 0; y < MAP_HEIGHT; y++) 
-    for (z = 0; z < MAP_DEPTH; z++) {
+    for (z = 0; z < MAP_DEPTH_MAX; z++) {
 
         tilep tile = map->tiles[x][y][z].tile;
         if (!tile) {
@@ -1210,7 +1210,7 @@ static void wid_map_preview_small (widp b, fpoint tl, fpoint br)
 
     for (x = 0; x < MAP_WIDTH; x+=step) 
     for (y = 0; y < MAP_HEIGHT; y+=step) 
-    for (z = 0; z < MAP_DEPTH; z++) {
+    for (z = 0; z < MAP_DEPTH_MAX; z++) {
         tilep tile = map->tiles[x][y][z].tile;
         if (!tile) {
             tpp tp = map->tiles[x][y][z].tp;
@@ -1305,14 +1305,14 @@ widp wid_editor_level_map_thing_replace_template (widp w,
         DIE("no map to write to at position (%f,%f) -> (%d,%d) in level %u.%u, "
             "map bounds (%d,%d) -> (%d,%d)", 
             x, y, ix, iy, ctx->loading_x, ctx->loading_y,
-            0, 0, MAP_DEPTH, MAP_HEIGHT);
+            0, 0, MAP_DEPTH_MAX, MAP_HEIGHT);
     }
 
     if ((ix >= MAP_WIDTH) || (iy >= MAP_HEIGHT) || (ix < 0) || (iy < 0)) {
         ERR("overflow in reading position (%f,%f) -> (%d,%d) in level %u.%u, "
             "map bounds (%d,%d) -> (%d,%d)", 
             x, y, ix, iy, ctx->loading_x, ctx->loading_y,
-            0, 0, MAP_DEPTH, MAP_HEIGHT);
+            0, 0, MAP_DEPTH_MAX, MAP_HEIGHT);
         return (0);
     }
 

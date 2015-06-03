@@ -6,7 +6,7 @@
     "data/things/bow1"
     "data/things/torches"
  }
- z_depth=4
+ z_depth="player"
  speed=32
  max_hp=150
  max_magic=150

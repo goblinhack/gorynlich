@@ -2,7 +2,7 @@
  short_name="Poison slime"
  raw_name="slime-3"
  tooltip="Poison slime"
- z_depth=3
+ z_depth="monst"
  speed=1
  max_hp=20
  damage=10

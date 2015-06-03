@@ -2,7 +2,7 @@
  short_name="Eyebawl mob"
  raw_name="eyebawlmob"
  tooltip="Eyebawl generator"
- z_depth=3
+ z_depth="monst"
  is_mob_spawner
  is_effect_pulse
  is_light_source

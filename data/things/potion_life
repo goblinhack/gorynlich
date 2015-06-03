@@ -2,7 +2,7 @@
  short_name="Lifeforce potion"
  raw_name="potion_life"
  tooltip="Potion of make you live longer"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_potion
  is_stackable

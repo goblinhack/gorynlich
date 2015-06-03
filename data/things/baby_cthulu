@@ -2,7 +2,7 @@
  short_name="Baby cthulu"
  raw_name="baby cthulu1"
  tooltip="Baby cthulu"
- z_depth=3
+ z_depth="monst"
  speed=2
  max_hp=500
  damage=11

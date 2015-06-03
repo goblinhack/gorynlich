@@ -2,7 +2,7 @@
  short_name="Diamond Sword"
  raw_name="sword6"
  tooltip="Diamond Sword"
- z_depth=3
+ z_depth="monst"
  is_weapon
  is_melee_weapon
  can_be_enchanted

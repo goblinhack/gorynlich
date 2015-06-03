@@ -2,7 +2,7 @@
  short_name="bomb"
  raw_name="bomb"
  tooltip="Short fuse"
- z_depth=3
+ z_depth="monst"
  is_sleeping
  is_bomb
  is_combustable

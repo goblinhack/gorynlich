@@ -115,7 +115,7 @@ typedef struct wid_editor_map_tile_ {
 } wid_editor_map_tile;
 
 typedef struct wid_editor_map_grid_ {
-    wid_editor_map_tile tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+    wid_editor_map_tile tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH_MAX];
 
     /*
      * For joined up walls etc.

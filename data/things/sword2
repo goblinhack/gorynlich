@@ -2,7 +2,7 @@
  short_name="Wooden sword"
  raw_name="sword2"
  tooltip="Wooden sword"
- z_depth=3
+ z_depth="monst"
  is_weapon
  is_melee_weapon
  can_be_enchanted

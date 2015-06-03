@@ -121,17 +121,6 @@
 #define MAP_JIGSAW_PIECES_ACROSS    ((MAP_WIDTH / JIGPIECE_WIDTH) - 1)
 #define MAP_JIGSAW_PIECES_DOWN      ((MAP_WIDTH / JIGPIECE_WIDTH) - 1)
 
-#define MAP_DEPTH_EDITOR            0
-#define MAP_DEPTH_FLOOR             1
-#define MAP_DEPTH_WALL              2
-#define MAP_DEPTH_MONST_AND_OBJ     3
-#define MAP_DEPTH_PLAYER            4
-#define MAP_DEPTH_EXPLOSION         4
-#define MAP_DEPTH_EXPLOSION_TOP     5
-#define MAP_DEPTH_ACTIONS           6
-#define MAP_DEPTH                   7
-#define MAP_BORDER                  3
-
 #define MAP_THINGS_PER_CELL         32
 
 /*

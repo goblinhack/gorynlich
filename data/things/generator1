@@ -2,7 +2,7 @@
  short_name="Mob spawner"
  raw_name="generator1"
  tooltip="Mob spawner"
- z_depth=3
+ z_depth="monst"
  is_mob_spawner
  bonus_xp_on_death=200
  hit_priority=20

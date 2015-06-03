@@ -9,7 +9,7 @@
 #include <SDL.h>
 
 #include "sdl.h"
-#include "enum.h"
+#include "map.h"
 
 typedef enum {
     WID_COLOR_BG,
@@ -498,7 +498,7 @@ typedef struct widgridnode_ {
 } widgridnode;
 
 typedef struct widgrid_ {
-    tree_root **grid_of_trees[MAP_DEPTH];
+    tree_root **grid_of_trees[MAP_DEPTH_MAX];
     uint32_t nelems;
     uint32_t width;
     uint32_t height;
