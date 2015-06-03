@@ -198,7 +198,7 @@ void level_trigger_activate (levelp level, const char *name)
              */
             tpp triggerd_tp = 0;
 
-            for (z = MAP_DEPTH_ACTIONS - 1; z > 0; z--) {
+            for (z = MAP_DEPTH_ACTIONS - 1; z >= 0; z--) {
                 triggerd_tp = level->map_grid.tile[x][y][z].tp;
                 if (triggerd_tp) {
                     break;
