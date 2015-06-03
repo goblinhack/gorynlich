@@ -2,12 +2,11 @@
  short_name="acid"
  raw_name="acid1"
  tooltip="acid"
- z_depth=2
+ z_depth="floor2"
  is_acid
  is_monst
  hit_delay_tenths=5
- speed=1
- light_radius=1.0
+ light_radius=0.05
  light_tint="green"
  is_animated
  scale=1.2

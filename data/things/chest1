@@ -2,7 +2,7 @@
  short_name="Chest"
  raw_name="chest1"
  tooltip="Treasure chest"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_treasure
  is_stackable

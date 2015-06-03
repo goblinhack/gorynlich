@@ -2,7 +2,7 @@
  short_name="giant spider"
  raw_name="giant spider"
  tooltip="giant spider"
- z_depth=3
+ z_depth="monst"
  speed=1
  max_hp=200
  damage=25

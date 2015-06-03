@@ -1,7 +1,7 @@
 {
  short_name="blood2"
  raw_name="blood2"
- z_depth=3
+ z_depth="monst"
  is_animated
  is_hidden_from_editor
  is_explosion

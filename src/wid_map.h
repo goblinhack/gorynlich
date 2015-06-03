@@ -27,7 +27,7 @@ typedef struct wid_map_cell_ {
     /*
      * Used for level preview.
      */
-    wid_map_tile tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+    wid_map_tile tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH_MAX];
 
     /*
      * Player (well one of them) start at

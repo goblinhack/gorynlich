@@ -2,7 +2,7 @@
  short_name="Cheddar cheese"
  raw_name="cheese"
  tooltip="Is this cheese?"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_food
  is_stackable

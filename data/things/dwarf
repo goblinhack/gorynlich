@@ -6,7 +6,7 @@
     "data/things/axe1"
     "data/things/torches"
  }
- z_depth=4
+ z_depth="player"
  speed=26
  max_hp=250
  max_magic=100

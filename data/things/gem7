@@ -2,7 +2,7 @@
  short_name="Starstone"
  raw_name="gem7"
  tooltip="Starstone"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_treasure
  is_stackable

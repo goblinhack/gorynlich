@@ -2,7 +2,7 @@
  short_name="Very short sword"
  raw_name="sword1"
  tooltip="Very Very Short sword"
- z_depth=3
+ z_depth="monst"
  is_weapon
  is_melee_weapon
  can_be_enchanted

@@ -2,7 +2,7 @@
  short_name="Bloodstone"
  raw_name="gem5"
  tooltip="Bloodstone"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_treasure
  is_stackable

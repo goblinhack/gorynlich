@@ -3,7 +3,7 @@
  raw_name="bow3"
  tooltip="Longer Bow"
  fires="data/things/arrow"
- z_depth=3
+ z_depth="monst"
  is_weapon
  is_ranged_weapon
  can_be_enchanted

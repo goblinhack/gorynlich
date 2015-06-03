@@ -1,7 +1,7 @@
 {
  short_name="powerup"
  raw_name="powerup1"
- z_depth=2
+ z_depth="wall"
  is_animated
  is_hidden_from_editor
  is_powerup

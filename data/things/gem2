@@ -2,7 +2,7 @@
  short_name="Shiny gem"
  raw_name="gem2"
  tooltip="Turquoise gem"
- z_depth=3
+ z_depth="monst"
  is_inactive
  is_treasure
  is_stackable

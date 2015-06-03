@@ -2,7 +2,7 @@
  short_name="Phantom"
  raw_name="ghost2"
  tooltip="Phantom"
- z_depth=3
+ z_depth="monst"
  speed=10
  max_hp=1
  damage=4

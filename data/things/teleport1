@@ -2,7 +2,7 @@
  short_name="teleport"
  raw_name="teleport1"
  tooltip="Level teleport"
- z_depth=5
+ z_depth="explosion_top"
  is_teleport
  is_light_source
  light_radius=1.0
