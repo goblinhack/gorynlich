@@ -426,7 +426,7 @@ static void thing_consider_target (thingp me, thingp it,
     if (thing_is_dead_or_dying(it)) {
 #if 0
 if (debug) {
-CON("  dead or dying");
+LOG("  dead or dying");
 }
 #endif
         return;
@@ -435,7 +435,7 @@ CON("  dead or dying");
     if (thing_has_left_level(it)) {
 #if 0
 if (debug) {
-CON("  no on lev");
+LOG("  no on lev");
 }
 #endif
         return;
@@ -447,7 +447,7 @@ CON("  no on lev");
     if (thing_owner(it) == me) {
 #if 0
 if (debug) {
-CON("  owner");
+LOG("  owner");
 }
 #endif
         return;
@@ -500,7 +500,7 @@ void thing_fire_at_target (thingp me)
             }
 #if 0
 if (debug) {
-CON("%d %d [%d] %s",x,y,i, thing_logname(it));
+LOG("%d %d [%d] %s",x,y,i, thing_logname(it));
 }
 #endif
 

@@ -423,16 +423,18 @@ void thing_magic_tick (thingp t)
     /*
      * Auto heal
      */
-    if (thing_stats_get_hp(t) < thing_stats_get_max_hp(t)) {
+    if (thing_stats_get_magic(t) < thing_stats_get_max_magic(t)) {
         int delta = thing_stats_val_to_modifier(thing_stats_get_healing(t));
-        thing_stats_modify_hp(t, delta);
+        if (delta > 0) {
+            thing_stats_modify_magic(t, delta);
+        }
     }
 
     /*
      * If over max magic, return to max.
      */
-    int delta = thing_stats_get_hp(t) - thing_stats_get_max_hp(t);
+    int delta = thing_stats_get_magic(t) - thing_stats_get_max_magic(t);
     if (delta > 0) {
-        thing_stats_modify_hp(t, -1);
+        thing_stats_modify_magic(t, -1);
     }
 }

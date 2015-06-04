@@ -102,7 +102,7 @@ void thing_stats_dump (const thing_statsp s)
 
             LOG("    (%d) %-30s (%d) %-30s",
                 i, ia ? ia : "nothing", 
-                i, ib ? ib : "nothing");
+                i + 1, ib ? ib : "nothing");
 
             if (ia) {
                 myfree(ia);
