@@ -26,9 +26,18 @@ void thing_server_effect (thingp t, int effect)
 {
     verify(t);
 
-    thingp owner = thing_owner(t);
-    if (owner) {
-        t = owner;
+    if (thing_is_shield(t)) {
+        /*
+         * Let the shield show the hit
+         */
+    } else {
+        /*
+         * Let the owner show the hit?
+         */
+        thingp owner = thing_owner(t);
+        if (owner) {
+            t = owner;
+        }
     }
 
     if (!t->on_server) {

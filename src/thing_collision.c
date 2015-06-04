@@ -241,10 +241,10 @@ static uint8_t things_overlap (const thingp A,
         if (dist < max(thing_collision_radius(A), 
                        thing_collision_radius(B))) {
 #if 0
-CON(" ");
-CON("%s", thing_logname(A));
-CON("%s", thing_logname(B));
-CON("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
+LOG(" ");
+LOG("%s", thing_logname(A));
+LOG("%s", thing_logname(B));
+LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
 #endif
             return (true);
         } else {
@@ -409,7 +409,8 @@ CON("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
      * hit by missiles.
      */
     if (thing_is_projectile(A) &&
-        (thing_is_monst(B) ||
+        (thing_is_monst(B)          ||
+         thing_is_shield(B)         ||
          thing_is_mob_spawner(B))) {
 
         Bpx1 = collision_map_large_x1;
@@ -435,12 +436,12 @@ CON("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
 if (debug) {
     if ((thing_is_monst(A) &&
          thing_is_monst(B))) {
-CON("    A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
-CON("      %f %f",Ax,Ay);
-CON("      %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
-CON("    B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
-CON("      %f %f",Bx,By);
-CON("      %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
+LOG("    A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
+LOG("      %f %f",Ax,Ay);
+LOG("      %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
+LOG("    B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
+LOG("      %f %f",Bx,By);
+LOG("      %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
     }
 }
 #endif
@@ -478,7 +479,7 @@ static void thing_handle_collision (thingp me, thingp it,
     if (thing_is_dead_or_dying(it)) {
 #if 0
 if (debug) {
-CON("  dead or dying");
+LOG("  dead or dying");
 }
 #endif
         return;
@@ -487,7 +488,7 @@ CON("  dead or dying");
     if (thing_has_left_level(it)) {
 #if 0
 if (debug) {
-CON("  no on lev");
+LOG("  no on lev");
 }
 #endif
         return;
@@ -499,7 +500,7 @@ CON("  no on lev");
     if (thing_owner(it) == me) {
 #if 0
 if (debug) {
-CON("  owner");
+LOG("  owner");
 }
 #endif
         return;
@@ -511,7 +512,7 @@ CON("  owner");
     if (!things_overlap(me, -1.0, -1.0, it)) {
 #if 0
 if (debug) {
-CON("  no overlap %s vs %s",thing_logname(me), thing_logname(it));
+LOG("  no overlap %s vs %s",thing_logname(me), thing_logname(it));
 }
 #endif
         return;
@@ -519,7 +520,7 @@ CON("  no overlap %s vs %s",thing_logname(me), thing_logname(it));
 
 #if 0
 (debug) {
-CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
+LOG("  overlap %s vs %s",thing_logname(me), thing_logname(it));
 }
 #endif
 
@@ -588,7 +589,7 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
              */
 #if 0
 if (debug) {
-CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
+LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
             thing_possible_hit_add(it, "player hit thing");
@@ -629,7 +630,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
              */
 #if 0
 if (debug) {
-CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
+LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
@@ -701,7 +702,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
              */
 #if 0
 if (debug) {
-CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
+LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
@@ -747,9 +748,10 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
              * No hitting this.
              */
         } else if (thing_is_monst(it)           || 
-            thing_is_fragile(it)                ||
-            thing_is_combustable(it)            ||
-            thing_is_mob_spawner(it)) {
+                   thing_is_fragile(it)         ||
+                   thing_is_shield(it)          ||
+                   thing_is_combustable(it)     ||
+                   thing_is_mob_spawner(it)) {
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             if (thing_owner(me) == it) {
                 /*
@@ -763,7 +765,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 
                     thing_stats_modify_hp(me, -thing_stats_get_hp(it));
 
-                    thing_possible_hit_add(it, "projection hit");
+                    thing_possible_hit_add(it, "projectile hit");
                 } else {
                     thing_possible_hit_add_hitter_killed_on_hit_or_miss(
                                                     it, "projectile hit");
@@ -844,7 +846,7 @@ CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
              */
 #if 0
 if (debug) {
-CON("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
+LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
@@ -868,11 +870,11 @@ void thing_handle_collisions (widp grid, thingp me)
 #if 0
 if (thing_is_powerup(me)) {
 debug = 1;
-CON("  ");
-CON("  ");
-CON("--");
-CON("  ");
-CON("shield coll");
+LOG("  ");
+LOG("  ");
+LOG("--");
+LOG("  ");
+LOG("shield coll");
 }
 #endif
     thing_map *map = thing_get_map(me);
@@ -899,7 +901,7 @@ CON("shield coll");
             }
 #if 0
 if (debug) {
-CON("%d %d [%d] %s",x,y,i, thing_logname(it));
+LOG("%d %d [%d] %s",x,y,i, thing_logname(it));
 }
 #endif
 
