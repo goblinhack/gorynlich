@@ -1489,37 +1489,40 @@ void socket_rx_client_status (gsocketp s, UDPpacket *packet, uint8_t *data)
     }
 
     /*
-     * Stats from the player.
+     * Get the new stats from the client and the old stats and then compare 
+     * them so we can see what changed on the client.
      */
-    thing_stats new_stats;
-    memcpy(&new_stats, &msg.stats, sizeof(new_stats));
+    thing_stats new_stats_from_client;
+    memcpy(&new_stats_from_client, &msg.stats, 
+           sizeof(new_stats_from_client));
+
+    thing_stats old_stats_from_client;
+    memcpy(&old_stats_from_client, &p->stats_from_client, 
+           sizeof(old_stats_from_client));
 
     /*
-     * Current stats either from the thing or player if no thing.
+     * Save the client stats so we can compare again later.
      */
-    thing_stats current_stats;
-    if (p->thing) {
-        memcpy(&current_stats, &p->thing->stats, sizeof(current_stats));
-    } else {
-        memcpy(&current_stats, &p->stats_from_client, sizeof(new_stats));
-    }
+    memcpy(&p->stats_from_client, &new_stats_from_client, 
+           sizeof(new_stats_from_client));
 
 // LOG("server, rx version %d",new_stats.client_version);
 
     /*
      * Merge them together.
      */
-    thing_stats merged_stats;
-    memcpy(&merged_stats, &current_stats, sizeof(current_stats));
-    int changed = thing_stats_merge(&merged_stats, &current_stats, &new_stats);
-
-    /*
-     * Now update the player stats and thing with merged stats.
-     */
-    memcpy(&p->stats_from_client, &merged_stats, sizeof(merged_stats));
+    thing_stats server_stats;
 
     if (p->thing) {
-        memcpy(&p->thing->stats, &merged_stats, sizeof(merged_stats));
+        memcpy(&server_stats, &p->thing->stats, sizeof(server_stats));
+    } else {
+        memcpy(&server_stats, &old_stats_from_client, sizeof(old_stats_from_client));
+    }
+
+    int changed = thing_stats_merge(&server_stats, &old_stats_from_client, &new_stats_from_client);
+
+    if (p->thing) {
+        memcpy(&p->thing->stats, &server_stats, sizeof(server_stats));
     }
 
     /*
@@ -2374,7 +2377,8 @@ void socket_tx_server_status (gsocketp s_in)
                     msg_tx->stats.shield = thing_stats_get_hp(shield_carry_anim);
                 }
 
-// LOG("server, tx version: %d",t->stats.client_version);
+LOG("server, tx version: %d",t->stats.client_version);
+thing_stats_dump(&t->stats);
                 if (0) {
                     LOG("Server: Tx Server Status to %s", socket_get_remote_logname(s));
                     thing_dump(t);

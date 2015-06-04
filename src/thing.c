@@ -1906,9 +1906,9 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
 
 #if 0
 if (orig_hitter) {
-CON("%s is being hit by %s orig %s",thing_logname(t), thing_logname(hitter), thing_logname(orig_hitter));
+LOG("%s is being hit by %s orig %s",thing_logname(t), thing_logname(hitter), thing_logname(orig_hitter));
 } else {
-CON("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
+LOG("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
 }
 #endif
     verify(t);

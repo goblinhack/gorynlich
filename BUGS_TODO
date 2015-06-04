@@ -1,29 +1,27 @@
 --------------------------------------- plan for june --------------------------------------
-- projectile going through shield
-- takes 2 presses to eat food
 - wildcard treasure types
 - spending points on level end
-- xp level and hp increase per level
-- brick wall not very good looking
+- xp gives 1 spending point each 10000
 - sound effects for weapons and hits http://www.bfxr.net/
+- treasure levels
 - add money
-- sound on momey collect
-- sound on potion use
-- add double arrow for faster moving triggers
-- add stop sign to stop a moving thing?
-- press m for magic to give life to other players
-- pop bouncing m and arrow over player to give them a clue what to do
+- add shop
 - pause character on spending point window - on single player?
-- increase move granulariy on server so projectiles line up with player more
 --------------------------------------- plan for jul --------------------------------------
-- water ?
-- dart and rock traps
-- rolling boulders?
-- cheese, lots of
+- add double arrow for faster moving triggers
+- speed potion
+- fire and acid boots
 - money/xp doubler amulet
 - amulet of resurrection?
 - double fire double arrows
-- fire and acid boots
+- rolling boulders?
+- cheese, lots of
+- sound on money collect
+- sound on potion use
+- magic gives health to other players
+- pop bouncing "help!" and arrow over player to give them a clue what to do
+- water ?
+- dart and rock traps
 --------------------------------------- plan for aug --------------------------------------
 - giant worm like creature?
 - change DIE to ERR in most cases
@@ -33,6 +31,7 @@
 - tx socket thing loop is too slow could use a thing array to update
 - minor: colision map tiny not used
 - minor: lifespan code not used
+- increase move granulariy on server so projectiles line up with player more
 --------------------------------------- plan for sep --------------------------------------
 - boss baddies every 10 levels
 - first baddy, large ghost, drops bone piles
@@ -48,6 +47,95 @@
 - mining?
 - add bot to test out multiplayer ?
 - different profiles for level generation
+- levels 3.6
+- levels 3.7
+
+- levels 4.1
+- levels 4.2
+- levels 4.3
+- levels 4.4
+- levels 4.5
+- levels 4.6
+- levels 4.7
+- levels 4.8
+- levels 4.9
+- levels 4.10
+
+- levels 5.1
+- levels 5.2
+- levels 5.3
+- levels 5.4
+- levels 5.5
+- levels 5.6
+- levels 5.7
+- levels 5.8
+- levels 5.9
+- levels 5.10
+
+- levels 6.1
+- levels 6.2
+- levels 6.3
+- levels 6.4
+- levels 6.5
+- levels 6.6
+- levels 6.7
+- levels 6.8
+- levels 6.9
+- levels 6.10
+
+- levels 7.1
+- levels 7.2
+- levels 7.3
+- levels 7.4
+- levels 7.5
+- levels 7.6
+- levels 7.7
+- levels 7.8
+- levels 7.9
+- levels 7.10
+
+- levels 8.1
+- levels 8.2
+- levels 8.3
+- levels 8.4
+- levels 8.5
+- levels 8.6
+- levels 8.7
+- levels 8.8
+- levels 8.9
+- levels 8.10
+
+- levels 9.1
+- levels 9.2
+- levels 9.3
+- levels 9.4
+- levels 9.5
+- levels 9.6
+- levels 9.7
+- levels 9.8
+- levels 8.9
+- levels 9.10
+
+- levels 10.1
+- levels 10.2
+- levels 10.3
+- levels 10.4
+- levels 10.5
+- levels 10.6
+- levels 10.7
+- levels 10.8
+- levels 10.9
+- levels 10.10
+
+Thu Jun  4 12:54:44 EDT 2015
+- takes 2 presses to eat food
+
+Wed Jun  3 11:16:16 EDT 2015
+- projectile going through shield
+- health ticking down due to magic
+- levels 3.6
+- levels 3.7
+- brick wall not very good looking
 
 Tue Jun  2 21:28:17 EDT 2015
 - editor yank of floor failed
