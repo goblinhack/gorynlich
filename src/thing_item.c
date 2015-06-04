@@ -286,7 +286,7 @@ void thing_used (thingp t, tpp tp)
         }
     }
 
-    THING_LOG(t, "used %s", tp_short_name(tp));
+    THING_CON(t, "used %s", tp_short_name(tp));
 
     /*
      * Remove from the inventory and other places.
