@@ -3090,7 +3090,49 @@ static tpp random_monst (int depth)
 
         tpp tp = id_to_tp(id);
 
-        if (!tp_is_monst(tp) && !tp_is_mob_spawner(tp)) {
+        if (!tp_is_monst(tp)) {
+            continue;
+        }
+
+        /*
+         * Unique? like death?
+         */
+        if (!tp_get_d10000_chance_of_appearing(tp)) {
+            continue;
+        }
+
+        if (depth < tp_get_min_appear_depth(tp)) {
+            continue;
+        }
+
+        if (depth > tp_get_max_appear_depth(tp)) {
+            continue;
+        }
+
+        int r = myrand() % 10000;
+
+        if (r < (tp_get_d10000_chance_of_appearing(tp) + depth)) {
+            return (tp);
+        }
+    }
+}
+
+static tpp random_mob (int depth)
+{
+    int loop = 0;
+
+    for (;;) {
+
+        if (loop++ > 100000) {
+            ERR("couldn't find random monst");
+            return (0);
+        }
+
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+
+        if (!tp_is_mob_spawner(tp)) {
             continue;
         }
 
@@ -3195,7 +3237,8 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
             case 'w': tp = random_weapon(); break;
             case 'f': tp = random_food(); break;
             case 'p': tp = random_potion(); break;
-            case 'M': tp = random_monst(depth); break;
+            case 'M': tp = random_mob(depth); break;
+            case 'm': tp = random_monst(depth); break;
             case '$': {
                 int r = myrand() % 100;
 
