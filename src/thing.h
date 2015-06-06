@@ -419,6 +419,12 @@ enum {
     THING_POTION_CLOUDKILL,
     THING_POTION_LIFE,
     THING_POTION_SHIELD,
+    THING_POTION_ANY, 
+    THING_FOOD_ANY, 
+    THING_MOB_ANY, 
+    THING_MONST_ANY, 
+    THING_TREASURE_ANY, 
+    THING_WEAPON_ANY, 
     THING_WATER,
     THING_WATER_POISON,
     THING_MASK1,
@@ -1317,11 +1323,11 @@ static inline uint8_t thing_is_rrr30 (thingp t)
     return (tp_is_rrr30(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr31 (thingp t)
+static inline uint8_t thing_is_internal (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr31(thing_tp(t)));
+    return (tp_is_internal(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_levitating (thingp t)
@@ -2114,9 +2120,9 @@ static inline uint8_t thing_is_rrr30_noverify (thingp t)
     return (t->tp->is_rrr30);
 }
 
-static inline uint8_t thing_is_rrr31_noverify (thingp t)
+static inline uint8_t thing_is_internal_noverify (thingp t)
 {
-    return (t->tp->is_rrr31);
+    return (t->tp->is_internal);
 }
 
 static inline uint8_t thing_is_levitating_noverify (thingp t)

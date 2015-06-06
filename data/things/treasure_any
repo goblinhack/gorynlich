@@ -1,0 +1,13 @@
+{
+ short_name="Any treasure"
+ raw_name="treasure_any"
+ tooltip="Random treasure"
+ z_depth="monst"
+ is_treasure
+ is_internal
+ tiles={
+  tile={
+   tile="treasure_any"
+  }
+ }
+}

@@ -257,6 +257,41 @@ wid_game_map_server_replace_tile (widp w,
         return (0);
     }
 
+    int depth = (level->level_pos.y * LEVELS_ACROSS) + level->level_pos.x;
+
+    /*
+     * Map random things to real things.
+     */
+    tpp otp = tp;
+
+    switch (tp_to_id(tp)) {
+        case THING_POTION_ANY:
+CON("%s %f %f",tp_name(tp),x,y);
+            tp = random_potion();
+CON("%s",tp_name(tp));
+            break;
+        case THING_FOOD_ANY:
+            tp = random_food();
+            break;
+        case THING_MOB_ANY:
+            tp = random_mob(depth);
+            break;
+        case THING_MONST_ANY:
+            tp = random_monst(depth);
+            break;
+        case THING_TREASURE_ANY:
+            tp = random_treasure();
+            break;
+        case THING_WEAPON_ANY:
+            tp = random_weapon();
+            break;
+    }
+
+    if (!tp) {
+        ERR("failed to make random %s", tp_name(otp));
+        return (0);
+    }
+
     /*
      * Second pass, do not create things that are to only be created on 
      * triggers.
