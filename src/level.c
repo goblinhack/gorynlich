@@ -422,7 +422,7 @@ levelp level_load_random (level_pos_t level_pos,
     LEVEL_LOG(level, "Level generating");
 
     map_jigsaw_generate(wid, 
-                        (level_pos.y * LEVELS_ACROSS) | level_pos.x, 
+                        (level_pos.y * LEVELS_ACROSS) + level_pos.x, 
                         wid_game_map_server_replace_tile);
 
     level_update_now(level);

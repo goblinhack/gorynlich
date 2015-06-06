@@ -623,7 +623,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr28", t->is_rrr28);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr29", t->is_rrr29);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr30", t->is_rrr30);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr31", t->is_rrr31);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_internal", t->is_internal);
         GET_OPT_NAMED_BITFIELD(ctx, "is_levitating", t->is_levitating);
         GET_OPT_NAMED_BITFIELD(ctx, "is_acid", t->is_acid);
         GET_OPT_NAMED_BITFIELD(ctx, "is_lava", t->is_lava);
@@ -862,7 +862,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr28", t->is_rrr28);
     PUT_NAMED_BITFIELD(ctx, "is_rrr29", t->is_rrr29);
     PUT_NAMED_BITFIELD(ctx, "is_rrr30", t->is_rrr30);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr31", t->is_rrr31);
+    PUT_NAMED_BITFIELD(ctx, "is_internal", t->is_internal);
     PUT_NAMED_BITFIELD(ctx, "is_levitating", t->is_levitating);
     PUT_NAMED_BITFIELD(ctx, "is_acid", t->is_acid);
     PUT_NAMED_BITFIELD(ctx, "is_lava", t->is_lava);

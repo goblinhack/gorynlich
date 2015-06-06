@@ -291,7 +291,7 @@ typedef struct tp_ {
     uint8_t is_rrr28:1;
     uint8_t is_rrr29:1;
     uint8_t is_rrr30:1;
-    uint8_t is_rrr31:1;
+    uint8_t is_internal:1;
     uint8_t is_levitating:1;
     uint8_t is_acid:1;
     uint8_t is_lava:1;
@@ -803,9 +803,9 @@ static inline uint8_t tp_is_rrr30 (tpp t)
     return (t->is_rrr30);
 }
 
-static inline uint8_t tp_is_rrr31 (tpp t)
+static inline uint8_t tp_is_internal (tpp t)
 {
-    return (t->is_rrr31);
+    return (t->is_internal);
 }
 
 static inline uint8_t tp_is_levitating (tpp t)
@@ -1143,3 +1143,15 @@ static inline uint8_t tp_is_effect_rotate_2way (tpp t)
     return (t->is_effect_rotate_2way);
 }
 
+tpp random_wall(void);
+tpp random_door(void);
+tpp random_floor(void);
+tpp random_player(void);
+tpp random_exit(void);
+tpp random_food(void);
+tpp random_treasure(void);
+tpp random_weapon(void);
+tpp random_potion(void);
+tpp random_rock(void);
+tpp random_monst(int depth);
+tpp random_mob(int depth);
