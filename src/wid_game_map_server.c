@@ -212,6 +212,13 @@ static void level_set_new_tp (levelp level,
     }
 }
 
+static void level_get_tp (levelp level,
+                          int x, int y, int z, 
+                          tpp *tp)
+{
+    *tp = level->map_grid.tile[x][y][z].tp;
+}
+
 /*
  * Replace or place a tile.
  */
@@ -235,6 +242,51 @@ wid_game_map_server_replace_tile (widp w,
     widp child;
     int ix = x;
     int iy = y;
+    int depth = (level->level_pos.y * LEVELS_ACROSS) + level->level_pos.x;
+
+    if (server_level_is_being_loaded == 1) {
+        /*
+         * Map random things to real things.
+         */
+        tpp otp = tp;
+
+        switch (tp_to_id(tp)) {
+            case THING_POTION_ANY:
+                tp = random_potion();
+                break;
+            case THING_FOOD_ANY:
+                tp = random_food();
+                break;
+            case THING_MOB_ANY:
+                tp = random_mob(depth);
+                break;
+            case THING_MONST_ANY:
+                tp = random_monst(depth);
+                break;
+            case THING_TREASURE_ANY:
+                tp = random_treasure();
+                break;
+            case THING_WEAPON_ANY:
+                tp = random_weapon();
+                break;
+        }
+
+        if (!tp) {
+            ERR("failed to make random %s", tp_name(otp));
+            return (0);
+        }
+    } else {
+        switch (tp_to_id(tp)) {
+            case THING_POTION_ANY:
+            case THING_FOOD_ANY:
+            case THING_MOB_ANY:
+            case THING_MONST_ANY:
+            case THING_TREASURE_ANY:
+            case THING_WEAPON_ANY:
+                level_get_tp(level, x, y, z, &tp);
+                break;
+        }
+    }
 
     /*
      * First pass? Only interested in location of triggers.
@@ -254,39 +306,6 @@ wid_game_map_server_replace_tile (widp w,
 
         level_set_new_tp(level, x, y, z, tp, data);
 
-        return (0);
-    }
-
-    int depth = (level->level_pos.y * LEVELS_ACROSS) + level->level_pos.x;
-
-    /*
-     * Map random things to real things.
-     */
-    tpp otp = tp;
-
-    switch (tp_to_id(tp)) {
-        case THING_POTION_ANY:
-            tp = random_potion();
-            break;
-        case THING_FOOD_ANY:
-            tp = random_food();
-            break;
-        case THING_MOB_ANY:
-            tp = random_mob(depth);
-            break;
-        case THING_MONST_ANY:
-            tp = random_monst(depth);
-            break;
-        case THING_TREASURE_ANY:
-            tp = random_treasure();
-            break;
-        case THING_WEAPON_ANY:
-            tp = random_weapon();
-            break;
-    }
-
-    if (!tp) {
-        ERR("failed to make random %s", tp_name(otp));
         return (0);
     }
 
