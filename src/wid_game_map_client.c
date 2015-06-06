@@ -609,18 +609,39 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
             s = &player->stats;
 
             if (!wid_player_info_is_visible()) {
+                /*
+                 * Show stats window.
+                 */
                 wid_player_stats_visible(s);
                 wid_player_info_visible(s, false /* fast */);
                 wid_player_inventory_visible(s, false /* fast */);
+
+                socket_tx_player_action(client_joined_server, player, 
+                                        PLAYER_ACTION_PAUSE_GAME,
+                                        0 /* action_bar_index */,
+                                        false /* change_selection_only */);
             } else {
+                /*
+                 * Hide stats window.
+                 */
                 wid_player_stats_hide(s);
                 wid_player_info_hide(false /* fast */);
                 wid_player_inventory_hide(false /* fast */);
+
+                socket_tx_player_action(client_joined_server, player, 
+                                        PLAYER_ACTION_RESUME_GAME,
+                                        0 /* action_bar_index */,
+                                        false /* change_selection_only */);
             }
             return (true);
         }
         case 's':
             wid_choose_stats_visible();
+
+            socket_tx_player_action(client_joined_server, player, 
+                                    PLAYER_ACTION_PAUSE_GAME,
+                                    0 /* action_bar_index */,
+                                    false /* change_selection_only */);
             return (true);
 
         case 'q':
