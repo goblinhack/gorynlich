@@ -33,7 +33,26 @@ void thing_reached_teleport (thingp t, thingp teleport)
 
     int x, y;
 
-    if (!time_have_x_tenths_passed_since(10, t->timestamp_last_teleport)) {
+    int delay = 20;
+
+    if (!thing_is_player(t)) {
+        delay = 100;
+
+        /*
+         * Only move other things sometimes.
+         */
+        if ((myrand() % 100) < 90) {
+            return;
+        }
+    }
+
+    if (!time_have_x_tenths_passed_since(delay, 
+                                         t->timestamp_last_teleport)) {
+        return;
+    }
+
+    if (!time_have_x_tenths_passed_since(delay, 
+                                         teleport->timestamp_last_teleport)) {
         return;
     }
 
@@ -79,7 +98,9 @@ void thing_reached_teleport (thingp t, thingp teleport)
         return;
     }
 
+    teleport->timestamp_last_teleport = 
     t->timestamp_last_teleport = time_get_time_ms();
+
     poss = myrand() % poss;
 
     double nx = tx[poss];
@@ -88,6 +109,7 @@ void thing_reached_teleport (thingp t, thingp teleport)
     wid_move_end(t->wid);
 
     thing_server_wid_update(t, nx, ny, true /* is_new */);
+    thing_update(t);
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
 
