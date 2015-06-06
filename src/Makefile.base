@@ -52,38 +52,40 @@ GAME_OBJECTS=				\
     $(OBJDIR)/term.o 			\
     $(OBJDIR)/tex.o 			\
     $(OBJDIR)/thing.o 			\
-    $(OBJDIR)/thing_exit.o 		\
-    $(OBJDIR)/thing_teleport.o 		\
     $(OBJDIR)/thing_ai.o 		\
-    $(OBJDIR)/thing_death.o 		\
-    $(OBJDIR)/thing_dir.o 		\
     $(OBJDIR)/thing_anim.o 		\
-    $(OBJDIR)/thing_speed.o 		\
-    $(OBJDIR)/thing_health.o 		\
-    $(OBJDIR)/thing_vision.o 		\
-    $(OBJDIR)/thing_defense.o 		\
     $(OBJDIR)/thing_blood.o 		\
     $(OBJDIR)/thing_bomb.o 		\
     $(OBJDIR)/thing_client.o 		\
     $(OBJDIR)/thing_collision.o 	\
-    $(OBJDIR)/thing_fire.o 		\
-    $(OBJDIR)/thing_magic.o 		\
     $(OBJDIR)/thing_damage.o 		\
+    $(OBJDIR)/thing_death.o 		\
+    $(OBJDIR)/thing_defense.o 		\
+    $(OBJDIR)/thing_dir.o 		\
     $(OBJDIR)/thing_effect.o 		\
+    $(OBJDIR)/thing_exit.o 		\
     $(OBJDIR)/thing_explosion.o 	\
+    $(OBJDIR)/thing_fire.o 		\
+    $(OBJDIR)/thing_health.o 		\
     $(OBJDIR)/thing_item.o 		\
+    $(OBJDIR)/thing_magic.o 		\
     $(OBJDIR)/thing_mob_spawn.o 	\
     $(OBJDIR)/thing_place.o 		\
+    $(OBJDIR)/thing_random.o 		\
     $(OBJDIR)/thing_server.o 		\
     $(OBJDIR)/thing_shield.o 		\
+    $(OBJDIR)/thing_speed.o 		\
     $(OBJDIR)/thing_stats.o 		\
+    $(OBJDIR)/thing_teleport.o 		\
     $(OBJDIR)/thing_template.o 		\
     $(OBJDIR)/thing_tick.o 		\
     $(OBJDIR)/thing_tile.o 		\
     $(OBJDIR)/thing_timer.o 		\
     $(OBJDIR)/thing_torch.o 		\
+    $(OBJDIR)/thing_vision.o 		\
     $(OBJDIR)/thing_weapon.o 		\
-    $(OBJDIR)/thing_random.o 		\
+    $(OBJDIR)/thing_xp.o 		\
+    $(OBJDIR)/thing_spending_points.o 	\
     $(OBJDIR)/tile.o 			\
     $(OBJDIR)/time.o 			\
     $(OBJDIR)/timer.o 			\

@@ -62,5 +62,7 @@ void thing_reached_exit (thingp t, thingp exit)
 
     thing_leave_level(t);
 
+    thing_modify_xp(t, 1000);
+
     sound_play_level_end();
 }

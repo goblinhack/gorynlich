@@ -1,13 +1,8 @@
 --------------------------------------- plan for june --------------------------------------
-circle of deaths - treasure trap room 1 and 2
-- wildcard treasure types
-- spending points on level end
 - xp gives 1 spending point each 10000
 - sound effects for weapons and hits http://www.bfxr.net/
-- treasure levels
 - add money
 - add shop
-- pause character on spending point window - on single player?
 --------------------------------------- plan for jul --------------------------------------
 - add double arrow for faster moving triggers
 - speed potion
@@ -50,6 +45,10 @@ circle of deaths - treasure trap room 1 and 2
 - different profiles for level generation
 
 Sat Jun  6 09:46:06 EDT 2015
+- pause character on spending point window - on single player?
+- treasure levels
+- spending points on level end
+- wildcard treasure types
 - telport was not updating position
 - random items in fixed levels
 

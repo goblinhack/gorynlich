@@ -1526,7 +1526,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
             int32_t val = tp_get_bonus_xp_on_death(tp);
 
             if (val) {
-                thing_stats_modify_xp(recipient, val);
+                thing_modify_xp(recipient, val);
 
                 if (thing_is_player(recipient)) {
 #if 0
