@@ -2,7 +2,7 @@
  short_name="Any mob"
  raw_name="mob_any"
  tooltip="Random mob"
- z_depth="mob"
+ z_depth="monst"
  is_mob_spawner
  is_internal
  tiles={

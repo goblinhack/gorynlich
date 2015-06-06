@@ -7,7 +7,7 @@
  is_light_source
  light_radius=1.0
  scale=0.4
- collision_radius=1.5
+ collision_radius=1.0
  is_animated
  is_effect_pulse
  tiles={
