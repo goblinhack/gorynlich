@@ -16,6 +16,7 @@
  scale=1.5
  hit_priority=10
  is_ethereal
+ is_levitating
  is_cats_eyes
  is_collision_map_medium
  is_animated

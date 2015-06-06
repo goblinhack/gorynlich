@@ -615,6 +615,20 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         }
     }
 
+    if (thing_is_lava(me)                  ||
+        thing_is_acid(me)) {
+
+        if (thing_is_levitating(it)) {
+            return;
+        }
+
+        if (thing_is_fragile(it)         ||
+            thing_is_combustable(it)) {
+            thing_possible_hit_add(it, "monst hit thing");
+            return;
+        }
+    }
+
     if (thing_is_monst(me)) {
         /*
          * Monster bumped into something.
