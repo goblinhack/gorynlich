@@ -1279,14 +1279,20 @@ uint8_t level_is_paused (levelp level)
 {
     verify(level);
 
-    return (level->is_paused);
+    return (level->is_paused > 0);
 }
 
 void level_set_is_paused (levelp level, uint8_t val)
 {
     verify(level);
 
-    level->is_paused = val;
+    if (val) {
+        level->is_paused++;
+    } else {
+        if (level->is_paused) {
+            level->is_paused--;
+        }
+    }
 }
 
 uint8_t level_exit_has_been_reached (levelp level)

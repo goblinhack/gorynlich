@@ -164,6 +164,16 @@ void thing_server_action (thingp t,
                           uint32_t action_bar_index,
                           int change_selection_only)
 {
+    switch (action) {
+        case PLAYER_ACTION_PAUSE_GAME: 
+            level_set_is_paused(server_level, true);
+            return;
+
+        case PLAYER_ACTION_RESUME_GAME: 
+            level_set_is_paused(server_level, false);
+            return;
+    }
+
     if (action_bar_index >= THING_ACTION_BAR_MAX) {
         ERR("invalid action bar slot %u", action_bar_index);
         return;

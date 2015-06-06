@@ -19,6 +19,8 @@
 #include "name.h"
 #include "thing.h"
 #include "string_util.h"
+#include "socket_util.h"
+#include "client.h"
 
 static widp wid_choose_stats;
 static widp wid_choose_stats_background;
@@ -150,6 +152,13 @@ void wid_choose_stats_hide (void)
 
     if (menu) {
         wid_destroy(&menu);
+    }
+
+    if (player) {
+        socket_tx_player_action(client_joined_server, player, 
+                                PLAYER_ACTION_RESUME_GAME,
+                                0 /* action_bar_index */,
+                                false /* change_selection_only */);
     }
 }
 

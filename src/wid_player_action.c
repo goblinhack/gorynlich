@@ -546,7 +546,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         }
     }
 
-    if (player->shield) {
+    if (player && player->shield) {
         widp w =
             wid_new_square_button(wid_player_action,
                                   "wid player_stats container");

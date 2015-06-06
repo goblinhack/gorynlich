@@ -2796,6 +2796,17 @@ double thing_stats_get_total_vision(thingp t, double vision);
 void thing_health_tick(thingp t);
 
 /*
+ * thing_xp.c
+ */
+void thing_modify_xp(thingp t, int val);
+
+/*
+ * thing_spending_points.c
+ */
+void thing_modify_spending_points(thingp t, int val);
+
+
+/*
  * thing_magic.c
  */
 void thing_server_magic_powerup(thingp t);

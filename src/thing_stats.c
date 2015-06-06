@@ -196,6 +196,12 @@ int thing_stats_diff (const thing_statsp old_stats,
         changed = 1;
     }
 
+    if (old_stats->max_hp != new_stats->max_hp) {
+        LOG("%smax_hp changed from %d to %d", indent, 
+            old_stats->max_hp, new_stats->max_hp);
+        changed = 1;
+    }
+
     if (old_stats->shield != new_stats->shield) {
         LOG("%sshield changed from %d to %d", indent, 
             old_stats->shield, new_stats->shield);
@@ -205,6 +211,12 @@ int thing_stats_diff (const thing_statsp old_stats,
     if (old_stats->magic != new_stats->magic) {
         LOG("%sMagic changed from %d to %d", indent, 
             old_stats->magic, new_stats->magic);
+        changed = 1;
+    }
+
+    if (old_stats->max_magic != new_stats->max_magic) {
+        LOG("%smax_magic changed from %d to %d", indent, 
+            old_stats->max_magic, new_stats->max_magic);
         changed = 1;
     }
 
