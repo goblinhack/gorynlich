@@ -1504,11 +1504,6 @@ uint32_t level_count_is_mob_spawner (levelp level)
     return (level_count_is_x(level, tp_is_mob_spawner));
 }
 
-uint32_t level_count_is_rrr1 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr1));
-}
-
 uint32_t level_count_is_acid (levelp level)
 {
     return (level_count_is_x(level, tp_is_acid));
