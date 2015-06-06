@@ -1,5 +1,4 @@
 --------------------------------------- plan for june --------------------------------------
-- xp gives 1 spending point each 10000
 - sound effects for weapons and hits http://www.bfxr.net/
 - add money
 - add shop
@@ -45,6 +44,7 @@
 - different profiles for level generation
 
 Sat Jun  6 09:46:06 EDT 2015
+- xp gives 1 spending point each 10000
 - pause character on spending point window - on single player?
 - treasure levels
 - spending points on level end
