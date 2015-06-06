@@ -104,7 +104,7 @@ typedef struct level_t_ {
     /*
      * Things cannot move but can be animated.
      */
-    uint8_t is_paused:1;
+    uint8_t is_paused;
 
     /*
      * Exit has been reached.
