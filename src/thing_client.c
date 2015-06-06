@@ -206,7 +206,8 @@ static void thing_client_wid_move (thingp t,
         }
 
         if (!speed) {
-            ERR("thing %s is wanting to move distance %f but I don't know what speed at",
+            speed = 10;
+            LOG("thing %s is wanting to move distance %f but I don't know what speed at",
                 thing_logname(t), dist);
         }
 

@@ -266,9 +266,7 @@ wid_game_map_server_replace_tile (widp w,
 
     switch (tp_to_id(tp)) {
         case THING_POTION_ANY:
-CON("%s %f %f",tp_name(tp),x,y);
             tp = random_potion();
-CON("%s",tp_name(tp));
             break;
         case THING_FOOD_ANY:
             tp = random_food();
