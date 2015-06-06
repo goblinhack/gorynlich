@@ -472,6 +472,9 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
             map_depth en = 0;
             GET_OPT_NAMED_ENUM(ctx, "z_depth", en, map_depth_str2val);
             t->z_depth = en;
+            if (t->z_depth >= MAP_DEPTH_MAX) {
+                DIE("%s has unknown depth", t->short_name); 
+            }
         }
 
         GET_OPT_NAMED_UINT8(ctx, "z_order", t->z_order);

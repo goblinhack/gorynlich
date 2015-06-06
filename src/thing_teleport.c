@@ -36,23 +36,16 @@ void thing_reached_teleport (thingp t, thingp teleport)
     int delay = 20;
 
     if (!thing_is_player(t)) {
-        delay = 100;
-
         /*
          * Only move other things sometimes.
          */
-        if ((myrand() % 100) < 90) {
+        if ((myrand() % 100) < 95) {
             return;
         }
     }
 
     if (!time_have_x_tenths_passed_since(delay, 
                                          t->timestamp_last_teleport)) {
-        return;
-    }
-
-    if (!time_have_x_tenths_passed_since(delay, 
-                                         teleport->timestamp_last_teleport)) {
         return;
     }
 
@@ -98,7 +91,6 @@ void thing_reached_teleport (thingp t, thingp teleport)
         return;
     }
 
-    teleport->timestamp_last_teleport = 
     t->timestamp_last_teleport = time_get_time_ms();
 
     poss = myrand() % poss;
