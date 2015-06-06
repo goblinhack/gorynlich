@@ -281,11 +281,6 @@ uint8_t map_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_mob_spawner));
 }
 
-uint8_t map_is_rrr1_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, tp_is_rrr1));
-}
-
 uint8_t map_is_acid_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, tp_is_acid));
@@ -741,11 +736,6 @@ thingp map_thing_is_pipe_at (levelp level, int32_t x, int32_t y)
 thingp map_thing_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, tp_is_mob_spawner));
-}
-
-thingp map_thing_is_rrr1_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr1));
 }
 
 thingp map_thing_is_acid_at (levelp level, int32_t x, int32_t y)
@@ -1221,11 +1211,6 @@ tree_rootp map_all_things_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_mob_spawner));
 }
 
-tree_rootp map_all_things_is_rrr1_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr1));
-}
-
 tree_rootp map_all_things_is_acid_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, tp_is_acid));
@@ -1677,11 +1662,6 @@ tpp map_find_pipe_at (levelp level, int32_t x, int32_t y, widp *w)
 tpp map_find_generator_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_mob_spawner, w));
-}
-
-tpp map_find_rrr1_at (levelp level, int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_rrr1, w));
 }
 
 tpp map_find_acid_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2480,11 +2460,6 @@ tree_rootp map_all_things_is_pipe (levelp level)
 tree_rootp map_all_things_is_mob_spawner (levelp level)
 {
     return (map_all_things_is_x(level, tp_is_mob_spawner));
-}
-
-tree_rootp map_all_things_is_rrr1 (levelp level)
-{
-    return (map_all_things_is_x(level, tp_is_rrr1));
 }
 
 tree_rootp map_all_things_is_acid (levelp level)

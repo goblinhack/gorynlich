@@ -262,6 +262,37 @@ typedef struct tp_ {
     uint8_t is_pipe:1;
     uint8_t is_mob_spawner:1;
     uint8_t is_rrr1:1;
+    uint8_t is_rrr2:1;
+    uint8_t is_rrr3:1;
+    uint8_t is_rrr4:1;
+    uint8_t is_rrr5:1;
+    uint8_t is_rrr6:1;
+    uint8_t is_rrr7:1;
+    uint8_t is_rrr8:1;
+    uint8_t is_rrr9:1;
+    uint8_t is_rrr10:1;
+    uint8_t is_rrr11:1;
+    uint8_t is_rrr12:1;
+    uint8_t is_rrr13:1;
+    uint8_t is_rrr14:1;
+    uint8_t is_rrr15:1;
+    uint8_t is_rrr16:1;
+    uint8_t is_rrr17:1;
+    uint8_t is_rrr18:1;
+    uint8_t is_rrr19:1;
+    uint8_t is_rrr20:1;
+    uint8_t is_rrr21:1;
+    uint8_t is_rrr22:1;
+    uint8_t is_rrr23:1;
+    uint8_t is_rrr24:1;
+    uint8_t is_rrr25:1;
+    uint8_t is_rrr26:1;
+    uint8_t is_rrr27:1;
+    uint8_t is_rrr28:1;
+    uint8_t is_rrr29:1;
+    uint8_t is_rrr30:1;
+    uint8_t is_rrr31:1;
+    uint8_t is_levitating:1;
     uint8_t is_acid:1;
     uint8_t is_lava:1;
     uint8_t is_teleport:1;
@@ -625,6 +656,161 @@ static inline uint8_t tp_is_mob_spawner (tpp t)
 static inline uint8_t tp_is_rrr1 (tpp t)
 {
     return (t->is_rrr1);
+}
+
+static inline uint8_t tp_is_rrr2 (tpp t)
+{
+    return (t->is_rrr2);
+}
+
+static inline uint8_t tp_is_rrr3 (tpp t)
+{
+    return (t->is_rrr3);
+}
+
+static inline uint8_t tp_is_rrr4 (tpp t)
+{
+    return (t->is_rrr4);
+}
+
+static inline uint8_t tp_is_rrr5 (tpp t)
+{
+    return (t->is_rrr5);
+}
+
+static inline uint8_t tp_is_rrr6 (tpp t)
+{
+    return (t->is_rrr6);
+}
+
+static inline uint8_t tp_is_rrr7 (tpp t)
+{
+    return (t->is_rrr7);
+}
+
+static inline uint8_t tp_is_rrr8 (tpp t)
+{
+    return (t->is_rrr8);
+}
+
+static inline uint8_t tp_is_rrr9 (tpp t)
+{
+    return (t->is_rrr9);
+}
+
+static inline uint8_t tp_is_rrr10 (tpp t)
+{
+    return (t->is_rrr10);
+}
+
+static inline uint8_t tp_is_rrr11 (tpp t)
+{
+    return (t->is_rrr11);
+}
+
+static inline uint8_t tp_is_rrr12 (tpp t)
+{
+    return (t->is_rrr12);
+}
+
+static inline uint8_t tp_is_rrr13 (tpp t)
+{
+    return (t->is_rrr13);
+}
+
+static inline uint8_t tp_is_rrr14 (tpp t)
+{
+    return (t->is_rrr14);
+}
+
+static inline uint8_t tp_is_rrr15 (tpp t)
+{
+    return (t->is_rrr15);
+}
+
+static inline uint8_t tp_is_rrr16 (tpp t)
+{
+    return (t->is_rrr16);
+}
+
+static inline uint8_t tp_is_rrr17 (tpp t)
+{
+    return (t->is_rrr17);
+}
+
+static inline uint8_t tp_is_rrr18 (tpp t)
+{
+    return (t->is_rrr18);
+}
+
+static inline uint8_t tp_is_rrr19 (tpp t)
+{
+    return (t->is_rrr19);
+}
+
+static inline uint8_t tp_is_rrr20 (tpp t)
+{
+    return (t->is_rrr20);
+}
+
+static inline uint8_t tp_is_rrr21 (tpp t)
+{
+    return (t->is_rrr21);
+}
+
+static inline uint8_t tp_is_rrr22 (tpp t)
+{
+    return (t->is_rrr22);
+}
+
+static inline uint8_t tp_is_rrr23 (tpp t)
+{
+    return (t->is_rrr23);
+}
+
+static inline uint8_t tp_is_rrr24 (tpp t)
+{
+    return (t->is_rrr24);
+}
+
+static inline uint8_t tp_is_rrr25 (tpp t)
+{
+    return (t->is_rrr25);
+}
+
+static inline uint8_t tp_is_rrr26 (tpp t)
+{
+    return (t->is_rrr26);
+}
+
+static inline uint8_t tp_is_rrr27 (tpp t)
+{
+    return (t->is_rrr27);
+}
+
+static inline uint8_t tp_is_rrr28 (tpp t)
+{
+    return (t->is_rrr28);
+}
+
+static inline uint8_t tp_is_rrr29 (tpp t)
+{
+    return (t->is_rrr29);
+}
+
+static inline uint8_t tp_is_rrr30 (tpp t)
+{
+    return (t->is_rrr30);
+}
+
+static inline uint8_t tp_is_rrr31 (tpp t)
+{
+    return (t->is_rrr31);
+}
+
+static inline uint8_t tp_is_levitating (tpp t)
+{
+    return (t->is_levitating);
 }
 
 static inline uint8_t tp_is_acid (tpp t)

@@ -17,6 +17,7 @@
  hit_priority=10
  is_combustable
  is_death
+ is_levitating
  scale=2.5
  is_collision_map_medium
  is_ethereal
