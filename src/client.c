@@ -762,6 +762,8 @@ static void client_rx_server_status (gsocketp s,
     /*
      * Now see what really changed and if we need to update scores.
      */
+    int changed = false;
+
     if (memcmp(old_stats, new_stats, sizeof(thing_stats))) {
         LOG("Client: %s player stats changed on server:", 
             thing_logname(player));
@@ -780,6 +782,8 @@ static void client_rx_server_status (gsocketp s,
          * Update the weapon placement as the thing might be dying.
          */
         thing_set_weapon_placement(player);
+
+        changed = true;
     }
 
     new_stats = &server_stats->stats;
@@ -788,6 +792,18 @@ static void client_rx_server_status (gsocketp s,
 
     memcpy(&s->stats, new_stats, sizeof(thing_stats));
     stats_set_on_server(&s->stats, player->on_server);
+
+    if (changed) {
+        /*
+         * Ack the stats change sen on the server, so the server knows we are 
+         * up to data and can detect changes in our stats.
+         */
+        THING_LOG(player, "ack stats change on server");
+
+        stats_bump_version(&player->stats);
+
+        thing_stats_client_modified(&player->stats);
+    }
 }
 
 static void client_poll (void)
