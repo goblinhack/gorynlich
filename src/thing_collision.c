@@ -525,9 +525,7 @@ LOG("  overlap %s vs %s",thing_logname(me), thing_logname(it));
 #endif
 
     if (!thing_is_teleport(me)        &&
-        !thing_is_floor(me)           &&
-        !thing_is_acid(me)            &&
-        !thing_is_mob_spawner(me)) {
+        !thing_is_floor(me)) {
 
         if (thing_is_teleport(it)) {
             thing_reached_teleport(me, it);

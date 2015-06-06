@@ -309,13 +309,13 @@ void thing_wield (thingp t, tpp weapon)
     const char *carry_as = tp_weapon_carry_anim(weapon);
 
     if (!carry_as) {
-        ERR("%s could not wield weapon %s", thing_logname(t), tp_short_name(weapon));
+        THING_ERR(t, "could not wield weapon %s", tp_short_name(weapon));
         return;
     }
 
     tpp what = tp_find(carry_as);
     if (!what) {
-        ERR("Could not find %s to wield for %s", carry_as, thing_logname(t));
+        THING_ERR(t, "could not find %s to wield", carry_as);
         return;
     }
 
@@ -379,19 +379,19 @@ void thing_swing (thingp t)
 
     tpp weapon = thing_weapon(t);
     if (!weapon) {
-        ERR("No weapon to swing");
+        THING_ERR(t, "No weapon to swing");
         return;
     }
 
     const char *swung_as = tp_weapon_swing_anim(weapon);
     if (!swung_as) {
-        ERR("%s could not swing %s", thing_logname(t), tp_short_name(weapon));
+        THING_ERR(t, "could not swing %s", tp_short_name(weapon));
         return;
     }
 
     tpp what = tp_find(swung_as);
     if (!what) {
-        ERR("Could not find %s to wield for %s", swung_as, thing_logname(t));
+        THING_ERR(t, "could not find %s to wield", swung_as);
         return;
     }
 
