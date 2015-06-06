@@ -49,6 +49,10 @@ circle of deaths - treasure trap room 1 and 2
 - add bot to test out multiplayer ?
 - different profiles for level generation
 
+Sat Jun  6 09:46:06 EDT 2015
+- telport was not updating position
+- random items in fixed levels
+
 Fri Jun  5 21:24:57 EDT 2015
 - circle of deaths level
 - levitating check for lava
