@@ -6,6 +6,7 @@
  is_torch
  is_carryable
  is_stackable
+ is_treasure
  is_light_source
  light_radius=3.5
  is_animated

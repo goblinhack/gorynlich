@@ -216,6 +216,11 @@ static void wid_choose_stats_callback (widp w)
 
     s->spending_points--;
 
+    if (player) {
+        THING_LOG(player, "spending points %d -> %d", 
+                  s->spending_points + 1, s->spending_points);
+    }
+
     switch (row) {
     case 1:
         s->hp += s->hp / 10;
