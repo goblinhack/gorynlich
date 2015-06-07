@@ -10,6 +10,7 @@
  hit_priority=9
  is_cobweb
  scale=0.5
+ bonus_xp_on_death=20
  is_collision_map_large
  tiles={
   tile={
