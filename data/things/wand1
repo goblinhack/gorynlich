@@ -1,6 +1,6 @@
 {
  short_name="Wand"
- raw_name="wand_fire"
+ raw_name="wand1"
  tooltip="Wand of fire"
  fires="data/things/fireball1"
  weapon_fire_delay_hundredths=30
@@ -29,19 +29,19 @@
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={
-   tile="wand-fire1"
+   tile="wand1.1"
    delay=50
   }
   tile={
-   tile="wand-fire2"
+   tile="wand1.2"
    delay=50
   }
   tile={
-   tile="wand-fire3"
+   tile="wand1.3"
    delay=50
   }
   tile={
-   tile="wand-fire4"
+   tile="wand1.4"
    delay=50
   }
  }
