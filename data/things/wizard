@@ -3,7 +3,7 @@
  raw_name="wizard"
  tooltip="Wizard"
  carrying={
-    "data/things/wand_fire"
+    "data/things/wand1"
     "data/things/torches"
  }
  z_depth="player"

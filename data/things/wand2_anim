@@ -1,6 +1,6 @@
 {
- short_name="wand1 anim"
- raw_name="wand1_anim"
+ short_name="wand2 anim"
+ raw_name="wand2_anim"
  z_depth="player"
  is_animated
  is_hidden_from_editor
@@ -8,52 +8,52 @@
  is_weapon_carry_anim
  is_light_source
  is_candle_light
- light_tint="purple"
- light_radius=3.0
+ light_tint="red"
+ light_radius=5.0
  tiles={
   tile={
    delay=200
    is_dir_up
-   tile="wand1_anim.7"
+   tile="wand2_anim.7"
   }
   tile={
    delay=200
    is_dir_down
-   tile="wand1_anim.3"
+   tile="wand2_anim.3"
   }
   tile={
    delay=200
    is_dir_left
-   tile="wand1_anim.5"
+   tile="wand2_anim.5"
   }
   tile={
    delay=200
    is_dir_right
-   tile="wand1_anim.1"
+   tile="wand2_anim.1"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="wand1_anim.6"
+   tile="wand2_anim.6"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="wand1_anim.4"
+   tile="wand2_anim.4"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="wand1_anim.8"
+   tile="wand2_anim.8"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="wand1_anim.2"
+   tile="wand2_anim.2"
   }
  }
 }
