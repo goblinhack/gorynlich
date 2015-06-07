@@ -63,7 +63,7 @@ void tile_load (const char *tex_name, uint32_t width, uint32_t height,
             tile *t;
 
             if (tile_find(name)) {
-                DIE("tile name [%s] already used", name);
+                ERR("tile name [%s] already used", name);
             }
 
             if (!tiles) {
@@ -74,7 +74,7 @@ void tile_load (const char *tex_name, uint32_t width, uint32_t height,
             t->tree.key = dupstr(name, "TREE KEY: tile");
 
             if (!tree_insert(tiles, &t->tree.node)) {
-                DIE("tile insert name [%s] failed", name);
+                ERR("tile insert name [%s] failed", name);
             }
 
             t->width = width;
@@ -99,9 +99,9 @@ void tile_load (const char *tex_name, uint32_t width, uint32_t height,
 
         if (y * height > tex_get_height(tex)) {
             if (name) {
-                DIE("overflow reading tiles [%s]", name);
+                ERR("overflow reading tiles [%s]", name);
             } else {
-                DIE("overflow reading tiles");
+                ERR("overflow reading tiles");
             }
         }
     }
@@ -143,7 +143,7 @@ void tile_load_arr (const char *tex_name,
             tile *t;
 
             if (tile_find(name)) {
-                DIE("tile name [%s] already used", name);
+                ERR("tile name [%s] already used", name);
             }
 
             if (!tiles) {
@@ -154,7 +154,7 @@ void tile_load_arr (const char *tex_name,
             t->tree.key = dupstr(name, "TREE KEY: tile");
 
             if (!tree_insert(tiles, &t->tree.node)) {
-                DIE("tile insert name [%s] failed", name);
+                ERR("tile insert name [%s] failed", name);
             }
 
             t->index = idx - 1;
@@ -249,9 +249,9 @@ void tile_load_arr (const char *tex_name,
 
         if (y * height > tex_get_height(tex)) {
             if (name) {
-                DIE("overflow reading tile arr[%s]", name);
+                ERR("overflow reading tile arr[%s]", name);
             } else {
-                DIE("overflow reading tile arr at x %d y %d", x, y);
+                ERR("overflow reading tile arr at x %d y %d", x, y);
             }
         }
     }
@@ -266,7 +266,7 @@ tilep tile_find (const char *name)
     tile *result;
 
     if (!name) {
-        DIE("no name for tile find");
+        ERR("no name for tile find");
     }
 
     memset(&target, 0, sizeof(target));
@@ -350,7 +350,7 @@ tilep string2tile (const char **s)
 
     target = (typeof(target)) tree_find(tiles, &find.tree.node);
     if (!target) {
-        DIE("unknown tile [%s]", tmp);
+        ERR("unknown tile [%s]", tmp);
     }
 
     return (target);

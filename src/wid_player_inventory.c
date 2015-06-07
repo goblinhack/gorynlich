@@ -407,7 +407,7 @@ wid_player_item_pick_up (widp w, itemp over_item)
     tp = wid_get_thing_template(w);
 
     if (wid_mouse_template) {
-        DIE("already carrying an item");
+        ERR("already carrying an item");
     }
 
     /*

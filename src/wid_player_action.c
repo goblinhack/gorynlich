@@ -639,7 +639,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
                 while (i--) {
                     tpp what = tp_find("data/things/heart");
                     if (!what) {
-                        DIE("cannot place heart");
+                        ERR("cannot place heart");
                     }
 
                     widp heart =

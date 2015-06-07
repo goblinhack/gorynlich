@@ -110,7 +110,7 @@ void thing_timer_place_and_destroy_callback (void *context)
     place = (typeof(place)) context;
 
     if (!place->tp) {
-        DIE("no thing to place");
+        ERR("no thing to place");
     }
 
     widp w;

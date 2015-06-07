@@ -107,7 +107,7 @@ uint8_t server_init (void)
     }
 
     if (!wid_server_create_init()) {
-        DIE("wid server create init");
+        ERR("wid server create init");
     }
 
     server_init_done = true;
@@ -319,19 +319,19 @@ static void server_poll (void)
             break;
 
         case MSG_SERVER_CLOSE:
-            DIE("MSG_SERVER_CLOSE received unexpected on server");
+            ERR("MSG_SERVER_CLOSE received unexpected on server");
             break;
 
         case MSG_SERVER_STATUS:
-            DIE("MSG_SERVER_STATUS received unexpected on server");
+            ERR("MSG_SERVER_STATUS received unexpected on server");
             break;
 
         case MSG_SERVER_SHOUT:
-            DIE("MSG_SERVER_SHOUT received unexpected on server");
+            ERR("MSG_SERVER_SHOUT received unexpected on server");
             break;
 
         case MSG_SERVER_MAP_UPDATE:
-            DIE("MSG_SERVER_MAP_UPDATE received unexpected on server");
+            ERR("MSG_SERVER_MAP_UPDATE received unexpected on server");
             break;
 
         default:

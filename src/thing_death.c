@@ -18,7 +18,7 @@ uint8_t thing_death_spawn (void)
 {
     tpp what = id_to_tp(THING_DEATH);
     if (!what) {
-        DIE("cannot spawn death");
+        ERR("cannot spawn death");
         return (false);
     }
 

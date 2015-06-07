@@ -275,7 +275,7 @@ static void map_jigsaw_buffer_goto (int32_t x, int32_t y)
 static void map_jigsaw_buffer_putchar (int32_t m)
 {
     if (m == 's') {
-        DIE("s");
+        ERR("s");
     }
     if (map_jigsaw_buffer_at_x < 0) {
         return;
@@ -663,7 +663,7 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
                                         jigpiece_vert_flip;
 
                     } else {
-                        DIE("bug");
+                        ERR("bug");
                     }
 
                     c++;
@@ -719,7 +719,6 @@ static int32_t jigpiece_char_is_occupiable (char c)
 {
     return (c == MAP_FLOOR) ||
            (c == MAP_MONST) ||
-           (c == MAP_TELEPORT) ||
            (c == MAP_MOB_SPAWN) ||
            (c == MAP_TREASURE);
 }
@@ -730,7 +729,6 @@ static int32_t jigpiece_char_is_passable (char c)
            (c == MAP_MONST) ||
            (c == MAP_START) ||
            (c == MAP_END) ||
-           (c == MAP_TELEPORT) ||
            (c == MAP_MOB_SPAWN) ||
            (c == MAP_DOOR) ||
            (c == MAP_WEAPON) ||
@@ -1204,7 +1202,7 @@ static void jigpiece_add_frag (dungeon_t *dg)
                     }
                     printf("\n");
 
-                    DIE("invalid fragment char [0x%x/%c] above", fragchar, fragchar);
+                    ERR("invalid fragment char [0x%x/%c] above", fragchar, fragchar);
                 }
             }
         }
@@ -1360,7 +1358,7 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
              * Rotate 90 degrees
              */
             if (dg->jigpieces_cnt >= JIGPIECE_MAX) {
-                DIE("Too many jigpiece to mirror");
+                ERR("Too many jigpiece to mirror");
             }
 
             for (x = 0; x < JIGPIECE_WIDTH; x++) {
@@ -1385,7 +1383,7 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
          * Mirror horizontally
          */
         if (dg->jigpieces_cnt >= JIGPIECE_MAX) {
-            DIE("Too many jigpiece to mirror");
+            ERR("Too many jigpiece to mirror");
         }
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
@@ -1409,7 +1407,7 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
          * Mirror vertically
          */
         if (dg->jigpieces_cnt >= JIGPIECE_MAX) {
-            DIE("Too many jigpiece to mirror");
+            ERR("Too many jigpiece to mirror");
         }
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
@@ -1433,7 +1431,7 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
          * Mirror horizontally and vertically
          */
         if (dg->jigpieces_cnt >= JIGPIECE_MAX - 1) {
-            DIE("Too many jigpiece to mirror");
+            ERR("Too many jigpiece to mirror");
         }
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
@@ -1620,7 +1618,7 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
                     }
                     printf("\n");
 
-                    DIE("invalid fragment alt char [0x%x/%c] above", alt, alt);
+                    ERR("invalid fragment alt char [0x%x/%c] above", alt, alt);
                 }
             }
         }
@@ -2048,6 +2046,64 @@ static int maze_check_exit_can_be_reached (void)
 }
 
 /*
+ * Find "old" in a room and replace with "new"
+ */
+static uint8_t 
+maze_replace_room_char (char new_char)
+{
+    uint32_t tries = MAP_WIDTH * MAP_HEIGHT * 10;
+
+    while (tries--) {
+        uint32_t cx = myrand() % MAP_WIDTH;
+        uint32_t cy = myrand() % MAP_HEIGHT;
+        
+        if (jigpiece_char_is_floor_or_corridor(map_jigsaw_buffer_getchar(cx, cy)) &&
+            jigpiece_char_is_ground((map_jigsaw_buffer_getchar(cx, cy+1))) &&
+            !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx-1, cy))) &&
+            !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx-2, cy))) &&
+            !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx+1, cy))) &&
+            !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx+2, cy)))) {
+
+            map_jigsaw_buffer_goto(cx, cy);
+            map_jigsaw_buffer_putchar(new_char);
+
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
+static void maze_check_teleports (void)
+{
+    int32_t x;
+    int32_t y;
+    int teleport = 0;
+
+    for (x = 1; x < MAP_WIDTH - 1; x++) {
+        for (y = 1; y < MAP_HEIGHT - 1; y++) {
+
+            if ((map_jigsaw_buffer_getchar(x, y) == MAP_TELEPORT)) {
+                teleport++;
+                break;
+            }
+        }
+    }
+
+    if (teleport > 1) {
+        return;
+    }
+
+    int tries = 100000;
+
+    while (tries--) {
+        if (maze_replace_room_char(MAP_TELEPORT)) {
+            return;
+        }
+    }
+}
+
+/*
  * maze_dump_jigpieces_to_map
  */
 static void dump_jigpieces_to_map (dungeon_t *dg)
@@ -2462,34 +2518,6 @@ static int32_t maze_solve_search (dungeon_t *dg, maze_cell_t *c)
     return (0);
 }
 
-/*
- * Find "old" in a room and replace with "new"
- */
-static uint8_t 
-maze_replace_room_char (uint32_t rx, uint32_t ry, char new_char)
-{
-    uint32_t tries = MAP_WIDTH * MAP_HEIGHT * 10;
-
-    while (tries--) {
-        uint32_t cx = myrand() % MAP_WIDTH;
-        uint32_t cy = myrand() % MAP_HEIGHT;
-        
-        if (jigpiece_char_is_floor_or_corridor(map_jigsaw_buffer_getchar(cx, cy)) &&
-            jigpiece_char_is_ground((map_jigsaw_buffer_getchar(cx, cy+1))) &&
-            !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx-1, cy))) &&
-            !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx-2, cy))) &&
-            !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx+1, cy))) &&
-            !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx+2, cy)))) {
-
-            map_jigsaw_buffer_goto(cx, cy);
-            map_jigsaw_buffer_putchar(new_char);
-
-            return (true);
-        }
-    }
-
-    return (false);
-}
 
 /*
  * maze_solve
@@ -2620,7 +2648,7 @@ static int32_t generate_level (const char *jigsaw_map,
      */
     buf = filetobuf(jigsaw_map);
     if (!buf) {
-        DIE("no buf");
+        ERR("no buf");
     }
 
     jigpieces_read(dg, buf);
@@ -2653,13 +2681,13 @@ static int32_t generate_level (const char *jigsaw_map,
 
         maze_convert_to_map(dg);
 
-        if (!maze_replace_room_char(dg->sx, dg->sy, MAP_START)) {
+        if (!maze_replace_room_char(MAP_START)) {
             LOG("Maze: Generate failed, cannot place start:");
             map_jigsaw_buffer_print_file(MY_STDOUT);
             goto reseed;
         }
 
-        if (!maze_replace_room_char(dg->ex, dg->ey, MAP_END)) {
+        if (!maze_replace_room_char(MAP_END)) {
             LOG("Maze: Generate failed, cannot place exit:");
             map_jigsaw_buffer_print_file(MY_STDOUT);
             goto reseed;
@@ -2684,6 +2712,11 @@ reseed:
         map_jigsaw_buffer_print_file(MY_STDOUT);
         goto reseed;
     }
+
+    /*
+     * Check at least 2 teleports.
+     */
+    maze_check_teleports();
 
     LOG("Maze: Final maze:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
@@ -2838,14 +2871,14 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
             break;
 
         default:
-            DIE("-f <input file file>, -s <seed>");
+            ERR("-f <input file file>, -s <seed>");
             break;
         }
     }
 
     rc = generate_level(jigsaw_map, opt_seed);
     if (!rc) {
-        DIE("failed to generate a maze!");
+        ERR("failed to generate a maze!");
     }
 
     exit(0);
@@ -2870,7 +2903,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
     rc = generate_level(jigsaw_map, opt_seed);
 
     if (!rc) {
-        DIE("failed to generate a maze!");
+        ERR("failed to generate a maze!");
     }
 
     int32_t x;

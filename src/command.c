@@ -136,7 +136,7 @@ void command_add (command_fn_t callback,
     tokens_tostring(readable, &command->readable_tokens);
 
     if (!tree_insert(commands, &command->tree.node)) {
-        DIE("insert of command %s fail", input);
+        ERR("insert of command %s fail", input);
     }
 }
 

@@ -100,7 +100,7 @@ void wid_choose_name_visible (void)
     wid_choose_name_is_hidden = false;
 
     if (!wid_choose_name) {
-        DIE("no wid intro");
+        ERR("no wid intro");
     }
 
     if (global_config.game_over) {

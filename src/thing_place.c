@@ -42,7 +42,7 @@ static widp thing_place_ (thingp t,
         */
         widp grid = wid_game_map_server_grid_container;
         if (!grid) {
-            DIE("cannot place thing, no grid map");
+            ERR("cannot place thing, no grid map");
         }
 
         if (!thing_hit_any_obstacle(grid, t, x, y)) {
@@ -81,7 +81,7 @@ static widp thing_place_ (thingp t,
      */
     widp grid = wid_game_map_server_grid_container;
     if (!grid) {
-        DIE("cannot place thing, no grid map");
+        ERR("cannot place thing, no grid map");
     }
 
     if (!thing_hit_any_obstacle(grid, t, x, y)) {

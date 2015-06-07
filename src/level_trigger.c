@@ -83,7 +83,7 @@ void level_trigger_alloc (levelp level, const char *name)
         }
     }
 
-    DIE("out of level triggers trying to add %s", name);
+    ERR("out of level triggers trying to add %s", name);
 }
 
 static void level_trigger_mark_activate (levelp level, const char *name)
@@ -96,7 +96,7 @@ static void level_trigger_mark_activate (levelp level, const char *name)
 
     slot = level_trigger2slot(level, name);
     if (slot == -1) {
-        DIE("Cannot activate trigger %s", name);
+        ERR("Cannot activate trigger %s", name);
     }
 
     level->trigger[slot].activated = 1;
@@ -112,7 +112,7 @@ static void level_trigger_mark_activate_exists (levelp level, const char *name)
 
     slot = level_trigger2slot(level, name);
     if (slot == -1) {
-        DIE("cannot activate name %s", name);
+        ERR("cannot activate name %s", name);
     }
 
     level->trigger[slot].activate_exists = 1;
@@ -128,7 +128,7 @@ int level_trigger_is_activated (levelp level, const char *name)
 
     slot = level_trigger2slot(level, name);
     if (slot == -1) {
-        DIE("cannot check if name %s is activated, never allocated", name);
+        ERR("cannot check if name %s is activated, never allocated", name);
     }
 
     return (level->trigger[slot].activated);
@@ -181,7 +181,7 @@ void level_trigger_activate (levelp level, const char *name)
                 thingp t = map_is_tp_at(level, x, y, tile_tp);
                 if (t) {
                     if (!t->data) {
-                        DIE("expecting data for thing %s", thing_logname(t));
+                        ERR("expecting data for thing %s", thing_logname(t));
                     }
 
                     if (t->data->text[0]) {

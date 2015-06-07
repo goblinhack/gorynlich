@@ -329,13 +329,13 @@ static void thing_map_sanity_ (thing_map *map, thingp *ids)
                 if (found_end) {
                     thing_map_dump();
 
-                    DIE("map elements are not contiguous at %d,%d", x, y);
+                    ERR("map elements are not contiguous at %d,%d", x, y);
                 }
 
                 thingp t = ids[m];
 
                 if (!t) {
-                    DIE("thing %p ID %u is invalid and on map", t, m);
+                    ERR("thing %p ID %u is invalid and on map", t, m);
                 }
 
                 verify(t);
@@ -441,7 +441,7 @@ void thing_map_remove (thingp t)
         return;
     }
 
-    DIE("did not find id %u/%s on map at %d,%d to remove",
+    ERR("did not find id %u/%s on map at %d,%d to remove",
         t->thing_id, thing_logname(t), x, y);
 }
 
@@ -450,23 +450,23 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
     verify(t);
 
     if (!t->thing_id) {
-        DIE("cannot add thing %s ID of 0", t->logname);
+        ERR("cannot add thing %s ID of 0", t->logname);
     }
 
     if (x < 0) {
-        DIE("map underflow for thing %s", t->logname);
+        ERR("map underflow for thing %s", t->logname);
     }
 
     if (y < 0) {
-        DIE("map y underflow for thing %s", t->logname);
+        ERR("map y underflow for thing %s", t->logname);
     }
 
     if (x >= MAP_WIDTH) {
-        DIE("map x overflow for thing %s", t->logname);
+        ERR("map x overflow for thing %s", t->logname);
     }
 
     if (y >= MAP_HEIGHT) {
-        DIE("map y overflow for thing %s", t->logname);
+        ERR("map y overflow for thing %s", t->logname);
     }
 
     thingp *ids;
@@ -482,7 +482,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
      * Check not on the map.
      */
     if ((t->map_x != -1) || (t->map_y != -1)) {
-        DIE("thing %s already on map at %d,%d", t->logname,
+        ERR("thing %s already on map at %d,%d", t->logname,
             t->map_x, t->map_y);
         return;
     }
@@ -509,12 +509,12 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
             /*
              * It's us?
              */
-            DIE("already found on map");
+            ERR("already found on map");
         }
 
         thingp p = ids[m];
         if (p == t) {
-            DIE("already found thing %s on map", t->logname);
+            ERR("already found thing %s on map", t->logname);
         }
     }
 #endif
@@ -539,12 +539,12 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
         for (i = 0; i < cell->count; i++) {
             uint32_t m = cell->id[i];
             if (!m) {
-                DIE("expected to find a map id on the map here");
+                ERR("expected to find a map id on the map here");
             }
 
             thingp p = ids[m];
             if (!p) {
-                DIE("expected to find a thing on the map here");
+                ERR("expected to find a thing on the map here");
             }
 
             if (thing_is_cloud_effect(p)    ||
@@ -594,7 +594,7 @@ thingp thing_server_new (const char *name,
 
     tp = tp_find(name);
     if (!tp) {
-        DIE("thing [%s] has no template", name);
+        ERR("thing [%s] has no template", name);
     }
 
     if (!server_player_things) {
@@ -674,7 +674,7 @@ thingp thing_server_new (const char *name,
             }
 
             if (looped == 3) {
-                DIE("out of thing ids, min %u max %u!", min, max);
+                ERR("out of thing ids, min %u max %u!", min, max);
             }
         }
     }
@@ -683,7 +683,7 @@ thingp thing_server_new (const char *name,
     thing_server_ids[id] = t;
     t->thing_id = id;
     if (!id) {
-        DIE("sanity check, ID 0 never used min %u max %u", min, max);
+        ERR("sanity check, ID 0 never used min %u max %u", min, max);
     }
 
     *next = id + 1;
@@ -697,7 +697,7 @@ thingp thing_server_new (const char *name,
         t->tree2.key = id;
 
         if (!tree_insert(server_player_things, &t->tree2.node)) {
-            DIE("thing insert name [%s, %u] into server_player_things failed",
+            ERR("thing insert name [%s, %u] into server_player_things failed",
                 name, id);
         }
 
@@ -707,14 +707,14 @@ thingp thing_server_new (const char *name,
 
     if (tp_is_inactive(tp)) {
         if (!tree_insert(server_boring_things, &t->tree.node)) {
-            DIE("thing insert name [%s, %u] into server_boring_things failed",
+            ERR("thing insert name [%s, %u] into server_boring_things failed",
                 name, id);
         }
 
         t->client_or_server_tree = server_boring_things;
     } else {
         if (!tree_insert(server_active_things, &t->tree.node)) {
-            DIE("thing insert name [%s, %u] into server_active_things failed",
+            ERR("thing insert name [%s, %u] into server_active_things failed",
                 name, id);
         }
 
@@ -877,7 +877,7 @@ thingp thing_client_new (uint32_t id, tpp tp)
         t->tree2.key = id;
 
         if (!tree_insert(client_player_things, &t->tree2.node)) {
-            DIE("thing insert id [%u] failed into client_player_things", id);
+            ERR("thing insert id [%u] failed into client_player_things", id);
         }
 
         t->on_client_player_things = true;
@@ -886,13 +886,13 @@ thingp thing_client_new (uint32_t id, tpp tp)
 
     if (tp_is_inactive(tp)) {
         if (!tree_insert(client_boring_things, &t->tree.node)) {
-            DIE("thing insert id [%u] failed into client_boring_things", id);
+            ERR("thing insert id [%u] failed into client_boring_things", id);
         }
 
         t->client_or_server_tree = client_boring_things;
     } else {
         if (!tree_insert(client_active_things, &t->tree.node)) {
-            DIE("thing insert id [%u] failed into client_active_things", id);
+            ERR("thing insert id [%u] failed into client_active_things", id);
         }
 
         t->client_or_server_tree = client_active_things;
@@ -965,13 +965,13 @@ thingp thing_client_local_new (tpp tp)
             }
 
             if (looped == 3) {
-                DIE("out of thing ids, min %u max %u!", min, max);
+                ERR("out of thing ids, min %u max %u!", min, max);
             }
         }
     }
 
     if (!id) {
-        DIE("sanity check, ID 0 never used min %u max %u", min, max);
+        ERR("sanity check, ID 0 never used min %u max %u", min, max);
     }
 
     *next = id + 1;
@@ -1217,7 +1217,7 @@ void thing_destroy (thingp t, const char *why)
      * Remove from the active or boring list.
      */
     if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
-        DIE("thing template destroy name [%s] failed", thing_name(t));
+        ERR("thing template destroy name [%s] failed", thing_name(t));
     }
 
     t->client_or_server_tree = 0;
@@ -1226,7 +1226,7 @@ void thing_destroy (thingp t, const char *why)
     if (t->on_client_player_things) {
         t->on_client_player_things = false;
         if (!tree_remove(client_player_things, &t->tree2.node)) {
-            DIE("thing template destroy name [%s] failed (2)",
+            ERR("thing template destroy name [%s] failed (2)",
                 thing_name(t));
         }
     }
@@ -1234,7 +1234,7 @@ void thing_destroy (thingp t, const char *why)
     if (t->on_server_player_things) {
         t->on_server_player_things = false;
         if (!tree_remove(server_player_things, &t->tree2.node)) {
-            DIE("thing template destroy name [%s] failed (3)",
+            ERR("thing template destroy name [%s] failed (3)",
                 thing_name(t));
         }
     }
@@ -1354,7 +1354,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
     }
 
     if (!reason) {
-        DIE("thing %s dead for no reason? why? why? why?!", thing_logname(t));
+        ERR("thing %s dead for no reason? why? why? why?!", thing_logname(t));
     }
 
     /*
@@ -1441,7 +1441,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
             } else if (polymorph) {
                 tpp what = tp_find(polymorph);
                 if (!what) {
-                    DIE("could now find %s to polymorph into on %s death",
+                    ERR("could now find %s to polymorph into on %s death",
                         polymorph, thing_logname(t));
                 }
 
@@ -1643,23 +1643,23 @@ void thing_make_active (thingp t)
     }
 
     if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
-        DIE("thing move, remove boring list [%s] failed", thing_name(t));
+        ERR("thing move, remove boring list [%s] failed", thing_name(t));
     }
 
     if (t->client_or_server_tree == server_boring_things) {
         if (!tree_insert(server_active_things, &t->tree.node)) {
-            DIE("thing move, insert active list [%s] failed", thing_name(t));
+            ERR("thing move, insert active list [%s] failed", thing_name(t));
         }
 
         t->client_or_server_tree = server_active_things;
     } else if (t->client_or_server_tree == client_boring_things) {
         if (!tree_insert(client_active_things, &t->tree.node)) {
-            DIE("thing move, insert active list [%s] failed", thing_name(t));
+            ERR("thing move, insert active list [%s] failed", thing_name(t));
         }
 
         t->client_or_server_tree = client_active_things;
     } else {
-        DIE("bug, not on client or server list");
+        ERR("bug, not on client or server list");
     }
 
     t->on_active_list = true;
@@ -1936,13 +1936,13 @@ LOG("%s is being hit by %s",thing_logname(t), thing_logname(hitter));
      * Sanity check.
      */
     if (!t->on_server) {
-        DIE("hits can only happen on the server");
+        ERR("hits can only happen on the server");
         return (false);
     }
 
     if (hitter) {
         if (!hitter->on_server) {
-            DIE("hits can only happen from hitter on the server");
+            ERR("hits can only happen from hitter on the server");
             return (false);
         }
     }
@@ -2202,7 +2202,7 @@ thingp thing_owner (thingp t)
                               t->owner_thing_id, thing_logname(t));
                     return (0);
                 } else {
-                    DIE("no server owner thing found for owner id %u for %s",
+                    ERR("no server owner thing found for owner id %u for %s",
                         t->owner_thing_id, thing_logname(t));
                 }
             }
@@ -2214,7 +2214,7 @@ thingp thing_owner (thingp t)
         if (t->owner_thing_id) {
             thingp n = thing_client_ids[t->owner_thing_id];
             if (!n) {
-                DIE("no client owner thing found for owner id %u for %s",
+                ERR("no client owner thing found for owner id %u for %s",
                     t->owner_thing_id, thing_logname(t));
             }
 
@@ -2446,13 +2446,13 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
                     continue;
                 }
 
-                DIE("thing still exists %s", thing_logname(t));
+                ERR("thing still exists %s", thing_logname(t));
             }
         }
 
         {
             TREE_WALK(server_boring_things, t) {
-                DIE("thing still exists %s", thing_logname(t));
+                ERR("thing still exists %s", thing_logname(t));
             }
         }
     }
@@ -2496,13 +2496,13 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
                     continue;
                 }
 
-                DIE("thing still exists %s", thing_logname(t));
+                ERR("thing still exists %s", thing_logname(t));
             }
         }
 
         {
             TREE_WALK(client_boring_things, t) {
-                DIE("thing still exists %s", thing_logname(t));
+                ERR("thing still exists %s", thing_logname(t));
             }
         }
     }
@@ -3029,7 +3029,7 @@ void thing_place_and_destroy_timed (levelp level,
                 ms,
                 jitter);
     } else {
-        DIE("don't know where to place explosion");
+        ERR("don't know where to place explosion");
     }
 }
 
@@ -3047,7 +3047,7 @@ void thing_teleport (thingp t, int32_t x, int32_t y)
                                     y,
                                     tp_is_floor);
     if (!wid_next_floor) {
-        DIE("no floor tile to hpp to");
+        ERR("no floor tile to hpp to");
     }
 
     double next_floor_x, next_floor_y;
@@ -3580,7 +3580,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT)) {
             weapon_id = *data++;
             if (!weapon_id) {
-                DIE("THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT set but no weapon");
+                ERR("THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT set but no weapon");
             }
 //CON("  weapon   0x%02x",weapon_id);
         } else {
@@ -3591,7 +3591,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             shield_id = *data++;
 //CON("  owner    0x%04x", owner_id);
             if (!shield_id) {
-                DIE("THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT set but no owner");
+                ERR("THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT set but no owner");
             }
         } else {
             shield_id = 0;
@@ -3601,7 +3601,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             magic_id = *data++;
 //CON("  owner    0x%04x", owner_id);
             if (!magic_id) {
-                DIE("THING_STATE_BIT_SHIFT_EXT2_MAGIC_ID_PRESENT set but no owner");
+                ERR("THING_STATE_BIT_SHIFT_EXT2_MAGIC_ID_PRESENT set but no owner");
             }
         } else {
             magic_id = 0;

@@ -123,7 +123,7 @@ demarshal_ptr_alloc_node (tree_demarshal *ctx, void *ptr)
     node->tree.key = ptr;
 
     if (!tree_insert(ctx->ptr_tree.root, &node->tree.node)) {
-        DIE("insert ptr node %p fail", ptr);
+        ERR("insert ptr node %p fail", ptr);
     }
 
     return (node);
@@ -141,7 +141,7 @@ demarshal_ptr_ref_alloc_node (tree_demarshal *ctx, void *ptr_ref)
     node->ptr_ref = ptr_ref;
 
     if (!tree_insert(ctx->ptr_ref_tree.root, &node->tree.node)) {
-        DIE("insert ptr ref %p fail", ptr_ref);
+        ERR("insert ptr ref %p fail", ptr_ref);
     }
 
     return (node);
@@ -165,7 +165,7 @@ static tree_demarshal_node *demarshal_alloc_node (tree_demarshal *ctx,
     node->line = demarshal_parse_line;
 
     if (!tree_insert(ctx->root, &node->tree.node)) {
-        DIE("insert demarshal node %d fail", key);
+        ERR("insert demarshal node %d fail", key);
     }
 
     return (node);
@@ -306,7 +306,7 @@ void demarshal_fini (tree_demarshal *ctx)
             tree_find(ctx->ptr_tree.root, (tree_node*)&target);
 
         if (!found) {
-            DIE("pointer ref %p not found", target.tree.key);
+            ERR("pointer ref %p not found", target.tree.key);
         }
 
         (*r->pptr_ref) = (*found->ptr);
@@ -483,7 +483,7 @@ tree_demarshal *demarshal (const char *filename)
     demarshal_parse_line = 1;
 
     if (!filename) {
-        DIE("no filename");
+        ERR("no filename");
     }
 
     buf = (char*)ramdisk_load(filename, &size);
@@ -532,7 +532,7 @@ tree_demarshal *demarshal (const char *filename)
         next = at + 1;
 
         if (at >= demarshal_buf_end) {
-            DIE("Unexpected end in \"%s\"", filename);
+            ERR("Unexpected end in \"%s\"", filename);
         }
 
         switch (state) {
@@ -627,7 +627,7 @@ tree_demarshal *demarshal (const char *filename)
                 c = *++at;
 
                 if (at >= demarshal_buf_end) {
-                    DIE("Unexpected end in \"%s\" when parsing int", filename);
+                    ERR("Unexpected end in \"%s\" when parsing int", filename);
                 }
             }
 
@@ -643,7 +643,7 @@ tree_demarshal *demarshal (const char *filename)
 
                 while (!isspace(c)) {
                     if (at >= demarshal_buf_end) {
-                        DIE("Unexpected end in \"%s\" when parsing float",
+                        ERR("Unexpected end in \"%s\" when parsing float",
                             filename);
                     }
 
@@ -705,7 +705,7 @@ tree_demarshal *demarshal (const char *filename)
                 c = *++at;
 
                 if (at >= demarshal_buf_end) {
-                    DIE("Unexpected end in \"%s\" when parsing int", filename);
+                    ERR("Unexpected end in \"%s\" when parsing int", filename);
                 }
             }
 
@@ -729,7 +729,7 @@ tree_demarshal *demarshal (const char *filename)
                 c = *++at;
 
                 if (at >= demarshal_buf_end) {
-                    DIE("Unexpected end in \"%s\" when parsing name",
+                    ERR("Unexpected end in \"%s\" when parsing name",
                         filename);
                 }
             }
@@ -756,7 +756,7 @@ tree_demarshal *demarshal (const char *filename)
                 }
 
                 if (at >= demarshal_buf_end) {
-                    DIE("Unexpected end in \"%s\" when parsing string",
+                    ERR("Unexpected end in \"%s\" when parsing string",
                         filename);
                 }
             }
@@ -775,7 +775,7 @@ tree_demarshal *demarshal (const char *filename)
     }
 
     if (state != MARSHAL_PARSE_STATE_NONE) {
-        DIE("Error in \"%s\" line %u",
+        ERR("Error in \"%s\" line %u",
             demarshal_parse_filename,
             demarshal_parse_line);
     }

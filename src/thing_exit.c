@@ -26,7 +26,7 @@
 
 void thing_reached_exit (thingp t, thingp exit)
 {
-    verify(t);
+    ASSERT(t);
 
     /*
      * First to the exit?
@@ -51,7 +51,7 @@ void thing_reached_exit (thingp t, thingp exit)
     } else {
         global_config.server_level_pos.x++;
         if (global_config.server_level_pos.x >= LEVELS_ACROSS) {
-            global_config.server_level_pos.x = 1;
+            global_config.server_level_pos.x = (myrand() % 10) + 1;
             global_config.server_level_pos.y++;
         }
 

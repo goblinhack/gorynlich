@@ -97,7 +97,7 @@ static void term_core_init_terminal (void)
     term_core_buffer_size = TERM_WIDTH * TERM_HEIGHT * 32;
 
     if (!(term_core_buffer = (char*) malloc(term_core_buffer_size))) {
-        DIE("no mem");
+        ERR("no mem");
     }
     
     t.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
@@ -190,7 +190,7 @@ static void term_core_putc (const char c)
                                               term_core_buffer_size);
 
         if (!term_core_buffer) {
-            DIE("no mem");
+            ERR("no mem");
         }
     }
 }
@@ -208,7 +208,7 @@ static void term_core_puts (const char *str)
                                               term_core_buffer_size);
 
         if (!term_core_buffer) {
-            DIE("no mem");
+            ERR("no mem");
         }
     }
 
@@ -237,7 +237,7 @@ static inline void term_core_fg (unsigned char a)
     };
 
     if (a >= ARRAY_SIZE(data)) {
-        DIE("overflow");
+        ERR("overflow");
     }
 
     term_core_puts(data[a]);
@@ -284,7 +284,7 @@ static inline void term_puts_fg (unsigned char a)
     };
 
     if (a >= ARRAY_SIZE(data)) {
-        DIE("overflow");
+        ERR("overflow");
     }
 
     fputs(data[a], stdout);

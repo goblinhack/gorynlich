@@ -37,7 +37,7 @@ static uint8_t wid_text_input_button_selected (widp w)
     wid_input = wid_find(wid_get_top_parent(w),
                          wid_text_input_filename_input_str);
     if (!wid_input) {
-        DIE("no wid input found [%s]", wid_text_input_filename_input_str);
+        ERR("no wid input found [%s]", wid_text_input_filename_input_str);
     }
 
     (*callback)(wid_input);

@@ -1302,7 +1302,7 @@ widp wid_editor_level_map_thing_replace_template (widp w,
 
     wid_map_level *map = &ctx->levels[ctx->loading_y][ctx->loading_x];
     if (!map) {
-        DIE("no map to write to at position (%f,%f) -> (%d,%d) in level %u.%u, "
+        ERR("no map to write to at position (%f,%f) -> (%d,%d) in level %u.%u, "
             "map bounds (%d,%d) -> (%d,%d)", 
             x, y, ix, iy, ctx->loading_x, ctx->loading_y,
             0, 0, MAP_DEPTH_MAX, MAP_HEIGHT);
