@@ -269,7 +269,7 @@ void tree_debug_test (void)
                 printf("%u[%u] ", node->tree.key, node->test);
 #endif
                 if (node->test < val) {
-                    DIE("walk > got %u vs %u", node->test, val);
+                    ERR("walk > got %u vs %u", node->test, val);
                 }
 
                 val = node->test;
@@ -298,7 +298,7 @@ void tree_debug_test (void)
                 printf("%u[%u] ", node->tree.key, node->test);
 #endif
                 if (node->test > val) {
-                    DIE("walk > got %u vs %u", node->test, val);
+                    ERR("walk > got %u vs %u", node->test, val);
                 }
 
                 val = node->test;

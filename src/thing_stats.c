@@ -389,7 +389,7 @@ int thing_stats_diff (const thing_statsp old_stats,
         if (memcmp(old_stats, new_stats, sizeof(*old_stats))) {
             hex_dump_log(old_stats, 0, sizeof(*old_stats));
             hex_dump_log(new_stats, 0, sizeof(*new_stats));
-            DIE("stats differ bug is unable to debug the difference; fixme");
+            ERR("stats differ bug is unable to debug the difference; fixme");
         }
     }
 
@@ -520,7 +520,7 @@ int item_push (itemp dst, item_t src)
     }
 
     if (!dst->quantity) {
-        DIE("bug, dst should have quantity");
+        ERR("bug, dst should have quantity");
     }
 
     if (dst->id != src.id) {
@@ -574,7 +574,7 @@ int item_pop (itemp dst, itemp popped)
     }
 
     if (!dst->quantity) {
-        DIE("bug, cannot pop, no quantity");
+        ERR("bug, cannot pop, no quantity");
     }
 
     dst->quantity--;
@@ -598,7 +598,7 @@ int item_pop_all (itemp dst, itemp popped)
     }
 
     if (!dst->quantity) {
-        DIE("bug, cannot pop, no quantity");
+        ERR("bug, cannot pop, no quantity");
     }
 
     memcpy(popped, dst, sizeof(item_t));
@@ -722,7 +722,7 @@ int thing_stats_val_to_modifier (int value)
 void player_inventory_sort (thing_statsp player_stats)
 {
     if (!player_stats) {
-        DIE("no player stats");
+        ERR("no player stats");
     }
 
     static const int32_t NCLASSES = 
@@ -946,11 +946,11 @@ int thing_stats_item_add (thingp t,
     int32_t i;
 
     if (!item.quantity) {
-        DIE("Bad quantity for item add %s", tp_short_name(it));
+        ERR("Bad quantity for item add %s", tp_short_name(it));
     }
 
     if (!item.id) {
-        DIE("Bad ID for item add %s", tp_short_name(it));
+        ERR("Bad ID for item add %s", tp_short_name(it));
     }
  
     /*
@@ -1167,7 +1167,7 @@ static void player_stats_generate_fixed_items (thing_statsp player_stats)
         if (carried_as) {
             tpp what = tp_find(carried_as);
             if (!what) {
-                DIE("could now find %s to auto carry item as", 
+                ERR("could now find %s to auto carry item as", 
                     tp_name(what));
             }
 
@@ -1575,7 +1575,7 @@ static void thing_stats_verify (thingp t)
     verify(t);
 
     if (t->on_server != t->stats.on_server) {
-        DIE("%s thing stats location do not match thing", thing_logname(t));
+        ERR("%s thing stats location do not match thing", thing_logname(t));
     }
 }
 

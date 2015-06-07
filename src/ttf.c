@@ -110,7 +110,7 @@ font *ttf_new (const char *name, int32_t pointSize, int32_t style)
 
     ttf = TTF_OpenFont(name, pointSize);
     if (!ttf) {
-        DIE("cannot open font file %s", name);
+        ERR("cannot open font file %s", name);
     }
 
     f->foreground.r = 255;
@@ -659,16 +659,16 @@ ttf_read_tga (char *name, int32_t pointsize)
     font *f;
 
     if (pointsize < 0) {
-        DIE("nutso font size %d", pointsize);
+        ERR("nutso font size %d", pointsize);
     }
 
     if (pointsize > 100) {
-        DIE("nutso font size %d", pointsize);
+        ERR("nutso font size %d", pointsize);
     }
 
     f = (typeof(f)) myzalloc(sizeof(*f), "TTF font");
     if (!f) {
-        DIE("could not alloc font %s", name);
+        ERR("could not alloc font %s", name);
     }
 
     /*
@@ -679,7 +679,7 @@ ttf_read_tga (char *name, int32_t pointsize)
 
     const unsigned char *glyph_data = ramdisk_load(filename, 0);
     if (!glyph_data) {
-        DIE("could not load font %s data", filename);
+        ERR("could not load font %s data", filename);
     }
 
     memcpy(f->glyphs, glyph_data, sizeof(f->glyphs));
@@ -690,7 +690,7 @@ ttf_read_tga (char *name, int32_t pointsize)
     tex = tex_load(filename,
                    filename /* to make unique for same point size */);
     if (!tex) {
-        DIE("could not load font %s tex", filename);
+        ERR("could not load font %s tex", filename);
     }
 
     for (c = TTF_GLYPH_MIN; c < TTF_GLYPH_MAX; c++) {
@@ -733,7 +733,7 @@ ttf_write_tga (char *name, int32_t pointsize)
 
     f = ttf_new(name, pointsize, TTF_STYLE_NORMAL);
     if (!f) {
-        DIE("could not create font %s", name);
+        ERR("could not create font %s", name);
     }
 
     maxx = 0;
@@ -761,7 +761,7 @@ ttf_write_tga (char *name, int32_t pointsize)
     }
 
     if (!maxx) {
-        DIE("no glyphs in font %s", name);
+        ERR("no glyphs in font %s", name);
     }
 
     width = glyph_per_row * maxx;
@@ -794,7 +794,7 @@ ttf_write_tga (char *name, int32_t pointsize)
     dst = SDL_CreateRGBSurface(0, width, height, 32,
                                rmask, gmask, bmask, amask);
     if (!dst) {
-        DIE("no surface created for size %dx%d font %s", width, height, name);
+        ERR("no surface created for size %dx%d font %s", width, height, name);
     }
 
     newptr(dst, "SDL_CreateRGBSurface");
@@ -867,7 +867,7 @@ ttf_write_tga (char *name, int32_t pointsize)
 #define MAX_TEXTURE_HEIGHT 4096
 
     if (dst->h > MAX_TEXTURE_HEIGHT) {
-        DIE("ttf is too large");
+        ERR("ttf is too large");
     }
 
     uint8_t filled_pixel_row[MAX_TEXTURE_HEIGHT] = {0};
@@ -995,7 +995,7 @@ ttf_write_tga (char *name, int32_t pointsize)
     texp tex;
     tex = tex_from_surface(dst, filename, filename);
     if (!tex) {
-        DIE("could not convert %s to tex", filename);
+        ERR("could not convert %s to tex", filename);
     }
 
     /*

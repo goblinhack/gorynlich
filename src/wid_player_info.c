@@ -178,7 +178,7 @@ wid_player_info_button_style_mouse_down (widp w,
 
         tpp item_tp = id_to_tp(over_item->id);
         if (!item_tp) {
-            DIE("no item to place");
+            ERR("no item to place");
         }
 
         switch (id) {

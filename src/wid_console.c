@@ -136,7 +136,7 @@ void wid_console_log (const char *s)
         node->buf = dupstr(s, "TREE KEY: wid_console log");
 
         if (!tree_insert(tree_wid_console, &node->tree.node)) {
-            DIE("insert log %s fail", s);
+            ERR("insert log %s fail", s);
         }
 
         return;

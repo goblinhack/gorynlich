@@ -19,7 +19,7 @@ void action_init_fns_destroy (tree_rootp *root)
     init_fnp p;
 
     if (!root) {
-        DIE("no init_fns to destroy");
+        ERR("no init_fns to destroy");
     }
 
     TREE_WALK((*root), p) {
@@ -52,7 +52,7 @@ void action_init_fn_destroy (tree_rootp *t, init_fnp p)
     INIT_FN_LOG(p, "destroyed");
 
     if (!tree_remove(*t, &p->tree.node)) {
-        DIE("init destroy name [%s] failed", action_init_fn_logname(p));
+        ERR("init destroy name [%s] failed", action_init_fn_logname(p));
     }
 
     action_init_fn_free(p);
@@ -81,7 +81,7 @@ init_fnp action_init_fn_create (tree_rootp *root,
     t->tree.key = tiebreak++;
 
     if (!tree_insert(*root, &t->tree.node)) {
-        DIE("collect init [%s] failed", action_init_fn_logname(t));
+        ERR("collect init [%s] failed", action_init_fn_logname(t));
     }
 
     t->logname = dynprintf("%s()", name);
@@ -116,7 +116,7 @@ uint8_t action_init_fns_tick (tree_rootp *root)
 
     if (!((t->callback)(t->context))) {
         INIT_FN_LOG(t, "failed");
-        DIE("init function failed");
+        ERR("init function failed");
     }
 
     tree_remove_found_node(*root, &t->tree.node);

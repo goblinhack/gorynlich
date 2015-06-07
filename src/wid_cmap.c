@@ -626,7 +626,7 @@ static void wid_cmap_load_colors (wid_cmap_ctx *ctx)
 
         widp b = ctx->buttons[y][x];
         if (!b) {
-            DIE("no cmap button");
+            ERR("no cmap button");
         }
 
         wid_set_tooltip(b, name, med_font);

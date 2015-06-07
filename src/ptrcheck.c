@@ -139,7 +139,7 @@ static void *local_zalloc (uint32_t size)
 
     p = calloc(1, size);
     if (!p) {
-        DIE("calloc");
+        ERR("calloc");
     }
 
     return (p);
@@ -318,7 +318,7 @@ static ptrcheck *ptrcheck_verify_pointer (const void *ptr,
     uint32_t i;
 
     if (!ptr) {
-        DIE("%s%p %s:%s():%u", null_pointer_warning, ptr, file, func, line);
+        ERR("%s%p %s:%s():%u", null_pointer_warning, ptr, file, func, line);
         return (0);
     }
 
@@ -446,7 +446,7 @@ static ptrcheck *ptrcheck_verify_pointer (const void *ptr,
         }
     }
 
-    DIE("Fatal error");
+    ERR("Fatal error");
 
     return (0);
 }
@@ -466,7 +466,7 @@ void *ptrcheck_alloc (const void *ptr,
     ptrcheck *context;
 
     if (!ptr) {
-        DIE("null pointer");
+        ERR("null pointer");
     }
 
     /*
@@ -487,7 +487,7 @@ void *ptrcheck_alloc (const void *ptr,
      * Missing an earlier free?
      */
     if (hash_find(hash, (void*) ptr)) {
-        DIE("pointer %p alread exists and attempting to add again", ptr);
+        ERR("pointer %p alread exists and attempting to add again", ptr);
         return ((void*) ptr);
     }
 
@@ -544,7 +544,7 @@ uint8_t ptrcheck_free (void *ptr,
     ptrcheck *context;
 
     if (!ptr) {
-        DIE("null pointer");
+        ERR("null pointer");
 
         return (false);;
     }
@@ -772,7 +772,7 @@ void ptrcheck_usage_print (void)
                 node->blocks = 1;
 
                 if (!tree_insert(root, &node->tree.node)) {
-                    DIE("insert usage %s", context->what);
+                    ERR("insert usage %s", context->what);
                 }
             } else {
                 target->total += context->size;

@@ -63,9 +63,9 @@ void ptrcheck_usage_print(void);
 #define fast_verify(__ptr__) (ptrcheck_fast_verify((__ptr__), PTRCHECK_AT))
 #else /* } { */
 #define newptr(__ptr__, __what__)
-#define oldptr(__ptr__)
-#define verify(__ptr__)
-#define fast_verify(__ptr__)
+#define oldptr(__ptr__) ASSERT(__ptr__)
+#define verify(__ptr__) ASSERT(__ptr__)
+#define fast_verify(__ptr__) ASSERT(__ptr__)
 #endif /* ENABLE_PTRCHECK } */
 
 #endif /* __PTRCHECK_H__ */

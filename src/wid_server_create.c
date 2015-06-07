@@ -534,7 +534,7 @@ static uint8_t wid_server_create_col2_mouse_event_ (widp w,
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
 
     if (row >= WID_SERVER_CREATE_MAX_SETTINGS) {
-        DIE("bad row");
+        ERR("bad row");
     }
 
     if (row == WID_SERVER_CREATE_ROW_MAX_PLAYERS) {

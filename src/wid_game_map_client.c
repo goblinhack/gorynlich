@@ -898,7 +898,7 @@ void wid_game_map_client_wid_create (void)
     level_pos_t level_pos = global_config.stats.level_pos;
 
     if (!level_pos.x && !level_pos.y) {
-        level_pos.x = 1;
+        level_pos.x = (myrand() % 10) + 1;
         level_pos.y = 1;
     }
 

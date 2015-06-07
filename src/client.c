@@ -84,7 +84,7 @@ uint8_t client_init (void)
 
     if (!on_server) {
         if (!wid_server_join_init()) {
-            DIE("wid server join init");
+            ERR("wid server join init");
         }
     }
 
@@ -483,7 +483,7 @@ static uint8_t client_socket_tell (char *from, char *to, char *msg)
 uint8_t client_socket_set_name (const char *name)
 {
     if (!name || !*name) {
-        DIE("need to set a pname");
+        ERR("need to set a pname");
         return (false);
     }
 
@@ -512,7 +512,7 @@ uint8_t client_socket_set_name (const char *name)
 uint8_t client_socket_set_pclass (const char *pclass)
 {
     if (!pclass || !*pclass) {
-        DIE("need to set a pclass");
+        ERR("need to set a pclass");
         return (false);
     }
 

@@ -20,7 +20,6 @@
 - dart and rock traps
 --------------------------------------- plan for aug --------------------------------------
 - giant worm like creature?
-- change DIE to ERR in most cases
 - lit levels gauntlet old style
 - manually generate lots of levels
 - picture of keyboard and keys to use at start
@@ -45,6 +44,9 @@
 - different profiles for level generation
 
 Sat Jun  6 09:46:06 EDT 2015
+- change DIE to ERR in most cases
+- rotate rooms
+- start randomly in first 10 rooms
 - xp gives 1 spending point each 10000
 - pause character on spending point window - on single player?
 - treasure levels

@@ -175,7 +175,7 @@ tree_root *split (const char *text, uint32_t max_line_len)
         strncpy(node->line, line_start, line_len);
 
         if (!tree_insert(root, &node->tree.node)) {
-            DIE("insert split string %s fail", node->line);
+            ERR("insert split string %s fail", node->line);
         }
 
         text = line_end;
@@ -220,7 +220,7 @@ enum_fmt string2fmt (const char **s)
     enum_fmt val = enum_fmt_str2val(tmp);
 
     if ((int) val == -1) {
-        DIE("unknown fmt [%s]", tmp);
+        ERR("unknown fmt [%s]", tmp);
     }
 
     return (val);
@@ -253,7 +253,7 @@ fontp string2font (const char **s)
     enum_font val = enum_font_str2val(tmp);
 
     if ((int) val == -1) {
-        DIE("unknown font [%s]", tmp);
+        ERR("unknown font [%s]", tmp);
     }
 
     switch (val) {

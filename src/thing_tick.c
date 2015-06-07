@@ -270,7 +270,7 @@ static void thing_tick_server_all (void)
             uint32_t delay = 
                     tp_get_mob_spawn_delay_tenths(tp);
             if (!delay) {
-                DIE("mob spawner %s with no delay", thing_logname(t));
+                ERR("mob spawner %s with no delay", thing_logname(t));
             }
 
             if (time_have_x_tenths_passed_since(delay,
