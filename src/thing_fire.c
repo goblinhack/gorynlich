@@ -44,9 +44,13 @@ void thing_server_fire (thingp t,
         return;
     }
 
+    /*
+     * Never do this. All server things are hidden.
+     *
     if (wid_is_hidden(t->wid)) {
         return;
     }
+     */
 
     /*
      * Use the currently wielded weapon.
