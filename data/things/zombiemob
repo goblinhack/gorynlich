@@ -1,0 +1,23 @@
+{
+ short_name="Zommob"
+ raw_name="Zommob"
+ tooltip="Zombie mob spwan"
+ z_depth="monst"
+ is_mob_spawner
+ is_effect_pulse
+ is_light_source
+ light_radius=1.0
+ light_tint="green"
+ is_candle_light
+ hit_priority=22
+ is_collision_map_medium
+ damage=1
+ bonus_xp_on_death=120
+ mob_spawn_delay_tenths=50
+ mob_spawn="data/things/zombie"
+ tiles={
+  tile={
+   tile="zombiemob"
+  }
+ }
+}
