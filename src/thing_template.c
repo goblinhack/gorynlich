@@ -412,10 +412,13 @@ static void demarshal_thing_carrying (demarshal_p ctx, tpp t)
         GET_STRING(ctx, val);
 
         tpp c = tp_find(val);
+        if (!c) {
+            DIE("carried thing %s not found", val);
+        }
 
         uint32_t id = tp_to_id(c);
         if (!id) {
-            ERR("carried thing %s not in database", val);
+            DIE("carried thing %s not in database", val);
         }
 
         t->base_items[id].quantity++;
@@ -625,7 +628,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr27", t->is_rrr27);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr28", t->is_rrr28);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr29", t->is_rrr29);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr30", t->is_rrr30);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_effect_fade_in_out", t->is_effect_fade_in_out);
         GET_OPT_NAMED_BITFIELD(ctx, "is_internal", t->is_internal);
         GET_OPT_NAMED_BITFIELD(ctx, "is_levitating", t->is_levitating);
         GET_OPT_NAMED_BITFIELD(ctx, "is_acid", t->is_acid);
@@ -864,7 +867,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr27", t->is_rrr27);
     PUT_NAMED_BITFIELD(ctx, "is_rrr28", t->is_rrr28);
     PUT_NAMED_BITFIELD(ctx, "is_rrr29", t->is_rrr29);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr30", t->is_rrr30);
+    PUT_NAMED_BITFIELD(ctx, "is_effect_fade_in_out", t->is_effect_fade_in_out);
     PUT_NAMED_BITFIELD(ctx, "is_internal", t->is_internal);
     PUT_NAMED_BITFIELD(ctx, "is_levitating", t->is_levitating);
     PUT_NAMED_BITFIELD(ctx, "is_acid", t->is_acid);

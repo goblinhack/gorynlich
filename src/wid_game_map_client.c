@@ -74,6 +74,10 @@ static void wid_game_map_client_set_thing_template (widp w, tpp t)
     if (tp_is_effect_sway(t)) {
         wid_rotate_to_pct_in(w, -2, 2, 500, 9999999);
     }
+
+    if (tp_is_effect_fade_in_out(t)) {
+        wid_fade_in_out(w, 4000, 99999, 1);
+    }
 }
 
 uint8_t wid_game_map_client_init (void)
