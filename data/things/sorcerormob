@@ -1,0 +1,31 @@
+{
+ short_name="sorceror mob"
+ raw_name="sorcerormob"
+ tooltip="sorceror generator"
+ z_depth="monst"
+ is_mob_spawner
+ is_effect_pulse
+ bonus_xp_on_death=750
+ max_hp=200
+ is_light_source
+ light_radius=3.0
+ light_tint="red"
+ is_candle_light
+ hit_priority=22
+ is_collision_map_medium
+ damage=20
+ is_animated
+ explodes_as="data/things/explosion2"
+ mob_spawn_delay_tenths=200
+ mob_spawn="data/things/sorceror"
+ tiles={
+  tile={
+   tile="sorcerormob1"
+   delay=100
+  }
+  tile={
+   tile="sorcerormob2"
+   delay=100
+  }
+ }
+}
