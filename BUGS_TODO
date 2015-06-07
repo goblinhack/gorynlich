@@ -43,10 +43,13 @@
 - add bot to test out multiplayer ?
 - different profiles for level generation
 
-Sat Jun  6 09:46:06 EDT 2015
+Sun Jun  7 14:24:12 EDT 2015
 - gobbler
 - sorceror mob
 - sorcerors
+- zombie
+
+Sat Jun  6 09:46:06 EDT 2015
 - change DIE to ERR in most cases
 - rotate rooms
 - start randomly in first 10 rooms
