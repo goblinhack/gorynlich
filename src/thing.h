@@ -357,6 +357,7 @@ enum {
     THING_WARRIOR,
     THING_VALKYRIE,
     THING_WIZARD,
+    THING_SORCEROR,
     THING_ELF,
     THING_DWARF,
     THING_GHOST1,
@@ -375,6 +376,7 @@ enum {
     THING_DEATH,
     THING_BABY_DEATH,
     THING_WAND1_ANIM,
+    THING_WAND2_ANIM,
     THING_SWORD1_ANIM,
     THING_SWORD2_ANIM,
     THING_SWORD3_ANIM,
@@ -461,7 +463,8 @@ enum {
     THING_BOW2,
     THING_BOW3,
     THING_BOW4,
-    THING_WAND_FIRE,
+    THING_WAND1,
+    THING_WAND2,
     THING_SWORD1,
     THING_SWORD2,
     THING_SWORD3,
@@ -484,6 +487,7 @@ enum {
     THING_ARROW,
     THING_FIREBALL1,
     THING_FIREBALL2,
+    THING_FIREBALL3,
     THING_ENERGY1,
     THING_PLASMABALL1,
     THING_SILKBALL,
@@ -1316,11 +1320,11 @@ static inline uint8_t thing_is_rrr29 (thingp t)
     return (tp_is_rrr29(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr30 (thingp t)
+static inline uint8_t thing_is_effect_fade_in_out (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr30(thing_tp(t)));
+    return (tp_is_effect_fade_in_out(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_internal (thingp t)
@@ -2115,9 +2119,9 @@ static inline uint8_t thing_is_rrr29_noverify (thingp t)
     return (t->tp->is_rrr29);
 }
 
-static inline uint8_t thing_is_rrr30_noverify (thingp t)
+static inline uint8_t thing_is_effect_fade_in_out_noverify (thingp t)
 {
-    return (t->tp->is_rrr30);
+    return (t->tp->is_effect_fade_in_out);
 }
 
 static inline uint8_t thing_is_internal_noverify (thingp t)

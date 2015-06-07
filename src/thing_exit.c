@@ -26,8 +26,6 @@
 
 void thing_reached_exit (thingp t, thingp exit)
 {
-    ASSERT(t);
-
     /*
      * First to the exit?
      */
