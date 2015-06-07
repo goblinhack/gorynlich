@@ -12,7 +12,7 @@
  hit_priority=20
  is_collision_map_medium
  damage=1
- bonus_xp_on_death=100
+ bonus_xp_on_death=10
  mob_spawn_delay_tenths=50
  mob_spawn="data/things/ghost1"
  tiles={
