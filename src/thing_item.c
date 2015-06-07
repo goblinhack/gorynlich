@@ -59,7 +59,7 @@ static void thing_collect (thingp t,
 
     id = tp_to_id(tp);
     if (!i.id) {
-        DIE("trying to collect item %s with no id", tp_name(tp));
+        ERR("trying to collect item %s with no id", tp_name(tp));
     }
 
     if (id == THING_WATER_POISON) {
@@ -79,7 +79,7 @@ static void thing_collect (thingp t,
         tpp what = tp_find(carried_as);
 
         if (!what) {
-            DIE("could now find %s to carry item as for %s",
+            ERR("could now find %s to carry item as for %s",
                 tp_name(what), thing_logname(t));
         }
 

@@ -962,7 +962,7 @@ widp wid_menu (widp parent,
                int items, ...)
 {
     if (items >= WID_MENU_MAX_ITEMS) {
-        DIE("too many menu items");
+        ERR("too many menu items");
     }
 
     wid_menu_visible = true;

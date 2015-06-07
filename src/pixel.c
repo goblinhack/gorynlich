@@ -58,12 +58,12 @@ void putPixel (SDL_Surface * surface, uint32_t x, uint32_t y, color col)
     uint32_t rgb;
 
     if (x >= (uint32_t)surface->w) {
-//        DIE("out of range x %u, max %u", x, surface->w);
+//        ERR("out of range x %u, max %u", x, surface->w);
         return;
     }
 
     if (y >= (uint32_t)surface->h) {
-//        DIE("out of range y %u, max %u", y, surface->h);
+//        ERR("out of range y %u, max %u", y, surface->h);
         return;
     }
 
@@ -130,7 +130,7 @@ color getPixel (SDL_Surface * surface, uint32_t x, uint32_t y)
     color     col;
 
     if ((x >= (uint32_t)surface->w) || (y >= (uint32_t)surface->h)) {
-        DIE("getPixel out of range, pix %d,%d in size %d,%d",
+        ERR("getPixel out of range, pix %d,%d in size %d,%d",
             x, y, surface->w, surface->h);
     }
 

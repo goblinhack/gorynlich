@@ -28,7 +28,7 @@ thingp map_is_tp_at (levelp level, int32_t x, int32_t y, tpp tp)
 
     grid_wid = level_get_map(level);
     if (!grid_wid) {
-        DIE("no grid wid");
+        ERR("no grid wid");
     }
 
     /*
@@ -71,7 +71,7 @@ static uint8_t map_is_x_at (levelp level,
 
     grid_wid = level_get_map(level);
     if (!grid_wid) {
-        DIE("no grid wid");
+        ERR("no grid wid");
     }
 
     /*
@@ -126,7 +126,7 @@ uint8_t map_count_x_at (levelp level,
 
     grid_wid = level_get_map(level);
     if (!grid_wid) {
-        DIE("no grid wid");
+        ERR("no grid wid");
     }
 
     /*
@@ -566,7 +566,7 @@ static thingp map_thing_is_x_at (levelp level,
 
     grid_wid = level_get_map(level);
     if (!grid_wid) {
-        DIE("no grid wid");
+        ERR("no grid wid");
     }
 
     /*
@@ -1027,7 +1027,7 @@ static tree_rootp map_all_things_is_x_at (levelp level,
 
     grid_wid = level_get_map(level);
     if (!grid_wid) {
-        DIE("no grid wid");
+        ERR("no grid wid");
     }
 
     /*
@@ -1064,7 +1064,7 @@ static tree_rootp map_all_things_is_x_at (levelp level,
                     node->tree.key = (void*)thing_it;
 
                     if (!tree_insert(root, &node->tree.node)) {
-                        DIE("insert thingp %p", thing_it);
+                        ERR("insert thingp %p", thing_it);
                     }
                 }
             }
@@ -2120,7 +2120,7 @@ if (level != server_level)
             }
 
             if (index == -1) {
-                DIE("%u%u%u %u%u%u %u%u%u not handled",
+                ERR("%u%u%u %u%u%u %u%u%u not handled",
                     a ? 1 : 0,
                     b ? 1 : 0,
                     c ? 1 : 0,
@@ -2147,19 +2147,19 @@ if (level != server_level)
 
                     thing_tile = thing_tile_find(t, index, &tile);
                     if (!thing_tile) {
-                        DIE("no joinable tile for %s", tp_name(t));
+                        ERR("no joinable tile for %s", tp_name(t));
                     }
                 }
             }
 
             if (!tile) {
-                DIE("no tile for %s", tp_name(t));
+                ERR("no tile for %s", tp_name(t));
             }
 
             const char *tilename = thing_tile_name(thing_tile);
 
             if (!tilename) {
-                DIE("no tilename for %s", tp_name(e));
+                ERR("no tilename for %s", tp_name(e));
             }
 
             /*
@@ -2273,7 +2273,7 @@ static tree_rootp map_all_things_is_x (levelp level,
 
     grid_wid = level_get_map(level);
     if (!grid_wid) {
-        DIE("no grid wid");
+        ERR("no grid wid");
     }
 
     uint8_t z;
@@ -2313,7 +2313,7 @@ static tree_rootp map_all_things_is_x (levelp level,
                             node->tree.key = (void*)thing_it;
 
                             if (!tree_insert(root, &node->tree.node)) {
-                                DIE("insert thingp %p", thing_it);
+                                ERR("insert thingp %p", thing_it);
                             }
                         }
                     }

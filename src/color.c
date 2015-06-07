@@ -784,7 +784,7 @@ static void color_set (int include_in_palette,
     val->include_in_palette = include_in_palette;
 
     if (!tree_insert(colors, &val->tree.node)) {
-        DIE("insert color %s", name);
+        ERR("insert color %s", name);
     }
 }
 

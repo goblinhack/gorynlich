@@ -109,7 +109,7 @@ void wid_chat_log (const char *s)
         node->buf = dupstr(s, "TREE KEY: wid_chat log");
 
         if (!tree_insert(tree_wid_chat, &node->tree.node)) {
-            DIE("insert log %s fail", s);
+            ERR("insert log %s fail", s);
         }
 
         return;

@@ -72,7 +72,7 @@ void wid_choose_game_type_hide (void)
     wid_choose_game_type_is_visible = false;
 
     if (!wid_choose_game_type) {
-        DIE("no wid intro");
+        ERR("no wid intro");
     }
 
     wid_fade_out(wid_choose_game_type_background, intro_effect_delay);
@@ -102,7 +102,7 @@ void wid_choose_game_type_visible (void)
     wid_choose_game_type_is_hidden = false;
 
     if (!wid_choose_game_type) {
-        DIE("no wid intro");
+        ERR("no wid intro");
     }
 
     if (global_config.game_over) {

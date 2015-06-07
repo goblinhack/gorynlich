@@ -18,7 +18,7 @@ void *myzalloc_ (uint32_t size,
     void *ptr = calloc(1, size);
 
     if (!ptr) {
-        DIE("No memory, %s:%s():%u", file, func, line);
+        ERR("No memory, %s:%s():%u", file, func, line);
     }
 
 #ifdef ENABLE_LEAKCHECK
@@ -37,7 +37,7 @@ void *mymalloc_ (uint32_t size,
     void *ptr = malloc(size);
 
     if (!ptr) {
-        DIE("No memory, %s:%s():%u", file, func, line);
+        ERR("No memory, %s:%s():%u", file, func, line);
     }
 
 #ifdef ENABLE_LEAKCHECK
@@ -60,7 +60,7 @@ void *myrealloc_ (void *ptr,
 
     ptr = realloc(ptr, size);
     if (!ptr) {
-        DIE("No memory, %s:%s():%u", file, func, line);
+        ERR("No memory, %s:%s():%u", file, func, line);
     }
 
 #ifdef ENABLE_LEAKCHECK
@@ -99,7 +99,7 @@ char *dupstr_ (const char *in,
 #endif
 
     if (!ptr) {
-        DIE("No memory, %s:%s():%u", file, func, line);
+        ERR("No memory, %s:%s():%u", file, func, line);
     }
 
 #ifdef ENABLE_LEAKCHECK

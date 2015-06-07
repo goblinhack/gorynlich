@@ -150,7 +150,7 @@ static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
 
     /* Check if there are any modes available */
     if (modes == (SDL_Rect**)0) {
-        DIE("No modes available!");
+        ERR("No modes available!");
     }
 
     /* Check if our resolution is restricted */
@@ -193,7 +193,7 @@ static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
 
     /* Check if there are any modes available */
     if (modes == (SDL_Rect**)0) {
-        DIE("No modes available!");
+        ERR("No modes available!");
     }
 
     /* Check if our resolution is restricted */
@@ -433,7 +433,7 @@ uint8_t sdl_init (void)
 
             config_save();
 
-            DIE("Couldn't set display %ux%u: %s",
+            ERR("Couldn't set display %ux%u: %s",
                 VIDEO_WIDTH, VIDEO_HEIGHT,
                 SDL_GetError());
         }
@@ -458,7 +458,7 @@ uint8_t sdl_init (void)
 
             config_save();
 
-            DIE("Couldn't set windowed display %ux%u: %s",
+            ERR("Couldn't set windowed display %ux%u: %s",
                 VIDEO_WIDTH, VIDEO_HEIGHT,
                 SDL_GetError());
         }
@@ -864,7 +864,7 @@ static void sdl_event (SDL_Event * event)
     case SDL_QUIT:
         SDL_ShowCursor(1);
 
-        DIE("Quit requested");
+        ERR("Quit requested");
         break;
 
     case SDL_USEREVENT:

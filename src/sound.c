@@ -66,9 +66,9 @@ soundp sound_load (const char *filename, const char *name_alias)
 
     if (!filename) {
         if (!name_alias) {
-            DIE("no file for sound");
+            ERR("no file for sound");
         } else {
-            DIE("no file for sound loading %s", name_alias);
+            ERR("no file for sound loading %s", name_alias);
         }
     }
 
@@ -80,22 +80,22 @@ soundp sound_load (const char *filename, const char *name_alias)
     m->tree.key = dupstr(name_alias, "TREE KEY: sound");
 
     if (!tree_insert(all_sound, &m->tree.node)) {
-        DIE("sound insert name_alias [%s] failed", name_alias);
+        ERR("sound insert name_alias [%s] failed", name_alias);
     }
 
     m->data = ramdisk_load(filename, &m->len);
     if (!m->data) {
-        DIE("cannot load sound %s", filename);
+        ERR("cannot load sound %s", filename);
     }
 
     SDL_RWops *rw = SDL_RWFromMem(m->data, m->len);
     if (!rw) {
-        DIE("cannot make RW sound %s", filename);
+        ERR("cannot make RW sound %s", filename);
     }
 
     m->sound = Mix_LoadWAV_RW(rw, 0 /* freesrc */);
     if (!m->sound) {
-        DIE("cannot make sound %s: %s %s", filename, Mix_GetError(),
+        ERR("cannot make sound %s: %s %s", filename, Mix_GetError(),
             SDL_GetError());
     }
 
@@ -113,7 +113,7 @@ soundp sound_find (const char *name_alias)
     sound *result;
 
     if (!name_alias) {
-        DIE("no name_alias given for sound find");
+        ERR("no name_alias given for sound find");
     }
 
     memset(&target, 0, sizeof(target));

@@ -469,7 +469,7 @@ static void dmap_thread1_init (void)
     int rc = pthread_create(&dmap_thread1, NULL, &dmap_thread1_func, NULL);
 
     if (rc != 0) {
-        DIE("no dmap thread %s", strerror(rc));
+        ERR("no dmap thread %s", strerror(rc));
     }
 }
 
@@ -484,7 +484,7 @@ static void dmap_thread2_init (void)
         pthread_create(&dmap_thread2, NULL, &dmap_thread2_func, NULL);
 
     if (rc != 0) {
-        DIE("no dmap thread %s", strerror(rc));
+        ERR("no dmap thread %s", strerror(rc));
     }
 }
 

@@ -276,7 +276,7 @@ void demarshal_thing_tiles (demarshal_p ctx, tpp t)
         tile->tree.key = id++;
 
         if (!tree_insert(t->tiles, &tile->tree.node)) {
-            DIE("insert thing tiles node fail");
+            ERR("insert thing tiles node fail");
         }
 
         demarshal_thing_tile(ctx, tile);
@@ -331,7 +331,7 @@ void demarshal_thing_tiles2 (demarshal_p ctx, tpp t)
         tile->tree.key = id++;
 
         if (!tree_insert(t->tiles2, &tile->tree.node)) {
-            DIE("insert thing tiles2 node fail");
+            ERR("insert thing tiles2 node fail");
         }
 
         demarshal_thing_tile(ctx, tile);

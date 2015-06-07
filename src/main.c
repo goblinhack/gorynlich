@@ -527,7 +527,7 @@ static void parse_args (int32_t argc, char *argv[])
 
             const char *name = argv[i + 1];
             if (!name) {
-                DIE("no name");
+                ERR("no name");
             }
 
             i++;
@@ -688,47 +688,47 @@ int32_t main (int32_t argc, char *argv[])
     find_file_locations();
 
     if (!config_init()) {
-	DIE("Config init");
+	ERR("Config init");
     }
 
     if (!config_load()) {
-	DIE("Config read");
+	ERR("Config read");
     }
 
     if (!sdl_init()) {
-	DIE("SDL init");
+	ERR("SDL init");
     }
 
     if (!tex_init()) {
-	DIE("tex init");
+	ERR("tex init");
     }
 
     if (!music_init()) {
-	DIE("music init");
+	ERR("music init");
     }
 
     if (!sound_init()) {
-	DIE("sound init");
+	ERR("sound init");
     }
 
     if (!tile_init()) {
-	DIE("tile init");
+	ERR("tile init");
     }
 
     if (!ttf_init()) {
-	DIE("TTF init");
+	ERR("TTF init");
     }
 
     if (!font_init()) {
-	DIE("Font init");
+	ERR("Font init");
     }
 
     if (!wid_init()) {
-	DIE("wid init");
+	ERR("wid init");
     }
 
     if (!wid_hiscore_init()) {
-	DIE("wid hiscore init");
+	ERR("wid hiscore init");
     }
 
 #ifdef ENABLE_LEAKCHECK
@@ -736,26 +736,26 @@ int32_t main (int32_t argc, char *argv[])
 #endif
 
     if (!resource_init()) {
-	DIE("resource init");
+	ERR("resource init");
     }
 
 #ifndef WID_TEST
     if (!wid_console_init()) {
-	DIE("wid_console init");
+	ERR("wid_console init");
     }
 
     if (!wid_chat_init()) {
-	DIE("wid_chat init");
+	ERR("wid_chat init");
     }
 
     if (!command_init()) {
-	DIE("command init");
+	ERR("command init");
     }
 #endif
 
 #ifdef ENABLE_LEAKCHECK
     if (!ptrcheck_init()) {
-	DIE("ptrcheck init");
+	ERR("ptrcheck init");
     }
 #endif
 

@@ -150,12 +150,12 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
     levelp level;
 
     if (!plevel) {
-        DIE("no plevel");
+        ERR("no plevel");
     }
 
     level = *plevel;
     if (!level) {
-        DIE("no level");
+        ERR("no level");
     }
 
     /*
@@ -255,7 +255,7 @@ void level_load_new (void)
         fixed = true;
     }
 
-    if (((myrand() % 100) < 25) && file_exists(tmp)) {
+    if (((myrand() % 100) < 10) && file_exists(tmp)) {
         fixed = true;
     }
 
@@ -278,7 +278,7 @@ void level_load_new (void)
     myfree(tmp);
 
     if (!server_level) {
-        DIE("failed to load server level %d.%d",
+        ERR("failed to load server level %d.%d",
             global_config.server_level_pos.y,
             global_config.server_level_pos.x);
     }
@@ -1866,7 +1866,7 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
 
     wid = level_get_map(level);
     if (!wid) {
-        DIE("no map for level");
+        ERR("no map for level");
     }
 
     do {
