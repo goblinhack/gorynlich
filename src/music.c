@@ -61,9 +61,9 @@ musicp music_load (const char *file, const char *name_alias)
 
     if (!file) {
         if (!name_alias) {
-            DIE("no file for music");
+            ERR("no file for music");
         } else {
-            DIE("no file for music loading %s", name_alias);
+            ERR("no file for music loading %s", name_alias);
         }
     }
 
@@ -75,19 +75,19 @@ musicp music_load (const char *file, const char *name_alias)
     m->tree.key = dupstr(name_alias, "TREE KEY: music");
 
     if (!tree_insert(all_music, &m->tree.node)) {
-        DIE("music insert name_alias [%s] failed", name_alias);
+        ERR("music insert name_alias [%s] failed", name_alias);
     }
 
     m->data = ramdisk_load(file, &m->len);
     if (!m->data) {
-        DIE("cannot load music %s", file);
+        ERR("cannot load music %s", file);
     }
 
     SDL_RWops *rw;
 
     rw = SDL_RWFromMem(m->data, m->len);
     if (!rw) {
-        DIE("cannot make RW music %s", file);
+        ERR("cannot make RW music %s", file);
     }
 
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
@@ -114,7 +114,7 @@ musicp music_find (const char *name_alias)
     music *result;
 
     if (!name_alias) {
-        DIE("no name_alias given for music find");
+        ERR("no name_alias given for music find");
     }
 
     memset(&target, 0, sizeof(target));

@@ -1178,7 +1178,7 @@ UDPpacket *packet_alloc (void)
     
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
-        DIE("Out of packet space, pak %u", MAX_PACKET_SIZE);
+        ERR("Out of packet space, pak %u", MAX_PACKET_SIZE);
     }
 
     newptr(packet, "pak");
@@ -1194,7 +1194,7 @@ UDPpacket *packet_dup (const UDPpacket *packet)
 
     dup = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!dup) {
-        DIE("Out of packet space, len %d", packet->len);
+        ERR("Out of packet space, len %d", packet->len);
     }
 
     newptr(dup, "pak dup");
@@ -1216,7 +1216,7 @@ static UDPpacket *packet_dup_no_copy (const UDPpacket *packet,
 
     dup = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!dup) {
-        DIE("Out of packet space, len %d", packet->len);
+        ERR("Out of packet space, len %d", packet->len);
     }
 
     newptr(dup, "pak dup");
@@ -1675,7 +1675,7 @@ uint8_t socket_rx_client_join (gsocketp s, UDPpacket *packet, uint8_t *data)
     if (!global_config.server_level_pos.x && 
         !global_config.server_level_pos.y) {
 
-        global_config.server_level_pos.x = 1;
+        global_config.server_level_pos.x = (myrand() % 10) + 1;
         global_config.server_level_pos.y = 1;
 
         LOG("Server: No level set, start at level %d.%d",
@@ -1696,6 +1696,10 @@ uint8_t socket_rx_client_join (gsocketp s, UDPpacket *packet, uint8_t *data)
                                          0 /* tpp_data */,
                                          0 /* item */,
                                          &msg.stats);
+    if (!w) {
+        ERR("no player");
+    }
+
     thingp t = wid_get_thing(w);
     verify(t);
 
@@ -2473,7 +2477,7 @@ void socket_tx_server_hiscore (gsocketp only,
     hiscore *h;
 
     if (!death_reason) {
-        DIE("Player %s death with no reason", player_name);
+        ERR("Player %s death with no reason", player_name);
     }
 
     { TREE_WALK_REVERSE(hiscores, h) {
@@ -3033,7 +3037,7 @@ UDPpacket *packet_definalize (gsocketp s, UDPpacket *packet)
 #endif
 
     if (failed) {
-        DIE("packet layer error");
+        ERR("packet layer error");
     }
 
     return (packet);
@@ -3068,7 +3072,7 @@ void packet_compress (UDPpacket *packet)
     unsigned char *tmp = miniz_compress2(packet->data, &packet->len, 9);
 
     if (packet->len > MAX_PACKET_SIZE) {
-        DIE("compress fail");
+        ERR("compress fail");
     }
 
     *packet->data = MSG_COMPRESSED;
@@ -3343,7 +3347,7 @@ void socket_tx_enqueue (gsocketp s, UDPpacket **packet_in)
         socket_tx_queue_flush(s);
 
         if (((int)s->tx_queue_size) == MAX_SOCKET_QUEUE_SIZE - 1) {
-            DIE("socket tx queue stuck");
+            ERR("socket tx queue stuck");
         }
     }
 

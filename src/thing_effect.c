@@ -41,7 +41,7 @@ void thing_server_effect (thingp t, int effect)
     }
 
     if (!t->on_server) {
-        DIE("Trying to do an effect on a client thing");
+        ERR("Trying to do an effect on a client thing");
     }
 
     if (effect > t->effect) {
@@ -57,7 +57,7 @@ void thing_server_effect (thingp t, int effect)
 void thing_client_effect (thingp t, int effect)
 {
     if (t->on_server) {
-        DIE("Trying to do an effect on a server thing on client");
+        ERR("Trying to do an effect on a server thing on client");
     }
 
     switch (effect) {

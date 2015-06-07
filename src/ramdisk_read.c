@@ -151,7 +151,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
 
         out = mymalloc(ramfile->orig_len, "RAMDISK scratchpad");
         if (!out) {
-            DIE("no memory for ramdisk, %s", filename);
+            ERR("no memory for ramdisk, %s", filename);
         }
 
         outlenl = ramfile->orig_len;
@@ -159,7 +159,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
                          (unsigned char *)ramfile->data,
                          ramfile->len);
         if (err) {
-            DIE("file failed to decompress from ramdisk, %s, "
+            ERR("file failed to decompress from ramdisk, %s, "
                 "orig len %d, compressed len %d, err %d",
                 filename, ramfile->orig_len, ramfile->len, err);
         }
@@ -174,7 +174,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
 
         out = (typeof(out)) mymalloc(ramfile->orig_len, "RAMDISK scratchpad");
         if (!out) {
-            DIE("no memory for ramdisk, %s", filename);
+            ERR("no memory for ramdisk, %s", filename);
         }
 
         outlenl = ramfile->orig_len;
@@ -182,7 +182,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
                             (unsigned char *)ramfile->data,
                             ramfile->len);
         if (err) {
-            DIE("file failed to decompress from ramdisk, %s, err %d",
+            ERR("file failed to decompress from ramdisk, %s, err %d",
                 filename, err);
         }
 
@@ -196,7 +196,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
             stbi_zlib_decode_malloc((const char *)ramfile->data,
                                     ramfile->len, &outlenl);
         if (!out) {
-            DIE("file failed to decompress from ramdisk, %s", filename);
+            ERR("file failed to decompress from ramdisk, %s", filename);
         }
 
         if (outlen) {

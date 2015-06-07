@@ -71,11 +71,11 @@ void action_timer_destroy (tree_rootp *t, timerp p)
     TIMER_LOG(p, "destroy");
 
     if (!tree) {
-        DIE("no timer tree");
+        ERR("no timer tree");
     }
 
     if (!tree_remove(tree, &p->tree.node)) {
-        DIE("timer remove [%s] failed", action_timer_logname(p));
+        ERR("timer remove [%s] failed", action_timer_logname(p));
     }
 
     TIMER_LOG(p, "destroyed");
@@ -118,7 +118,7 @@ timerp action_timer_create (tree_rootp *root,
     t->tree.key3 = tiebreak++;
 
     if (!tree_insert(*root, &t->tree.node)) {
-        DIE("collect timer [%s] failed", action_timer_logname(t));
+        ERR("collect timer [%s] failed", action_timer_logname(t));
     }
 
     t->logname = dynprintf("%s [timer:%p] context:%p", name, t, context);

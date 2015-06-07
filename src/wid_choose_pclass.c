@@ -99,7 +99,7 @@ void wid_choose_pclass_visible (void)
     wid_choose_pclass_is_hidden = false;
 
     if (!wid_choose_pclass) {
-        DIE("no wid intro");
+        ERR("no wid intro");
     }
 
     if (global_config.game_over) {
@@ -128,7 +128,7 @@ static void wid_choose_pclass_callback (widp w)
     thing_statsp s = &global_config.stats;
     const char *new_pclass = pclass_nth(row);
     if (!new_pclass) {
-        DIE("not player class from row %d", row);
+        ERR("not player class from row %d", row);
     }
 
     if (strlen(s->pclass)) {

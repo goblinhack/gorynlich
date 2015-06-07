@@ -260,7 +260,7 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
     if (!wall) {
         wall = tile_find("wall1_0_0");
         if (!wall) {
-            DIE("no wall for collisions");
+            ERR("no wall for collisions");
         }
 
         xscale = 1.0 / (wall->px2 - wall->px1);
@@ -268,7 +268,7 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
 
         tilep tile = tile_find("large-collision-map");
         if (!tile) {
-            DIE("no tile for collisions");
+            ERR("no tile for collisions");
         }
 
         collision_map_large_x1 = tile->px1 * xscale;
@@ -278,7 +278,7 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
 
         tile = tile_find("medium-collision-map");
         if (!tile) {
-            DIE("no tile for collisions");
+            ERR("no tile for collisions");
         }
 
         collision_map_medium_x1 = tile->px1 * xscale;
@@ -288,7 +288,7 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
 
         tile = tile_find("small-collision-map");
         if (!tile) {
-            DIE("no tile for collisions");
+            ERR("no tile for collisions");
         }
 
         collision_map_small_x1 = tile->px1 * xscale;
@@ -298,7 +298,7 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
 
         tile = tile_find("tiny-collision-map");
         if (!tile) {
-            DIE("no tile for collisions");
+            ERR("no tile for collisions");
         }
 
         collision_map_tiny_x1 = tile->px1 * xscale;

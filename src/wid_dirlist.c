@@ -78,13 +78,13 @@ static uint8_t wid_dirlist_button_selected (widp w)
     context = (typeof(context))
                     wid_get_client_context(wid_get_top_parent(w));
     if (!context) {
-        DIE("no wid context found [%s]", wid_dirlist_filename_input_str);
+        ERR("no wid context found [%s]", wid_dirlist_filename_input_str);
     }
 
     wid_input = wid_find(wid_get_top_parent(w),
                          wid_dirlist_filename_input_str);
     if (!wid_input) {
-        DIE("no wid input found [%s]", wid_dirlist_filename_input_str);
+        ERR("no wid input found [%s]", wid_dirlist_filename_input_str);
     }
 
     /*
@@ -107,7 +107,7 @@ static uint8_t wid_dirlist_file_event (widp w, int32_t x, int32_t y,
                               wid_dirlist_filename_input_str);
 
     if (!wid_input) {
-        DIE("no wid input found [%s]", wid_dirlist_filename_input_str);
+        ERR("no wid input found [%s]", wid_dirlist_filename_input_str);
     }
 
     wid_set_text(wid_input, wid_get_text(w));
@@ -129,13 +129,13 @@ static uint8_t wid_dirlist_dir_event (widp w, int32_t x, int32_t y,
     context = (typeof(context))
                     wid_get_client_context(wid_get_top_parent(w));
     if (!context) {
-        DIE("no wid context found [%s]", wid_dirlist_filename_input_str);
+        ERR("no wid context found [%s]", wid_dirlist_filename_input_str);
     }
 
     wid_input = wid_find(wid_get_top_parent(w),
                          wid_dirlist_filename_input_str);
     if (!wid_input) {
-        DIE("no wid input found [%s]", wid_dirlist_filename_input_str);
+        ERR("no wid input found [%s]", wid_dirlist_filename_input_str);
     }
 
     new_dir = dupstr(wid_get_text(w), __FUNCTION__);

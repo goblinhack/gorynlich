@@ -82,12 +82,12 @@ static unsigned char *load_raw_image (const char *filename,
                                       int32_t *comp)
 {
     unsigned char *ramdisk_data;
-    unsigned char *image_data;
+    unsigned char *image_data = 0;
     int32_t len;
 
     ramdisk_data = ramdisk_load(filename, &len);
     if (!ramdisk_data) {
-        DIE("could not read ramdisk for file, %s", filename);
+        ERR("could not read ramdisk for file, %s", filename);
     }
 
     if (strstr(filename, ".tga")) {
@@ -103,11 +103,11 @@ static unsigned char *load_raw_image (const char *filename,
         image_data = stbi_png_load_from_memory(ramdisk_data,
                                                len, x, y, comp, 0);
     } else {
-        DIE("unknown suffix for image, %s", filename);
+        ERR("unknown suffix for image, %s", filename);
     }
 
     if (!image_data) {
-        DIE("could not read memory for file, %s", filename);
+        ERR("could not read memory for file, %s", filename);
     }
 
     DBG("Load %s, %ux%u", filename, *x, *y);
@@ -131,7 +131,7 @@ static SDL_Surface *load_image (const char *filename)
 
     image_data = load_raw_image(filename, &x, &y, &comp);
     if (!image_data) {
-        DIE("could not read memory for file, %s", filename);
+        ERR("could not read memory for file, %s", filename);
     }
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -177,9 +177,9 @@ texp tex_load (const char *file, const char *name)
 
     if (!file) {
         if (!name) {
-            DIE("no file for tex");
+            ERR("no file for tex");
         } else {
-            DIE("no file for tex loading %s", name);
+            ERR("no file for tex loading %s", name);
         }
     }
 
@@ -187,7 +187,7 @@ texp tex_load (const char *file, const char *name)
     surface = load_image(file);
 
     if (!surface) {
-        DIE("could not make surface from file, %s", file);
+        ERR("could not make surface from file, %s", file);
     }
 
     t = tex_from_surface(surface, file, name);
@@ -212,9 +212,9 @@ texp tex_load_tiled (const char *file,
 
     if (!file) {
         if (!name) {
-            DIE("no file for tex");
+            ERR("no file for tex");
         } else {
-            DIE("no file for tex loading %s", name);
+            ERR("no file for tex loading %s", name);
         }
     }
 
@@ -223,7 +223,7 @@ texp tex_load_tiled (const char *file,
     surface = load_image(file);
 
     if (!surface) {
-        DIE("could not make surface from file, %s", file);
+        ERR("could not make surface from file, %s", file);
     }
 
 #ifdef TILES_WITH_PIXEL_BOUNDARIES_BETWEEN_TILES
@@ -258,9 +258,9 @@ texp tex_load_tiled_black_and_white (const char *file,
 
     if (!file) {
         if (!name) {
-            DIE("no file for tex");
+            ERR("no file for tex");
         } else {
-            DIE("no file for tex loading %s", name);
+            ERR("no file for tex loading %s", name);
         }
     }
 
@@ -269,7 +269,7 @@ texp tex_load_tiled_black_and_white (const char *file,
     surface = load_image(file);
 
     if (!surface) {
-        DIE("could not make surface from file, %s", file);
+        ERR("could not make surface from file, %s", file);
     }
 
     t = tex_black_and_white(surface, tile_width, tile_height, file, name);
@@ -292,7 +292,7 @@ texp tex_find (const char *file)
     tex *result;
 
     if (!file) {
-        DIE("no filename given for tex find");
+        ERR("no filename given for tex find");
     }
 
     memset(&target, 0, sizeof(target));
@@ -318,21 +318,21 @@ texp tex_from_surface (SDL_Surface *surface,
     tex *t;
 
     if (!surface) {
-        DIE("could not make surface from file, %s", file);
+        ERR("could not make surface from file, %s", file);
     }
 
     /*
      * Check that the sdl_surface's width is a power of 2
      */
     if ((surface->w & (surface->w - 1)) != 0) {
-        DIE("%s has a width %u that is not a power of 2", file, surface->w)
+        ERR("%s has a width %u that is not a power of 2", file, surface->w);
     }
 
     /*
      * Also check if the height is a power of 2
      */
     if ((surface->h & (surface->h - 1)) != 0) {
-        DIE("%s has a height %u that is not a power of 2", file, surface->h);
+        ERR("%s has a height %u that is not a power of 2", file, surface->h);
     }
 
     DBG("Texture: %s, %dx%d", file, surface->w, surface->h);
@@ -362,11 +362,11 @@ texp tex_from_surface (SDL_Surface *surface,
 #ifdef GL_BGR
             textureFormat = GL_BGR;
 #else
-            DIE("%s Need support for GL_BGR", file);
+            ERR("%s Need support for GL_BGR", file);
 #endif
         }
     } else {
-        DIE("%s is not truecolor, need %d bytes per pixel", file,
+        ERR("%s is not truecolor, need %d bytes per pixel", file,
             channels);
     }
 
@@ -418,7 +418,7 @@ texp tex_from_surface (SDL_Surface *surface,
     t->tree.key = dupstr(name, "TREE KEY: tex");
 
     if (!tree_insert(textures, &t->tree.node)) {
-        DIE("tex insert name [%s] failed", name);
+        ERR("tex insert name [%s] failed", name);
     }
 
     t->width = surface->w;
@@ -441,7 +441,7 @@ texp tex_from_tiled_surface (SDL_Surface *in,
     tex *t;
 
     if (!in) {
-        DIE("could not make surface from file, %s", file);
+        ERR("could not make surface from file, %s", file);
     }
 
     uint32_t rmask, gmask, bmask, amask;
@@ -583,7 +583,7 @@ static texp tex_black_and_white (SDL_Surface *in,
     tex *t;
 
     if (!in) {
-        DIE("could not make surface from file, %s", file);
+        ERR("could not make surface from file, %s", file);
     }
 
     uint32_t rmask, gmask, bmask, amask;
@@ -662,7 +662,7 @@ int32_t tex_get_gl_binding (tex *tex)
 uint32_t tex_get_width (tex *tex)
 {
     if (!tex) {
-        DIE("no texture");
+        ERR("no texture");
     }
 
     return (tex->width);
@@ -671,7 +671,7 @@ uint32_t tex_get_width (tex *tex)
 uint32_t tex_get_height (tex *tex)
 {
     if (!tex) {
-        DIE("no texture");
+        ERR("no texture");
     }
 
     return (tex->height);
@@ -680,7 +680,7 @@ uint32_t tex_get_height (tex *tex)
 uint32_t tex_get_tile_width (tex *tex)
 {
     if (!tex) {
-        DIE("no texture");
+        ERR("no texture");
     }
 
     return (tex->tile_width);
@@ -689,7 +689,7 @@ uint32_t tex_get_tile_width (tex *tex)
 uint32_t tex_get_tile_height (tex *tex)
 {
     if (!tex) {
-        DIE("no texture");
+        ERR("no texture");
     }
 
     return (tex->tile_height);
@@ -698,7 +698,7 @@ uint32_t tex_get_tile_height (tex *tex)
 uint32_t tex_get_tiles_width (tex *tex)
 {
     if (!tex) {
-        DIE("no texture");
+        ERR("no texture");
     }
 
     return (tex->tiles_width);
@@ -707,7 +707,7 @@ uint32_t tex_get_tiles_width (tex *tex)
 uint32_t tex_get_tiles_height (tex *tex)
 {
     if (!tex) {
-        DIE("no texture");
+        ERR("no texture");
     }
 
     return (tex->tiles_height);
@@ -764,7 +764,7 @@ texp string2tex (const char **s)
 
     target = (typeof(target)) tree_find(textures, &find.tree.node);
     if (!target) {
-        DIE("unknown tex [%s]", tmp);
+        ERR("unknown tex [%s]", tmp);
     }
 
     return (target);

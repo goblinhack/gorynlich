@@ -174,7 +174,7 @@ void wid_choose_stats_visible (void)
     wid_choose_stats_is_hidden = false;
 
     if (!wid_choose_stats) {
-        DIE("no wid intro");
+        ERR("no wid intro");
     }
 
     if (global_config.game_over) {

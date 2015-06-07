@@ -169,14 +169,14 @@ static void tp_fill_cache (tpp t)
 
         tile = tile_find(thing_tile_name(thing_tile));
         if (!tile) {
-            DIE("no tile for join index %d for %s, tile name %s",
+            ERR("no tile for join index %d for %s, tile name %s",
                 index, t->short_name, thing_tile_name(thing_tile));
         }
 
         t->tilep_join_tile[index][ t->tilep_join_count[index] ] = tile;
 
         if (t->tilep_join_count[index]++ >= IS_JOIN_ALT_MAX) {
-            DIE("too many tile join alternatives for %s", t->short_name);
+            ERR("too many tile join alternatives for %s", t->short_name);
         }
     }
 }
@@ -187,7 +187,7 @@ tpp tp_load (uint16_t id, const char *name)
     demarshal_p in;
 
     if (tp_find(name)) {
-        DIE("thing template name [%s] already used", name);
+        ERR("thing template name [%s] already used", name);
     }
 
     if (!thing_templates) {
@@ -201,7 +201,7 @@ tpp tp_load (uint16_t id, const char *name)
     }
 
     if (id >= THING_MAX - 1) {
-        DIE("too many thing templates");
+        ERR("too many thing templates");
     }
 
     t = &thing_templates_chunk[id];
@@ -210,12 +210,12 @@ tpp tp_load (uint16_t id, const char *name)
     t->id = id;
 
     if (!tree_insert_static(thing_templates, &t->tree.node)) {
-        DIE("thing template insert name [%s] failed", name);
+        ERR("thing template insert name [%s] failed", name);
     }
 
     in = demarshal(name);
     if (!in) {
-        DIE("cannot demarshal template name [%s] failed", name);
+        ERR("cannot demarshal template name [%s] failed", name);
     }
 
     demarshal_thing_template(in, t);
@@ -225,7 +225,7 @@ tpp tp_load (uint16_t id, const char *name)
 
     t->tree2.key = create_order++;
     if (!tree_insert_static(thing_templates_create_order, &t->tree2.node)) {
-        DIE("thing template insert create order [%s] failed", name);
+        ERR("thing template insert create order [%s] failed", name);
     }
 
     tp_fill_cache(t);
@@ -323,7 +323,7 @@ tpp tp_find (const char *name)
     tpp result;
 
     if (!name) {
-        DIE("no name for thing find");
+        ERR("no name for thing find");
     }
 
     memset(&target, 0, sizeof(target));
@@ -350,7 +350,7 @@ tpp tp_find_short_name (const char *name)
         }
     }
 
-    DIE("did not find short template name \"%s\"", name);
+    ERR("did not find short template name \"%s\"", name);
 
     return (0);
 }
@@ -388,7 +388,7 @@ tpp string2thing_template (const char **s)
 
     target = (typeof(target)) tree_find(thing_templates, &find.tree.node);
     if (!target) {
-        DIE("unknown thing [%s]", tmp);
+        ERR("unknown thing [%s]", tmp);
     }
 
     return (target);
@@ -415,7 +415,7 @@ static void demarshal_thing_carrying (demarshal_p ctx, tpp t)
 
         uint32_t id = tp_to_id(c);
         if (!id) {
-            DIE("carried thing %s not in database", val);
+            ERR("carried thing %s not in database", val);
         }
 
         t->base_items[id].quantity++;
@@ -450,7 +450,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         if (GET_OPT_NAMED_STRING(ctx, "fires", val)) {
             t->fires = tp_find(val);
             if (!t->fires) {
-                DIE("cannot find %s for %s to fire",
+                ERR("cannot find %s for %s to fire",
                     val, t->short_name);
             }
             myfree(val);
@@ -473,7 +473,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
             GET_OPT_NAMED_ENUM(ctx, "z_depth", en, map_depth_str2val);
             t->z_depth = en;
             if (t->z_depth >= MAP_DEPTH_MAX) {
-                DIE("%s has unknown depth", t->short_name); 
+                ERR("%s has unknown depth", t->short_name); 
             }
         }
 

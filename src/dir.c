@@ -126,7 +126,7 @@ tree_root *dirlist (const char *dir,
         node->tree.key = mybasename(dir_and_file, "TREE KEY: dirlist2");
 
         if (!tree_insert(root, &node->tree.node)) {
-            DIE("insert dir %s", dir_and_file);
+            ERR("insert dir %s", dir_and_file);
         }
 
         myfree(dir_and_file);

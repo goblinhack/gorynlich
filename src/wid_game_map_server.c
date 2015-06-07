@@ -231,9 +231,53 @@ wid_game_map_server_replace_tile (widp w,
                                   itemp item,
                                   thing_statsp stats)
 {
+    static levelp last_level;
+    static int flip_x;
+    static int flip_y;
+    static int rot;
+
     verify(w);
     levelp level = (typeof(level)) wid_get_client_context(w);
     verify(level);
+
+    if (server_level_is_being_loaded) {
+        if (level != last_level) {
+            last_level = level;
+
+            flip_x = 0;
+            flip_y = 0;
+            rot = 0;
+
+            if ((myrand() % 100) < 50) {
+                flip_x = 1;
+            }
+
+            if ((myrand() % 100) < 50) {
+                flip_y = 1;
+            }
+
+            if ((myrand() % 100) < 50) {
+                rot = 1;
+            }
+        }
+
+        if (flip_x) {
+            x = MAP_WIDTH - x - 1;
+        }
+
+        if (flip_y) {
+            y = MAP_HEIGHT - y - 1;
+        }
+
+        if (rot) {
+            swap(x, y);
+        }
+
+        if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_HEIGHT)) {
+            ERR("%s placing thing at bad co-ords %f %f", tp_name(tp), x, y);
+            return (0);
+        }
+    }
 
     int z = tp_get_z_depth(tp);
     tree_rootp thing_tiles;
@@ -362,7 +406,9 @@ wid_game_map_server_replace_tile (widp w,
              * Add a position to the list.
              */
             if (level->player_start_max == MAX_PLAYERS) {
-                ERR("Too many player start positions in level");
+                ERR("Too many player start positions in level %d.%d",
+                    global_config.server_level_pos.x,
+                    global_config.server_level_pos.y);
                 return (0);
             }
 
@@ -408,7 +454,7 @@ wid_game_map_server_replace_tile (widp w,
     tile = tile_find(tilename);
 
     if (!tile) {
-        DIE("tile name %s from thing %s not found on server",
+        ERR("tile name %s from thing %s not found on server",
             tilename,
             tp_short_name(tp));
         return (0);
