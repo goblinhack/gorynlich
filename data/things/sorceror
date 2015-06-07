@@ -4,7 +4,7 @@
  tooltip="sorceror"
  z_depth="monst"
  speed=10
- max_hp=100
+ max_hp=20
  max_magic=200
  hit_priority=20
  is_monst
@@ -14,9 +14,10 @@
  is_candle_light
  is_collision_map_medium
  vision_distance=10
- explodes_as="data/things/explosion3"
+ bonus_xp_on_death=250
  d10000_chance_of_appearing=100
  fires="data/things/fireball3"
+ explodes_as="data/things/explosion3"
  weapon_fire_delay_hundredths=100
  is_effect_fade_in_out
  is_animated

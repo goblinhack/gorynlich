@@ -1,7 +1,7 @@
 {
- short_name="Large bone pile"
- raw_name="bonepile3"
- tooltip="Large bone pile"
+ short_name="gobbler mob"
+ raw_name="gobblermob"
+ tooltip="gobbler generator"
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
@@ -11,14 +11,13 @@
  is_candle_light
  hit_priority=22
  is_collision_map_medium
- damage=1
- bonus_xp_on_death=80
+ bonus_xp_on_death=200
+ max_hp=100
  mob_spawn_delay_tenths=50
- polymorph_on_death="data/things/bonepile2"
- mob_spawn="data/things/ghost3"
+ mob_spawn="data/things/gobbler"
  tiles={
   tile={
-   tile="bonepile3"
+   tile="gobblermob"
   }
  }
 }
