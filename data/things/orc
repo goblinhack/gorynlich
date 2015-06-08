@@ -2,10 +2,10 @@
  short_name="Stinking ork"
  raw_name="ork"
  tooltip="Stinking orc"
- z_depth="monst"
  carrying={
     "data/things/sword1"
  }
+ z_depth="monst"
  speed=15
  max_hp=12
  damage=8
