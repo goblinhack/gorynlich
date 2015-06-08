@@ -1,19 +1,23 @@
 {
- short_name="Smelly zombie"
- raw_name="zombie"
- tooltip="Smelly zombie"
+ short_name="Stinking ork"
+ raw_name="ork"
+ tooltip="Stinking orc"
  z_depth="monst"
+ carrying={
+    "data/things/sword1"
+ }
  speed=15
- max_hp=1
- damage=6
- bonus_xp_on_death=35
- vision_distance=20
+ max_hp=12
+ damage=8
+ bonus_xp_on_death=55
+ vision_distance=30
  hit_delay_tenths=5
  is_monst
  is_warm_blooded
  is_shadow_caster
  is_shadow_caster_soft
  hit_priority=10
+ is_cats_eyes
  is_collision_map_medium
  is_animated
  d10000_chance_of_appearing=1000
@@ -23,178 +27,178 @@
   tile={
    delay=200
    is_dir_up
-   tile="zombiea-up"
+   tile="orca-up"
   }
   tile={
    delay=200
    is_dir_down
-   tile="zombiea-down"
+   tile="orca-down"
   }
   tile={
    delay=200
    is_dir_left
-   tile="zombiea-left"
+   tile="orca-left"
   }
   tile={
    delay=200
    is_dir_right
-   tile="zombiea-right"
+   tile="orca-right"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="zombiea-tl"
+   tile="orca-tl"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="zombiea-bl"
+   tile="orca-bl"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="zombiea-tr"
+   tile="orca-tr"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="zombiea-br"
+   tile="orca-br"
   }
   tile={
    delay=200
    is_dir_up
-   tile="zombieb-up"
+   tile="orcb-up"
   }
   tile={
    delay=200
    is_dir_down
-   tile="zombieb-down"
+   tile="orcb-down"
   }
   tile={
    delay=200
    is_dir_left
-   tile="zombieb-left"
+   tile="orcb-left"
   }
   tile={
    delay=200
    is_dir_right
-   tile="zombieb-right"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_left
-   tile="zombieb-tl"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_left
-   tile="zombieb-bl"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_right
-   tile="zombieb-tr"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_right
-   tile="zombieb-br"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   tile="zombiec-up"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   tile="zombiec-down"
-  }
-  tile={
-   delay=200
-   is_dir_left
-   tile="zombiec-left"
-  }
-  tile={
-   delay=200
-   is_dir_right
-   tile="zombiec-right"
+   tile="orcb-right"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="zombiec-tl"
+   tile="orcb-tl"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="zombiec-bl"
+   tile="orcb-bl"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="zombiec-tr"
+   tile="orcb-tr"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="zombiec-br"
+   tile="orcb-br"
   }
   tile={
    delay=200
    is_dir_up
-   tile="zombied-up"
+   tile="orcc-up"
   }
   tile={
    delay=200
    is_dir_down
-   tile="zombied-down"
+   tile="orcc-down"
   }
   tile={
    delay=200
    is_dir_left
-   tile="zombied-left"
+   tile="orcc-left"
   }
   tile={
    delay=200
    is_dir_right
-   tile="zombied-right"
+   tile="orcc-right"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="zombied-tl"
+   tile="orcc-tl"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="zombied-bl"
+   tile="orcc-bl"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="zombied-tr"
+   tile="orcc-tr"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="zombied-br"
+   tile="orcc-br"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="orcd-up"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="orcd-down"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="orcd-left"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="orcd-right"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="orcd-tl"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="orcd-bl"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="orcd-tr"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="orcd-br"
   }
  }
 }

@@ -21,11 +21,11 @@
  tiles={
   tile={
    tile="sorcerormob1"
-   delay=100
+   delay=500
   }
   tile={
    tile="sorcerormob2"
-   delay=100
+   delay=500
   }
  }
 }

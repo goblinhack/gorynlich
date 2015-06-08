@@ -13,7 +13,7 @@
  is_collision_map_medium
  bonus_xp_on_death=200
  max_hp=100
- mob_spawn_delay_tenths=50
+ mob_spawn_delay_tenths=20
  mob_spawn="data/things/gobbler"
  tiles={
   tile={
