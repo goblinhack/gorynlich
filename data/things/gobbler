@@ -11,7 +11,6 @@
  hit_delay_tenths=5
  is_monst
  is_effect_pulse
- is_effect_fade_in_out
  is_cats_eyes
  is_shadow_caster
  is_shadow_caster_soft
