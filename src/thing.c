@@ -1904,18 +1904,15 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     thingp orig_hitter = hitter;
     tpp weapon = 0;
 
-#if 1
     if (hitter && thing_owner(hitter)) {
-        CON("%s is being hit by %s, owner %s",
-            thing_logname(t), 
-            thing_logname(hitter), 
-            thing_logname(thing_owner(hitter)));
+        THING_LOG(t, "is being hit by %s, owner %s",
+                  thing_logname(hitter), 
+                  thing_logname(thing_owner(hitter)));
     } else {
-        CON("%s is being hit by %s",
-            thing_logname(t), 
-            thing_logname(hitter));
+        THING_LOG(t, "is being hit by %s",
+                  thing_logname(hitter));
     }
-#endif
+
     verify(t);
     if (hitter) {
         verify(hitter);

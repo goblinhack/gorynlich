@@ -19,7 +19,7 @@
  is_valid_for_action_bar
  d10000_chance_of_appearing=100
  d10000_chance_of_breaking=50
- weapon_carry_anim="data/things/sword1_anim"
+ weapon_carry_anim="data/things/sword2_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={

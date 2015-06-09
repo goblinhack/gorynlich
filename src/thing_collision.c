@@ -420,6 +420,20 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
     }
 
     /*
+     * Similar thing for sword things, we want them to hit targets easily.
+     */
+    if (thing_is_weapon_swing_effect(A) &&
+        (thing_is_monst(B)          ||
+         thing_is_player(B)         ||
+         thing_is_shield(B)         ||
+         thing_is_mob_spawner(B))) {
+        Bpx1 = collision_map_large_x1;
+        Bpx2 = collision_map_large_x2;
+        Bpy1 = collision_map_large_y1;
+        Bpy2 = collision_map_large_y2;
+    }
+
+    /*
      * Find the start of pixels in the tile.
      */
     double Atlx = Ax + Apx1;
@@ -433,17 +447,15 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
     double Bbry = By + Bpy2;
 
 #if 0
-if (debug) {
-    if ((thing_is_monst(A) &&
-         thing_is_monst(B))) {
-LOG("    A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
-LOG("      %f %f",Ax,Ay);
-LOG("      %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
-LOG("    B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
-LOG("      %f %f",Bx,By);
-LOG("      %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
+    if ((thing_is_weapon_swing_effect(A) &&
+         thing_is_player(B))) {
+CON("    A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
+CON("      %f %f",Ax,Ay);
+CON("      %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
+CON("    B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
+CON("      %f %f",Bx,By);
+CON("      %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
     }
-}
 #endif
 
     /*
@@ -511,17 +523,13 @@ LOG("  owner");
      */
     if (!things_overlap(me, -1.0, -1.0, it)) {
 #if 0
-if (debug) {
-LOG("  no overlap %s vs %s",thing_logname(me), thing_logname(it));
-}
+CON("  no overlap %s vs %s",thing_logname(me), thing_logname(it));
 #endif
         return;
     }
 
 #if 0
-(debug) {
-LOG("  overlap %s vs %s",thing_logname(me), thing_logname(it));
-}
+CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
 #endif
 
     if (!thing_is_teleport(me)        &&
