@@ -33,20 +33,28 @@ static pthread_cond_t dmap_thread2_cond = PTHREAD_COND_INITIALIZER;
 /*
  * Final dmaps
  */
-static level_walls dmap_map_treat_doors_as_passable;
-static level_walls dmap_map_treat_doors_as_walls;
+static level_walls dmap_map_player_target_treat_doors_as_passable;
+static level_walls dmap_map_player_target_treat_doors_as_walls;
+static level_walls dmap_map_treasure_target_treat_doors_as_passable;
+static level_walls dmap_map_treasure_target_treat_doors_as_walls;
 
 /*
  * Scratch pad dmaps are updated to the above dmaps when complete so the 
  * monster never sees a partail dmap.
  */
-static level_walls dmap_map_treat_doors_as_passable_scratchpad;
-static level_walls dmap_map_treat_doors_as_walls_scratchpad;
+static level_walls dmap_map_player_target_treat_doors_as_passable_scratchpad;
+static level_walls dmap_map_player_target_treat_doors_as_walls_scratchpad;
+static level_walls dmap_map_treasure_target_treat_doors_as_passable_scratchpad;
+static level_walls dmap_map_treasure_target_treat_doors_as_walls_scratchpad;
 
 /*
  * For individual players. Updated each time we need it.
  */
-static level_walls dmap_map_treat_doors_as_walls_scratchpad;
+static level_walls dmap_map_player_target_treat_doors_as_walls_scratchpad;
+static level_walls dmap_map_treasure_target_treat_doors_as_walls_scratchpad;
+
+static int update_treasure_dmap;
+static int update_player_dmap;
 
 /*
  * Djkstra maps so we can quickly tell the next hop.
@@ -133,7 +141,7 @@ static void dmap_thing_print (thingp t,
                     fprintf(fp, " Mo ");
                 } else {
                     fprintf(fp, "%4d", 
-                            dmap_map_treat_doors_as_walls.walls[x][y]);
+                            dmap_map_player_target_treat_doors_as_walls.walls[x][y]);
                 }
             }
         }
@@ -255,7 +263,7 @@ static void dmap_process (level_walls *dmap, level_walls *dmap_final)
 /*
  * Generate goal points with a low value.
  */
-static uint32_t dmap_monst_goals_set (uint8_t test, level_walls *dmap)
+static uint32_t dmap_generate_for_player_target_set_goals (uint8_t test, level_walls *dmap)
 {
     uint32_t checksum = 0;
     thingp thing_it;
@@ -297,15 +305,36 @@ static uint32_t dmap_monst_goals_set (uint8_t test, level_walls *dmap)
 /*
  * Generate goal points with a low value.
  */
-static void dmap_player_goals_set (double x, double y, level_walls *dmap)
+static uint32_t dmap_generate_for_treasure_target_set_goals (uint8_t test, level_walls *dmap)
 {
-    /*
-     * Aim for center of tile.
-     */
-    uint32_t ix = (int)(x + 0.5);
-    uint32_t iy = (int)(y + 0.5);
+    uint32_t checksum = 0;
+    thingp thing_it;
+    int8_t x;
+    int8_t y;
 
-    dmap->walls[ix][iy] = 0;
+    { TREE_OFFSET_WALK_UNSAFE(server_boring_things, thing_it) {
+        /*
+         * Only chase treasures.
+         */
+        if (!thing_is_treasure_noverify(thing_it)) {
+            continue;
+        }
+
+        /*
+         * Aim for center of tile.
+         */
+        x = (int)(thing_it->x + 0.5);
+        y = (int)(thing_it->y + 0.5);
+
+        if (!test) {
+            dmap->walls[x][y] = 0;
+        }
+
+        checksum ^= x | (y << 16);
+        checksum = checksum << 1;
+    } }
+
+    return (checksum);
 }
 
 /*
@@ -341,10 +370,21 @@ static void *dmap_thread1_func (void *context)
         /*
          * Start with a clean dmap for each set of obstacles to consider.
          */
-        dmap_process(&dmap_map_treat_doors_as_passable_scratchpad,
-                     &dmap_map_treat_doors_as_passable);
-        dmap_process(&dmap_map_treat_doors_as_walls_scratchpad,
-                     &dmap_map_treat_doors_as_walls);
+        if (update_player_dmap) {
+            dmap_process(&dmap_map_player_target_treat_doors_as_passable_scratchpad,
+                         &dmap_map_player_target_treat_doors_as_passable);
+            dmap_process(&dmap_map_player_target_treat_doors_as_walls_scratchpad,
+                         &dmap_map_player_target_treat_doors_as_walls);
+            update_player_dmap = false;
+        }
+
+        if (update_treasure_dmap) {
+            dmap_process(&dmap_map_treasure_target_treat_doors_as_passable_scratchpad,
+                         &dmap_map_treasure_target_treat_doors_as_passable);
+            dmap_process(&dmap_map_treasure_target_treat_doors_as_walls_scratchpad,
+                         &dmap_map_treasure_target_treat_doors_as_walls);
+            update_treasure_dmap = false;
+        }
 
         pthread_mutex_unlock(&dmap_thread1_mutex);
     }
@@ -352,10 +392,7 @@ static void *dmap_thread1_func (void *context)
     return (0);
 }
 
-/*
- * Wake up the thread that creates the djkstra map.
- */
-static void dmap_thread1_wake (levelp level)
+static void dmap_generate_for_player_target (levelp level)
 {
     static uint32_t dmap_checksum;
 
@@ -364,27 +401,68 @@ static void dmap_thread1_wake (levelp level)
      * We use a checksum of the goals to indicate this with reasonable 
      * certainty.
      */
-    uint32_t checksum = dmap_monst_goals_set(true /* test */, 0);
+    uint32_t checksum = dmap_generate_for_player_target_set_goals(true /* test */, 0);
 
     if (dmap_checksum == checksum) {
         return;
     }
 
-    if (!pthread_mutex_trylock(&dmap_thread1_mutex)) {
+    dmap_checksum = checksum;
+
+    update_player_dmap = true;
+
+    dmap_init(&dmap_map_player_target_treat_doors_as_passable_scratchpad,
+              &level->map_player_target_treat_doors_as_passable);
+    dmap_generate_for_player_target_set_goals(false /* test */,
+                   &dmap_map_player_target_treat_doors_as_passable_scratchpad);
+
+    dmap_init(&dmap_map_player_target_treat_doors_as_walls_scratchpad,
+              &level->map_player_target_treat_doors_as_walls);
+    dmap_generate_for_player_target_set_goals(false /* test */,
+                   &dmap_map_player_target_treat_doors_as_walls_scratchpad);
+}
+
+static void dmap_generate_for_treasure_target (levelp level)
+{
+    static uint32_t dmap_checksum;
+
+    /*
+     * Only reprocess the djkstra map if something has changed on the map
+     * We use a checksum of the goals to indicate this with reasonable 
+     * certainty.
+     */
+    uint32_t checksum = dmap_generate_for_treasure_target_set_goals(true /* test */, 0);
+
+    if (dmap_checksum == checksum) {
         return;
     }
 
     dmap_checksum = checksum;
 
-    dmap_init(&dmap_map_treat_doors_as_passable_scratchpad,
-              &level->map_treat_doors_as_passable);
-    dmap_monst_goals_set(false /* test */,
-                   &dmap_map_treat_doors_as_passable_scratchpad);
+    update_treasure_dmap = true;
 
-    dmap_init(&dmap_map_treat_doors_as_walls_scratchpad,
-              &level->map_treat_doors_as_walls);
-    dmap_monst_goals_set(false /* test */,
-                   &dmap_map_treat_doors_as_walls_scratchpad);
+    dmap_init(&dmap_map_treasure_target_treat_doors_as_passable_scratchpad,
+              &level->map_treasure_target_treat_doors_as_passable);
+    dmap_generate_for_treasure_target_set_goals(false /* test */,
+                   &dmap_map_treasure_target_treat_doors_as_passable_scratchpad);
+
+    dmap_init(&dmap_map_treasure_target_treat_doors_as_walls_scratchpad,
+              &level->map_player_target_treat_doors_as_walls);
+    dmap_generate_for_player_target_set_goals(false /* test */,
+                   &dmap_map_player_target_treat_doors_as_walls_scratchpad);
+}
+
+/*
+ * Wake up the thread that creates the djkstra map.
+ */
+static void dmap_thread1_wake (levelp level)
+{
+    if (!pthread_mutex_trylock(&dmap_thread1_mutex)) {
+        return;
+    }
+
+    dmap_generate_for_player_target(level);
+    dmap_generate_for_treasure_target(level);
 
     /*
      * Now wake the dmap processor.
@@ -420,13 +498,13 @@ static void *dmap_thread2_func (void *context)
 
         for (x = 0; x < MAP_WIDTH; x++) {
             for (y = 0; y < MAP_HEIGHT; y++) {
-                dmap_init(&tmp, &server_level->map_treat_doors_as_walls);
+                dmap_init(&tmp, &server_level->map_player_target_treat_doors_as_walls);
 
                 /*
                  * If a wall then we can't get to it, period.
                  */
                 if (server_level->
-                        map_treat_doors_as_walls.walls[x][y] != ' ') {
+                        map_player_target_treat_doors_as_walls.walls[x][y] != ' ') {
                     continue;
                 }
 
@@ -505,16 +583,6 @@ void dmap_process_fini (void)
     dmap_thread2_fini();
 }
 
-void dmap_generate_map (double x, double y)
-{
-    dmap_init(&dmap_map_treat_doors_as_walls_scratchpad,
-              &server_level->map_treat_doors_as_walls);
-    dmap_player_goals_set(x, y,
-                &dmap_map_treat_doors_as_walls_scratchpad);
-    dmap_process(&dmap_map_treat_doors_as_walls_scratchpad,
-                 &dmap_map_treat_doors_as_walls);
-}
-
 /*
  * Generate maps to allow things to wander to any location.
  */
@@ -535,7 +603,7 @@ static void dmap_generate (levelp level)
 #else
     if (/* DISABLES CODE */ (0))
 #endif
-    dmap_print(level, &dmap_map_treat_doors_as_passable);
+    dmap_print(level, &dmap_map_player_target_treat_doors_as_passable);
 }
 
 /*
@@ -679,7 +747,7 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
      * Start out with treating doors as passable.
      */
     if (!t->dmap) {
-        t->dmap = &dmap_map_treat_doors_as_passable;
+        t->dmap = &dmap_map_player_target_treat_doors_as_passable;
     }
 
     /*
@@ -693,10 +761,18 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     /*
      * Try the alternative map.
      */
-    if (t->dmap == &dmap_map_treat_doors_as_passable) {
-        t->dmap = &dmap_map_treat_doors_as_walls;
+    if (thing_is_treasure_eater(t)) {
+        if (t->dmap == &dmap_map_treasure_target_treat_doors_as_passable) {
+            t->dmap = &dmap_map_treasure_target_treat_doors_as_walls;
+        } else {
+            t->dmap = &dmap_map_treasure_target_treat_doors_as_passable;
+        }
     } else {
-        t->dmap = &dmap_map_treat_doors_as_passable;
+        if (t->dmap == &dmap_map_player_target_treat_doors_as_passable) {
+            t->dmap = &dmap_map_player_target_treat_doors_as_walls;
+        } else {
+            t->dmap = &dmap_map_player_target_treat_doors_as_passable;
+        }
     }
 
     if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
