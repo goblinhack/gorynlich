@@ -497,7 +497,7 @@ LOG("  no on lev");
     /*
      * Need this or shields attack the player.
      */
-    if (thing_owner(it) == me) {
+    if ((thing_owner(it) == me) || (thing_owner(me) == it)) {
 #if 0
 if (debug) {
 LOG("  owner");
@@ -578,7 +578,6 @@ LOG("  overlap %s vs %s",thing_logname(me), thing_logname(it));
          * Player bumped into something.
          */
         if (thing_is_shield(it)                ||
-            thing_is_weapon_swing_effect(it)   ||
             thing_is_lava(it)                  ||
             thing_is_acid(it)                  ||
             thing_is_cloud_effect(it)) {
@@ -627,6 +626,13 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         }
     }
 
+    if (thing_is_treasure_eater(me)) {
+        if (thing_is_treasure(it)) {
+            thing_possible_hit_add(it, "monst ate thing");
+            return;
+        }
+    }
+
     if (thing_is_monst(me)) {
         /*
          * Monster bumped into something.
@@ -635,7 +641,6 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_shield(it)                ||
             thing_is_lava(it)                  ||
             thing_is_acid(it)                  ||
-            thing_is_weapon_swing_effect(it)   ||
             thing_is_cloud_effect(it)) {
             /*
              * I'm hit!
@@ -832,6 +837,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         if (thing_is_monst(it)                  || 
             thing_is_door(it)                   ||
             thing_is_bomb(it)                   ||
+            thing_is_player(it)                 ||
             thing_is_wall(it)                   ||
             /*
              * Don't hit walls. It's daft.
@@ -997,22 +1003,28 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             }
 
             if (thing_is_monst(me)) {
-                /*
-                 * Allow monsters to walk into these things:
-                 */
-                if (thing_is_player(it)                 ||
-                    thing_can_walk_through(it)          ||
-                    thing_is_carryable(it)              ||
-                    thing_is_weapon_swing_effect(it)    ||
-                    thing_is_shield(it)                 ||
-                    thing_is_explosion(it)              ||
-                    thing_is_non_explosive_gas_cloud(it)||
-                    thing_is_projectile(it)             ||
-                    thing_is_treasure(it)               ||
-                    thing_is_weapon(it)                 ||
-                    thing_is_sawblade(it)               ||
-                    thing_is_potion(it)                 ||
-                    thing_is_food(it)) {
+                if (thing_is_player(it) &&
+                    thing_get_weapon_carry_anim_wid(me)) {
+                    /*
+                     * If the monst has a weapon do not walk into the player 
+                     * like a bite attack.
+                     */
+                } else if (thing_is_player(it)                 ||
+                           thing_can_walk_through(it)          ||
+                           thing_is_carryable(it)              ||
+                           thing_is_weapon_swing_effect(it)    ||
+                           thing_is_shield(it)                 ||
+                           thing_is_explosion(it)              ||
+                           thing_is_non_explosive_gas_cloud(it)||
+                           thing_is_projectile(it)             ||
+                           thing_is_treasure(it)               ||
+                           thing_is_weapon(it)                 ||
+                           thing_is_sawblade(it)               ||
+                           thing_is_potion(it)                 ||
+                           thing_is_food(it)) {
+                    /*
+                     * Allow monsters to walk into these things:
+                     */
                     continue;
                 }
             }

@@ -13,7 +13,7 @@
  is_collision_map_medium
  damage=1
  bonus_xp_on_death=120
- mob_spawn_delay_tenths=50
+ mob_spawn_delay_tenths=20
  mob_spawn="data/things/zombie"
  tiles={
   tile={

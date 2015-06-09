@@ -1320,11 +1320,11 @@ static inline uint8_t thing_is_rrr28 (thingp t)
     return (tp_is_rrr28(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr29 (thingp t)
+static inline uint8_t thing_is_treasure_eater (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr29(thing_tp(t)));
+    return (tp_is_treasure_eater(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_effect_fade_in_out (thingp t)
@@ -2121,9 +2121,9 @@ static inline uint8_t thing_is_rrr28_noverify (thingp t)
     return (t->tp->is_rrr28);
 }
 
-static inline uint8_t thing_is_rrr29_noverify (thingp t)
+static inline uint8_t thing_is_treasure_eater_noverify (thingp t)
 {
-    return (t->tp->is_rrr29);
+    return (t->tp->is_treasure_eater);
 }
 
 static inline uint8_t thing_is_effect_fade_in_out_noverify (thingp t)

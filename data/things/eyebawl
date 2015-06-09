@@ -21,7 +21,6 @@
  min_appear_depth=1
  max_appear_depth=100
  is_animated
- is_fragile
  tiles={
   tile={
    delay=175
