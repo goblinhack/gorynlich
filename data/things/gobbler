@@ -14,6 +14,7 @@
  is_cats_eyes
  is_shadow_caster
  is_shadow_caster_soft
+ is_treasure_eater
  is_variable_size
  hit_priority=10
  is_collision_map_medium
@@ -23,7 +24,6 @@
  min_appear_depth=1
  max_appear_depth=100
  is_animated
- is_fragile
  tiles={
   tile={
    delay=175
