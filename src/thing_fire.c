@@ -254,6 +254,10 @@ static void thing_fire_at (thingp t, thingp target)
         /*
          * Might be a sword.
          */
+        if (distance > 2.0) {
+            return;
+        }
+
         thing_swing(t);
         return;
     }

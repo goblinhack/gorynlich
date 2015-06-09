@@ -40,8 +40,10 @@ typedef struct level_t_ {
      * monster will wait by the door. If there is an open wall it will hit the
      * door and then decide to go for the opening.
      */
-    level_walls map_treat_doors_as_passable;
-    level_walls map_treat_doors_as_walls;
+    level_walls map_player_target_treat_doors_as_passable;
+    level_walls map_player_target_treat_doors_as_walls;
+    level_walls map_treasure_target_treat_doors_as_passable;
+    level_walls map_treasure_target_treat_doors_as_walls;
 
     level_walls walls;
     level_walls doors;

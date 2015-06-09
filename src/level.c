@@ -495,10 +495,10 @@ void level_set_walls (levelp level)
 
     widp w = wid_game_map_server_grid_container;
 
-    memset(level->map_treat_doors_as_walls.walls, ' ',
-           sizeof(level->map_treat_doors_as_walls.walls));
-    memset(level->map_treat_doors_as_passable.walls, ' ',
-           sizeof(level->map_treat_doors_as_passable.walls));
+    memset(level->map_player_target_treat_doors_as_walls.walls, ' ',
+           sizeof(level->map_player_target_treat_doors_as_walls.walls));
+    memset(level->map_player_target_treat_doors_as_passable.walls, ' ',
+           sizeof(level->map_player_target_treat_doors_as_passable.walls));
     memset(level->walls.walls, ' ',
            sizeof(level->walls.walls));
     memset(level->doors.walls, ' ',
@@ -533,7 +533,7 @@ void level_set_walls (levelp level)
                         thing_is_mob_spawner(t) ||
                         thing_is_teleport(t)    ||
                         thing_is_exit(t)) {
-                        level->map_treat_doors_as_walls.walls[x][y] = '+';
+                        level->map_player_target_treat_doors_as_walls.walls[x][y] = '+';
                     }
 
                     /*
@@ -544,7 +544,7 @@ void level_set_walls (levelp level)
                         thing_is_lava(t)        ||
                         thing_is_acid(t)        ||
                         thing_is_exit(t)) {
-                        level->map_treat_doors_as_passable.walls[x][y] = '+';
+                        level->map_player_target_treat_doors_as_passable.walls[x][y] = '+';
                     }
 
                     if (thing_is_wall(t)) {
