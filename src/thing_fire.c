@@ -258,6 +258,9 @@ static void thing_fire_at (thingp t, thingp target)
             return;
         }
 
+        t->dir = thing_angle_to_dir(dx, dy);
+        thing_update(t);
+
         thing_swing(t);
         return;
     }
