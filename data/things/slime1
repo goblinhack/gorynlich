@@ -2,6 +2,7 @@
  short_name="Purple slime"
  raw_name="slime-1"
  tooltip="Purple slime"
+ mob_spawn={ 100 "data/things/slime1" }
  z_depth="monst"
  max_hp=5
  damage=1
@@ -20,7 +21,6 @@
  is_animated
  is_mob_spawner
  mob_spawn_delay_tenths=300
- mob_spawn="data/things/slime1"
  d10000_chance_of_appearing=200
  min_appear_depth=1
  max_appear_depth=100

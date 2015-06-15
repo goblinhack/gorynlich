@@ -2,6 +2,7 @@
  short_name="acid"
  raw_name="acid1"
  tooltip="acid"
+ mob_spawn={ 100 "data/things/acid1" }
  z_depth="floor2"
  is_acid
  is_monst
@@ -19,7 +20,6 @@
  d10000_chance_of_appearing=100
  is_mob_spawner
  mob_spawn_delay_tenths=100
- mob_spawn="data/things/acid1"
  tiles={
   tile={
    tile="acid1.1"
