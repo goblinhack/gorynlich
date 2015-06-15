@@ -1,10 +1,10 @@
 {
- short_name="Smelly zombie2"
+ short_name="two headed zombaby"
  raw_name="zombie2"
- tooltip="Smelly zombie2"
+ tooltip="two headed zombaby"
  z_depth="monst"
  speed=15
- max_hp=1
+ max_hp=10
  damage=6
  bonus_xp_on_death=35
  vision_distance=20

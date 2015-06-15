@@ -1,5 +1,5 @@
 {
- short_name="Orc giant"
+ short_name="Orc sorceror"
  raw_name="ork3"
  tooltip="Orc sorceror"
  carrying={
@@ -7,7 +7,7 @@
  }
  z_depth="monst"
  speed=15
- max_hp=12
+ max_hp=90
  damage=8
  bonus_xp_on_death=55
  vision_distance=30
