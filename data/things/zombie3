@@ -1,10 +1,10 @@
 {
- short_name="Smelly zombie3"
+ short_name="zommom"
  raw_name="zombie3"
- tooltip="Smelly zombie3"
+ tooltip="zommom"
  z_depth="monst"
  speed=15
- max_hp=1
+ max_hp=10
  damage=6
  bonus_xp_on_death=35
  vision_distance=20
