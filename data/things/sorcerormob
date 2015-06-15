@@ -2,6 +2,7 @@
  short_name="sorceror mob"
  raw_name="sorcerormob"
  tooltip="sorceror generator"
+ mob_spawn={ 100 "data/things/sorceror" }
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
@@ -17,7 +18,6 @@
  is_animated
  explodes_as="data/things/explosion2"
  mob_spawn_delay_tenths=200
- mob_spawn="data/things/sorceror"
  tiles={
   tile={
    tile="sorcerormob1"

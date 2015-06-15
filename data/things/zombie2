@@ -1,7 +1,7 @@
 {
- short_name="Smelly zombie"
- raw_name="zombie"
- tooltip="Smelly zombie"
+ short_name="Smelly zombie2"
+ raw_name="zombie2"
+ tooltip="Smelly zombie2"
  z_depth="monst"
  speed=15
  max_hp=1
@@ -23,178 +23,178 @@
   tile={
    delay=200
    is_dir_up
-   tile="zombiea-up"
+   tile="zombie2a-up"
   }
   tile={
    delay=200
    is_dir_down
-   tile="zombiea-down"
+   tile="zombie2a-down"
   }
   tile={
    delay=200
    is_dir_left
-   tile="zombiea-left"
+   tile="zombie2a-left"
   }
   tile={
    delay=200
    is_dir_right
-   tile="zombiea-right"
+   tile="zombie2a-right"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="zombiea-tl"
+   tile="zombie2a-tl"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="zombiea-bl"
+   tile="zombie2a-bl"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="zombiea-tr"
+   tile="zombie2a-tr"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="zombiea-br"
+   tile="zombie2a-br"
   }
   tile={
    delay=200
    is_dir_up
-   tile="zombieb-up"
+   tile="zombie2b-up"
   }
   tile={
    delay=200
    is_dir_down
-   tile="zombieb-down"
+   tile="zombie2b-down"
   }
   tile={
    delay=200
    is_dir_left
-   tile="zombieb-left"
+   tile="zombie2b-left"
   }
   tile={
    delay=200
    is_dir_right
-   tile="zombieb-right"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_left
-   tile="zombieb-tl"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_left
-   tile="zombieb-bl"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_right
-   tile="zombieb-tr"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_right
-   tile="zombieb-br"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   tile="zombiec-up"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   tile="zombiec-down"
-  }
-  tile={
-   delay=200
-   is_dir_left
-   tile="zombiec-left"
-  }
-  tile={
-   delay=200
-   is_dir_right
-   tile="zombiec-right"
+   tile="zombie2b-right"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="zombiec-tl"
+   tile="zombie2b-tl"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="zombiec-bl"
+   tile="zombie2b-bl"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="zombiec-tr"
+   tile="zombie2b-tr"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="zombiec-br"
+   tile="zombie2b-br"
   }
   tile={
    delay=200
    is_dir_up
-   tile="zombied-up"
+   tile="zombie2c-up"
   }
   tile={
    delay=200
    is_dir_down
-   tile="zombied-down"
+   tile="zombie2c-down"
   }
   tile={
    delay=200
    is_dir_left
-   tile="zombied-left"
+   tile="zombie2c-left"
   }
   tile={
    delay=200
    is_dir_right
-   tile="zombied-right"
+   tile="zombie2c-right"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="zombied-tl"
+   tile="zombie2c-tl"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="zombied-bl"
+   tile="zombie2c-bl"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="zombied-tr"
+   tile="zombie2c-tr"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="zombied-br"
+   tile="zombie2c-br"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="zombie2d-up"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="zombie2d-down"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="zombie2d-left"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="zombie2d-right"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="zombie2d-tl"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="zombie2d-bl"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="zombie2d-tr"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="zombie2d-br"
   }
  }
 }

@@ -25,49 +25,42 @@ uint8_t demarshal_uint8(demarshal_p, uint8_t *out);
 uint8_t demarshal_named_uint8(demarshal_p, const char *name, uint8_t *out);
 uint8_t demarshal_opt_named_uint8(demarshal_p, const char *name, uint8_t *out);
 uint8_t demarshal_opt_def_named_uint8(demarshal_p, const char *name, uint8_t *out, uint8_t def);
-uint8_t demarshal_peek_uint8(demarshal_p, uint8_t *out);
 
 uint8_t demarshal_uint16(demarshal_p, uint16_t *out);
 uint8_t demarshal_named_uint16(demarshal_p, const char *name, uint16_t *out);
 uint8_t demarshal_opt_named_uint16(demarshal_p, const char *name, uint16_t *out);
 uint8_t demarshal_opt_def_named_uint16(demarshal_p, const char *name, uint16_t *out, uint16_t def);
-uint8_t demarshal_peek_uint16(demarshal_p, uint16_t *out);
 
 uint8_t demarshal_uint32(demarshal_p, uint32_t *out);
 uint8_t demarshal_named_uint32(demarshal_p, const char *name, uint32_t *out);
 uint8_t demarshal_opt_named_uint32(demarshal_p, const char *name, uint32_t *out);
 uint8_t demarshal_opt_def_named_uint32(demarshal_p, const char *name, uint32_t *out, uint32_t def);
-uint8_t demarshal_peek_uint32(demarshal_p, uint32_t *out);
 
 uint8_t demarshal_uint64(demarshal_p, uint64_t *out);
 uint8_t demarshal_named_uint64(demarshal_p, const char *name, uint64_t *out);
 uint8_t demarshal_opt_named_uint64(demarshal_p, const char *name, uint64_t *out);
 uint8_t demarshal_opt_def_named_uint64(demarshal_p, const char *name, uint64_t *out, uint64_t def);
-uint8_t demarshal_peek_uint64(demarshal_p, uint64_t *out);
+uint8_t demarshal_peek_int(demarshal_p);
 
 uint8_t demarshal_int8(demarshal_p, int8_t *out);
 uint8_t demarshal_named_int8(demarshal_p, const char *name, int8_t *out);
 uint8_t demarshal_opt_named_int8(demarshal_p, const char *name, int8_t *out);
 uint8_t demarshal_opt_def_named_int8(demarshal_p, const char *name, int8_t *out, int8_t def);
-uint8_t demarshal_peek_int8(demarshal_p, int8_t *out);
 
 uint8_t demarshal_int16(demarshal_p, int16_t *out);
 uint8_t demarshal_named_int16(demarshal_p, const char *name, int16_t *out);
 uint8_t demarshal_opt_named_int16(demarshal_p, const char *name, int16_t *out);
 uint8_t demarshal_opt_def_named_int16(demarshal_p, const char *name, int16_t *out, int16_t def);
-uint8_t demarshal_peek_int16(demarshal_p, int16_t *out);
 
 uint8_t demarshal_int32(demarshal_p, int32_t *out);
 uint8_t demarshal_named_int32(demarshal_p, const char *name, int32_t *out);
 uint8_t demarshal_opt_named_int32(demarshal_p, const char *name, int32_t *out);
 uint8_t demarshal_opt_def_named_int32(demarshal_p, const char *name, int32_t *out, int32_t def);
-uint8_t demarshal_peek_int32(demarshal_p, int32_t *out);
 
 uint8_t demarshal_int64(demarshal_p, int64_t *out);
 uint8_t demarshal_named_int64(demarshal_p, const char *name, int64_t *out);
 uint8_t demarshal_opt_named_int64(demarshal_p, const char *name, int64_t *out);
 uint8_t demarshal_opt_def_named_int64(demarshal_p, const char *name, int64_t *out, int64_t def);
-uint8_t demarshal_peek_int64(demarshal_p, int64_t *out);
 
 uint8_t demarshal_float(demarshal_p, float *out);
 uint8_t demarshal_named_float(demarshal_p, const char *name, float *out);
@@ -136,49 +129,49 @@ uint8_t marshal_array_ket(marshal_p);
 #define GET_OPT_DEF_NAMED_STRING(D, N, V, DEF)  demarshal_opt_def_named_string((D), (N), &(V), DEF)
 
 #define GET_UINT8(D, V)                demarshal_uint8((D), &(V))
-#define GET_PEEK_UINT8(D, V)           demarshal_peek_uint8((D), &(V))
+#define GET_PEEK_UINT8(D)              demarshal_peek_int((D))
 #define GET_NAMED_UINT8(D, N, V)       demarshal_named_uint8((D), (N), &(V))
 #define GET_OPT_NAMED_UINT8(D, N, V)   demarshal_opt_named_uint8((D), (N), &(V))
 #define GET_OPT_DEF_NAMED_UINT8(D, N, V, DEF)   demarshal_opt_def_named_uint8((D), (N), &(V), DEF)
 
 #define GET_UINT16(D, V)               demarshal_uint16((D), &(V))
-#define GET_PEEK_UINT16(D, V)          demarshal_peek_uint16((D), &(V))
+#define GET_PEEK_UINT16(D)             demarshal_peek_int((D))
 #define GET_NAMED_UINT16(D, N, V)      demarshal_named_uint16((D), (N), &(V))
 #define GET_OPT_NAMED_UINT16(D, N, V)  demarshal_opt_named_uint16((D), (N), &(V))
 #define GET_OPT_DEF_NAMED_UINT16(D, N, V, DEF)  demarshal_opt_def_named_uint16((D), (N), &(V), DEF)
 
 #define GET_UINT32(D, V)               demarshal_uint32((D), &(V))
-#define GET_PEEK_UINT32(D, V)          demarshal_peek_uint32((D), &(V))
+#define GET_PEEK_UINT32(D)             demarshal_peek_int((D))
 #define GET_NAMED_UINT32(D, N, V)      demarshal_named_uint32((D), (N), &(V))
 #define GET_OPT_NAMED_UINT32(D, N, V)  demarshal_opt_named_uint32((D), (N), &(V))
 #define GET_OPT_DEF_NAMED_UINT32(D, N, V, DEF)  demarshal_opt_def_named_uint32((D), (N), &(V), DEF)
 
 #define GET_UINT64(D, V)               demarshal_uint64((D), &(V))
-#define GET_PEEK_UINT64(D, V)          demarshal_peek_uint64((D), &(V))
+#define GET_PEEK_UINT64(D)             demarshal_peek_int((D))
 #define GET_NAMED_UINT64(D, N, V)      demarshal_named_uint64((D), (N), &(V))
 #define GET_OPT_NAMED_UINT64(D, N, V)  demarshal_opt_named_uint64((D), (N), &(V))
 #define GET_OPT_DEF_NAMED_UINT64(D, N, V, DEF)  demarshal_opt_def_named_uint64((D), (N), &(V), DEF)
 
 #define GET_INT8(D, V)                 demarshal_int8((D), &(V))
-#define GET_PEEK_INT8(D, V)            demarshal_peek_int8((D), &(V))
+#define GET_PEEK_INT8(D)               demarshal_peek_int8((D))
 #define GET_NAMED_INT8(D, N, V)        demarshal_named_int8((D), (N), &(V))
 #define GET_OPT_NAMED_INT8(D, N, V)    demarshal_opt_named_int8((D), (N), &(V))
 #define GET_OPT_DEF_NAMED_INT8(D, N, V, DEF)    demarshal_opt_def_named_int8((D), (N), &(V), DEF)
 
 #define GET_INT16(D, V)                demarshal_int16((D), &(V))
-#define GET_PEEK_INT16(D, V)           demarshal_peek_int16((D), &(V))
+#define GET_PEEK_INT16(D)              demarshal_peek_int16((D))
 #define GET_NAMED_INT16(D, N, V)       demarshal_named_int16((D), (N), &(V))
 #define GET_OPT_NAMED_INT16(D, N, V)   demarshal_opt_named_int16((D), (N), &(V))
 #define GET_OPT_DEF_NAMED_INT16(D, N, V, DEF)   demarshal_opt_def_named_int16((D), (N), &(V), DEF)
 
 #define GET_INT32(D, V)                demarshal_int32((D), &(V))
-#define GET_PEEK_INT32(D, V)           demarshal_peek_int32((D), &(V))
+#define GET_PEEK_INT32(D)              demarshal_peek_int32((D))
 #define GET_NAMED_INT32(D, N, V)       demarshal_named_int32((D), (N), &(V))
 #define GET_OPT_NAMED_INT32(D, N, V)   demarshal_opt_named_int32((D), (N), &(V))
 #define GET_OPT_DEF_NAMED_INT32(D, N, V, DEF)   demarshal_opt_def_named_int32((D), (N), &(V), DEF)
 
 #define GET_INT64(D, V)                demarshal_int64((D), &(V))
-#define GET_PEEK_INT64(D, V)           demarshal_peek_int64((D), &(V))
+#define GET_PEEK_INT64(D)              demarshal_peek_int64((D))
 #define GET_NAMED_INT64(D, N, V)       demarshal_named_int64((D), (N), &(V))
 #define GET_OPT_NAMED_INT64(D, N, V)   demarshal_opt_named_int64((D), (N), &(V))
 #define GET_OPT_DEF_NAMED_INT64(D, N, V, DEF)   demarshal_opt_def_named_int64((D), (N), &(V), DEF)
