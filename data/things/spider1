@@ -4,7 +4,7 @@
  tooltip="spider"
  z_depth="monst"
  speed=1
- max_hp=100
+ max_hp=10
  damage=10
  bonus_xp_on_death=100
  jump_speed=20
