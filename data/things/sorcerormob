@@ -2,7 +2,7 @@
  short_name="sorceror mob"
  raw_name="sorcerormob"
  tooltip="sorceror generator"
- mob_spawn={ 100 "data/things/sorceror" }
+ mob_spawn={ 1000 "data/things/sorceror" }
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
