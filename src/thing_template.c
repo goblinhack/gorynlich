@@ -457,7 +457,7 @@ static void demarshal_thing_mob_spawn (demarshal_p ctx, tpp t)
         }
 
         t->mob_spawn_what[t->mob_spawn_count] = v;
-        t->mob_spawn_chance[t->mob_spawn_count++] = chance;
+        t->mob_spawn_chance_d1000[t->mob_spawn_count++] = chance;
     } while (demarshal_gotone(ctx));
 
     GET_KET(ctx);
@@ -1058,9 +1058,9 @@ const char *tp_mob_spawn (tpp t)
 
     for (;;) {
         int i = myrand() % t->mob_spawn_count;
-        int r = myrand() % 100;
+        int r = myrand() % 1000;
 
-        if (t->mob_spawn_chance[i] < r) {
+        if (r < t->mob_spawn_chance_d1000[i]) {
             return (t->mob_spawn_what[i]);
         }
     }

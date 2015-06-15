@@ -2,7 +2,7 @@
  short_name="Eyebawl mob"
  raw_name="eyebawlmob"
  tooltip="Eyebawl generator"
- mob_spawn={ 100 "data/things/eyebawl" }
+ mob_spawn={ 1000 "data/things/eyebawl" }
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
