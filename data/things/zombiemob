@@ -3,11 +3,11 @@
  raw_name="Zommob"
  tooltip="Zombie mob spwan"
  mob_spawn={
-    30 "data/things/zombie1"
-    30 "data/things/zombie2"
-    30 "data/things/zombie3"
-    30 "data/things/zombie4"
-    30 "data/things/zombie5"
+    1000 "data/things/zombie1"
+    10 "data/things/zombie2"
+    1000 "data/things/zombie3"
+    1000 "data/things/zombie4"
+    1000 "data/things/zombie5"
  }
  z_depth="monst"
  is_mob_spawner

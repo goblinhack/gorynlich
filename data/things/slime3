@@ -2,7 +2,7 @@
  short_name="Poison slime"
  raw_name="slime-3"
  tooltip="Poison slime"
- mob_spawn={ 100 "data/things/slime3" }
+ mob_spawn={ 1000 "data/things/slime3" }
  z_depth="monst"
  speed=1
  max_hp=20

@@ -2,7 +2,7 @@
  short_name="Purple slime"
  raw_name="slime-1"
  tooltip="Purple slime"
- mob_spawn={ 100 "data/things/slime1" }
+ mob_spawn={ 1000 "data/things/slime1" }
  z_depth="monst"
  max_hp=5
  damage=1

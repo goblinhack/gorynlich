@@ -2,7 +2,7 @@
  short_name="Bone pile"
  raw_name="bonepile2"
  tooltip="Bone pile"
- mob_spawn={ 100 "data/things/ghost2" }
+ mob_spawn={ 1000 "data/things/ghost2" }
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
