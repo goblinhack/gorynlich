@@ -1,11 +1,11 @@
 {
- short_name="Smelly zombie4"
+ short_name="part time zombie"
  raw_name="zombie4"
- tooltip="Smelly zombie4"
+ tooltip="part time zombie"
  z_depth="monst"
  speed=15
  max_hp=1
- damage=6
+ damage=10
  bonus_xp_on_death=35
  vision_distance=20
  hit_delay_tenths=5
