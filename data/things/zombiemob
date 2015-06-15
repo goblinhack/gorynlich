@@ -2,6 +2,13 @@
  short_name="Zommob"
  raw_name="Zommob"
  tooltip="Zombie mob spwan"
+ mob_spawn={
+    30 "data/things/zombie1"
+    30 "data/things/zombie2"
+    30 "data/things/zombie3"
+    30 "data/things/zombie4"
+    30 "data/things/zombie5"
+ }
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
@@ -14,7 +21,6 @@
  damage=1
  bonus_xp_on_death=120
  mob_spawn_delay_tenths=20
- mob_spawn="data/things/zombie"
  tiles={
   tile={
    tile="zombiemob"

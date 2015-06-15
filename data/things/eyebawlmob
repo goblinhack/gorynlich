@@ -2,6 +2,7 @@
  short_name="Eyebawl mob"
  raw_name="eyebawlmob"
  tooltip="Eyebawl generator"
+ mob_spawn={ 100 "data/things/eyebawl" }
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
@@ -14,7 +15,6 @@
  damage=1
  bonus_xp_on_death=100
  mob_spawn_delay_tenths=30
- mob_spawn="data/things/eyebawl"
  tiles={
   tile={
    tile="eyebawlmob"

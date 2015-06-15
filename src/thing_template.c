@@ -290,8 +290,11 @@ static void tp_destroy_internal (tpp t)
         myfree(t->message_on_use);
     }
 
-    if (t->mob_spawn) {
-        myfree(t->mob_spawn);
+    int i;
+    for (i = 0; i < t->mob_spawn_count; i++) {
+        if (t->mob_spawn_what[i]) {
+            myfree(t->mob_spawn_what[i]);
+        }
     }
 }
 
@@ -430,6 +433,36 @@ static void demarshal_thing_carrying (demarshal_p ctx, tpp t)
     GET_KET(ctx);
 }
 
+static void demarshal_thing_mob_spawn (demarshal_p ctx, tpp t)
+{
+    if (!GET_PEEK_NAME(ctx, "mob_spawn")) {
+        return;
+    }
+
+    GET_NAME(ctx, "mob_spawn");
+
+    GET_BRA(ctx);
+
+    (void) demarshal_gotone(ctx);
+
+    while (GET_PEEK_UINT32(ctx)) {
+        int chance;
+        GET_INT32(ctx, chance);
+
+        char *v;
+        GET_STRING(ctx, v);
+
+        if (t->mob_spawn_count == MAX_MOB_SPAWN) {
+            DIE("thing %s has too many mob spawn values", v);
+        }
+
+        t->mob_spawn_what[t->mob_spawn_count] = v;
+        t->mob_spawn_chance[t->mob_spawn_count++] = chance;
+    } while (demarshal_gotone(ctx));
+
+    GET_KET(ctx);
+}
+
 ENUM_DEF_C(MAP_DEPTH, map_depth)
 
 void demarshal_thing_template (demarshal_p ctx, tpp t)
@@ -444,6 +477,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
     GET_OPT_DEF_NAMED_STRING(ctx, "tooltip", t->tooltip, "<no name>");
 
     demarshal_thing_carrying(ctx, t);
+    demarshal_thing_mob_spawn(ctx, t);
 
     (void) demarshal_gotone(ctx);
 
@@ -469,7 +503,6 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
         GET_OPT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
         GET_OPT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
-        GET_OPT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
 
         if (GET_PEEK_NAME(ctx, "z_depth")) {
             map_depth en = 0;
@@ -755,7 +788,6 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
     PUT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
     PUT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
-    PUT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
     PUT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
     PUT_NAMED_UINT8(ctx, "z_order", t->z_order);
     PUT_NAMED_INT32(ctx, "speed", t->speed);
@@ -1020,7 +1052,18 @@ const char *tp_message_on_use (tpp t)
 
 const char *tp_mob_spawn (tpp t)
 {
-    return (t->mob_spawn);
+    if (!t->mob_spawn_count) {
+        return (0);
+    }
+
+    for (;;) {
+        int i = myrand() % t->mob_spawn_count;
+        int r = myrand() % 100;
+
+        if (t->mob_spawn_chance[i] < r) {
+            return (t->mob_spawn_what[i]);
+        }
+    }
 }
 
 const char *tp_get_tooltip (tpp t)

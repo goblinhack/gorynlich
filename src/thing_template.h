@@ -129,7 +129,10 @@ typedef struct tp_ {
     /*
      * Periodically spawn something.
      */
-    char *mob_spawn;
+#define MAX_MOB_SPAWN 16
+    char *mob_spawn_what[MAX_MOB_SPAWN];
+    int mob_spawn_chance[MAX_MOB_SPAWN];
+    int mob_spawn_count;
 
     /*
      * How many and of what we are carrying. This is the base items a thing

@@ -2,6 +2,13 @@
  short_name="Orcmob"
  raw_name="Orcmob"
  tooltip="orc mob spwan"
+ mob_spawn={
+    90 "data/things/orc1"
+    10 "data/things/orc2"
+    5 "data/things/orc3"
+    2 "data/things/orc4"
+    1 "data/things/orc5"
+ }
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
@@ -14,7 +21,6 @@
  damage=1
  bonus_xp_on_death=120
  mob_spawn_delay_tenths=10
- mob_spawn="data/things/orc"
  tiles={
   tile={
    tile="orcmob"

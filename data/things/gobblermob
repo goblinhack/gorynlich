@@ -2,6 +2,7 @@
  short_name="gobbler mob"
  raw_name="gobblermob"
  tooltip="gobbler generator"
+ mob_spawn={ 100 "data/things/gobbler" }
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
@@ -14,7 +15,6 @@
  bonus_xp_on_death=200
  max_hp=100
  mob_spawn_delay_tenths=20
- mob_spawn="data/things/gobbler"
  tiles={
   tile={
    tile="gobblermob"

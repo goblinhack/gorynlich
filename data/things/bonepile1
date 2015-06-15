@@ -2,6 +2,7 @@
  short_name="Small bone pile"
  raw_name="bonepile1"
  tooltip="Small bone pile"
+ mob_spawn={ 100 "data/things/ghost1" }
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
@@ -14,7 +15,6 @@
  damage=1
  bonus_xp_on_death=10
  mob_spawn_delay_tenths=50
- mob_spawn="data/things/ghost1"
  tiles={
   tile={
    tile="bonepile1"
