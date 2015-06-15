@@ -1,0 +1,30 @@
+{
+ short_name="Big stick"
+ raw_name="stick2"
+ tooltip="Bit stick"
+ z_depth="monst"
+ is_weapon
+ is_melee_weapon
+ can_be_enchanted
+ is_degradable
+ hit_priority=0
+ is_carryable
+ is_given_randomly_at_start
+ weapon_fire_delay_hundredths=25
+ damage=8
+ swing_distance_from_player=7
+ is_wearable
+ is_collision_map_medium
+ is_animated
+ is_valid_for_action_bar
+ d10000_chance_of_appearing=150
+ d10000_chance_of_breaking=5
+ weapon_carry_anim="data/things/stick2_anim"
+ weapon_swing_anim="data/things/weapon_swing1"
+ tiles={
+  tile={
+   tile="stick"
+   delay=50
+  }
+ }
+}
