@@ -2,6 +2,7 @@
  short_name="Pink slime"
  raw_name="slime-2"
  tooltip="Pink slime"
+ mob_spawn={ 100 "data/things/slime2" }
  z_depth="monst"
  speed=1
  max_hp=10
@@ -24,7 +25,6 @@
  max_appear_depth=100
  is_mob_spawner
  mob_spawn_delay_tenths=300
- mob_spawn="data/things/slime2"
  tiles={
   tile={ delay=75 tile="slime-2-1-4" }
   tile={ delay=75 tile="slime-2-2-4" }

@@ -1773,6 +1773,13 @@ uint8_t demarshal_peek_float (tree_demarshal *ctx)
     return (demarshal_internal_float(ctx, 0));
 }
 
+uint8_t demarshal_peek_int (tree_demarshal *ctx)
+{
+    ctx->peek = 1;
+
+    return (demarshal_internal_int(ctx, 0));
+}
+
 uint8_t demarshal_float (tree_demarshal *ctx, float *out)
 {
     ctx->peek = 0;
