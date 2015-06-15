@@ -1,9 +1,9 @@
 {
- short_name="Stinking ork"
- raw_name="ork"
- tooltip="Stinking orc"
+ short_name="Orc soldier"
+ raw_name="ork1"
+ tooltip="Orc soldier"
  carrying={
-    "data/things/sword1"
+    "data/things/stick1"
  }
  z_depth="monst"
  speed=15
@@ -27,178 +27,178 @@
   tile={
    delay=200
    is_dir_up
-   tile="orca-up"
+   tile="orc1a-up"
   }
   tile={
    delay=200
    is_dir_down
-   tile="orca-down"
+   tile="orc1a-down"
   }
   tile={
    delay=200
    is_dir_left
-   tile="orca-left"
+   tile="orc1a-left"
   }
   tile={
    delay=200
    is_dir_right
-   tile="orca-right"
+   tile="orc1a-right"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="orca-tl"
+   tile="orc1a-tl"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="orca-bl"
+   tile="orc1a-bl"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="orca-tr"
+   tile="orc1a-tr"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="orca-br"
+   tile="orc1a-br"
   }
   tile={
    delay=200
    is_dir_up
-   tile="orcb-up"
+   tile="orc1b-up"
   }
   tile={
    delay=200
    is_dir_down
-   tile="orcb-down"
+   tile="orc1b-down"
   }
   tile={
    delay=200
    is_dir_left
-   tile="orcb-left"
+   tile="orc1b-left"
   }
   tile={
    delay=200
    is_dir_right
-   tile="orcb-right"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_left
-   tile="orcb-tl"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_left
-   tile="orcb-bl"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_right
-   tile="orcb-tr"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_right
-   tile="orcb-br"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   tile="orcc-up"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   tile="orcc-down"
-  }
-  tile={
-   delay=200
-   is_dir_left
-   tile="orcc-left"
-  }
-  tile={
-   delay=200
-   is_dir_right
-   tile="orcc-right"
+   tile="orc1b-right"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="orcc-tl"
+   tile="orc1b-tl"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="orcc-bl"
+   tile="orc1b-bl"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="orcc-tr"
+   tile="orc1b-tr"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="orcc-br"
+   tile="orc1b-br"
   }
   tile={
    delay=200
    is_dir_up
-   tile="orcd-up"
+   tile="orc1c-up"
   }
   tile={
    delay=200
    is_dir_down
-   tile="orcd-down"
+   tile="orc1c-down"
   }
   tile={
    delay=200
    is_dir_left
-   tile="orcd-left"
+   tile="orc1c-left"
   }
   tile={
    delay=200
    is_dir_right
-   tile="orcd-right"
+   tile="orc1c-right"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="orcd-tl"
+   tile="orc1c-tl"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="orcd-bl"
+   tile="orc1c-bl"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="orcd-tr"
+   tile="orc1c-tr"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="orcd-br"
+   tile="orc1c-br"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="orc1d-up"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="orc1d-down"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="orc1d-left"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="orc1d-right"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="orc1d-tl"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="orc1d-bl"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="orc1d-tr"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="orc1d-br"
   }
  }
 }
