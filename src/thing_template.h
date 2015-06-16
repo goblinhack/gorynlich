@@ -291,7 +291,7 @@ typedef struct tp_ {
     uint8_t is_rrr25:1;
     uint8_t is_rrr26:1;
     uint8_t is_rrr27:1;
-    uint8_t is_rrr28:1;
+    uint8_t is_bullet:1;
     uint8_t is_treasure_eater:1;
     uint8_t is_effect_fade_in_out:1;
     uint8_t is_internal:1;
@@ -791,9 +791,9 @@ static inline uint8_t tp_is_rrr27 (tpp t)
     return (t->is_rrr27);
 }
 
-static inline uint8_t tp_is_rrr28 (tpp t)
+static inline uint8_t tp_is_bullet (tpp t)
 {
-    return (t->is_rrr28);
+    return (t->is_bullet);
 }
 
 static inline uint8_t tp_is_treasure_eater (tpp t)
