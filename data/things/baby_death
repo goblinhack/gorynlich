@@ -22,7 +22,7 @@
  d10000_chance_of_appearing=10
  min_appear_depth=5
  max_appear_depth=100
- explodes_as="data/things/explosion3"
+ explodes_as="data/things/explosion2"
  is_animated
  tiles={
   tile={
