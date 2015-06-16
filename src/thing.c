@@ -1573,7 +1573,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      */
     if (t->on_server) {
         if (!t->is_collected) {
-            if (thing_is_bomb(t)) {
+            if (thing_is_bomb(t) || thing_is_bullet(t)) {
                 level_place_explosion(thing_level(t),
                                       0, /* owner */
                                       t->tp,

@@ -17,9 +17,6 @@
  is_collision_map_medium
  tiles={
   tile={
-   tile="fireball2-1"
-  }
-  tile={
    tile="fireball2-2"
   }
   tile={
