@@ -4,7 +4,7 @@
  tooltip="pellets"
  is_hidden_from_editor
  z_depth="explosion_top"
- speed=90
+ speed=150
  damage=15
  hit_delay_tenths=1
  is_bullet
@@ -16,7 +16,7 @@
  is_light_source
  light_tint="orange"
  light_radius=0.1
- explodes_as="data/things/explosion3"
+ explodes_as="data/things/explosion1"
  tiles={
   tile={
    tile="pellets"

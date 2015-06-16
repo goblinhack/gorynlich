@@ -12,6 +12,7 @@
  is_animated
  is_valid_for_action_bar
  is_given_randomly_at_start
+ explosion_radius=4.0
  d10000_chance_of_appearing=50
  tiles={
   tile={
