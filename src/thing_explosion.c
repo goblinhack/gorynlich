@@ -367,6 +367,10 @@ static void level_place_explosion_ (levelp level,
                 continue;
             }
 
+            if (distance > radius) {
+                continue;
+            }
+
             double dx, dy;
 
             for (dx = -0.5; dx <= 0.5; dx += density) {
@@ -417,9 +421,6 @@ void level_place_explosion (levelp level,
         explosion_radius = tp_get_explosion_radius(tp);
         id = tp_to_id(tp);
     }
-if(tp) {
-CON("explodes as %s explosion_radius %f",tp_name(tp), explosion_radius);
-}
 
     /*
      * Used for fire potions and bombs as it gives a layered effect.
