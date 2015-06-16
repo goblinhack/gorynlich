@@ -8,7 +8,6 @@
  damage=15
  hit_delay_tenths=1
  is_bullet
- is_fragile
  is_projectile
  is_animated
  is_variable_size
