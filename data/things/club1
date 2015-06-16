@@ -23,7 +23,7 @@
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={
-   tile="club"
+   tile="club1"
    delay=50
   }
  }
