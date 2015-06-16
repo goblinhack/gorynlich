@@ -398,28 +398,49 @@ void level_place_explosion (levelp level,
                             double x, double y)
 {
     const char *explodes_as = 0;
+    double explosion_radius = 1.0;
+    int id = 0;
 
     if (tp) {
         if (tp_is_cloud_effect(tp)) {
             explodes_as = tp_name(tp);
+            if (explodes_as) {
+                tp = tp_find(explodes_as);
+            }
         } else {
             explodes_as = tp_explodes_as(tp);
+            if (explodes_as) {
+                tp = tp_find(explodes_as);
+            }
         }
+
+        explosion_radius = tp_get_explosion_radius(tp);
+        id = tp_to_id(tp);
     }
+if(tp) {
+CON("explodes as %s explosion_radius %f",tp_name(tp), explosion_radius);
+}
 
     /*
      * Used for fire potions and bombs as it gives a layered effect.
      */
     if (!explodes_as || 
-            (tp_to_id(tp) == THING_EXPLOSION1) ||
-            (tp_to_id(tp) == THING_BOMB)) {
+            (id == THING_EXPLOSION1) ||
+            (id == THING_EXPLOSION2) ||
+            (id == THING_EXPLOSION3) ||
+            (id == THING_EXPLOSION4) ||
+            (id == THING_BOMB)) {
 
-        level_explosion_flash_effect = 20;
+        if ((id == THING_EXPLOSION3) ||
+            (id == THING_EXPLOSION4) ||
+            (id == THING_BOMB)) {
+            level_explosion_flash_effect = 20;
+        }
 
         level_place_explosion_(level, 
                                owner,
                                x, y,
-                               6, // radius
+                               explosion_radius,
                                0.5, // density
                                4, // nargs
                                "data/things/explosion1",

@@ -17,7 +17,7 @@
  bonus_xp_on_death=250
  d10000_chance_of_appearing=100
  fires="data/things/fireball3"
- explodes_as="data/things/explosion3"
+ explodes_as="data/things/explosion2"
  weapon_fire_delay_hundredths=100
  is_effect_fade_in_out
  is_animated
