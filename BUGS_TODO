@@ -5,7 +5,6 @@
 - web walking boots, lava and acid boots
 - power attack, diver defense to attack
 - possession ghost, cursed weapon, hit self
-- gobbler eats treasure
 - zombies resurrect
 - sound effects for weapons and hits http://www.bfxr.net/
 - add money
@@ -52,6 +51,7 @@
 - different profiles for level generation
 
 Mon Jun 15 22:11:57 EDT 2015
+- gobbler eats treasure
 - orc random spawn
 - orc soldier, captain, sorceror, baby, orc titan, ork hulk?
 - zomboy, zomgal, zombaby
