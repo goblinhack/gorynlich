@@ -1,7 +1,7 @@
 {
- short_name="Diamond Sword"
+ short_name="crystal Sword"
  raw_name="sword8"
- tooltip="Diamond Sword"
+ tooltip="crystal Sword"
  z_depth="monst"
  is_weapon
  is_melee_weapon
@@ -11,14 +11,14 @@
  is_carryable
  is_given_randomly_at_start
  weapon_fire_delay_hundredths=15
- damage=14
+ damage=25
  swing_distance_from_player=5
  is_wearable
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
  d10000_chance_of_appearing=2
- d10000_chance_of_breaking=0
+ d10000_chance_of_breaking=20
  weapon_carry_anim="data/things/sword8_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={
