@@ -1,7 +1,7 @@
 {
- short_name="Very short stick"
+ short_name="very short stick"
  raw_name="stick1"
- tooltip="Very Very Short stick"
+ tooltip="very very short stick"
  z_depth="monst"
  is_weapon
  is_melee_weapon

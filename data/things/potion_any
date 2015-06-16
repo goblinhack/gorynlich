@@ -1,7 +1,7 @@
 {
- short_name="Any potion"
+ short_name="any potion"
  raw_name="potion_any"
- tooltip="Random potion"
+ tooltip="random potion"
  z_depth="monst"
  is_potion
  is_magical

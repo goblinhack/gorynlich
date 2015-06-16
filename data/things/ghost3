@@ -1,7 +1,7 @@
 {
- short_name="Mighty phantom"
+ short_name="mighty phantom"
  raw_name="ghost3"
- tooltip="Greater phantom"
+ tooltip="greater phantom"
  z_depth="monst"
  speed=15
  max_hp=1

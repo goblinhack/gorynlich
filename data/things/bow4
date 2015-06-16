@@ -1,7 +1,7 @@
 {
- short_name="Machine-Bow"
+ short_name="machine-bow"
  raw_name="bow4"
- tooltip="Professional Bow"
+ tooltip="professional bow"
  fires="data/things/arrow"
  z_depth="monst"
  is_weapon

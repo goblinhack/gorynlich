@@ -1,7 +1,7 @@
 {
- short_name="Wall"
+ short_name="wall"
  raw_name="wall2"
- tooltip="Wall2"
+ tooltip="wall2"
  z_depth="wall"
  is_hard
  speed=20

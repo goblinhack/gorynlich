@@ -1,7 +1,7 @@
 {
- short_name="Mob spawner"
+ short_name="mob spawner"
  raw_name="generator5"
- tooltip="Mob spawner"
+ tooltip="mob spawner"
  z_depth="monst"
  is_mob_spawner
  hit_priority=20

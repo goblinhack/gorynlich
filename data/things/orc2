@@ -1,7 +1,7 @@
 {
- short_name="Orc captain"
+ short_name="orc captain"
  raw_name="ork2"
- tooltip="Orc captain"
+ tooltip="orc captain"
  carrying={
     "data/things/sword2"
  }

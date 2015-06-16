@@ -1,7 +1,7 @@
 {
- short_name="Giant club"
+ short_name="giant club"
  raw_name="club1"
- tooltip="Giant club"
+ tooltip="giant club"
  z_depth="monst"
  is_weapon
  is_melee_weapon

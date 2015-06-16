@@ -1,7 +1,7 @@
 {
- short_name="Any weapon"
+ short_name="any weapon"
  raw_name="weapon_any"
- tooltip="Random weapon"
+ tooltip="random weapon"
  z_depth="monst"
  is_weapon
  is_internal

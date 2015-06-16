@@ -1,7 +1,7 @@
 {
- short_name="Wand"
- raw_name="wand1"
- tooltip="Wand of more fire"
+ short_name="wand of yet more fire"
+ raw_name="wand2"
+ tooltip="wand of yet more fire"
  fires="data/things/fireball3"
  weapon_fire_delay_hundredths=30
  z_depth="monst"

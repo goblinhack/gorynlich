@@ -1,7 +1,7 @@
 {
- short_name="Child's Bow"
+ short_name="child's bow"
  raw_name="bow1"
- tooltip="Plastic Bow"
+ tooltip="plastic bow"
  fires="data/things/arrow"
  z_depth="monst"
  is_weapon

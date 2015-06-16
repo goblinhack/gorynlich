@@ -1,7 +1,7 @@
 {
- short_name="Shiny gem"
+ short_name="shiny gem"
  raw_name="gem1"
- tooltip="Tourmaline gem"
+ tooltip="tourmaline gem"
  z_depth="monst"
  is_inactive
  is_treasure

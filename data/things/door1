@@ -1,7 +1,7 @@
 {
- short_name="Door"
+ short_name="door"
  raw_name="door1"
- tooltip="Door1"
+ tooltip="door1"
  z_depth="wall"
  is_inactive
  is_door

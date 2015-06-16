@@ -1,7 +1,7 @@
 {
- short_name="Pink slime"
+ short_name="pink slime"
  raw_name="slime-2"
- tooltip="Pink slime"
+ tooltip="pink slime"
  mob_spawn={ 1000 "data/things/slime2" }
  z_depth="monst"
  speed=1

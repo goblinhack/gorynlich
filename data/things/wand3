@@ -1,8 +1,8 @@
 {
- short_name="wand of fire"
+ short_name="wand of something"
  raw_name="wand1"
- tooltip="wand of fire"
- fires="data/things/fireball1"
+ tooltip="wand of something"
+ fires="data/things/fireball3"
  weapon_fire_delay_hundredths=30
  z_depth="monst"
  is_weapon
@@ -25,23 +25,23 @@
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
- weapon_carry_anim="data/things/wand1_anim"
+ weapon_carry_anim="data/things/wand3_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={
-   tile="wand1.1"
+   tile="wand3.1"
    delay=50
   }
   tile={
-   tile="wand1.2"
+   tile="wand3.2"
    delay=50
   }
   tile={
-   tile="wand1.3"
+   tile="wand3.3"
    delay=50
   }
   tile={
-   tile="wand1.4"
+   tile="wand3.4"
    delay=50
   }
  }
