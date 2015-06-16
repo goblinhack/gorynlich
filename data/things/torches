@@ -1,7 +1,7 @@
 {
- short_name="Bundle of torches"
+ short_name="bundle of torches"
  raw_name="torches"
- tooltip="Bundle of torches"
+ tooltip="bundle of torches"
  z_depth="monst"
  quantity=10
  is_torch

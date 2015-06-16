@@ -1,7 +1,7 @@
 {
  short_name="teleport"
  raw_name="teleport1"
- tooltip="Level teleport"
+ tooltip="level teleport"
  z_depth="explosion_top"
  is_teleport
  is_light_source

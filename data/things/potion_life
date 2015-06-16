@@ -1,7 +1,7 @@
 {
- short_name="Lifeforce potion"
+ short_name="lifeforce potion"
  raw_name="potion_life"
- tooltip="Potion of make you live longer"
+ tooltip="potion of make you live longer"
  z_depth="monst"
  is_inactive
  is_potion

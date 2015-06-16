@@ -1,7 +1,7 @@
 {
- short_name="Very short sword"
+ short_name="very short sword"
  raw_name="sword1"
- tooltip="Very Very Short sword"
+ tooltip="very very short sword"
  z_depth="monst"
  is_weapon
  is_melee_weapon

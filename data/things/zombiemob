@@ -1,7 +1,7 @@
 {
- short_name="Zommob"
- raw_name="Zommob"
- tooltip="Zombie mob spwan"
+ short_name="zommob"
+ raw_name="zommob"
+ tooltip="zombie mob spwan"
  mob_spawn={
     1000 "data/things/zombie1"
     10 "data/things/zombie2"

@@ -1,7 +1,7 @@
 {
- short_name="Water"
+ short_name="water"
  raw_name="water"
- tooltip="Water"
+ tooltip="water"
  z_depth="monst"
  is_inactive
  is_food

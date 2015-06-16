@@ -1,7 +1,7 @@
 {
- short_name="Brazier"
+ short_name="brazier"
  raw_name="brazier"
- tooltip="Fire lighty thing"
+ tooltip="fire lighty thing"
  z_depth="player"
  is_light_source
  is_candle_light

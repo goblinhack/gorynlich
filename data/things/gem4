@@ -1,7 +1,7 @@
 {
- short_name="Dark gem"
+ short_name="dark gem"
  raw_name="gem4"
- tooltip="Dark amethyst"
+ tooltip="dark amethyst"
  z_depth="monst"
  is_inactive
  is_treasure

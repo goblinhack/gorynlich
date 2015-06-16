@@ -1,7 +1,7 @@
 {
- short_name="Key"
+ short_name="key"
  raw_name="key"
- tooltip="It's a key..."
+ tooltip="it's a key..."
  z_depth="monst"
  is_key
  is_stackable

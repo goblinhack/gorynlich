@@ -1,7 +1,7 @@
 {
- short_name="EyeBawl"
+ short_name="eyebawl"
  raw_name="eyebawl"
- tooltip="EyeBawl"
+ tooltip="eyebawl"
  z_depth="monst"
  speed=30
  max_hp=1

@@ -1,7 +1,7 @@
 {
- short_name="Ring"
+ short_name="ring"
  raw_name="ring2"
- tooltip="Generic magical ring tm"
+ tooltip="generic magical ring tm"
  z_depth="monst"
  is_inactive
  is_treasure

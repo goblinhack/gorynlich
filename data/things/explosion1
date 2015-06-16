@@ -1,5 +1,5 @@
 {
- short_name="Explosion"
+ short_name="explosion"
  raw_name="explosion1"
  z_depth="explosion_top"
  is_animated

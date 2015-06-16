@@ -1,7 +1,7 @@
 {
- short_name="Apple"
+ short_name="apple"
  raw_name="apple2"
- tooltip="Ripe apple"
+ tooltip="ripe apple"
  z_depth="monst"
  is_inactive
  is_food

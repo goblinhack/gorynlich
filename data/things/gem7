@@ -1,7 +1,7 @@
 {
- short_name="Starstone"
+ short_name="starstone"
  raw_name="gem7"
- tooltip="Starstone"
+ tooltip="starstone"
  z_depth="monst"
  is_inactive
  is_treasure

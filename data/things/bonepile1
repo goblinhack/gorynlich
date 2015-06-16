@@ -1,7 +1,7 @@
 {
- short_name="Small bone pile"
+ short_name="small bone pile"
  raw_name="bonepile1"
- tooltip="Small bone pile"
+ tooltip="small bone pile"
  mob_spawn={ 1000 "data/things/ghost1" }
  z_depth="monst"
  is_mob_spawner

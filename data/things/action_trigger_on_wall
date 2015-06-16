@@ -1,7 +1,7 @@
 {
  short_name="action_trigger_on_wall"
  raw_name="action_trigger_on_wall"
- tooltip="Triggers on moving wall"
+ tooltip="triggers on moving wall"
  is_collision_map_small
  z_depth="actions"
  is_action

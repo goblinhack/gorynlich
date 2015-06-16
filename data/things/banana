@@ -1,7 +1,7 @@
 {
- short_name="Banana"
+ short_name="banana"
  raw_name="banana"
- tooltip="A porcupine..."
+ tooltip="a porcupine..."
  z_depth="monst"
  is_inactive
  is_food
