@@ -487,7 +487,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         if (GET_OPT_NAMED_STRING(ctx, "fires", val)) {
             t->fires = tp_find(val);
             if (!t->fires) {
-                ERR("cannot find %s for %s to fire",
+                DIE("cannot find %s for %s to fire",
                     val, t->short_name);
             }
             myfree(val);
