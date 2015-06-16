@@ -157,6 +157,10 @@ void thing_server_fire (thingp t,
          */
         thing_swing(t);
         return;
+    } else {
+        /*
+         * Wand or shotgun etc...
+         */
     }
 
     widp w = wid_game_map_server_replace_tile(

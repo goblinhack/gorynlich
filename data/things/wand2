@@ -1,7 +1,7 @@
 {
- short_name="wand of yet more fire"
+ short_name="wand of plasma stuff"
  raw_name="wand2"
- tooltip="wand of yet more fire"
+ tooltip="wand of plasma stuff"
  fires="data/things/fireball3"
  weapon_fire_delay_hundredths=30
  z_depth="monst"
@@ -26,7 +26,6 @@
  is_animated
  is_valid_for_action_bar
  weapon_carry_anim="data/things/wand2_anim"
- weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={
    tile="wand2.1"

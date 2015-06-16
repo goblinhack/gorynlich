@@ -1905,11 +1905,11 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     tpp weapon = 0;
 
     if (hitter && thing_owner(hitter)) {
-        THING_CON(t, "is being hit by %s, owner %s",
+        THING_LOG(t, "is being hit by %s, owner %s",
                   thing_logname(hitter), 
                   thing_logname(thing_owner(hitter)));
     } else {
-        THING_CON(t, "is being hit by %s",
+        THING_LOG(t, "is being hit by %s",
                   thing_logname(hitter));
     }
 
@@ -3724,10 +3724,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
          * also move the weapons.
          */
         if (weapon_id) {
-THING_LOG(t, "rx weapon, wield %d",weapon_id);
             thing_wield(t, id_to_tp(weapon_id));
         } else if (t->weapon) {
-THING_LOG(t, "rx weapon, unwield");
             thing_unwield(t);
         }
 
