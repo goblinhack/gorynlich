@@ -1,0 +1,22 @@
+{
+ short_name="pellets"
+ raw_name="pellets"
+ tooltip="pellets"
+ is_hidden_from_editor
+ z_depth="explosion_top"
+ speed=90
+ damage=15
+ hit_delay_tenths=1
+ is_bullet
+ is_fragile
+ is_projectile
+ is_animated
+ is_variable_size
+ is_collision_map_medium
+ explodes_as="data/things/explosion3"
+ tiles={
+  tile={
+   tile="pellets"
+  }
+ }
+}
