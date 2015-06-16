@@ -13,6 +13,9 @@
  is_animated
  is_variable_size
  is_collision_map_medium
+ is_light_source
+ light_tint="orange"
+ light_radius=0.1
  explodes_as="data/things/explosion3"
  tiles={
   tile={

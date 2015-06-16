@@ -2,24 +2,23 @@
  short_name="shotgun"
  raw_name="shotgun"
  tooltip="shotgun"
+ fires="data/things/pellets"
+ weapon_fire_delay_hundredths=30
  z_depth="monst"
  is_weapon
- is_melee_weapon
  can_be_enchanted
  is_degradable
  hit_priority=0
  is_carryable
  is_given_randomly_at_start
- fires="data/things/pellets"
- weapon_fire_delay_hundredths=25
- damage=3
- swing_distance_from_player=5
+ is_fragile
+ is_damaged_on_firing
+ d10000_chance_of_appearing=1
+ d10000_chance_of_breaking=5
  is_wearable
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
- d10000_chance_of_appearing=150
- d10000_chance_of_breaking=5
  weapon_carry_anim="data/things/shotgun_anim"
  tiles={
   tile={

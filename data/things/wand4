@@ -26,7 +26,6 @@
  is_animated
  is_valid_for_action_bar
  weapon_carry_anim="data/things/wand4_anim"
- weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={
    tile="wand4.1"
