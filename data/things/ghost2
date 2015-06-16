@@ -1,7 +1,7 @@
 {
- short_name="Phantom"
+ short_name="phantom"
  raw_name="ghost2"
- tooltip="Phantom"
+ tooltip="phantom"
  z_depth="monst"
  speed=10
  max_hp=1

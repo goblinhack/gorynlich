@@ -1,7 +1,7 @@
 {
- short_name="Shiny topaz"
+ short_name="shiny topaz"
  raw_name="gem3"
- tooltip="Yellow topaz"
+ tooltip="yellow topaz"
  z_depth="monst"
  is_inactive
  is_treasure

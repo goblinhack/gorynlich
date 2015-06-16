@@ -1,7 +1,7 @@
 {
- short_name="Cheddar cheese"
+ short_name="cheddar cheese"
  raw_name="cheese"
- tooltip="Is this cheese?"
+ tooltip="is this cheese?"
  z_depth="monst"
  is_inactive
  is_food
@@ -12,7 +12,7 @@
  d10000_chance_of_appearing=250
  is_fragile
  bonus_hp_on_use=40
- message_on_use="%%fg=yellow$more cheese Gromit?"
+ message_on_use="%%fg=yellow$more cheese gromit?"
  tiles={
   tile={
    tile="cheese"

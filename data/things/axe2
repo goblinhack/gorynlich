@@ -1,7 +1,7 @@
 {
- short_name="Steel Axe"
+ short_name="steel axe"
  raw_name="axe2"
- tooltip="Steel Axe"
+ tooltip="steel axe"
  z_depth="monst"
  is_weapon
  is_melee_weapon

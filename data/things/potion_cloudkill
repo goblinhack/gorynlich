@@ -1,7 +1,7 @@
 {
- short_name="Cloudkill potion"
+ short_name="cloudkill potion"
  raw_name="potion_cloudkill"
- tooltip="Potion of purply death"
+ tooltip="potion of purply death"
  z_depth="monst"
  is_inactive
  is_potion

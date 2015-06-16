@@ -1,7 +1,7 @@
 {
- short_name="Two handed sword"
+ short_name="two handed sword"
  raw_name="sword5"
- tooltip="Two Fisted Sword"
+ tooltip="two fisted sword"
  z_depth="monst"
  is_weapon
  is_melee_weapon

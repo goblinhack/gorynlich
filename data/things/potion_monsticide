@@ -1,7 +1,7 @@
 {
- short_name="Monsticide"
+ short_name="monsticide"
  raw_name="potion_monsticide"
- tooltip="Monsticide"
+ tooltip="monsticide"
  z_depth="monst"
  is_inactive
  is_potion

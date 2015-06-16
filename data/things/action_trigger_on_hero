@@ -1,7 +1,7 @@
 {
  short_name="action_trigger_on_hero"
  raw_name="action_trigger_on_hero"
- tooltip="Triggers on hero step"
+ tooltip="triggers on hero step"
  is_collision_map_medium
  z_depth="actions"
  is_action

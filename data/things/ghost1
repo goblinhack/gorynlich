@@ -1,7 +1,7 @@
 {
- short_name="Weak spirit"
+ short_name="weak spirit"
  raw_name="ghost1"
- tooltip="Minor phantom"
+ tooltip="minor phantom"
  z_depth="monst"
  speed=5
  max_hp=1

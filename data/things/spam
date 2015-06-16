@@ -1,7 +1,7 @@
 {
- short_name="Spam"
+ short_name="spam"
  raw_name="spam"
- tooltip="Spam, spam, spam, spam, spam"
+ tooltip="spam, spam, spam, spam, spam"
  z_depth="monst"
  is_inactive
  is_spam

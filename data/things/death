@@ -1,7 +1,7 @@
 {
- short_name="The Reaper"
+ short_name="the reaper"
  raw_name="death"
- tooltip="The Reaper"
+ tooltip="the reaper"
  carrying={
     "data/things/scythe1"
  }

@@ -1,7 +1,7 @@
 {
  short_name="rock"
  raw_name="rock1"
- tooltip="Rock"
+ tooltip="rock"
  z_depth="wall"
  is_hard
  is_inactive

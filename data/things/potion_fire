@@ -1,7 +1,7 @@
 {
- short_name="Fire potion"
+ short_name="fire potion"
  raw_name="potion_fire"
- tooltip="Burny fire fire potion"
+ tooltip="burny fire fire potion"
  z_depth="monst"
  is_inactive
  is_potion

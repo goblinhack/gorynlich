@@ -1,7 +1,7 @@
 {
- short_name="Keys"
+ short_name="keys"
  raw_name="keys2"
- tooltip="It's more keys"
+ tooltip="it's more keys"
  z_depth="monst"
  quantity=2
  is_key

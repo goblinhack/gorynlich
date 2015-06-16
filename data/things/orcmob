@@ -1,6 +1,6 @@
 {
- short_name="Orcmob"
- raw_name="Orcmob"
+ short_name="orcmob"
+ raw_name="orcmob"
  tooltip="orc mob spwan"
  mob_spawn={
     1000 "data/things/orc1"

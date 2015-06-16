@@ -1,7 +1,7 @@
 {
- short_name="Baby cthulu"
+ short_name="baby cthulu"
  raw_name="baby cthulu1"
- tooltip="Baby cthulu"
+ tooltip="baby cthulu"
  z_depth="monst"
  speed=2
  max_hp=500

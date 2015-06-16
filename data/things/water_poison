@@ -1,7 +1,7 @@
 {
- short_name="Tasty water"
+ short_name="tasty water"
  raw_name="water_poison"
- tooltip="Water..."
+ tooltip="water..."
  z_depth="player"
  is_inactive
  is_food

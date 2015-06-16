@@ -1,7 +1,7 @@
 {
- short_name="Key chain"
+ short_name="key chain"
  raw_name="keys3"
- tooltip="It's a key chain"
+ tooltip="it's a key chain"
  z_depth="monst"
  quantity=3
  is_key
