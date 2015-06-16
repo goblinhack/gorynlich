@@ -8,7 +8,7 @@
  z_depth="monst"
  speed=15
  max_hp=90
- damage=8
+ damage=5
  bonus_xp_on_death=55
  vision_distance=30
  hit_delay_tenths=5

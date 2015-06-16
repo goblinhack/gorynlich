@@ -5,7 +5,7 @@
  z_depth="monst"
  speed=2
  max_hp=500
- damage=11
+ damage=20
  is_effect_rotate_2way
  bonus_xp_on_death=1500
  vision_distance=20
