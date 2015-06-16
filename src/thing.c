@@ -1905,11 +1905,11 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     tpp weapon = 0;
 
     if (hitter && thing_owner(hitter)) {
-        THING_LOG(t, "is being hit by %s, owner %s",
+        THING_CON(t, "is being hit by %s, owner %s",
                   thing_logname(hitter), 
                   thing_logname(thing_owner(hitter)));
     } else {
-        THING_LOG(t, "is being hit by %s",
+        THING_CON(t, "is being hit by %s",
                   thing_logname(hitter));
     }
 

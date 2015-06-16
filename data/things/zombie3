@@ -2,6 +2,15 @@
  short_name="zommom"
  raw_name="zombie3"
  tooltip="zommom"
+ mob_spawn={
+    1000 "data/things/zombie1"
+    10 "data/things/zombie2"
+    1000 "data/things/zombie3"
+    1000 "data/things/zombie4"
+    1000 "data/things/zombie5"
+ }
+ mob_spawn_delay_tenths=200
+ is_mob_spawner
  z_depth="monst"
  speed=15
  max_hp=10

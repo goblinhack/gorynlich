@@ -488,6 +488,25 @@ static void thing_handle_collision (thingp me, thingp it,
         return;
     }
 
+    /*
+     * Monster friendly fire?
+     */
+    if (thing_is_monst(me) && thing_is_monst(it)) {
+        return;
+    }
+
+    /*
+     * Weapon swing of monster should not hit other monsters.
+     */
+    thingp owner_it = thing_owner(it);
+    thingp owner_me = thing_owner(me);
+
+    if (owner_me) {
+        if (thing_is_monst(owner_me) && thing_is_monst(it)) {
+            return;
+        }
+    }
+
     if (thing_is_dead_or_dying(it)) {
 #if 0
 if (debug) {
@@ -509,7 +528,7 @@ LOG("  no on lev");
     /*
      * Need this or shields attack the player.
      */
-    if ((thing_owner(it) == me) || (thing_owner(me) == it)) {
+    if ((owner_it == me) || (owner_me == it)) {
 #if 0
 if (debug) {
 LOG("  owner");
@@ -778,7 +797,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
                    thing_is_combustable(it)     ||
                    thing_is_mob_spawner(it)) {
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
-            if (thing_owner(me) == it) {
+            if (owner_me == it) {
                 /*
                  * Don't hit your owner.
                  */
@@ -804,7 +823,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_wall(it)                   ||
             thing_is_sawblade(it)) {
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
-            if (thing_owner(me) == it) {
+            if (owner_me == it) {
                 /*
                  * Don't hit your owner.
                  */
