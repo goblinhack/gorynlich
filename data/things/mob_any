@@ -1,7 +1,7 @@
 {
- short_name="Any mob"
+ short_name="any mob"
  raw_name="mob_any"
- tooltip="Random mob"
+ tooltip="random mob"
  z_depth="monst"
  is_mob_spawner
  is_internal

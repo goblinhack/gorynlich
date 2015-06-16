@@ -1,7 +1,7 @@
 {
- short_name="Bread"
+ short_name="bread"
  raw_name="bread"
- tooltip="Bread sandwich"
+ tooltip="bread sandwich"
  z_depth="monst"
  is_inactive
  is_food

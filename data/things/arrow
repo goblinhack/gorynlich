@@ -1,7 +1,7 @@
 {
- short_name="Arrow"
+ short_name="arrow"
  raw_name="arrow"
- tooltip="A banana"
+ tooltip="a banana"
  is_hidden_from_editor
  z_depth="monst"
  speed=70

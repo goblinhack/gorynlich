@@ -1,7 +1,7 @@
 {
- short_name="Valkyrie"
+ short_name="valkyrie"
  raw_name="valkyrie"
- tooltip="Valkyrie"
+ tooltip="valkyrie"
  carrying={
     "data/things/sword1"
     "data/things/torches"

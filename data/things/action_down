@@ -1,7 +1,7 @@
 {
  short_name="action_down"
  raw_name="action_down"
- tooltip="Moves object down"
+ tooltip="moves object down"
  is_collision_map_small
  z_depth="actions"
  is_action

@@ -1,7 +1,7 @@
 {
- short_name="Scythe"
+ short_name="scythe"
  raw_name="scythe1"
- tooltip="Scythe"
+ tooltip="scythe"
  z_depth="monst"
  is_weapon
  is_melee_weapon

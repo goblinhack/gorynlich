@@ -1,7 +1,7 @@
 {
- short_name="Orc titan"
+ short_name="orc titan"
  raw_name="orc5"
- tooltip="Orc titan"
+ tooltip="orc titan"
  carrying={
     "data/things/club1"
  }

@@ -1,7 +1,7 @@
 {
- short_name="Big stick"
+ short_name="big stick"
  raw_name="stick2"
- tooltip="Bit stick"
+ tooltip="bit stick"
  z_depth="monst"
  is_weapon
  is_melee_weapon

@@ -1,7 +1,7 @@
 {
  short_name="floor"
  raw_name="floor6"
- tooltip="Floor6"
+ tooltip="floor6"
  z_depth="floor"
  is_inactive
  is_floor

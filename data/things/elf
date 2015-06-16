@@ -1,7 +1,7 @@
 {
- short_name="Elf"
+ short_name="elf"
  raw_name="elf"
- tooltip="Elf"
+ tooltip="elf"
  carrying={
     "data/things/bow1"
     "data/things/torches"

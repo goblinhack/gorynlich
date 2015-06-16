@@ -1,7 +1,7 @@
 {
- short_name="Any food"
+ short_name="any food"
  raw_name="food_any"
- tooltip="Random food"
+ tooltip="random food"
  z_depth="monst"
  is_food
  is_internal

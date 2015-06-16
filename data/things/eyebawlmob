@@ -1,7 +1,7 @@
 {
- short_name="Eyebawl mob"
+ short_name="eyebawl mob"
  raw_name="eyebawlmob"
- tooltip="Eyebawl generator"
+ tooltip="eyebawl generator"
  mob_spawn={ 1000 "data/things/eyebawl" }
  z_depth="monst"
  is_mob_spawner

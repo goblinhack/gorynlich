@@ -1,7 +1,7 @@
 {
- short_name="Any treasure"
+ short_name="any treasure"
  raw_name="treasure_any"
- tooltip="Random treasure"
+ tooltip="random treasure"
  z_depth="monst"
  is_treasure
  is_internal

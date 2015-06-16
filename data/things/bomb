@@ -1,7 +1,7 @@
 {
  short_name="bomb"
  raw_name="bomb"
- tooltip="Short fuse"
+ tooltip="short fuse"
  z_depth="monst"
  is_sleeping
  is_bomb
