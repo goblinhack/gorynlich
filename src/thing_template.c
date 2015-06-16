@@ -659,7 +659,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr25", t->is_rrr25);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr26", t->is_rrr26);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr27", t->is_rrr27);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr28", t->is_rrr28);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_bullet", t->is_bullet);
         GET_OPT_NAMED_BITFIELD(ctx, "is_treasure_eater", t->is_treasure_eater);
         GET_OPT_NAMED_BITFIELD(ctx, "is_effect_fade_in_out", t->is_effect_fade_in_out);
         GET_OPT_NAMED_BITFIELD(ctx, "is_internal", t->is_internal);
@@ -897,7 +897,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr25", t->is_rrr25);
     PUT_NAMED_BITFIELD(ctx, "is_rrr26", t->is_rrr26);
     PUT_NAMED_BITFIELD(ctx, "is_rrr27", t->is_rrr27);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr28", t->is_rrr28);
+    PUT_NAMED_BITFIELD(ctx, "is_bullet", t->is_bullet);
     PUT_NAMED_BITFIELD(ctx, "is_treasure_eater", t->is_treasure_eater);
     PUT_NAMED_BITFIELD(ctx, "is_effect_fade_in_out", t->is_effect_fade_in_out);
     PUT_NAMED_BITFIELD(ctx, "is_internal", t->is_internal);

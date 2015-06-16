@@ -393,6 +393,8 @@ enum {
     THING_WAND4_ANIM,
     THING_STICK1_ANIM,
     THING_STICK2_ANIM,
+    THING_SHOTGUN_ANIM,
+    THING_PELLETS_ANIM,
     THING_SWORD1_ANIM,
     THING_SWORD2_ANIM,
     THING_SWORD3_ANIM,
@@ -495,6 +497,8 @@ enum {
     THING_WAND3,
     THING_WAND4,
     THING_CLUB1,
+    THING_SHOTGUN,
+    THING_PELLETS,
     THING_STICK1,
     THING_STICK2,
     THING_SWORD1,
@@ -1342,11 +1346,11 @@ static inline uint8_t thing_is_rrr27 (thingp t)
     return (tp_is_rrr27(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr28 (thingp t)
+static inline uint8_t thing_is_bullet (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr28(thing_tp(t)));
+    return (tp_is_bullet(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_treasure_eater (thingp t)
@@ -2145,9 +2149,9 @@ static inline uint8_t thing_is_rrr27_noverify (thingp t)
     return (t->tp->is_rrr27);
 }
 
-static inline uint8_t thing_is_rrr28_noverify (thingp t)
+static inline uint8_t thing_is_bullet_noverify (thingp t)
 {
-    return (t->tp->is_rrr28);
+    return (t->tp->is_bullet);
 }
 
 static inline uint8_t thing_is_treasure_eater_noverify (thingp t)
