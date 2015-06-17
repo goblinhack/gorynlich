@@ -699,6 +699,11 @@ typedef struct thing_ {
     uint32_t timestamp_last_teleport;
 
     /*
+     * Last time we entered a shop.
+     */
+    uint32_t timestamp_last_shop_enter;
+
+    /*
      * Last time we were attacked.
      */
     uint32_t timestamp_last_attacked;
