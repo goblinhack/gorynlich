@@ -28,24 +28,29 @@ void level_place_explosion_at (levelp level,
                                double x, 
                                double y, 
                                uint8_t dist,
-                               uint8_t epicenter,
+                               uint8_t is_epicenter,
+                               const char *epicenter,
                                uint32_t nargs,
                                va_list args)
 {
     /*
      * Choose one of the things in the args list to place.
      */
+    const char *name = 0;
     uint32_t r;
 
-    if (epicenter) {
+    if (is_epicenter) {
         r = 1;
+
+        name = epicenter;
     } else {
         r = (myrand() % nargs) + 1;
     }
 
-    const char *name = 0;
-    while (r--) {
-        name = va_arg(args, char *);
+    if (!name) {
+        while (r--) {
+            name = va_arg(args, char *);
+        }
     }
 
     if (!name) {
@@ -85,7 +90,7 @@ void level_place_explosion_at (levelp level,
                                   destroy_in,
                                   jitter,
                                   level == server_level ? 1 : 0,
-                                  epicenter);
+                                  is_epicenter);
 
 }
 
@@ -214,6 +219,7 @@ static void level_place_explosion_ (levelp level,
                                     double y,
                                     int radius,
                                     double density,
+                                    const char *epicenter,
                                     uint32_t nargs, ...)
 {
     va_list args;
@@ -330,6 +336,7 @@ static void level_place_explosion_ (levelp level,
                                     y, 
                                     0,
                                     true, /* epicenter */
+                                    epicenter,
                                     nargs, args);
     va_end(args);
 
@@ -367,29 +374,40 @@ static void level_place_explosion_ (levelp level,
                 continue;
             }
 
-            if (distance > radius) {
-                continue;
-            }
-
             double dx, dy;
 
-            for (dx = -0.5; dx <= 0.5; dx += density) {
-                for (dy = -0.5; dy <= 0.5; dy += density) {
-                    double ex = ix + dx;
-                    double ey = iy + dy;
+            if (radius == 1) {
+                va_start(args, nargs);
+                (void) level_place_explosion_at(level, 
+                                                owner,
+                                                x,
+                                                y,
+                                                ix, 
+                                                iy, 
+                                                distance,
+                                                false, /* epicenter */
+                                                epicenter,
+                                                nargs, args);
+                va_end(args);
+            } else {
+                for (dx = -0.5; dx <= 0.5; dx += density) {
+                    for (dy = -0.5; dy <= 0.5; dy += density) {
+                        double ex = ix + dx;
+                        double ey = iy + dy;
 
-                    va_start(args, nargs);
-
-                    (void) level_place_explosion_at(level, 
-                                                    owner,
-                                                    x,
-                                                    y,
-                                                    ex, 
-                                                    ey, 
-                                                    distance,
-                                                    false, /* epicenter */
-                                                    nargs, args);
-                    va_end(args);
+                        va_start(args, nargs);
+                        (void) level_place_explosion_at(level, 
+                                                        owner,
+                                                        x,
+                                                        y,
+                                                        ex, 
+                                                        ey, 
+                                                        distance,
+                                                        false, /* epicenter */
+                                                        epicenter,
+                                                        nargs, args);
+                        va_end(args);
+                    }
                 }
             }
         }
@@ -405,6 +423,7 @@ void level_place_explosion (levelp level,
     double explosion_radius = 1.0;
     int id = 0;
 
+CON("%s",tp_name(tp));
     if (tp) {
         if (tp_is_cloud_effect(tp)) {
             explodes_as = tp_name(tp);
@@ -422,15 +441,15 @@ void level_place_explosion (levelp level,
         id = tp_to_id(tp);
     }
 
+CON("explosion_radius %f",explosion_radius);
     /*
      * Used for fire potions and bombs as it gives a layered effect.
      */
-    if (!explodes_as || 
-            (id == THING_EXPLOSION1) ||
-            (id == THING_EXPLOSION2) ||
-            (id == THING_EXPLOSION3) ||
-            (id == THING_EXPLOSION4) ||
-            (id == THING_BOMB)) {
+    if ((id == THING_EXPLOSION1) ||
+        (id == THING_EXPLOSION2) ||
+        (id == THING_EXPLOSION3) ||
+        (id == THING_EXPLOSION4) ||
+        (id == THING_BOMB)) {
 
         if ((id == THING_EXPLOSION3) ||
             (id == THING_EXPLOSION4) ||
@@ -443,6 +462,7 @@ void level_place_explosion (levelp level,
                                x, y,
                                explosion_radius,
                                0.5, // density
+                               explodes_as,
                                4, // nargs
                                "data/things/explosion1",
                                "data/things/explosion2",
@@ -464,6 +484,7 @@ void level_place_explosion (levelp level,
                            x, y,
                            tp_get_explosion_radius(non_explosive_gas_cloud),
                            0.5, // density
+                           explodes_as, // epicenter
                            1, // nargs
                            explodes_as);
 }

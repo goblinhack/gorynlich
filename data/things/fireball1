@@ -12,6 +12,7 @@
  is_light_source
  light_radius=0.5
  is_collision_map_medium
+ explodes_as="data/things/explosion1"
  tiles={
   tile={
    is_dir_up
