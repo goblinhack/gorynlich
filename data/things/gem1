@@ -1,5 +1,5 @@
 {
- short_name="shiny gem"
+ short_name="tourmaline gem"
  raw_name="gem1"
  tooltip="tourmaline gem"
  z_depth="monst"
@@ -8,6 +8,7 @@
  is_stackable
  hit_priority=1
  is_carryable
+ d10000_chance_of_appearing=100
  tiles={
   tile={
    tile="gem1"
