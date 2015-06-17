@@ -18,7 +18,7 @@
  stats_attack_ranged=11
  stats_attack_magical=9
  stats_speed=11
- stats_vision=11
+ stats_vision=8
  stats_healing=11
  stats_defense=9
  is_animate_only_when_moving
