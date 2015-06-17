@@ -74,9 +74,6 @@ static uint8_t map_is_x_at (levelp level,
         ERR("no grid wid");
     }
 
-    /*
-     * Look for a floor tile where we can place stuff.
-     */
     uint8_t z;
 
     for (z = 0; z < MAP_DEPTH_MAX; z++) {
@@ -84,19 +81,14 @@ static uint8_t map_is_x_at (levelp level,
         while (w) {
             thingp thing_it = wid_get_thing(w);
 
-            /*
-             * No things on level editor, just templates.
-             */
-            if (!level_is_editor(level)) {
-                if (!thing_it) {
-                    w = wid_grid_find_next(grid_wid, w, x, y, z);
-                    continue;
-                }
+            if (!thing_it) {
+                w = wid_grid_find_next(grid_wid, w, x, y, z);
+                continue;
+            }
 
-                if (thing_is_dead_or_dying(thing_it)) {
-                    w = wid_grid_find_next(grid_wid, w, x, y, z);
-                    continue;
-                }
+            if (thing_is_dead_or_dying(thing_it)) {
+                w = wid_grid_find_next(grid_wid, w, x, y, z);
+                continue;
             }
 
             tp = wid_get_thing_template(w);
@@ -164,6 +156,11 @@ uint8_t map_is_monst_at (levelp level, int32_t x, int32_t y)
 uint8_t map_is_wall_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, tp_is_wall));
+}
+
+uint8_t map_is_shop_floor_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_shop_floor));
 }
 
 uint8_t map_is_key_at (levelp level, int32_t x, int32_t y)

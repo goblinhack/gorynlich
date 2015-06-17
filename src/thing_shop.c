@@ -168,3 +168,116 @@ void shop_steal_message (thingp t)
 
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
+
+static thingp all_shop_floor[MAP_WIDTH][MAP_HEIGHT];
+static thingp all_shopkeeper[MAP_WIDTH][MAP_HEIGHT];
+static thingp all_shop_item[MAP_WIDTH][MAP_HEIGHT];
+
+static void shop_get_all_shop_floor_things (void)
+{
+    memset(all_shop_floor, 0, sizeof(all_shop_floor));
+
+    thing_map *map = &thing_server_map;
+
+    int x;
+    int y;
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+
+            thing_map_cell *cell = &map->cells[x][y];
+
+            uint32_t i;
+            for (i = 0; i < cell->count; i++) {
+                thingp it;
+                
+                it = thing_server_id(cell->id[i]);
+
+                if (thing_is_shop_floor(it)) {
+                    all_shop_floor[x][y] = it;
+                }
+            }
+        }
+    }
+}
+
+static void shop_get_all_shop_item_things (void)
+{
+    memset(all_shop_item, 0, sizeof(all_shop_item));
+
+    thing_map *map = &thing_server_map;
+
+    int x;
+    int y;
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+
+            if (all_shop_floor[x][y]) {
+                continue;
+            }
+
+            thing_map_cell *cell = &map->cells[x][y];
+
+            uint32_t i;
+            for (i = 0; i < cell->count; i++) {
+                thingp it;
+                
+                it = thing_server_id(cell->id[i]);
+
+                if (thing_is_treasure(it)) {
+                    all_shop_item[x][y] = it;
+                }
+            }
+        }
+    }
+}
+
+static void shop_flood_own_things (thingp shopkeeper, int x, int y)
+{
+    if ((x < 0) || (y < 0) ||
+        (x >= MAP_WIDTH) ||
+        (y >= MAP_HEIGHT)) {
+        return;
+    }
+
+    thingp floor = all_shop_floor[x][y];
+    if (!floor) {
+        return;
+    }
+
+    thingp item = all_shop_item[x][y];
+    if (item) {
+        thing_set_owner(item, shopkeeper);
+CON("%s owns %s",thing_logname(shopkeeper), thing_logname(item));
+    }
+
+    shop_flood_own_things(shopkeeper, x + 1, y);
+    shop_flood_own_things(shopkeeper, x - 1, y);
+    shop_flood_own_things(shopkeeper, x, y + 1);
+    shop_flood_own_things(shopkeeper, x, y - 1);
+}
+
+static void shop_get_all_shopkeeper_things (void)
+{
+    int x;
+    int y;
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            thingp shopkeeper = all_shopkeeper[x][y];
+            if (!shopkeeper) {
+                continue;
+            }
+
+            shop_flood_own_things(shopkeeper, x, y);
+        }
+    }
+}
+void shop_fixup (void)
+{
+    shop_get_all_shop_floor_things();
+    shop_get_all_shopkeeper_things();
+    shop_get_all_shop_item_things();
+    shop_get_all_shopkeeper_things();
+}

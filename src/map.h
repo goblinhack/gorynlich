@@ -16,6 +16,7 @@ uint8_t map_is_inactive_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_plant_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_player_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_wall_at(levelp, int32_t x, int32_t y);
+uint8_t map_is_shop_floor_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_rock_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_animated_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_combustable_at(levelp, int32_t x, int32_t y);
