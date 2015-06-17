@@ -19,3 +19,4 @@ void shop_collect_message(thingp t);
 void shop_purchase_message(thingp t);
 void shop_steal_message(thingp t);
 void shop_welcom_message(thingp t);
+void shop_fixup(void);
