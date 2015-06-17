@@ -748,15 +748,23 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
      * Start out with treating doors as passable.
      */
     if (!t->dmap) {
+        if (thing_is_angry(t)) {
+            t->dmap = &dmap_map_player_target_treat_doors_as_passable;
+        }
+    } else if (thing_is_treasure_eater(t)) {
+        t->dmap = &dmap_map_treasure_target_treat_doors_as_passable;
+    } else {
         t->dmap = &dmap_map_player_target_treat_doors_as_passable;
     }
 
     /*
      * Try the current map.
      */
-    if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
-                          true /* can_change_dir_without_moving */)) {
-        return (true);
+    if (t->dmap) {
+        if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
+                            true /* can_change_dir_without_moving */)) {
+            return (true);
+        }
     }
 
     /*
@@ -787,9 +795,11 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         }
     }
 
-    if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
-                          false /* can_change_dir_without_moving */)) {
-        return (true);
+    if (t->dmap) {
+        if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
+                            false /* can_change_dir_without_moving */)) {
+            return (true);
+        }
     }
 
     /*
@@ -823,7 +833,7 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         }
 
         thing_map_cell *cell = &map->cells[x][y];
-
+        int done = false;
         uint32_t i;
         for (i = 0; i < cell->count; i++) {
             thingp it;
@@ -840,6 +850,7 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
                      * Not angry. Just wander the shop floor.
                      */
                     if (thing_is_shop_floor(it)) {
+                        done = true;
                         break;
                     }
 
@@ -858,16 +869,24 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
                     /*
                      * Lost sight of the player. Hunting.
                      */
+                    done = true;
                     break;
                 }
             } else {
                 /*
                  * Monsters just wander anywhere.
                  */
+                done = true;
                 break;
             }
+
+            done = true;
+            break;
         }
-        break;
+
+        if (done) {
+            break;
+        }
     }
 
     if (!t->dmap_wander) {
