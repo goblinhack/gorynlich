@@ -16,6 +16,7 @@
  is_collision_map_medium
  damage=20
  is_animated
+ d10000_chance_of_appearing=5 
  explodes_as="data/things/explosion2"
  mob_spawn_delay_tenths=200
  tiles={

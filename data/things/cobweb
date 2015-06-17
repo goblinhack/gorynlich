@@ -14,6 +14,7 @@
  is_cobweb
  scale=0.5
  bonus_xp_on_death=20
+ d10000_chance_of_appearing=10
  is_collision_map_large
  tiles={
   tile={
