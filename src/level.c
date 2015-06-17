@@ -682,6 +682,7 @@ void level_pause (levelp level)
             "Your end is nigh...",
             "Go forth!",
             "Make it so!",
+            "Make it thusly!",
             "Get ready!",
         };
 
