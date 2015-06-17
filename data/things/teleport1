@@ -10,6 +10,7 @@
  collision_radius=1.0
  is_animated
  is_effect_pulse
+ d10000_chance_of_appearing=10000
  tiles={
   tile={
    tile="teleport1.1"
