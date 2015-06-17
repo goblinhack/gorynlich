@@ -62,6 +62,14 @@ void thing_set_weapon_carry_anim (thingp t, thingp weapon_carry_anim)
 
     if (weapon_carry_anim) {
         t->weapon_carry_anim_thing_id = weapon_carry_anim->thing_id;
+
+        /*
+         * Scale up weapons so they look the same size as the carryer.
+         */
+        double scale = tp_get_scale(t->tp);
+        if (scale != 1.0) {
+            wid_scaling_blit_to_pct_in(weapon_carry_anim->wid, scale, scale, 500, 9999999);
+        }
     } else {
         t->weapon_carry_anim_thing_id = 0;
     }
@@ -120,6 +128,14 @@ void thing_set_weapon_swing_anim (thingp t, thingp weapon_swing_anim)
 
     if (weapon_swing_anim) {
         t->weapon_swing_anim_thing_id = weapon_swing_anim->thing_id;
+
+        /*
+         * Scale up weapons so they look the same size as the carryer.
+         */
+        double scale = tp_get_scale(t->tp);
+        if (scale != 1.0) {
+            wid_scaling_blit_to_pct_in(weapon_swing_anim->wid, scale, scale, 500, 9999999);
+        }
     } else {
         t->weapon_swing_anim_thing_id = 0;
     }

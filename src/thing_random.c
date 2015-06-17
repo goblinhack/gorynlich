@@ -319,9 +319,7 @@ tpp random_monst (int depth)
         }
 
         int r = myrand() % 10000;
-CON("%d",r);
         if (r < (tp_get_d10000_chance_of_appearing(tp) + depth)) {
-CON("%s",tp_name(tp));
             return (tp);
         }
     }
