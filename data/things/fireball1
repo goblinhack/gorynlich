@@ -9,6 +9,7 @@
  hit_delay_tenths=1
  is_projectile
  is_animated
+ is_fireball
  is_light_source
  light_radius=0.5
  is_collision_map_medium

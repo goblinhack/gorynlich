@@ -9,7 +9,6 @@
  hit_delay_tenths=1
  is_bullet
  is_projectile
- is_fireball
  is_animated
  is_variable_size
  is_collision_map_medium
