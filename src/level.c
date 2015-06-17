@@ -27,6 +27,7 @@
 #include "map_jigsaw.h"
 #include "file.h"
 #include "map.h"
+#include "thing_shop.h"
 
 static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;
@@ -221,6 +222,8 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
 void level_update_now (levelp level)
 {
     map_fixup(level);
+
+    shop_fixup();
 
     level_set_walls(level);
 
