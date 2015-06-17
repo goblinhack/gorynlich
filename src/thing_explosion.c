@@ -423,7 +423,6 @@ void level_place_explosion (levelp level,
     double explosion_radius = 1.0;
     int id = 0;
 
-CON("%s",tp_name(tp));
     if (tp) {
         if (tp_is_cloud_effect(tp)) {
             explodes_as = tp_name(tp);
@@ -441,7 +440,6 @@ CON("%s",tp_name(tp));
         id = tp_to_id(tp);
     }
 
-CON("explosion_radius %f",explosion_radius);
     /*
      * Used for fire potions and bombs as it gives a layered effect.
      */
