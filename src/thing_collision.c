@@ -14,6 +14,7 @@
 #include "math_util.h"
 #include "level.h"
 #include "wid_game_map_server.h"
+#include "thing_shop.h"
 
 typedef struct {
     thingp target;
@@ -485,6 +486,13 @@ static void thing_handle_collision (thingp me, thingp it,
     if (thing_is_floor(it)                  ||
         thing_is_weapon_carry_anim(it)      ||
         thing_is_animation(it)) {
+
+        if (thing_is_player(me)) {
+            if (thing_is_shop_floor(it)) {
+                shop_enter_message(me);
+            }
+        }
+
         return;
     }
 
