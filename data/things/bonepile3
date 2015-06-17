@@ -12,10 +12,10 @@
  is_candle_light
  hit_priority=22
  is_collision_map_medium
- d10000_chance_of_appearing=300
+ d10000_chance_of_appearing=600
  damage=1
  bonus_xp_on_death=80
- mob_spawn_delay_tenths=100
+ mob_spawn_delay_tenths=80
  polymorph_on_death="data/things/bonepile2"
  tiles={
   tile={

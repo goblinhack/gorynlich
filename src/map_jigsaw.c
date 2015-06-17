@@ -2967,7 +2967,13 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
             case 'w': tp = random_weapon(); break;
             case 'f': tp = random_food(); break;
             case 'p': tp = random_potion(); break;
-            case 'M': tp = random_mob(depth); break;
+            case 'M': 
+                      if ((myrand() % 100) < 50) {
+                        tp = random_monst(depth); 
+                      } else {
+                        tp = random_mob(depth); 
+                      }
+                      break;
             case 'm': tp = random_monst(depth); break;
             case '$': {
                 int r = myrand() % 100;

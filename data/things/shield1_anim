@@ -7,7 +7,7 @@
  is_shield
  is_shield_carry_anim
  collision_radius=2.0
- max_hp=400
+ max_hp=200
  hit_priority=100
  damage=3
  scale=0.3
