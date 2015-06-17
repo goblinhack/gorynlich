@@ -19,7 +19,7 @@
  hit_priority=10
  is_collision_map_medium
  is_animated
- d10000_chance_of_appearing=1000
+ d10000_chance_of_appearing=100
  weapon_fire_delay_hundredths=500
  min_appear_depth=1
  max_appear_depth=80
