@@ -1338,11 +1338,11 @@ static inline uint8_t thing_is_rrr26 (thingp t)
     return (tp_is_rrr26(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr27 (thingp t)
+static inline uint8_t thing_is_fireball (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr27(thing_tp(t)));
+    return (tp_is_fireball(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_bullet (thingp t)
@@ -2143,9 +2143,9 @@ static inline uint8_t thing_is_rrr26_noverify (thingp t)
     return (t->tp->is_rrr26);
 }
 
-static inline uint8_t thing_is_rrr27_noverify (thingp t)
+static inline uint8_t thing_is_fireball_noverify (thingp t)
 {
-    return (t->tp->is_rrr27);
+    return (t->tp->is_fireball);
 }
 
 static inline uint8_t thing_is_bullet_noverify (thingp t)
@@ -2766,7 +2766,8 @@ void level_place_explosion_at(levelp level,
                               double x, 
                               double y, 
                               uint8_t dist,
-                              uint8_t epicenter,
+                              uint8_t is_epicenter,
+                              const char *epicenter,
                               uint32_t nargs,
                               va_list args);
 void level_place_explosion(levelp level, 
