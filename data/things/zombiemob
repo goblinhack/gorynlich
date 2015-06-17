@@ -21,6 +21,7 @@
  damage=1
  bonus_xp_on_death=120
  mob_spawn_delay_tenths=100
+ d10000_chance_of_appearing=30
  tiles={
   tile={
    tile="zombiemob"
