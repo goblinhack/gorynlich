@@ -10,6 +10,7 @@
  is_light_source
  light_radius=3.5
  is_animated
+ d10000_chance_of_appearing=100
  tiles={
   tile={
    tile="torch1"

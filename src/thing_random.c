@@ -136,7 +136,8 @@ tpp random_exit (void)
         }
 
         if (tp_is_exit(tp)) {
-            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+            int r =  myrand() % 10000;
+            if (r < tp_get_d10000_chance_of_appearing(tp)) {
                 return (tp);
             }
         }
@@ -163,7 +164,8 @@ tpp random_food (void)
         }
 
         if (tp_is_food(tp)) {
-            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+            int r =  myrand() % 10000;
+            if (r < tp_get_d10000_chance_of_appearing(tp)) {
                 return (tp);
             }
         }
@@ -190,7 +192,8 @@ tpp random_treasure (void)
         }
 
         if (tp_is_treasure(tp)) {
-            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+            int r =  myrand() % 10000;
+            if (r < tp_get_d10000_chance_of_appearing(tp)) {
                 return (tp);
             }
         }
@@ -217,7 +220,8 @@ tpp random_weapon (void)
         }
 
         if (tp_is_weapon(tp)) {
-            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+            int r =  myrand() % 10000;
+            if (r < tp_get_d10000_chance_of_appearing(tp)) {
                 return (tp);
             }
         }
@@ -244,7 +248,8 @@ tpp random_potion (void)
         }
 
         if (tp_is_potion(tp)) {
-            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+            int r =  myrand() % 10000;
+            if (r < tp_get_d10000_chance_of_appearing(tp)) {
                 return (tp);
             }
         }
@@ -271,7 +276,8 @@ tpp random_rock (void)
         }
 
         if (tp_is_rock(tp)) {
-            if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+            int r =  myrand() % 10000;
+            if (r < tp_get_d10000_chance_of_appearing(tp)) {
                 return (tp);
             }
         }
@@ -313,7 +319,6 @@ tpp random_monst (int depth)
         }
 
         int r = myrand() % 10000;
-
         if (r < (tp_get_d10000_chance_of_appearing(tp) + depth)) {
             return (tp);
         }
@@ -343,7 +348,8 @@ tpp random_mob (int depth)
             continue;
         }
 
-        if (tp_get_d10000_chance_of_appearing(tp) < myrand() % 10000) {
+        int r =  myrand() % 10000;
+        if (r < tp_get_d10000_chance_of_appearing(tp)) {
             return (tp);
         }
     }

@@ -25,7 +25,7 @@
  hit_priority=10
  is_collision_map_medium
  is_animated
- d10000_chance_of_appearing=1000
+ d10000_chance_of_appearing=30
  min_appear_depth=1
  max_appear_depth=80
  tiles={

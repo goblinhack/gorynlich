@@ -17,7 +17,7 @@
  damage=10
  is_effect_pulse
  can_be_hit_chance=2000000
- d10000_chance_of_appearing=100
+ d10000_chance_of_appearing=20
  is_mob_spawner
  mob_spawn_delay_tenths=100
  tiles={
