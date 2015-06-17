@@ -655,9 +655,9 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr21", t->is_rrr21);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr24", t->is_rrr24);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr25", t->is_rrr25);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr26", t->is_rrr26);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_fires_when_angry", t->is_fires_when_angry);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_shopkeeper", t->is_shopkeeper);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_shop_floor", t->is_shop_floor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_fireball", t->is_fireball);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bullet", t->is_bullet);
         GET_OPT_NAMED_BITFIELD(ctx, "is_treasure_eater", t->is_treasure_eater);
@@ -893,9 +893,9 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr21", t->is_rrr21);
     PUT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
     PUT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr24", t->is_rrr24);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr25", t->is_rrr25);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr26", t->is_rrr26);
+    PUT_NAMED_BITFIELD(ctx, "is_fires_when_angry", t->is_fires_when_angry);
+    PUT_NAMED_BITFIELD(ctx, "is_shopkeeper", t->is_shopkeeper);
+    PUT_NAMED_BITFIELD(ctx, "is_shop_floor", t->is_shop_floor);
     PUT_NAMED_BITFIELD(ctx, "is_fireball", t->is_fireball);
     PUT_NAMED_BITFIELD(ctx, "is_bullet", t->is_bullet);
     PUT_NAMED_BITFIELD(ctx, "is_treasure_eater", t->is_treasure_eater);

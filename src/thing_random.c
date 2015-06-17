@@ -85,6 +85,10 @@ tpp random_floor (void)
             continue;
         }
 
+        if (tp_is_shop_floor(tp)) {
+            continue;
+        }
+
         if (tp_is_floor(tp)) {
             return (tp);
         }

@@ -140,6 +140,7 @@ uint8_t thing_is_dir_br(thingp t);
 void thing_set_opened_exit(thingp t, uint8_t val);
 uint8_t thing_opened_exit(thingp t);
 void thing_set_is_open(thingp t, uint8_t val);
+void thing_set_is_angry(thingp t, uint8_t val);
 void thing_set_is_projectile(thingp t, uint8_t val);
 void thing_set_is_dead(thingp t, uint8_t val);
 void thing_set_key20(thingp t, uint8_t val);
@@ -344,6 +345,7 @@ enum {
     THING_BANANA,
     THING_CHEESE,
     THING_BREAD,
+    THING_SHOP_FLOOR1,
     THING_FLOOR1,
     THING_FLOOR2,
     THING_FLOOR3,
@@ -371,6 +373,7 @@ enum {
     THING_ORC3,
     THING_ORC4,
     THING_ORC5,
+    THING_SHOPKEEPER,
     THING_GHOST1,
     THING_GHOST2,
     THING_GHOST3,
@@ -805,6 +808,7 @@ typedef struct thing_ {
     uint32_t opened_exit:1;
     uint32_t is_open:1;
     uint32_t is_dead:1;
+    uint32_t is_angry:1;
 
     /*
      * Center of an explosion.
@@ -864,6 +868,13 @@ static inline uint8_t thing_is_open (thingp t)
     verify(t);
 
     return (t->is_open);
+}
+
+static inline uint8_t thing_is_angry (thingp t)
+{
+    verify(t);
+
+    return (t->is_angry);
 }
 
 static inline uint8_t thing_is_dying (thingp t)
@@ -1317,25 +1328,25 @@ static inline uint8_t thing_is_rrr23 (thingp t)
     return (tp_is_rrr23(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr24 (thingp t)
+static inline uint8_t thing_is_fires_when_angry (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr24(thing_tp(t)));
+    return (tp_is_fires_when_angry(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr25 (thingp t)
+static inline uint8_t thing_is_shopkeeper (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr25(thing_tp(t)));
+    return (tp_is_shopkeeper(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr26 (thingp t)
+static inline uint8_t thing_is_shop_floor (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr26(thing_tp(t)));
+    return (tp_is_shop_floor(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_fireball (thingp t)
@@ -1833,6 +1844,11 @@ static inline uint8_t thing_is_open_noverify (thingp t)
     return (t->is_open);
 }
 
+static inline uint8_t thing_is_angry_noverify (thingp t)
+{
+    return (t->is_angry);
+}
+
 static inline uint8_t thing_is_dead_noverify (thingp t)
 {
     return (t->is_dead);
@@ -2128,19 +2144,19 @@ static inline uint8_t thing_is_rrr23_noverify (thingp t)
     return (t->tp->is_rrr23);
 }
 
-static inline uint8_t thing_is_rrr24_noverify (thingp t)
+static inline uint8_t thing_is_fires_when_angry_noverify (thingp t)
 {
-    return (t->tp->is_rrr24);
+    return (t->tp->is_fires_when_angry);
 }
 
-static inline uint8_t thing_is_rrr25_noverify (thingp t)
+static inline uint8_t thing_is_shopkeeper_noverify (thingp t)
 {
-    return (t->tp->is_rrr25);
+    return (t->tp->is_shopkeeper);
 }
 
-static inline uint8_t thing_is_rrr26_noverify (thingp t)
+static inline uint8_t thing_is_shop_floor_noverify (thingp t)
 {
-    return (t->tp->is_rrr26);
+    return (t->tp->is_shop_floor);
 }
 
 static inline uint8_t thing_is_fireball_noverify (thingp t)
