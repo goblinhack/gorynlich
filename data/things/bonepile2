@@ -14,7 +14,7 @@
  is_collision_map_medium
  damage=1
  bonus_xp_on_death=50
- mob_spawn_delay_tenths=20
+ mob_spawn_delay_tenths=100
  polymorph_on_death="data/things/bonepile1"
  tiles={
   tile={
