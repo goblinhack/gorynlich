@@ -253,7 +253,17 @@ static void thing_fire_at (thingp t, thingp target)
     double x = t->x;
     double y = t->y;
 
-    tpp projectile = tp_fires(t->tp);
+    tpp projectile = 0;
+
+    tpp weapon = thing_weapon(t);
+    if (weapon) {
+        projectile = tp_fires(weapon);
+    }
+
+    if (projectile) {
+        projectile = tp_fires(t->tp);
+    }
+
     if (!projectile) {
         /*
          * Might be a sword.
