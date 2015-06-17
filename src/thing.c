@@ -2876,6 +2876,15 @@ void thing_set_is_open (thingp t, uint8_t val)
     t->is_open = val;
 }
 
+void thing_set_is_angry (thingp t, uint8_t val)
+{
+    verify(t);
+
+    t->timestamp_change_to_next_frame = time_get_time_ms();
+
+    t->is_angry = val;
+}
+
 void thing_set_is_dead (thingp t, uint8_t val)
 {
     verify(t);

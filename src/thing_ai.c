@@ -11,6 +11,7 @@
 #include "thing.h"
 #include "wid_game_map_server.h"
 #include "map.h"
+#include "math_util.h"
 
 static FILE *fp;
 static const int8_t is_a_wall = 63;
@@ -761,7 +762,18 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     /*
      * Try the alternative map.
      */
-    if (thing_is_treasure_eater(t)) {
+    if (thing_is_shopkeeper(t)) {
+        /*
+         * Chase players only if angry.
+         */
+        if (thing_is_angry(t)) {
+            if (t->dmap == &dmap_map_player_target_treat_doors_as_passable) {
+                t->dmap = &dmap_map_player_target_treat_doors_as_walls;
+            } else {
+                t->dmap = &dmap_map_player_target_treat_doors_as_passable;
+            }
+        }
+    } else if (thing_is_treasure_eater(t)) {
         if (t->dmap == &dmap_map_treasure_target_treat_doors_as_passable) {
             t->dmap = &dmap_map_treasure_target_treat_doors_as_walls;
         } else {
@@ -792,8 +804,71 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         }
     }
 
-    uint32_t x = myrand() % MAP_WIDTH;
-    uint32_t y = myrand() % MAP_HEIGHT;
+    /*
+     * Find a wander destination.
+     */
+    uint32_t x;
+    uint32_t y;
+    uint32_t tries = 0;
+
+    thing_map *map = thing_get_map(t);
+
+    for (;;) {
+        x = myrand() % MAP_WIDTH;
+        y = myrand() % MAP_HEIGHT;
+
+        tries++;
+        if (tries > 10000) {
+            break;
+        }
+
+        thing_map_cell *cell = &map->cells[x][y];
+
+        uint32_t i;
+        for (i = 0; i < cell->count; i++) {
+            thingp it;
+            
+            if (t->on_server) {
+                it = thing_server_id(cell->id[i]);
+            } else {
+                it = thing_client_id(cell->id[i]);
+            }
+
+            if (thing_is_shopkeeper(t)) {
+                if (!thing_is_angry(t)) {
+                    /*
+                     * Not angry. Just wander the shop floor.
+                     */
+                    if (thing_is_shop_floor(it)) {
+                        break;
+                    }
+
+                    /*
+                     * Make sure we stay in the same shop.
+                     */
+                    if (DISTANCE(x, y, t->x, t->y) > 4.0) {
+                        continue;
+                    }
+
+                    /*
+                     * Keep looking for a shop floor.
+                     */
+                    continue;
+                } else {
+                    /*
+                     * Lost sight of the player. Hunting.
+                     */
+                    break;
+                }
+            } else {
+                /*
+                 * Monsters just wander anywhere.
+                 */
+                break;
+            }
+        }
+        break;
+    }
 
     if (!t->dmap_wander) {
         t->dmap_wander = &dmap_map_wander[x][y];
