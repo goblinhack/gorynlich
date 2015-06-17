@@ -266,6 +266,14 @@ void thing_set_magic_anim (thingp t, thingp magic_anim)
 
     if (magic_anim) {
         t->magic_anim_thing_id = magic_anim->thing_id;
+
+        /*
+         * Scale up weapons so they look the same size as the carryer.
+         */
+        double scale = tp_get_scale(t->tp);
+        if (scale != 1.0) {
+            wid_scaling_blit_to_pct_in(magic_anim->wid, scale, scale, 500, 9999999);
+        }
     } else {
         t->magic_anim_thing_id = 0;
     }
