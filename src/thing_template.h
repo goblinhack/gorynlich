@@ -287,9 +287,9 @@ typedef struct tp_ {
     uint8_t is_rrr21:1;
     uint8_t is_rrr22:1;
     uint8_t is_rrr23:1;
-    uint8_t is_rrr24:1;
-    uint8_t is_rrr25:1;
-    uint8_t is_rrr26:1;
+    uint8_t is_fires_when_angry:1;
+    uint8_t is_shopkeeper:1;
+    uint8_t is_shop_floor:1;
     uint8_t is_fireball:1;
     uint8_t is_bullet:1;
     uint8_t is_treasure_eater:1;
@@ -771,19 +771,19 @@ static inline uint8_t tp_is_rrr23 (tpp t)
     return (t->is_rrr23);
 }
 
-static inline uint8_t tp_is_rrr24 (tpp t)
+static inline uint8_t tp_is_fires_when_angry (tpp t)
 {
-    return (t->is_rrr24);
+    return (t->is_fires_when_angry);
 }
 
-static inline uint8_t tp_is_rrr25 (tpp t)
+static inline uint8_t tp_is_shopkeeper (tpp t)
 {
-    return (t->is_rrr25);
+    return (t->is_shopkeeper);
 }
 
-static inline uint8_t tp_is_rrr26 (tpp t)
+static inline uint8_t tp_is_shop_floor (tpp t)
 {
-    return (t->is_rrr26);
+    return (t->is_shop_floor);
 }
 
 static inline uint8_t tp_is_fireball (tpp t)
