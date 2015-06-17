@@ -15,7 +15,7 @@
  is_candle_light
  hit_priority=20
  damage=20
- mob_spawn_delay_tenths=50
+ mob_spawn_delay_tenths=200
  can_be_hit_chance=2000000
  weapon_fire_delay_hundredths=100
  is_effect_pulse
