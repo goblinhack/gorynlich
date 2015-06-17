@@ -31,6 +31,7 @@ static void level_place_spatter (levelp level,
                                         py, 
                                         0,
                                         true, /* epicenter */
+                                        0,
                                         nargs, args);
         va_end(args);
     }

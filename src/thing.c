@@ -1573,7 +1573,9 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      */
     if (t->on_server) {
         if (!t->is_collected) {
-            if (thing_is_bomb(t) || thing_is_bullet(t)) {
+            if (thing_is_bomb(t)        || 
+                thing_is_fireball(t)    ||
+                thing_is_bullet(t)) {
                 level_place_explosion(thing_level(t),
                                       0, /* owner */
                                       t->tp,
@@ -1904,6 +1906,7 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     thingp orig_hitter = hitter;
     tpp weapon = 0;
 
+#if 0
     if (hitter && thing_owner(hitter)) {
         THING_CON(t, "is being hit by %s, owner %s",
                   thing_logname(hitter), 
@@ -1912,6 +1915,7 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
         THING_CON(t, "is being hit by %s",
                   thing_logname(hitter));
     }
+#endif
 
     verify(t);
     if (hitter) {
