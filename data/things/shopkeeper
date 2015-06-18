@@ -1,6 +1,6 @@
 {
- short_name="shppkeeper"
- raw_name="shppkeeper"
+ short_name="shopkeeper"
+ raw_name="shopkeeper"
  tooltip="shopkeeper"
  carrying={
     "data/things/shotgun"
