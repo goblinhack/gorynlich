@@ -3,6 +3,7 @@
  raw_name="potion_any"
  tooltip="random potion"
  z_depth="monst"
+is_treasure
  is_potion
  is_magical
  is_internal

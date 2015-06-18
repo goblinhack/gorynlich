@@ -169,13 +169,12 @@ void shop_steal_message (thingp t)
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
-static thingp all_shop_floor[MAP_WIDTH][MAP_HEIGHT];
-static thingp all_shopkeeper[MAP_WIDTH][MAP_HEIGHT];
-static thingp all_shop_item[MAP_WIDTH][MAP_HEIGHT];
+static thingp all_shop_floor_tiles[MAP_WIDTH][MAP_HEIGHT];
+static thingp all_shopkeeper_tiles[MAP_WIDTH][MAP_HEIGHT];
 
 static void shop_get_all_shop_floor_things (void)
 {
-    memset(all_shop_floor, 0, sizeof(all_shop_floor));
+    memset(all_shop_floor_tiles, 0, sizeof(all_shop_floor_tiles));
 
     thing_map *map = &thing_server_map;
 
@@ -194,16 +193,16 @@ static void shop_get_all_shop_floor_things (void)
                 it = thing_server_id(cell->id[i]);
 
                 if (thing_is_shop_floor(it)) {
-                    all_shop_floor[x][y] = it;
+                    all_shop_floor_tiles[x][y] = it;
                 }
             }
         }
     }
 }
 
-static void shop_get_all_shop_item_things (void)
+static void shop_get_all_shopkeeper_things (void)
 {
-    memset(all_shop_item, 0, sizeof(all_shop_item));
+    memset(all_shopkeeper_tiles, 0, sizeof(all_shopkeeper_tiles));
 
     thing_map *map = &thing_server_map;
 
@@ -213,7 +212,7 @@ static void shop_get_all_shop_item_things (void)
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
 
-            if (all_shop_floor[x][y]) {
+            if (!all_shop_floor_tiles[x][y]) {
                 continue;
             }
 
@@ -225,8 +224,9 @@ static void shop_get_all_shop_item_things (void)
                 
                 it = thing_server_id(cell->id[i]);
 
-                if (thing_is_treasure(it)) {
-                    all_shop_item[x][y] = it;
+                if (thing_is_shopkeeper(it)) {
+CON("got keeper %d %d",x,y);
+                    all_shopkeeper_tiles[x][y] = it;
                 }
             }
         }
@@ -241,15 +241,26 @@ static void shop_flood_own_things (thingp shopkeeper, int x, int y)
         return;
     }
 
-    thingp floor = all_shop_floor[x][y];
+    thingp floor = all_shop_floor_tiles[x][y];
     if (!floor) {
         return;
     }
 
-    thingp item = all_shop_item[x][y];
-    if (item) {
-        thing_set_owner(item, shopkeeper);
-CON("%s owns %s",thing_logname(shopkeeper), thing_logname(item));
+    all_shop_floor_tiles[x][y] = 0;
+
+    thing_map *map = &thing_server_map;
+    thing_map_cell *cell = &map->cells[x][y];
+
+    uint32_t i;
+    for (i = 0; i < cell->count; i++) {
+        thingp it;
+        
+        it = thing_server_id(cell->id[i]);
+
+        if (thing_is_treasure(it)) {
+            thing_set_owner(it, shopkeeper);
+CON("%s %s",thing_logname(it), thing_logname(shopkeeper));
+        }
     }
 
     shop_flood_own_things(shopkeeper, x + 1, y);
@@ -258,14 +269,14 @@ CON("%s owns %s",thing_logname(shopkeeper), thing_logname(item));
     shop_flood_own_things(shopkeeper, x, y - 1);
 }
 
-static void shop_get_all_shopkeeper_things (void)
+static void shop_own_all_shopkeeper_things (void)
 {
     int x;
     int y;
 
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
-            thingp shopkeeper = all_shopkeeper[x][y];
+            thingp shopkeeper = all_shopkeeper_tiles[x][y];
             if (!shopkeeper) {
                 continue;
             }
@@ -278,6 +289,5 @@ void shop_fixup (void)
 {
     shop_get_all_shop_floor_things();
     shop_get_all_shopkeeper_things();
-    shop_get_all_shop_item_things();
-    shop_get_all_shopkeeper_things();
+    shop_own_all_shopkeeper_things();
 }
