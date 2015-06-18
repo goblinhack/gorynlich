@@ -600,6 +600,11 @@ typedef struct thing_ {
     uint16_t owner_thing_id;
 
     /*
+     * How many things this thing owns.
+     */
+    uint16_t owned_count;
+
+    /*
      * How much damage per hit?
      */
     uint16_t damage;
