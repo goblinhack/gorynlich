@@ -225,7 +225,6 @@ static void shop_get_all_shopkeeper_things (void)
                 it = thing_server_id(cell->id[i]);
 
                 if (thing_is_shopkeeper(it)) {
-CON("got keeper %d %d",x,y);
                     all_shopkeeper_tiles[x][y] = it;
                 }
             }
@@ -259,7 +258,12 @@ static void shop_flood_own_things (thingp shopkeeper, int x, int y)
 
         if (thing_is_treasure(it)) {
             thing_set_owner(it, shopkeeper);
-CON("%s %s",thing_logname(it), thing_logname(shopkeeper));
+
+            if (tp_get_cost(it->tp)) {
+                MSG_SERVER_SHOUT_OVER_THING(POPUP, it,
+                                            "%%%%font=%s$%%%%fg=%s$%d$", 
+                                            "large", "gold", tp_get_cost(it->tp));
+            }
         }
     }
 

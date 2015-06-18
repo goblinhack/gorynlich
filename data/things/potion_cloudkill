@@ -4,7 +4,8 @@
  tooltip="potion of purply death"
  z_depth="monst"
  is_inactive
-is_treasure
+ cost=100
+ is_treasure
  is_potion
  is_stackable
  hit_priority=5

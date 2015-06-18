@@ -3,6 +3,7 @@
  raw_name="weapon_any"
  tooltip="random weapon"
  z_depth="monst"
+ is_treasure
  is_weapon
  is_internal
  tiles={

@@ -2739,6 +2739,8 @@ static void init (void)
     map_fg[MAP_WATER]          = TERM_COLOR_BLACK;
     map_fg[MAP_FLOOR]          = TERM_COLOR_WHITE;
     map_fg[MAP_DUSTY_FLOOR]    = TERM_COLOR_GREEN;
+    map_fg[MAP_SHOPKEEPER]     = TERM_COLOR_RED;
+    map_fg[MAP_SHOP_FLOOR]     = TERM_COLOR_GREEN;
     map_fg[MAP_ROCK]           = TERM_COLOR_BLUE;
     map_fg[MAP_WALL]           = TERM_COLOR_WHITE;
     map_fg[MAP_CONCRETE]       = TERM_COLOR_WHITE;
@@ -2768,6 +2770,8 @@ static void init (void)
     map_bg[MAP_WATER]          = TERM_COLOR_CYAN;
     map_bg[MAP_FLOOR]          = TERM_COLOR_BLACK;
     map_bg[MAP_DUSTY_FLOOR]    = TERM_COLOR_BLACK;
+    map_bg[MAP_SHOPKEEPER]     = TERM_COLOR_BLACK;
+    map_bg[MAP_SHOP_FLOOR]     = TERM_COLOR_BLACK;
     map_bg[MAP_ROCK]           = TERM_COLOR_BLACK;
     map_bg[MAP_WALL]           = TERM_COLOR_BLUE;
     map_bg[MAP_CONCRETE]       = TERM_COLOR_RED;
@@ -2797,6 +2801,8 @@ static void init (void)
     valid_frag_char[MAP_WATER]          = true;
     valid_frag_char[MAP_FLOOR]          = true;
     valid_frag_char[MAP_DUSTY_FLOOR]    = true;
+    valid_frag_char[MAP_SHOPKEEPER]     = true;
+    valid_frag_char[MAP_SHOP_FLOOR]     = true;
     valid_frag_char[MAP_ROCK]           = true;
     valid_frag_char[MAP_WALL]           = true;
     valid_frag_char[MAP_CONCRETE]       = true;
@@ -2825,6 +2831,8 @@ static void init (void)
     valid_frag_alt_char[MAP_WATER]          = true;
     valid_frag_alt_char[MAP_FLOOR]          = true;
     valid_frag_alt_char[MAP_DUSTY_FLOOR]    = true;
+    valid_frag_alt_char[MAP_SHOPKEEPER]     = true;
+    valid_frag_alt_char[MAP_SHOP_FLOOR]     = true;
     valid_frag_alt_char[MAP_ROCK]           = true;
     valid_frag_alt_char[MAP_WALL]           = true;
     valid_frag_alt_char[MAP_CONCRETE]       = true;
@@ -2920,12 +2928,34 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 
             char c = map_jigsaw_buffer[x][y];
 
+            /*
+             * Items in shops go on shop floors
+             */
+            int shop_floor = false;
+            switch (c) {
+            case 'K': 
+            case 'w': 
+            case 'p':
+            case 'm':
+            case '$':
+                if ((x > 0) && (x < MAP_WIDTH - 1) && (y > 0) && (y < MAP_HEIGHT - 1)) {
+                    shop_floor |= (map_jigsaw_buffer[x-1][y] == '_') ? 1 : 0;
+                    shop_floor |= (map_jigsaw_buffer[x+1][y] == '_') ? 1 : 0;
+                    shop_floor |= (map_jigsaw_buffer[x][y-1] == '_') ? 1 : 0;
+                    shop_floor |= (map_jigsaw_buffer[x][y+2] == '_') ? 1 : 0;
+                }
+                break;
+            }
+
             if (c != ' ') {
                 if (!floor) {
                     floor = random_floor();
                 }
                 tp = floor;
 
+                if (shop_floor) {
+                    tp = tp_find("data/things/shop_floor1");
+                }
 
                 (*callback)(wid, x, y, 
                             0, /* thing */
@@ -2961,12 +2991,12 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 
             case 'L': tp = tp_find("data/things/lava1"); break;
             case 'T': tp = tp_find("data/things/teleport1"); break;
+            case '_': tp = tp_find("data/things/shop_floor1"); break;
+            case 'K': tp = tp_find("data/things/shopkeeper"); break;
 
             case 'S': tp = random_player(); break;
             case 'E': tp = random_exit(); break;
-            case 'w': tp = random_weapon(); break;
             case 'f': tp = random_food(); break;
-            case 'p': tp = random_potion(); break;
             case 'M': 
                       if ((myrand() % 100) < 50) {
                         tp = random_monst(depth); 
@@ -2974,16 +3004,23 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                         tp = random_mob(depth); 
                       }
                       break;
+
+            case 'w': tp = random_weapon(shop_floor); break;
+            case 'p': tp = random_potion(shop_floor); break;
             case 'm': tp = random_monst(depth); break;
             case '$': {
                 int r = myrand() % 100;
 
-                if (r < 20) {
-                    tp = tp_find("data/things/brazier");
-                } else if (r < 40) {
-                    tp = tp_find("data/things/key");
+                if (shop_floor) {
+                    tp = random_treasure(shop_floor);
                 } else {
-                    tp = random_treasure();
+                    if (r < 20) {
+                        tp = tp_find("data/things/brazier");
+                    } else if (r < 40) {
+                        tp = tp_find("data/things/key");
+                    } else {
+                        tp = random_treasure(shop_floor);
+                    }
                 }
                 break;
             }
