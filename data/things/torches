@@ -8,6 +8,7 @@
  is_carryable
  is_light_source
  is_stackable
+ cost=100
  is_treasure
  carried_as="data/things/torch"
  light_radius=3.0

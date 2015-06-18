@@ -1099,7 +1099,7 @@ wid_game_map_client_replace_tile (widp w,
 #ifdef DEBUG_CLIENT_THING
     wid_update(child);
     char name[20];
-    sprintf(name, "%d",thing->thing_id);
+    sprintf(name, "%d",t->thing_id);
     wid_set_text(child,name);
 #endif
 

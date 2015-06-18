@@ -176,7 +176,7 @@ tpp random_food (void)
     }
 }
 
-tpp random_treasure (void)
+tpp random_treasure (int shop_floor)
 {
     int loop = 0;
 
@@ -195,6 +195,13 @@ tpp random_treasure (void)
             continue;
         }
 
+        /*
+         * Valid for shops?
+         */
+        if (shop_floor && !tp_get_cost(tp)) {
+            continue;
+        }
+
         if (tp_is_treasure(tp)) {
             int r =  myrand() % 10000;
             if (r < tp_get_d10000_chance_of_appearing(tp)) {
@@ -204,7 +211,7 @@ tpp random_treasure (void)
     }
 }
 
-tpp random_weapon (void)
+tpp random_weapon (int shop_floor)
 {
     int loop = 0;
 
@@ -223,6 +230,13 @@ tpp random_weapon (void)
             continue;
         }
 
+        /*
+         * Valid for shops?
+         */
+        if (shop_floor && !tp_get_cost(tp)) {
+            continue;
+        }
+
         if (tp_is_weapon(tp)) {
             int r =  myrand() % 10000;
             if (r < tp_get_d10000_chance_of_appearing(tp)) {
@@ -232,7 +246,7 @@ tpp random_weapon (void)
     }
 }
 
-tpp random_potion (void)
+tpp random_potion (int shop_floor)
 {
     int loop = 0;
 
@@ -248,6 +262,13 @@ tpp random_potion (void)
         tpp tp = id_to_tp(id);
 
         if (tp_is_internal(tp)) {
+            continue;
+        }
+
+        /*
+         * Valid for shops?
+         */
+        if (shop_floor && !tp_get_cost(tp)) {
             continue;
         }
 

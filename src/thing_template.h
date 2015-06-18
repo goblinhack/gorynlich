@@ -163,6 +163,11 @@ typedef struct tp_ {
     uint16_t damage;
 
     /*
+     * Cost in shops
+     */
+    uint16_t cost;
+
+    /*
      * Lifespan in milliseconds.
      */
     uint16_t lifespan;
@@ -423,6 +428,7 @@ uint8_t tp_get_z_order(tpp);
 uint32_t tp_get_speed(tpp);
 uint32_t tp_get_lifespan(tpp);
 uint16_t tp_get_damage(tpp);
+uint16_t tp_get_cost(tpp);
 int32_t tp_get_bonus_xp_on_death(tpp);
 uint32_t tp_get_vision_distance(tpp);
 int32_t tp_get_bonus_cash_on_collect(tpp);
@@ -1152,9 +1158,9 @@ tpp random_floor(void);
 tpp random_player(void);
 tpp random_exit(void);
 tpp random_food(void);
-tpp random_treasure(void);
-tpp random_weapon(void);
-tpp random_potion(void);
+tpp random_treasure(int shop_floor);
+tpp random_weapon(int shop_floor);
+tpp random_potion(int shop_floor);
 tpp random_rock(void);
 tpp random_monst(int depth);
 tpp random_mob(int depth);

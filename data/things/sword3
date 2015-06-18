@@ -3,6 +3,8 @@
  raw_name="sword3"
  tooltip="sword (tm)"
  z_depth="monst"
+ cost=150
+ is_treasure
  is_weapon
  is_melee_weapon
  can_be_enchanted
