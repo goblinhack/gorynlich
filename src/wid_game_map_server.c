@@ -294,9 +294,19 @@ wid_game_map_server_replace_tile (widp w,
          */
         tpp otp = tp;
 
+        /*
+         * Some things are only valid in shops.
+         */
+        tpp floor_tp;
+        level_get_tp(level, x, y, MAP_DEPTH_FLOOR, &floor_tp);
+        int shop_floor = false;
+        if (tp_is_shop_floor(floor_tp)) {
+            shop_floor = true;
+        }
+
         switch (tp_to_id(tp)) {
             case THING_POTION_ANY:
-                tp = random_potion();
+                tp = random_potion(shop_floor);
                 break;
             case THING_FOOD_ANY:
                 tp = random_food();
@@ -308,10 +318,10 @@ wid_game_map_server_replace_tile (widp w,
                 tp = random_monst(depth);
                 break;
             case THING_TREASURE_ANY:
-                tp = random_treasure();
+                tp = random_treasure(shop_floor);
                 break;
             case THING_WEAPON_ANY:
-                tp = random_weapon();
+                tp = random_weapon(shop_floor);
                 break;
         }
 

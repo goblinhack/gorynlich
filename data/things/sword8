@@ -3,6 +3,8 @@
  raw_name="sword8"
  tooltip="crystal sword"
  z_depth="monst"
+ cost=900
+ is_treasure
  is_weapon
  is_melee_weapon
  can_be_enchanted

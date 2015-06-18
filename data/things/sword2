@@ -3,6 +3,8 @@
  raw_name="sword2"
  tooltip="wooden sword"
  z_depth="monst"
+ cost=100
+ is_treasure
  is_weapon
  is_melee_weapon
  can_be_enchanted
