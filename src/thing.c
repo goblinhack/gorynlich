@@ -1180,6 +1180,29 @@ static void thing_remove_hooks (thingp t)
                                       true /* fast */);
         }
     }
+
+    /*
+     * Some things have lots of things they own
+     */
+    if (t->owned_count) {
+        THING_LOG(t, "remove remaining %d owned things", t->owned_count);
+
+        thingp i;
+
+        { TREE_WALK(server_active_things, i) {
+            thingp owner = thing_owner(i);
+            if (owner && (owner == t)) {
+                thing_set_owner(i, 0);
+            }
+        } }
+
+        { TREE_WALK(server_boring_things, i) {
+            thingp owner = thing_owner(i);
+            if (owner && (owner == t)) {
+                thing_set_owner(i, 0);
+            }
+        } }
+    }
 }
 
 static void thing_destroy_implicit (thingp t)
@@ -4025,8 +4048,14 @@ void thing_set_owner (thingp t, thingp owner)
 
     if (owner) {
         t->owner_thing_id = owner->thing_id;
+
+        owner->owned_count++;
     } else {
         t->owner_thing_id = 0;
+
+        if (old_owner) {
+            old_owner->owned_count--;
+        }
     }
 }
 
