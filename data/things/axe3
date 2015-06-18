@@ -3,6 +3,8 @@
  raw_name="axe3"
  tooltip="double-bladed axe"
  z_depth="monst"
+ cost=300
+ is_treasure
  is_weapon
  is_melee_weapon
  can_be_enchanted

@@ -5,6 +5,8 @@
  fires="data/things/fireball1"
  weapon_fire_delay_hundredths=30
  z_depth="monst"
+ cost=300
+ is_treasure
  is_weapon
  is_magical_weapon
  can_be_enchanted

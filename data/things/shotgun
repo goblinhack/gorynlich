@@ -5,6 +5,8 @@
  fires="data/things/pellets"
  weapon_fire_delay_hundredths=30
  z_depth="monst"
+ cost=1000
+ is_treasure
  is_weapon
  can_be_enchanted
  is_degradable
