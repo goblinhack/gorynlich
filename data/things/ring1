@@ -3,7 +3,6 @@
  raw_name="ring1"
  tooltip="generic magical ring tm"
  z_depth="monst"
- is_inactive
  cost=1000
  is_treasure
  is_stackable

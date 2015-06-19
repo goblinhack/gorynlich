@@ -3,7 +3,6 @@
  raw_name="potion_cloudkill"
  tooltip="potion of purply death"
  z_depth="monst"
- is_inactive
  cost=100
  is_treasure
  is_potion
