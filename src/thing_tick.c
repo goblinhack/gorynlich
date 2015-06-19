@@ -27,6 +27,17 @@ static void thing_tick_server_all (void)
         return;
     }
 
+    /*
+     * Do some things only occasionally.
+     */
+    static uint32_t last_slow_tick;
+    int slow_tick = false;
+
+    if (time_have_x_secs_passed_since(1, last_slow_tick)) {
+        slow_tick = true;
+        last_slow_tick = time_get_time_ms();
+    }
+
     thingp t;
     TREE_WALK_INLINE(server_active_things, t,
                      tree_get_next_tree_key_int32_compare_func) {
@@ -41,7 +52,7 @@ static void thing_tick_server_all (void)
 
 //    count++;
         w = t->wid;
-        if (w) {
+        if (likely(w != 0)) {
             verify(w);
         } else {
             THING_ERR(t, "has no widget");
@@ -98,23 +109,65 @@ static void thing_tick_server_all (void)
             thing_server_magic_fire(t);
         }
 
-        /*
-         * Thing is out of life?
-         */
-        if (tp_get_lifespan(tp)) {
-            if (!t->timestamp_lifestamp) {
+        if (slow_tick) {
+            /*
+             * Thing is out of life?
+             */
+            if (tp_get_lifespan(tp)) {
+                if (!t->timestamp_lifestamp) {
+                    /*
+                    * When does this thing expire ?
+                    */
+                    t->timestamp_lifestamp =
+                            time_get_time_ms() +
+                            tp_get_lifespan(tp);
+
+                    THING_LOG(t, "set end of life to %u", t->timestamp_lifestamp);
+
+                } else if (time_get_time_ms() > t->timestamp_lifestamp) {
+                    thing_dead(t, 0, "out of life"); 
+                    continue;
+                }
+
+            } else if (thing_is_treasure(t)) {
                 /*
-                 * When does this thing expire ?
+                 * Treasure that has an owner is in a shop.
                  */
-                t->timestamp_lifestamp =
-                        time_get_time_ms() +
-                        tp_get_lifespan(tp);
+                if (thing_owner(t)) {
+                    MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                                "%%%%font=%s$%%%%fg=%s$%d$", 
+                                                "large", "gold", tp_get_cost(tp));
+                }
 
-                THING_LOG(t, "set end of life to %u", t->timestamp_lifestamp);
+            } else if (thing_is_mob_spawner(t)) {
+                /*
+                 * Time to spawn a thing?
+                 */
+                uint32_t delay = 
+                        tp_get_mob_spawn_delay_tenths(tp);
+                if (!delay) {
+                    ERR("mob spawner %s with no delay", thing_logname(t));
+                }
 
-            } else if (time_get_time_ms() > t->timestamp_lifestamp) {
-                thing_dead(t, 0, "out of life"); 
-                continue;
+                if (time_have_x_tenths_passed_since(delay,
+                                                    t->timestamp_mob_spawn)) {
+                    /*
+                    * Not sure if should retry rapidly when we can't place.
+                    */
+                    if (t->timestamp_mob_spawn) {
+                        /*
+                        * Skip first time around else new born things spawn in a 
+                        * loop.
+                        */
+                        thing_mob_spawn(t);
+                    }
+
+                    /*
+                    * Add some jitter.
+                    */
+                    t->timestamp_mob_spawn = time_get_time_ms() +
+                                    (myrand() % (delay * 100));
+                }
             }
         }
 
@@ -260,37 +313,6 @@ static void thing_tick_server_all (void)
                      */
                     t->timestamp_ai = time_get_time_ms() + (myrand() % 100);
                 }
-            }
-        }
-
-        /*
-         * Time to spawn a thing?
-         */
-        if (thing_is_mob_spawner(t)) {
-            uint32_t delay = 
-                    tp_get_mob_spawn_delay_tenths(tp);
-            if (!delay) {
-                ERR("mob spawner %s with no delay", thing_logname(t));
-            }
-
-            if (time_have_x_tenths_passed_since(delay,
-                                                t->timestamp_mob_spawn)) {
-                /*
-                 * Not sure if should retry rapidly when we can't place.
-                 */
-                if (t->timestamp_mob_spawn) {
-                    /*
-                     * Skip first time around else new born things spawn in a 
-                     * loop.
-                     */
-                    thing_mob_spawn(t);
-                }
-
-                /*
-                 * Add some jitter.
-                 */
-                t->timestamp_mob_spawn = time_get_time_ms() +
-                                (myrand() % (delay * 100));
             }
         }
     }

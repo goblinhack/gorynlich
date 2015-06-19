@@ -258,12 +258,6 @@ static void shop_flood_own_things (thingp shopkeeper, int x, int y)
 
         if (thing_is_treasure(it)) {
             thing_set_owner(it, shopkeeper);
-
-            if (tp_get_cost(it->tp)) {
-                MSG_SERVER_SHOUT_OVER_THING(POPUP, it,
-                                            "%%%%font=%s$%%%%fg=%s$%d$", 
-                                            "large", "gold", tp_get_cost(it->tp));
-            }
         }
     }
 
