@@ -3,7 +3,6 @@
  raw_name="potion_shield"
  tooltip="magic potion"
  z_depth="monst"
- is_inactive
  cost=100
  is_treasure
  is_potion
