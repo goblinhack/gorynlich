@@ -783,10 +783,14 @@ typedef struct thing_ {
     uint16_t magic_powerup;
 
     /*
+     * Used to detect exit...
+     */
+    uint16_t in_shop_owned_by_thing_id;
+
+    /*
      * Money to be paid before leaving a shop
      */
-    uint16_t money_owed;
-    uint16_t owed_to_thing_id;
+    int money_owed;
 
     /*
      * How much light is this thing emitting. This cannot exceed the light 
@@ -863,11 +867,6 @@ typedef struct thing_ {
      */
     uint32_t is_jumping:1;
     uint32_t want_to_jump:1;
-
-    /*
-     * Used to detect exit...
-     */
-    uint32_t is_in_shop:1;
 } thing;
 
 #include "thing_template.h"
