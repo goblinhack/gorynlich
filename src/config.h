@@ -118,8 +118,8 @@
  * How many jigsaw pieces across and down make up the map. We substract
  * one so we can have a small border and center the tiles.
  */
-#define MAP_JIGSAW_PIECES_ACROSS    ((MAP_WIDTH / JIGPIECE_WIDTH) - 1)
-#define MAP_JIGSAW_PIECES_DOWN      ((MAP_WIDTH / JIGPIECE_WIDTH) - 1)
+#define MAP_JIGSAW_PIECES_ACROSS    ((MAP_WIDTH / JIGPIECE_WIDTH) - 3)
+#define MAP_JIGSAW_PIECES_DOWN      ((MAP_WIDTH / JIGPIECE_WIDTH) - 3)
 
 #define MAP_THINGS_PER_CELL         32
 
