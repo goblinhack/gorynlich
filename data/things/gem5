@@ -1,7 +1,7 @@
 {
- short_name="bloodstone"
+ short_name="ruby"
  raw_name="gem5"
- tooltip="bloodstone"
+ tooltip="ruby"
  z_depth="monst"
  is_inactive
  is_treasure
@@ -9,6 +9,7 @@
  scale=0.5
  hit_priority=1
  is_carryable
+ bonus_cash_on_collect=250
  d10000_chance_of_appearing=3
  tiles={
   tile={
