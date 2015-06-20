@@ -788,6 +788,11 @@ typedef struct thing_ {
     uint16_t magic_powerup;
 
     /*
+     * Money to be paid before leaving a shop
+     */
+    uint16_t money_owed;
+
+    /*
      * How much light is this thing emitting. This cannot exceed the light 
      * strength of the template. This is used for torches and the like to see 
      * how much we can really see.

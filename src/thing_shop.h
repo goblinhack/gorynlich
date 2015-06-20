@@ -20,3 +20,5 @@ void shop_purchase_message(thingp t, thingp item);
 void shop_steal_message(thingp t);
 void shop_fixup(void);
 void thing_shop_item_tick(thingp t);
+void shop_break_message(thingp t, thingp shopkeeper);
+void shop_whodunnit_break_message(thingp t, thingp shopkeeper);
