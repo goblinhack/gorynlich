@@ -45,15 +45,17 @@ void shop_enter (thingp t, thingp floor)
     }
 
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+                               "%%%%fg=green$%s", messages[myrand() % ARRAY_SIZE(messages)]);
 
-CON("in shop");
+    THING_LOG(t, "entered shop");
+
     t->is_in_shop = true;
 }
 
 void shop_leave (thingp t, thingp floor)
 {
-CON("leave shop");
+    THING_LOG(t, "leave shop");
+
     t->is_in_shop = false;
 
     if (!thing_is_player(t)) {
@@ -66,7 +68,7 @@ CON("leave shop");
     if (!t->owed_to_thing_id || !t->money_owed) {
         t->money_owed = 0;
         t->owed_to_thing_id = 0;
-CON("nothing oweed");
+        THING_LOG(t, "nothing owed to shopkeeper");
         return;
     }
 
@@ -139,14 +141,20 @@ void shop_collect_message (thingp t, thingp item)
         return;
     }
 
-    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+    if (t->timestamp_last_shop_enter &&
+        time_have_x_secs_passed_since(10, t->timestamp_last_shop_enter)) {
 
-    MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "%%%%fg=red$Press P to pay");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                                "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+
+        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "%%%%fg=red$Press P to pay");
+
+    }
 
     t->money_owed += tp_get_cost(item->tp);
     t->owed_to_thing_id = shopkeeper->thing_id;
-CON("owe %d to %d",t->money_owed,t->owed_to_thing_id);
+
+    THING_LOG(t, "owes %d$ to id %d", t->money_owed, t->owed_to_thing_id);
 }
 
 void shop_purchase_message (thingp t, thingp item)
@@ -186,8 +194,12 @@ void shop_purchase_message (thingp t, thingp item)
         return;
     }
 
-    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+    if (t->timestamp_last_shop_enter &&
+        time_have_x_secs_passed_since(10, t->timestamp_last_shop_enter)) {
+
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                                "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+    }
 }
 
 void shop_steal_message (thingp t)
@@ -236,7 +248,7 @@ void shop_steal_message (thingp t)
     };
 
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+                               "%%%%fg=red$%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
 void shop_break_message (thingp t, thingp shopkeeper)
@@ -261,7 +273,7 @@ void shop_break_message (thingp t, thingp shopkeeper)
     thing_set_is_angry(shopkeeper, true);
 
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+                               "%%%%fg=red$%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
 void shop_whodunnit_break_message (thingp t, thingp shopkeeper)
@@ -276,7 +288,7 @@ void shop_whodunnit_break_message (thingp t, thingp shopkeeper)
     };
 
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+                               "%%%%fg=orange$%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
 static thingp all_shop_floor_tiles[MAP_WIDTH][MAP_HEIGHT];
