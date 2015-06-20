@@ -26,6 +26,7 @@
 #include "wid_tooltip.h"
 #include "socket_util.h"
 #include "wid_notify.h"
+#include "wid_game_map_client.h"
 
 uint8_t debug_enabled = 0;
 uint8_t croaked;
@@ -552,22 +553,22 @@ static void msg_over_thing_ (uint32_t level,
     /*
      * Center a widget over the thing.
      */
-    double x, y;
+    fpoint tl, br;
 
-    wid_get_pct(wid_thing, &x, &y);
-    widp w = wid_new_window("wid_tooltip");
+    wid_get_tl_br(wid_thing, &tl, &br);
+    widp w = wid_new_container(wid_game_map_client_grid_container, "wid_tooltip");
 
-    fpoint tl = {0, 0};
-    fpoint br = {1, 1};
-    wid_set_tl_br_pct(w, tl, br);
+    wid_set_tl_br_no_relative_offset(w, tl, br);
     wid_set_text(w, buf);
     wid_set_text_outline(w, true);
     wid_set_font(w, med_font);
-    wid_move_to_pct_centered(w, x, y);
-    wid_move_to_pct_centered_in(w, x, y - 0.3, 1500);
+    wid_move_delta_pct_in(w, 0.0, -0.05, 0);
+    wid_move_end(w);
+    wid_move_delta_pct_in(w, 0.0, -0.1, 1500);
     wid_fade_out(w, 1500);
     wid_destroy_in(w, 1500);
     wid_set_no_shape(w);
+    wid_set_z_depth(w, MAP_DEPTH_ACTIONS);
     wid_raise(w);
 }
 

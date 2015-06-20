@@ -265,6 +265,7 @@ void wid_fade_in_out(widp w, uint32_t delay, uint32_t repeat,
 void wid_get_children_size(widp, double *width, double *height);
 void wid_get_offset(widp, fpoint *offset);
 void wid_get_tl_br(widp, fpoint *tl, fpoint *br);
+void wid_set_tl_br_no_relative_offset(widp w, fpoint tl, fpoint br);
 void wid_move_end(widp);
 void wid_move_delta(widp, double dx, double dy);
 void wid_move_to_abs(widp, double dx, double dy);
