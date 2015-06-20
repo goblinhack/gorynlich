@@ -179,7 +179,6 @@ void thing_server_fire (thingp t,
      * Make sure we keep track of who fired so we can award scores.
      */
     thing_set_owner(p, t);
-CON("set owner %s as %s",thing_logname(p),thing_logname(t));
 
     /*
      * Set up the modifier damage if this is say a fireball or bow for ex.
