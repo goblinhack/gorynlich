@@ -97,11 +97,17 @@ void thing_reached_teleport (thingp t, thingp teleport)
 
     double nx = tx[poss];
     double ny = ty[poss];
+THING_CON(t,"jump %f %f to %f %f",t->x, t->y,nx,ny);
 
     wid_move_end(t->wid);
 
     thing_server_wid_update(t, nx, ny, true /* is_new */);
     thing_update(t);
+
+    /*
+     * Make sure the client sees the jump
+     */
+    t->needs_tx_refresh_xy_and_template_id = 1;
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
 

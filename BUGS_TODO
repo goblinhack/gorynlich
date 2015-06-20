@@ -1,9 +1,10 @@
 --------------------------------------- plan for june --------------------------------------
 - shopkeepers hitting own items
 - add shop
-- buy from shop
-- steal from shop
-- sell in shop
+- handle buy from shop
+- handle steal from shop
+- handle sell in shop
+- handle damage in shop
 - add money
 - sound effects for weapons and hits http://www.bfxr.net/
 --------------------------------------- plan for jul --------------------------------------
@@ -46,6 +47,12 @@
 - thief, kill thief to recover items
 --------------------------------------- plan for dec --------------------------------------
 - add bot to test out multiplayer ?
+
+
+Sat Jun 20 12:18:47 EDT 2015
+- shopkeeper retaliates
+- player teleport was not updating on client
+- some potions should not explode
 
 Fri Jun 19 22:50:29 EDT 2015
 - gobblers not eating treasure

@@ -739,11 +739,6 @@ typedef struct thing_ {
     uint32_t timestamp_mob_spawn;
 
     /*
-     * When do I die? 8(
-     */
-    uint32_t timestamp_lifestamp;
-
-    /*
      * When did I last hit?
      */
     uint32_t timestamp_i_attacked;
