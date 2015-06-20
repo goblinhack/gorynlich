@@ -7,7 +7,7 @@
  max_hp=55
  damage=15
  bonus_xp_on_death=100
- vision_distance=20
+ vision_distance=60
  hit_delay_tenths=5
  is_monst
  is_effect_pulse

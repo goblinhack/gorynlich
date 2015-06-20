@@ -500,7 +500,12 @@ static void thing_handle_collision (thingp me, thingp it,
      * Monster friendly fire?
      */
     if (thing_is_monst(me) && thing_is_monst(it)) {
-        return;
+        /*
+         * Allow shopkeepers to shoot monsters.
+         */
+        if (!thing_is_shop_floor(me)) {
+            return;
+        }
     }
 
     /*
@@ -511,7 +516,12 @@ static void thing_handle_collision (thingp me, thingp it,
 
     if (owner_me) {
         if (thing_is_monst(owner_me) && thing_is_monst(it)) {
-            return;
+            /*
+             * Allow shopkeepers to shoot monsters.
+             */
+            if (!thing_is_shop_floor(owner_me)) {
+                return;
+            }
         }
     }
 
@@ -1056,6 +1066,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                            thing_is_weapon(it)                 ||
                            thing_is_sawblade(it)               ||
                            thing_is_potion(it)                 ||
+                           thing_is_teleport(it)               ||
                            thing_is_food(it)) {
                     /*
                      * Allow monsters to walk into these things:
