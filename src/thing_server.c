@@ -28,6 +28,7 @@
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
 #include "string_ext.h"
+#include "thing_shop.h"
 
 uint8_t thing_server_move (thingp t,
                            double x,
@@ -271,13 +272,34 @@ void thing_server_action (thingp t,
     }
 
     case PLAYER_ACTION_DROP:
+    {
+        widp w;
 
-        if (!thing_place(t, tp, item)) {
+        w = thing_place(t, tp, item);
+        if (!w) {
             /*
              * Urk!
              */
             MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "Drop failed");
             return;
+        }
+
+        /*
+         * If in a shop, try to sell it.
+         */
+        if (t->in_shop_owned_by_thing_id) {
+            thingp newt;
+            newt = wid_get_thing(w);
+            shop_deposit_message(t, newt);
+        }
+    } break;
+
+    case PLAYER_ACTION_PAY:
+
+        if (t->in_shop_owned_by_thing_id) {
+            shop_pay_for_items(t);
+        } else {
+            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "I'm not in a shop");
         }
         break;
 
