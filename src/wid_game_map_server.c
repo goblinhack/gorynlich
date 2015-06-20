@@ -300,8 +300,11 @@ wid_game_map_server_replace_tile (widp w,
         tpp floor_tp;
         level_get_tp(level, x, y, MAP_DEPTH_FLOOR, &floor_tp);
         int shop_floor = false;
-        if (tp_is_shop_floor(floor_tp)) {
-            shop_floor = true;
+
+        if (floor_tp) {
+            if (tp_is_shop_floor(floor_tp)) {
+                shop_floor = true;
+            }
         }
 
         switch (tp_to_id(tp)) {

@@ -565,3 +565,39 @@ void thing_shop_item_tick (thingp t)
                                     "medium", "gold", tp_get_cost(t->tp));
     }
 }
+
+/*
+ * Is a thing close to or inside a shop?
+ */
+int shop_inside (thingp t)
+{
+    thing_map *map = &thing_server_map;
+
+    int x;
+    int y;
+    int dx;
+    int dy;
+
+    for (dx = -2; dx <= 2; dx++) {
+        for (dy = -2; dy <= 2; dy++) {
+
+            x = t->x + dx;
+            y = t->y + dy;
+
+            thing_map_cell *cell = &map->cells[x][y];
+
+            uint32_t i;
+            for (i = 0; i < cell->count; i++) {
+                thingp it;
+                
+                it = thing_server_id(cell->id[i]);
+
+                if (thing_is_shop_floor(it)) {
+                    return (true);
+                }
+            }
+        }
+    }
+
+    return (false);
+}

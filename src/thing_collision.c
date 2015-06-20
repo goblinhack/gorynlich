@@ -490,10 +490,17 @@ static void thing_handle_collision (thingp me, thingp it,
         if ((dx == 0) && (dy == 0)) {
             if (thing_is_player(me)) {
                 if (thing_is_shop_floor(it)) {
+                    /*
+                     * Going into a shop.
+                     */
                     shop_enter(me, it);
-                } else if (thing_is_floor(it) && 
-                           me->in_shop_owned_by_thing_id) {
-                    shop_leave(me, it);
+                } else if (me->in_shop_owned_by_thing_id) {
+                    /*
+                     * Still inside the shop?
+                     */
+                    if (!shop_inside(me)) {
+                        shop_leave(me, it);
+                    }
                 }
             }
         }
