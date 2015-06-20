@@ -489,7 +489,7 @@ static void thing_handle_collision (thingp me, thingp it,
 
         if (thing_is_player(me)) {
             if (thing_is_shop_floor(it)) {
-                shop_enter_message(me);
+                shop_enter_message(me, it);
             }
         }
 
