@@ -1,6 +1,6 @@
 {
  short_name="loose change"
- raw_name="coins1"
+ raw_name="coins"
  tooltip="pile of coins"
  z_depth="monst"
  is_inactive
@@ -8,7 +8,7 @@
  is_stackable
  hit_priority=1
  is_carryable
- bonus_cash_on_collect=500
+ bonus_cash_on_collect=10
  d10000_chance_of_appearing=100
  tiles={
   tile={
