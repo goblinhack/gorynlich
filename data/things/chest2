@@ -1,19 +1,18 @@
 {
- short_name="crystal gem"
- raw_name="gem1"
- tooltip="crystal gem"
+ short_name="chest"
+ raw_name="chest2"
+ tooltip="treasure chest"
  z_depth="monst"
  is_inactive
  is_treasure
  is_stackable
- scale=0.5
  hit_priority=1
  is_carryable
- bonus_cash_on_collect=75
+ bonus_cash_on_collect=50
  d10000_chance_of_appearing=100
  tiles={
   tile={
-   tile="gem1"
+   tile="chest2"
   }
  }
 }
