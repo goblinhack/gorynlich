@@ -15,7 +15,7 @@
 #include "thing_shop.h"
 #include "time_util.h"
 
-void shop_enter_message (thingp t, thingp floor)
+void shop_enter (thingp t, thingp floor)
 {
     if (!thing_is_player(t)) {
         return;
@@ -46,6 +46,50 @@ void shop_enter_message (thingp t, thingp floor)
 
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
                                "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+
+CON("in shop");
+    t->is_in_shop = true;
+}
+
+void shop_leave (thingp t, thingp floor)
+{
+CON("leave shop");
+    t->is_in_shop = false;
+
+    if (!thing_is_player(t)) {
+        return;
+    }
+
+    /*
+     * Nothing bought?
+     */
+    if (!t->owed_to_thing_id || !t->money_owed) {
+        t->money_owed = 0;
+        t->owed_to_thing_id = 0;
+CON("nothing oweed");
+        return;
+    }
+
+    /*
+     * Dead keeper?
+     */
+    thingp shopkeeper = thing_server_find(t->owed_to_thing_id);
+    if (!shopkeeper) {
+        t->money_owed = 0;
+        t->owed_to_thing_id = 0;
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                                "Odd... No one around to pay");
+        return;
+    }
+
+    /*
+     * Stealing?
+     */
+    thing_set_is_angry(shopkeeper, true);
+    shop_steal_message(t);
+
+    t->money_owed = 0;
+    t->owed_to_thing_id = 0;
 }
 
 void shop_collect_message (thingp t, thingp item)
@@ -89,12 +133,20 @@ void shop_collect_message (thingp t, thingp item)
         "I insult all mothers at these prices!",
     };
 
+    thingp shopkeeper = thing_owner(item);
+    if (!shopkeeper) {
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "Odd... no one owns this. Free item...");
+        return;
+    }
+
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
                                "%s", messages[myrand() % ARRAY_SIZE(messages)]);
 
     MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "%%%%fg=red$Press P to pay");
 
-    t->money_owed += tp_get_cost(t->tp);
+    t->money_owed += tp_get_cost(item->tp);
+    t->owed_to_thing_id = shopkeeper->thing_id;
+CON("owe %d to %d",t->money_owed,t->owed_to_thing_id);
 }
 
 void shop_purchase_message (thingp t, thingp item)
