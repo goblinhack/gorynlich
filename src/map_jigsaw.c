@@ -2116,8 +2116,8 @@ static void dump_jigpieces_to_map (dungeon_t *dg)
     /*
      * Offset the map by an amount so we can have a border.
      */
-    int32_t dx = JIGPIECE_WIDTH / 2;
-    int32_t dy = JIGPIECE_HEIGHT / 2;
+    int dx = ((MAP_WIDTH - (JIGPIECE_WIDTH * MAP_JIGSAW_PIECES_ACROSS)) / 2);
+    int dy = ((MAP_HEIGHT - (JIGPIECE_HEIGHT * MAP_JIGSAW_PIECES_DOWN)) / 2);
 
     for (y = 0; y < MAP_HEIGHT; y++) {
         for (x = 0; x < MAP_WIDTH; x++) {
@@ -2999,12 +2999,16 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
             case 'E': tp = random_exit(); break;
             case 'f': tp = random_food(); break;
             case 'M': 
-                      if ((myrand() % 100) < 95) {
-                        tp = random_monst(depth); 
-                      } else {
-                        tp = random_mob(depth); 
-                      }
-                      break;
+                if ((myrand() % 100) < 50) {
+                    /*
+                     * Nothing
+                     */
+                } else if ((myrand() % 100) < 95) {
+                    tp = random_monst(depth); 
+                } else {
+                    tp = random_mob(depth); 
+                }
+                break;
 
             case 'w': tp = random_weapon(shop_floor); break;
             case 'p': tp = random_potion(shop_floor); break;
