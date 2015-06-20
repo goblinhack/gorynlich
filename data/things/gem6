@@ -1,7 +1,7 @@
 {
- short_name="deathstone"
+ short_name="diamond"
  raw_name="gem6"
- tooltip="deathstone"
+ tooltip="diamond"
  z_depth="monst"
  is_inactive
  is_treasure
@@ -9,7 +9,8 @@
  scale=0.5
  hit_priority=1
  is_carryable
- d10000_chance_of_appearing=1
+ bonus_cash_on_collect=500
+ d10000_chance_of_appearing=2
  tiles={
   tile={
    tile="gem6"
