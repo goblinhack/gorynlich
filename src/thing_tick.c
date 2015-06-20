@@ -111,26 +111,7 @@ static void thing_tick_server_all (void)
         }
 
         if (slow_tick) {
-            /*
-             * Thing is out of life?
-             */
-            if (tp_get_lifespan(tp)) {
-                if (!t->timestamp_lifestamp) {
-                    /*
-                    * When does this thing expire ?
-                    */
-                    t->timestamp_lifestamp =
-                            time_get_time_ms() +
-                            tp_get_lifespan(tp);
-
-                    THING_LOG(t, "set end of life to %u", t->timestamp_lifestamp);
-
-                } else if (time_get_time_ms() > t->timestamp_lifestamp) {
-                    thing_dead(t, 0, "out of life"); 
-                    continue;
-                }
-
-            } else if (thing_is_treasure(t)) {
+            if (thing_is_treasure(t)) {
                 thing_shop_item_tick(t);
 
             } else if (thing_is_mob_spawner(t)) {

@@ -469,6 +469,11 @@ void level_place_explosion (levelp level,
         return;
     }
 
+    if (!explodes_as) {
+        ERR("combustable, but no explosion for name %s", tp_name(tp));
+        return;
+    }
+
     tpp non_explosive_gas_cloud = tp_find(explodes_as);
     if (!non_explosive_gas_cloud) {
         ERR("no explosion for name %s", explodes_as);
