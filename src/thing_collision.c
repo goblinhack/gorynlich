@@ -491,7 +491,8 @@ static void thing_handle_collision (thingp me, thingp it,
             if (thing_is_player(me)) {
                 if (thing_is_shop_floor(it)) {
                     shop_enter(me, it);
-                } else if (thing_is_floor(it) && me->is_in_shop) {
+                } else if (thing_is_floor(it) && 
+                           me->in_shop_owned_by_thing_id) {
                     shop_leave(me, it);
                 }
             }

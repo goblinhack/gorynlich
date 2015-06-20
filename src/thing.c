@@ -2430,6 +2430,12 @@ void thing_leave_level (thingp t)
     if (magic_anim) {
         thing_leave_level(magic_anim);
     }
+
+    /*
+     * Still in a shop? Sneaky.
+     */
+    t->money_owed = 0;
+    t->in_shop_owned_by_thing_id = 0;
 }
 
 void thing_join_level (thingp t)
