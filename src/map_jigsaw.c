@@ -34,6 +34,7 @@
 #include "wid.h"
 #include "map_jigsaw.h"
 #include "ramdisk.h"
+#include "socket_util.h"
 
 /*
  * Creates a map somewhat like this
@@ -2903,6 +2904,7 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
 void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 {
     const char *jigsaw_map;
+    int shop_notify = false;
 
     tpp map_tp[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH_MAX];
 
@@ -2938,25 +2940,19 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
              * Items in shops go on shop floors
              */
             int shop_floor = false;
-            switch (c) {
-            case 'K': 
-            case 'w': 
-            case 'p':
-            case 'm':
-            case '$':
-                if ((x > 0) && (x < MAP_WIDTH - 1) && (y > 0) && (y < MAP_HEIGHT - 1)) {
-                    shop_floor |= (map_jigsaw_buffer[x-1][y] == '_') ? 1 : 0;
-                    shop_floor |= (map_jigsaw_buffer[x+1][y] == '_') ? 1 : 0;
-                    shop_floor |= (map_jigsaw_buffer[x][y-1] == '_') ? 1 : 0;
-                    shop_floor |= (map_jigsaw_buffer[x][y+2] == '_') ? 1 : 0;
-                }
-                break;
+            if ((x > 0) && (x < MAP_WIDTH - 1) && (y > 0) && (y < MAP_HEIGHT - 1)) {
+                shop_floor  = (map_jigsaw_buffer[x][y] == '_') ? 1 : 0;
+                shop_floor |= (map_jigsaw_buffer[x-1][y] == '_') ? 1 : 0;
+                shop_floor |= (map_jigsaw_buffer[x+1][y] == '_') ? 1 : 0;
+                shop_floor |= (map_jigsaw_buffer[x][y-1] == '_') ? 1 : 0;
+                shop_floor |= (map_jigsaw_buffer[x][y+1] == '_') ? 1 : 0;
             }
 
             if (c != ' ') {
                 if (!floor) {
                     floor = random_floor();
                 }
+
                 tp = floor;
 
                 if (shop_floor) {
@@ -2992,7 +2988,14 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 
             case 'L': tp = tp_find("data/things/lava1"); break;
             case 'T': tp = tp_find("data/things/teleport1"); break;
-            case '_': tp = tp_find("data/things/shop_floor1"); break;
+            case '_': 
+                tp = tp_find("data/things/shop_floor1"); 
+                if (!shop_notify) {
+                    shop_notify = true;
+                    socket_tx_server_shout_at_all_players(INFO, "You hear the chime of a cash register");
+                }
+                break;
+
             case 'K': tp = tp_find("data/things/shopkeeper"); break;
 
             case 'S': tp = random_player(); break;

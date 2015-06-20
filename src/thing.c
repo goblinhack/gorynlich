@@ -4087,13 +4087,13 @@ void thing_set_owner (thingp t, thingp owner)
                       thing_logname(old_owner), thing_logname(owner));
         } else {
             if (0) {
-                THING_CON(t, "remove owner %s", thing_logname(old_owner));
+                THING_LOG(t, "remove owner %s", thing_logname(old_owner));
             }
         }
     } else {
         if (owner) {
             if (0) {
-                THING_CON(t, "owner %s", thing_logname(owner));
+                THING_LOG(t, "owner %s", thing_logname(owner));
             }
         }
     }
