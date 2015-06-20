@@ -804,6 +804,14 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
     if (thing_is_projectile(me)                 || 
         thing_is_explosion(me)) {
 
+        /*
+         * Don't let shopkeepers shoot their own wares when defending a shop
+         */
+        thingp owner_proj = thing_owner(me);
+        if (owner_it && (owner_it == owner_proj)) {
+            return;
+        }
+
         if (thing_is_lava(it) ||
             thing_is_acid(it)) {
             /*

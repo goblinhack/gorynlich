@@ -1,4 +1,5 @@
 --------------------------------------- plan for june --------------------------------------
+- shopkeepers hitting own items
 - add shop
 - buy from shop
 - steal from shop
@@ -47,6 +48,8 @@
 - add bot to test out multiplayer ?
 
 Fri Jun 19 22:50:29 EDT 2015
+- gobblers not eating treasure
+- shopkeepers not shooing monsters
 - shop items and owners and popup cost
 - teleports not working on random levels
 
