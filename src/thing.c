@@ -23,6 +23,7 @@
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
 #include "wid_choose_stats.h"
+#include "thing_shop.h"
 
 tree_root *server_player_things;
 tree_root *client_player_things;
@@ -1437,7 +1438,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
     verify(t);
 
-//CON("%s %f %f",thing_logname(t),t->x,t->y);
+CON("%s %f %f",thing_logname(t),t->x,t->y);
     tpp tp = thing_tp(t);
 
     /*
@@ -1595,6 +1596,15 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      * Boom! If this bomb is not being collected then make it blow up.
      */
     if (t->on_server) {
+        thingp owner = thing_owner(t);
+CON("%s destroyed",thing_logname(t));
+if (owner) {
+CON("%s owner is keeper",thing_logname(owner));
+}
+
+if (killer) {
+CON("%s killer is keeper",thing_logname(killer));
+}
         if (!t->is_collected) {
             if (thing_is_bomb(t)        || 
                 thing_is_fireball(t)    ||
@@ -1603,6 +1613,30 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                                       0, /* owner */
                                       t->tp,
                                       t->x, t->y);
+            }
+
+            /*
+             * Breaking stuff in a shop? bad idea.
+             */
+            if (thing_is_treasure(t)) {
+                if (owner && thing_is_shopkeeper(owner)) {
+                    if (killer && thing_is_player(killer)) {
+                        shop_break_message(killer, owner);
+                    } else {
+                        shop_whodunnit_break_message(killer, owner);
+                    }
+                }
+            }
+        } else {
+            /*
+             * Collecting a thing?
+             */
+            if (thing_is_treasure(t)) {
+                if (owner && thing_is_shopkeeper(owner)) {
+                    if (killer && thing_is_player(killer)) {
+                        shop_collect_message(killer, t);
+                    }
+                }
             }
         }
     }

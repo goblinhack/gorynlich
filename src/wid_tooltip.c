@@ -101,7 +101,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
         wid_set_color(wid_tooltip_window, WID_COLOR_TEXT, WHITE);
 
         color c = WHITE;
-        c.a = 100;
+        c.a = 230;
         wid_set_color(wid_tooltip_window, WID_COLOR_BG, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_TL, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_BR, c);

@@ -89,13 +89,12 @@ void shop_collect_message (thingp t, thingp item)
         "I insult all mothers at these prices!",
     };
 
-    thingp shopkeeper = thing_owner(item);
-    if (!shopkeeper) {
-        return;
-    }
-
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
                                "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+
+    MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "%%%%fg=red$Press P to pay");
+
+    t->money_owed += tp_get_cost(t->tp);
 }
 
 void shop_purchase_message (thingp t, thingp item)
@@ -182,6 +181,46 @@ void shop_steal_message (thingp t)
         "Thief! And your father was an orc!",
         "Thief! May a camel drool on you!",
         "Thief! May your drown in your own drool!",
+    };
+
+    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+}
+
+void shop_break_message (thingp t, thingp shopkeeper)
+{
+    if (!thing_is_player(t)) {
+        return;
+    }
+
+    static const char *messages[] = {
+        "You break my stuff, I break your legs!",
+        "You break my stuff, I break your antennae!",
+        "You break my stuff, I break your tentacles!",
+        "You break my stuff, I break your probiscus!",
+        "You break my stuff, I break your horns!",
+        "You break my stuff, I break your long nose!",
+        "You break my stuff, I break your arms!",
+        "You break my stuff, I break your pinkies!",
+        "You break my stuff, I break your wand!",
+        "You break my stuff, I break your sword!",
+    };
+
+    thing_set_is_angry(shopkeeper, true);
+
+    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+}
+
+void shop_whodunnit_break_message (thingp t, thingp shopkeeper)
+{
+    if (!thing_is_player(t)) {
+        return;
+    }
+
+    static const char *messages[] = {
+        "Who broke my stuff! I'll get em",
+        "Who broke my stuff! Was it you?",
     };
 
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
