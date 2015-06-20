@@ -14,7 +14,8 @@
 #include "level.h"
 #include "time_util.h"
 
-void shop_enter_message(thingp t, thingp floor);
+void shop_enter(thingp t, thingp floor);
+void shop_leave(thingp t, thingp floor);
 void shop_collect_message(thingp t, thingp item);
 void shop_purchase_message(thingp t, thingp item);
 void shop_steal_message(thingp t);

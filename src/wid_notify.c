@@ -104,7 +104,7 @@ wid_notify_internal (const char *text, uint32_t level)
             break;
         case INFO:
             bg = MEDIUMBLUE;
-            bg.a = 240;
+            bg.a = 255;
             fg = YELLOW;
             break;
         case WARNING:
