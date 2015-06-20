@@ -161,11 +161,6 @@ static void msg_ (uint32_t level,
         w = wid_tooltip_transient(buf + len, 3 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.1);
         wid_move_to_pct_centered_in(w, 0.5, 0.1, ONESEC / 2);
-
-        /*
-         * Do we want popups and text below? Duplication...
-         */
-        return;
     } 
     
     if (wid_notify(level, buf + len)) {
@@ -565,11 +560,28 @@ static void msg_over_thing_ (uint32_t level,
     wid_move_delta_pct_in(w, 0.0, -0.05, 0);
     wid_move_end(w);
     wid_move_delta_pct_in(w, 0.0, -0.1, 1500);
-    wid_fade_out(w, 1500);
-    wid_destroy_in(w, 1500);
+
+    if (level == POPUP) {
+        wid_fade_out(w, 1500);
+        wid_destroy_in(w, 1500);
+    } else {
+        wid_fade_out(w, 3000);
+        wid_destroy_in(w, 3000);
+    }
+
     wid_set_no_shape(w);
     wid_set_z_depth(w, MAP_DEPTH_ACTIONS);
     wid_raise(w);
+
+    if (level == POPUP) {
+        return;
+    }
+
+    if (wid_notify(level, buf)) {
+        wid_console_log(buf);
+
+        term_log(buf);
+    }
 }
 
 void MSG_CLIENT_SHOUT_OVER_PLAYER (uint32_t level, 
