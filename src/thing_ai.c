@@ -448,9 +448,9 @@ static void dmap_generate_for_treasure_target (levelp level)
                    &dmap_map_treasure_target_treat_doors_as_passable_scratchpad);
 
     dmap_init(&dmap_map_treasure_target_treat_doors_as_walls_scratchpad,
-              &level->map_player_target_treat_doors_as_walls);
-    dmap_generate_for_player_target_set_goals(false /* test */,
-                   &dmap_map_player_target_treat_doors_as_walls_scratchpad);
+              &level->map_treasure_target_treat_doors_as_walls);
+    dmap_generate_for_treasure_target_set_goals(false /* test */,
+                   &dmap_map_treasure_target_treat_doors_as_walls_scratchpad);
 }
 
 /*
@@ -748,13 +748,19 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
      * Start out with treating doors as passable.
      */
     if (!t->dmap) {
-        if (thing_is_angry(t)) {
-            t->dmap = &dmap_map_player_target_treat_doors_as_passable;
+        if (thing_is_shopkeeper(t)) {
+            if (thing_is_angry(t)) {
+                t->dmap = &dmap_map_player_target_treat_doors_as_passable;
+            } else {
+                t->dmap = 0;
+            }
+        } else {
+            if (thing_is_treasure_eater(t)) {
+                t->dmap = &dmap_map_treasure_target_treat_doors_as_passable;
+            } else {
+                t->dmap = &dmap_map_player_target_treat_doors_as_passable;
+            }
         }
-    } else if (thing_is_treasure_eater(t)) {
-        t->dmap = &dmap_map_treasure_target_treat_doors_as_passable;
-    } else {
-        t->dmap = &dmap_map_player_target_treat_doors_as_passable;
     }
 
     /*
@@ -780,6 +786,8 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
             } else {
                 t->dmap = &dmap_map_player_target_treat_doors_as_passable;
             }
+        } else {
+            t->dmap = 0;
         }
     } else if (thing_is_treasure_eater(t)) {
         if (t->dmap == &dmap_map_treasure_target_treat_doors_as_passable) {
@@ -828,7 +836,7 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         y = myrand() % MAP_HEIGHT;
 
         tries++;
-        if (tries > 10000) {
+        if (tries > 1000) {
             break;
         }
 
