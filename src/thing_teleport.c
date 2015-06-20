@@ -97,7 +97,8 @@ void thing_reached_teleport (thingp t, thingp teleport)
 
     double nx = tx[poss];
     double ny = ty[poss];
-THING_CON(t,"jump %f %f to %f %f",t->x, t->y,nx,ny);
+
+    THING_LOG(t, "teleport");
 
     wid_move_end(t->wid);
 
