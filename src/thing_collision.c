@@ -487,9 +487,13 @@ static void thing_handle_collision (thingp me, thingp it,
         thing_is_weapon_carry_anim(it)      ||
         thing_is_animation(it)) {
 
-        if (thing_is_player(me)) {
-            if (thing_is_shop_floor(it)) {
-                shop_enter_message(me, it);
+        if ((dx == 0) && (dy == 0)) {
+            if (thing_is_player(me)) {
+                if (thing_is_shop_floor(it)) {
+                    shop_enter(me, it);
+                } else if (thing_is_floor(it) && me->is_in_shop) {
+                    shop_leave(me, it);
+                }
             }
         }
 
