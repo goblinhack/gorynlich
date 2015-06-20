@@ -24,3 +24,4 @@ void shop_fixup(void);
 void thing_shop_item_tick(thingp t);
 void shop_break_message(thingp t, thingp shopkeeper);
 void shop_whodunnit_break_message(thingp t, thingp shopkeeper);
+int shop_inside(thingp t);
