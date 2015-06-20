@@ -489,7 +489,7 @@ widp wid_popup (const char *text, const char *title,
             wid_set_square(child);
 
             c = WHITE;
-            c.a = 200;
+            c.a = 230;
             wid_set_mode(child, WID_MODE_NORMAL);
             wid_set_color(child, WID_COLOR_BG, c);
 

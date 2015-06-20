@@ -1434,11 +1434,27 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
 
 void thing_dead (thingp t, thingp killer, const char *reason, ...)
 {
+    /*
+     * If in a shop, this might be the shopkeeper.
+     */
+    thingp owner = thing_owner(t);
+
+    /*
+     * If an arrow, this might be an elf.
+     */
+    thingp real_killer = 0;
+
+    if (killer) {
+        real_killer = thing_owner(killer);
+        if (!real_killer) {
+            real_killer = killer;
+        }
+    }
+
     va_list args;
 
     verify(t);
 
-CON("%s %f %f",thing_logname(t),t->x,t->y);
     tpp tp = thing_tp(t);
 
     /*
@@ -1532,27 +1548,16 @@ CON("%s %f %f",thing_logname(t),t->x,t->y);
          * Bounty for the killer?
          */
         uint32_t score = tp_get_bonus_xp_on_death(tp);
-        if (score && killer) {
-            thingp recipient = killer;
-
+        if (score && real_killer) {
             /*
              * Did someone throw this weapon and gets the score?
              */
-            if (killer->owner_thing_id) {
-                thingp real_recipient = thing_owner(killer);
-                if (real_recipient) {
-                    recipient = real_recipient;
-                }
-            }
-
-            verify(recipient);
-
             int32_t val = tp_get_bonus_xp_on_death(tp);
 
             if (val) {
-                thing_modify_xp(recipient, val);
+                thing_modify_xp(real_killer, val);
 
-                if (thing_is_player(recipient)) {
+                if (thing_is_player(real_killer)) {
 #if 0
                     if (thing_is_cloud_effect(killer)) {
                         /*
@@ -1596,15 +1601,20 @@ CON("%s %f %f",thing_logname(t),t->x,t->y);
      * Boom! If this bomb is not being collected then make it blow up.
      */
     if (t->on_server) {
-        thingp owner = thing_owner(t);
+#if 0
+if (thing_is_treasure(t)) {
 CON("%s destroyed",thing_logname(t));
 if (owner) {
-CON("%s owner is keeper",thing_logname(owner));
+CON("  %s owner is keeper",thing_logname(owner));
 }
-
 if (killer) {
-CON("%s killer is keeper",thing_logname(killer));
+CON("  %s killer ",thing_logname(killer));
 }
+if (real_killer) {
+CON("  %s real_killer ",thing_logname(real_killer));
+}
+}
+#endif
         if (!t->is_collected) {
             if (thing_is_bomb(t)        || 
                 thing_is_fireball(t)    ||
@@ -1620,10 +1630,10 @@ CON("%s killer is keeper",thing_logname(killer));
              */
             if (thing_is_treasure(t)) {
                 if (owner && thing_is_shopkeeper(owner)) {
-                    if (killer && thing_is_player(killer)) {
-                        shop_break_message(killer, owner);
+                    if (thing_is_player(real_killer)) {
+                        shop_break_message(real_killer, owner);
                     } else {
-                        shop_whodunnit_break_message(killer, owner);
+                        shop_whodunnit_break_message(real_killer, owner);
                     }
                 }
             }
@@ -1633,8 +1643,8 @@ CON("%s killer is keeper",thing_logname(killer));
              */
             if (thing_is_treasure(t)) {
                 if (owner && thing_is_shopkeeper(owner)) {
-                    if (killer && thing_is_player(killer)) {
-                        shop_collect_message(killer, t);
+                    if (thing_is_player(real_killer)) {
+                        shop_collect_message(real_killer, t);
                     }
                 }
             }
@@ -1659,10 +1669,10 @@ CON("%s killer is keeper",thing_logname(killer));
      */
     if (reason) {
         va_start(args, reason);
-        thing_dead_(t, killer, dynvprintf(reason, args));
+        thing_dead_(t, real_killer, dynvprintf(reason, args));
         va_end(args);
     } else {
-        thing_dead_(t, killer, 0);
+        thing_dead_(t, real_killer, 0);
     }
 
     /*
@@ -2167,32 +2177,6 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
 
             orig_hitter->timestamp_i_attacked = time_get_time_ms();
         }
-
-        /*
-         * No killer to avoid giving a bonus to monsters!
-         */
-        if (thing_is_fragile(orig_hitter)) {
-            /*
-             * Sawblades get more covered in blood each time they kill
-             * something that is warm blooded. But we don't want that to
-             * happen for damage from say a bomb. However if the damage is
-             * really high then we just stop the blade.
-             */
-            if (thing_is_sawblade(orig_hitter)) {
-                if (thing_is_warm_blooded(t)) {
-                    /*
-                     * Move to the next most bloody blade
-                     */
-                    thing_dead(orig_hitter, 0, "blood splatter");
-                } else {
-                    /*
-                     * Keep on spinning those blades.
-                     */
-                }
-            } else {
-                thing_dead(orig_hitter, 0, "self destruct on hitting");
-            }
-        }
     }
 
     /*
@@ -2242,6 +2226,34 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     int r;
 
     r = thing_hit_(t, orig_hitter, hitter, damage);
+
+    /*
+     * Do we need to kill the original hitter?
+     */
+    if (orig_hitter) {
+        if (thing_is_fragile(orig_hitter)) {
+            /*
+             * Sawblades get more covered in blood each time they kill
+             * something that is warm blooded. But we don't want that to
+             * happen for damage from say a bomb. However if the damage is
+             * really high then we just stop the blade.
+             */
+            if (thing_is_sawblade(orig_hitter)) {
+                if (thing_is_warm_blooded(t)) {
+                    /*
+                     * Move to the next most bloody blade
+                     */
+                    thing_dead(orig_hitter, 0, "blood splatter");
+                } else {
+                    /*
+                     * Keep on spinning those blades.
+                     */
+                }
+            } else {
+                thing_dead(orig_hitter, 0, "self destruct on hitting");
+            }
+        }
+    }
 
     return (r);
 }
@@ -3454,7 +3466,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         t->needs_tx_refresh_xy_and_template_id = 0;
         t->first_update = false;
 
-//THING_LOG(t, "tx");
+//THING_CON(t, "tx");
         if (data + sizeof(msg_map_update) < eodata) {
             /*
              * Can fit more in.
@@ -3827,6 +3839,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             widp w = thing_wid(t);
             if (w) {
                 if (t == player) {
+//THING_CON(t, "rx %f %f",x,y);
                     /*
                      * Local echo only.
                      */
@@ -3843,15 +3856,14 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                                                 false /* is new */);
 
                         wid_game_map_client_scroll_adjust(1);
-                    } else
-                        if ((fabs(x-t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
-                            (fabs(y-t->y) > THING_MAX_SERVER_DISCREPANCY * 2)) {
+                    } else if ((fabs(x-t->x) > THING_MAX_SERVER_DISCREPANCY) ||
+                               (fabs(y-t->y) > THING_MAX_SERVER_DISCREPANCY)) {
                         /*
                          * Check we are roughly where the server thinks we
                          * are. If wildly out of whack, correct our viewpoint.
                          */
                         THING_LOG(t, "%s out of sync with server, correcting ",
-                                  t->logname);
+                                    t->logname);
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
@@ -4069,13 +4081,13 @@ void thing_set_owner (thingp t, thingp owner)
                       thing_logname(old_owner), thing_logname(owner));
         } else {
             if (0) {
-                THING_LOG(t, "remove owner %s", thing_logname(old_owner));
+                THING_CON(t, "remove owner %s", thing_logname(old_owner));
             }
         }
     } else {
         if (owner) {
             if (0) {
-                THING_LOG(t, "owner %s", thing_logname(owner));
+                THING_CON(t, "owner %s", thing_logname(owner));
             }
         }
     }

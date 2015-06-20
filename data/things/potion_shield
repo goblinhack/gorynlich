@@ -13,8 +13,6 @@
  is_magical
  is_valid_for_action_bar
  d10000_chance_of_appearing=75
- is_combustable
- explodes_as="data/things/explosion2"
  is_fragile
  tiles={
   tile={
