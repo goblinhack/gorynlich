@@ -260,7 +260,7 @@ static void thing_fire_at (thingp t, thingp target)
         projectile = tp_fires(weapon);
     }
 
-    if (projectile) {
+    if (!projectile) {
         projectile = tp_fires(t->tp);
     }
 

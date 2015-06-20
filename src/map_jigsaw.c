@@ -2904,6 +2904,10 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 {
     const char *jigsaw_map;
 
+    tpp map_tp[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH_MAX];
+
+    memset(map_tp, 0, sizeof(map_tp));
+
     init();
 
     jigsaw_map = "data/map/jigsaw.map";
@@ -2916,11 +2920,13 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 
     int32_t x;
     int32_t y;
+    int32_t z;
 
     tpp wall = 0;
     tpp door = 0;
     tpp floor = 0;
     tpp rock = 0;
+
 
     for (y = 0; y < MAP_HEIGHT; y++) {
         for (x = 0; x < MAP_WIDTH; x++) {
@@ -2957,12 +2963,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                     tp = tp_find("data/things/shop_floor1");
                 }
 
-                (*callback)(wid, x, y, 
-                            0, /* thing */
-                            tp,
-                            0 /* tp data */,
-                            0 /* item */,
-                            0 /* stats */);
+                map_tp[x][y][tp_get_z_depth(tp)] = tp;
             }
 
             tp = 0;
@@ -2998,7 +2999,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
             case 'E': tp = random_exit(); break;
             case 'f': tp = random_food(); break;
             case 'M': 
-                      if ((myrand() % 100) < 50) {
+                      if ((myrand() % 100) < 95) {
                         tp = random_monst(depth); 
                       } else {
                         tp = random_mob(depth); 
@@ -3033,12 +3034,35 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 continue;
             }
 
-            (*callback)(wid, x, y, 
-                        0, /* thing */
-                        tp,
-                        0 /* tpp_data */,
-                        0 /* item */,
-                        0 /* stats */);
+            map_tp[x][y][tp_get_z_depth(tp)] = tp;
         }
     }
+
+    int pass;
+    int max_pass = 2;
+
+    for (pass = 0; pass < max_pass; pass++) {
+        server_level_is_being_loaded = pass + 1;
+
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            for (x = 0; x < MAP_WIDTH; x++) {
+                for (z = 0; z < MAP_DEPTH_MAX; z++) {
+                    tpp tp = map_tp[x][y][z];
+                    if (!tp) {
+                        continue;
+                    }
+
+                    (*callback)(wid, x, y, 
+                                0, /* thing */
+                                tp,
+                                0 /* tpp_data */,
+                                0 /* item */,
+                                0 /* stats */);
+                }
+            }
+        }
+    }
+
+    server_level_is_being_loaded = 0;
+
 }

@@ -1,40 +1,40 @@
 --------------------------------------- plan for june --------------------------------------
-- add money
 - add shop
-- imp that teleports and steals
-- sword of life sucking, steals hp and gives to you
-- cheese bomb turns enemies into cheese
-- web walking boots, lava and acid boots
-- power attack, diver defense to attack
-- possession ghost, cursed weapon, hit self
+- buy from shop
+- steal from shop
+- sell in shop
+- add money
 - sound effects for weapons and hits http://www.bfxr.net/
 --------------------------------------- plan for jul --------------------------------------
+- imp that teleports and steals
+- cheese bomb turns enemies into cheese
+- more slime molds? chocolate / vampiric etc?
+- web walking boots, lava and acid boots
+- boots of speed?
+- ring of fire? ice?
+- sword of life sucking, steals hp and gives to you
+- power attack, diver defense to attack
+- possession ghost, cursed weapon, hit self
 - ring of reaper resistance
-- add double arrow for faster moving triggers
 - speed potion
-- fire and acid boots
-- money/xp doubler amulet
-- amulet of resurrection?
+- money/xp doubler ring
+- ring of resurrection?
 - double fire double arrows
-- rolling boulders?
 - cheese, lots of
-- sound on money collect
-- sound on potion use
 - magic gives health to other players
+- rolling boulders?
 - pop bouncing "help!" and arrow over player to give them a clue what to do
-- water ?
 - dart and rock traps
 --------------------------------------- plan for aug --------------------------------------
-- giant worm like creature?
-- lit levels gauntlet old style
 - manually generate lots of levels
-- picture of keyboard and keys to use at start
-- tx socket thing loop is too slow could use a thing array to update
+- ice and fire blocks? ice blocks move; add yetis and other monst for cold levels?
+- minor: tx socket thing loop is too slow could use a thing array to update
 - minor: colision map tiny not used
 - minor: lifespan code not used
-- increase move granulariy on server so projectiles line up with player more
+- minor: increase move granulariy on server so projectiles line up with player more
 --------------------------------------- plan for sep --------------------------------------
-- boss baddies every 10 levels
+- add dragon on wheels?
+- giant worm like creature?
 - first baddy, large ghost, drops bone piles
 - bosses drop exit on death
 --------------------------------------- plan for oct --------------------------------------
@@ -42,12 +42,13 @@
 - add game end
 --------------------------------------- plan for nov --------------------------------------
 - backpack drop on death
-- add shop
 - thief, kill thief to recover items
 --------------------------------------- plan for dec --------------------------------------
-- mining?
 - add bot to test out multiplayer ?
-- different profiles for level generation
+
+Fri Jun 19 22:50:29 EDT 2015
+- shop items and owners and popup cost
+- teleports not working on random levels
 
 Tue Jun 16 22:02:09 EDT 2015
 - shotgun
