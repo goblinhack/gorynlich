@@ -601,7 +601,8 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         case 'd':
             action = PLAYER_ACTION_DROP;
             break;
-        case 'u':
+        case 'p':
+            action = PLAYER_ACTION_PAY;
             break;
 
         case '\t': {
@@ -714,7 +715,7 @@ static uint8_t wid_game_map_joy_event (widp w, int x, int y)
 
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         SDL_KEYSYM key = {0};
-        key.sym = 'u';
+        key.sym = 'p';
         return (wid_game_map_key_event(w, &key));
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
