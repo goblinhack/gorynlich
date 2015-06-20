@@ -286,7 +286,11 @@ void thing_used (thingp t, tpp tp)
         }
     }
 
-    THING_CON(t, "used %s", tp_short_name(tp));
+    THING_LOG(t, "used %s", tp_short_name(tp));
+
+    if (thing_is_player(t)) {
+        CON("used %s", tp_short_name(tp));
+    }
 
     /*
      * Remove from the inventory and other places.

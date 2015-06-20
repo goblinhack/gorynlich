@@ -15,7 +15,7 @@
 #include "thing_shop.h"
 #include "time_util.h"
 
-void shop_enter_message (thingp t)
+void shop_enter_message (thingp t, thingp floor)
 {
     if (!thing_is_player(t)) {
         return;
@@ -37,12 +37,18 @@ void shop_enter_message (thingp t)
         "Sale on today. All items must be sold!",
     };
 
-    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%s", messages[myrand() % ARRAY_SIZE(messages)]);
-
     t->timestamp_last_shop_enter = time_get_time_ms();
+
+    thingp shopkeeper = thing_owner(floor);
+    if (!shopkeeper) {
+        return;
+    }
+
+    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
-void shop_collect_message (thingp t)
+void shop_collect_message (thingp t, thingp item)
 {
     if (!thing_is_player(t)) {
         return;
@@ -83,10 +89,16 @@ void shop_collect_message (thingp t)
         "I insult all mothers at these prices!",
     };
 
-    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+    thingp shopkeeper = thing_owner(item);
+    if (!shopkeeper) {
+        return;
+    }
+
+    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
-void shop_purchase_message (thingp t)
+void shop_purchase_message (thingp t, thingp item)
 {
     if (!thing_is_player(t)) {
         return;
@@ -118,7 +130,13 @@ void shop_purchase_message (thingp t)
         "Refer me to your friends!",
     };
 
-    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+    thingp shopkeeper = thing_owner(item);
+    if (!shopkeeper) {
+        return;
+    }
+
+    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
 void shop_steal_message (thingp t)
@@ -166,7 +184,8 @@ void shop_steal_message (thingp t)
         "Thief! May your drown in your own drool!",
     };
 
-    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
 static thingp all_shop_floor_tiles[MAP_WIDTH][MAP_HEIGHT];
@@ -259,6 +278,10 @@ static void shop_flood_own_things (thingp shopkeeper, int x, int y)
         if (thing_is_treasure(it)) {
             thing_set_owner(it, shopkeeper);
         }
+
+        if (thing_is_shop_floor(it)) {
+            thing_set_owner(it, shopkeeper);
+        }
     }
 
     shop_flood_own_things(shopkeeper, x + 1, y);
@@ -283,9 +306,22 @@ static void shop_own_all_shopkeeper_things (void)
         }
     }
 }
+
 void shop_fixup (void)
 {
     shop_get_all_shop_floor_things();
     shop_get_all_shopkeeper_things();
     shop_own_all_shopkeeper_things();
+}
+
+void thing_shop_item_tick (thingp t)
+{
+    /*
+     * Treasure that has an owner is in a shop.
+     */
+    if (thing_owner(t)) {
+        MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                    "%%%%font=%s$%%%%fg=%s$%d$", 
+                                    "medium", "gold", tp_get_cost(t->tp));
+    }
 }

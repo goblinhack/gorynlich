@@ -16,6 +16,7 @@
 #include "level.h"
 #include "time_util.h"
 #include "socket_util.h"
+#include "thing_shop.h"
 
 TREE_GET_NEXT_INLINE(tree_key_int32_compare_func)
 
@@ -130,14 +131,7 @@ static void thing_tick_server_all (void)
                 }
 
             } else if (thing_is_treasure(t)) {
-                /*
-                 * Treasure that has an owner is in a shop.
-                 */
-                if (thing_owner(t)) {
-                    MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
-                                                "%%%%font=%s$%%%%fg=%s$%d$", 
-                                                "large", "gold", tp_get_cost(tp));
-                }
+                thing_shop_item_tick(t);
 
             } else if (thing_is_mob_spawner(t)) {
                 /*
