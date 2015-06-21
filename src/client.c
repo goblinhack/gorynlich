@@ -41,7 +41,7 @@ static uint8_t client_shout(tokens_t *tokens, void *context);
 static uint8_t client_tell(tokens_t *tokens, void *context);
 static uint8_t client_player_show(tokens_t *tokens, void *context);
 static uint8_t client_socket_tell(char *from, char *to, char *msg);
-static void client_check_still_in_game(void);
+static void client_check_still_in_game(level_pos_t);
 
 static msg_server_status server_status;
 static uint8_t server_connection_confirmed;
@@ -652,7 +652,7 @@ static void client_rx_server_status (gsocketp s,
     /*
      * Look for our name in the update to know the server has acked our join.
      */
-    client_check_still_in_game();
+    client_check_still_in_game(latest_status.level_pos);
 
     uint8_t redo = false;
 
@@ -943,7 +943,7 @@ msg_player_statep client_get_player (void)
     return (p);
 }
 
-static void client_check_still_in_game (void)
+static void client_check_still_in_game (level_pos_t level_pos)
 {
     if (!client_joined_server) {
         return;
@@ -979,7 +979,7 @@ static void client_check_still_in_game (void)
                 break;
             }
 
-            music_play_game();
+            music_play_game(level_pos);
 
             server_connection_confirmed = true;
 
