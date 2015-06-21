@@ -14,6 +14,7 @@
 #include "level.h"
 #include "thing_shop.h"
 #include "time_util.h"
+#include "socket_util.h"
 
 void shop_enter (thingp t, thingp floor)
 {
@@ -600,4 +601,10 @@ int shop_inside (thingp t)
     }
 
     return (false);
+}
+
+void shop_on_level (void)
+{
+    socket_tx_server_shout_at_all_players(SOUND, "cash_register");
+    socket_tx_server_shout_at_all_players(INFO, "You hear the chime of a cash register");
 }

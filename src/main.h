@@ -226,6 +226,7 @@ enum {
     WARNING,
     CRITICAL,
     POPUP,
+    SOUND,
 };
 
 void MSG(uint32_t level, const char *fmt, ...) 
