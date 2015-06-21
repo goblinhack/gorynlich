@@ -1,7 +1,7 @@
 {
  short_name="action_text"
  raw_name="action_text"
- tooltip="text appears when"
+ tooltip="text appears when activated"
  is_collision_map_small
  z_depth="actions"
  is_action

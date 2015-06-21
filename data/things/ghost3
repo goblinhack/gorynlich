@@ -1,7 +1,7 @@
 {
- short_name="mighty phantom"
+ short_name="greater ghoul"
  raw_name="ghost3"
- tooltip="greater phantom"
+ tooltip="greater ghoul"
  z_depth="monst"
  speed=15
  max_hp=1

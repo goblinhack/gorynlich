@@ -1,7 +1,7 @@
 {
- short_name="bouncy skull"
+ short_name="skull minion"
  raw_name="skull1"
- tooltip="bouncy skull"
+ tooltip="skull minion"
  z_depth="monst"
  speed=3
  max_hp=10

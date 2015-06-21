@@ -1,7 +1,7 @@
 {
  short_name="loose change"
  raw_name="coins"
- tooltip="pile of coins"
+ tooltip="loose change"
  z_depth="monst"
  is_inactive
  is_treasure

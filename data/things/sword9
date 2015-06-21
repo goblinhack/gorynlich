@@ -1,7 +1,7 @@
 {
- short_name="blood sword"
+ short_name="blood sucking sword"
  raw_name="sword9"
- tooltip="blood sword"
+ tooltip="blood sucking sword"
  z_depth="monst"
  cost=2000
  is_treasure

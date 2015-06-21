@@ -1,7 +1,7 @@
 {
  short_name="sword"
  raw_name="sword3"
- tooltip="sword (tm)"
+ tooltip="normal sword (tm)"
  z_depth="monst"
  cost=150
  is_treasure

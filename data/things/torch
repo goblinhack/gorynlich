@@ -1,7 +1,7 @@
 {
  short_name="torch"
  raw_name="torch"
- tooltip="torch to see the monsters better"
+ tooltip="one minute torch"
  z_depth="monst"
  is_torch
  is_carryable
