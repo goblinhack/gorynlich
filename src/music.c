@@ -12,6 +12,7 @@
 #include "ramdisk.h"
 #include "tree.h"
 #include "config.h"
+#include "sound.h"
 
 typedef struct music_ {
     tree_key_string tree;
@@ -147,10 +148,6 @@ void music_play (const char *file,
     int audio_channels = 2;
     int audio_buffers = 1024;
 
-    if (HEADLESS) {
-        return;
-    }
-
     Mix_CloseAudio();
 
     if (Mix_OpenAudio(rate,
@@ -167,6 +164,16 @@ void music_play (const char *file,
     musicp music = music_load(file, alias);
 
     music_update_volume();
+
+    static int sound_loaded;
+    if (!sound_loaded) {
+        sound_loaded = true;
+        sound_load_all();
+    }
+
+    if (HEADLESS) {
+        return;
+    }
 
     if (Mix_PlayMusic(music->music, 2) == -1) {
         WARN("cannot play %s: %s", music->tree.key, Mix_GetError());
