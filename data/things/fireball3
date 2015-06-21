@@ -1,7 +1,7 @@
 {
- short_name="fireball3"
+ short_name="fireball III"
  raw_name="fireball3"
- tooltip="fireball3"
+ tooltip="fireball III"
  is_hidden_from_editor
  z_depth="explosion_top"
  speed=90
