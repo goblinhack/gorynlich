@@ -150,7 +150,7 @@ static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
 
     /* Check if there are any modes available */
     if (modes == (SDL_Rect**)0) {
-        ERR("No modes available!");
+        DIE("No modes available!");
     }
 
     /* Check if our resolution is restricted */
@@ -193,7 +193,7 @@ static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
 
     /* Check if there are any modes available */
     if (modes == (SDL_Rect**)0) {
-        ERR("No modes available!");
+        DIE("No modes available!");
     }
 
     /* Check if our resolution is restricted */
@@ -296,7 +296,7 @@ static void sdl_init_joystick (void)
                 LOG("Found gamecontroller");
                 break;
             } else {
-                ERR("Could not open gamecontroller %i: %s",
+                WARN("Could not open gamecontroller %i: %s",
                     joy_index, SDL_GetError());
             }
         }
@@ -337,7 +337,7 @@ uint8_t sdl_init (void)
     int32_t value;
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
-        ERR("Couldn't initialize SDL: %s", SDL_GetError());
+        DIE("Couldn't initialize SDL: %s", SDL_GetError());
         return (false);
     }
 
@@ -864,7 +864,7 @@ static void sdl_event (SDL_Event * event)
     case SDL_QUIT:
         SDL_ShowCursor(1);
 
-        ERR("Quit requested");
+        DIE("Quit requested");
         break;
 
     case SDL_USEREVENT:
