@@ -76,5 +76,12 @@ int32_t thing_stats_get_total_damage (thingp t)
         }
     }
 
-    return (final_damage);
+    if (!final_damage) {
+        return (final_damage);
+    }
+
+    /*
+     * 1dx damage.
+     */
+    return (myrand() % final_damage);
 }

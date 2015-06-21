@@ -64,7 +64,7 @@ void thing_health_tick (thingp t)
         thing_update(t);
 
         if (thing_stats_get_hp(t) <= THING_MIN_HEALTH) {
-            thing_dead(t, 0, "croaked it");
+            thing_dead(t, 0, 0);
         }
     }
 
