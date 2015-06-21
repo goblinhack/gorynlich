@@ -13,6 +13,8 @@
 #include "tree.h"
 #include "config.h"
 #include "music.h"
+#include "math_util.h"
+#include "thing.h"
 
 typedef struct sound_ {
     tree_key_string tree;
@@ -133,6 +135,43 @@ soundp sound_find (const char *name_alias)
     return (result);
 }
 
+void sound_play_at (const char *name_alias, double x, double y)
+{
+    if (HEADLESS) {
+        return;
+    }
+
+    if (!music_init_done) {
+        return;
+    }
+
+    soundp sound = sound_load(0, name_alias);
+    if (!sound) {
+        LOG("cannot load sound %s: %s", name_alias, Mix_GetError());
+
+        return;
+    }
+
+    if (Mix_PlayChannel(-1, sound->sound, 0) == -1) {
+        LOG("cannot play %s: %s", sound->tree.key, Mix_GetError());
+
+        return;
+    }
+
+    double volume = (float) global_config.sound_volume *
+              ((float) MIX_MAX_VOLUME / (float) SOUND_MAX);
+
+    if (player) {
+        double distance = DISTANCE(player->x, player->y, x, y) / 8.0;
+
+        if (distance > 1.0) {
+            volume /= distance;
+        }
+    }
+
+    Mix_VolumeChunk(sound->sound, volume);
+}
+
 void sound_play (const char *name_alias)
 {
     if (HEADLESS) {
@@ -156,9 +195,10 @@ void sound_play (const char *name_alias)
         return;
     }
 
-    Mix_VolumeChunk(sound->sound,
-                    (float) global_config.sound_volume *
-                    ((float) MIX_MAX_VOLUME / (float) SOUND_MAX));
+    double volume = (float) global_config.sound_volume *
+              ((float) MIX_MAX_VOLUME / (float) SOUND_MAX);
+
+    Mix_VolumeChunk(sound->sound, volume);
 }
 
 void sound_play_n (const char *name_alias, int32_t n)
@@ -275,4 +315,12 @@ void sound_load_all (void)
     sound_load("data/sound/shotgun_reload_by_ra_the_sun_god.wav", "shotgun_reload");
     sound_load("data/sound/shotgun_by_ra_the_sun_god.wav", "shotgun");
     sound_load("data/sound/swoosh_3_SoundBible.com_1573211927.wav", "swoosh");
+    sound_load("data/sound/flame_Arrow_SoundBible.com_618067908.wav", "fireball");
+    sound_load("data/sound/coin_roll.wav", "payment");
+    sound_load("data/sound/treasure.wav", "treasure");
+    sound_load("data/sound/Object_Drop_001.wav", "drop");
+    sound_load("data/sound/Door_Latch_002.wav", "door");
+    sound_load("data/sound/Electric_Zap.wav", "shield");
+    sound_load("data/sound/Red_Alert_FX_001.wav", "thief");
+    sound_load("data/sound/boom.wav", "boom");
 }

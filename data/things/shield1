@@ -5,6 +5,7 @@
  is_animated
  is_animated_no_dir
  shield_carry_anim="data/things/shield1_anim"
+ sound_create="shield"
  tiles={
   tile={
    tile="shield1.1"

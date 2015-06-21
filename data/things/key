@@ -5,10 +5,11 @@
  z_depth="monst"
  is_key
  is_stackable
- is_inactive
  is_carryable
  is_valid_for_action_bar
  is_given_randomly_at_start
+ cost=10
+ is_treasure
  tiles={
   tile={
    tile="key"

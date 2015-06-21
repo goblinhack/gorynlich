@@ -3002,11 +3002,11 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
             case 'E': tp = random_exit(); break;
             case 'f': tp = random_food(); break;
             case 'M': 
-                if ((myrand() % 100) < 50) {
+                if ((myrand() % 100) < 20) {
                     /*
                      * Nothing
                      */
-                } else if ((myrand() % 100) < 95) {
+                } else if ((myrand() % 100) < 75) {
                     tp = random_monst(depth); 
                 } else {
                     tp = random_mob(depth); 

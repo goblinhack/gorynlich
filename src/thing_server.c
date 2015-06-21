@@ -292,6 +292,8 @@ void thing_server_action (thingp t,
             newt = wid_get_thing(w);
             shop_deposit_message(t, newt);
         }
+
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "drop");
     } break;
 
     case PLAYER_ACTION_PAY:
