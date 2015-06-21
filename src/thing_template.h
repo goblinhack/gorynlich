@@ -114,6 +114,11 @@ typedef struct tp_ {
     char *explodes_as;
 
     /*
+     * Sound on thing creation
+     */
+    char *sound_create;
+
+    /*
      * How this weapon appears on screen when it is used.
      */
     char *weapon_carry_anim;
@@ -416,6 +421,7 @@ const char *tp_light_tint(tpp);
 color tp_light_color(tpp);
 const char *tp_spawn_on_death(tpp);
 const char *tp_explodes_as(tpp);
+const char *tp_sound_create(tpp);
 const char *tp_weapon_carry_anim(tpp);
 const char *tp_shield_carry_anim(tpp);
 const char *tp_magic_anim(tpp);
