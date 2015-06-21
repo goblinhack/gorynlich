@@ -1,5 +1,4 @@
 --------------------------------------- plan for june --------------------------------------
-- add money
 - sound effects for weapons and hits http://www.bfxr.net/
 --------------------------------------- plan for jul --------------------------------------
 - imp that teleports and steals
@@ -42,8 +41,8 @@
 --------------------------------------- plan for dec --------------------------------------
 - add bot to test out multiplayer ?
 
-
 Sat Jun 20 12:18:47 EDT 2015
+- add money
 - shopkeeper retaliates
 - player teleport was not updating on client
 - some potions should not explode
