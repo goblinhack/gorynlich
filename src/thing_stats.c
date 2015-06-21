@@ -1702,6 +1702,10 @@ void thing_stats_modify_cash (thingp t, int32_t val)
 {
     thing_stats_verify(t);
 
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "treasure");
+    }
+
     stats_modify_cash(&t->stats, val);
 }
 
