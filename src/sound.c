@@ -272,4 +272,5 @@ void sound_load_all (void)
     sound_load("data/sound/slime.wav", "slime");
     sound_load("data/sound/shotgun.wav", "shotgun");
     sound_load("data/sound/cash_register2.wav", "cash_register");
+    sound_load("data/sound/1996-shotgun-reload-old_school-RA_The_Sun_God-580332022.wav", "shotgun_reload");
 }
