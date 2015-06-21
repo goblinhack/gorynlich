@@ -270,7 +270,9 @@ void sound_load_all (void)
     sound_load("data/sound/thief.wav", "thief");
     sound_load("data/sound/explosion.wav", "explosion");
     sound_load("data/sound/slime.wav", "slime");
-    sound_load("data/sound/shotgun.wav", "shotgun");
+    sound_load("data/sound/swords_collide_sound_explorer_2015600826.wav", "sword");
     sound_load("data/sound/cash_register2.wav", "cash_register");
-    sound_load("data/sound/shotgun_reload_by_ra_the_sun_god.mp3", "shotgun_reload");
+    sound_load("data/sound/shotgun_reload_by_ra_the_sun_god.wav", "shotgun_reload");
+    sound_load("data/sound/shotgun_by_ra_the_sun_god.wav", "shotgun");
+    sound_load("data/sound/swoosh_3_SoundBible.com_1573211927.wav", "swoosh");
 }

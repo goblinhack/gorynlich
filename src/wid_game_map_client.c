@@ -33,6 +33,7 @@
 #include "thing_template.h"
 #include "wid_editor.h"
 #include "wid_choose_stats.h"
+#include "sound.h"
 
 levelp client_level;
 widp wid_game_map_client_window;
@@ -1126,6 +1127,11 @@ wid_game_map_client_replace_tile (widp w,
         } else {
             ERR("unknown explosion %s", thing_logname(t));
         }
+    }
+
+    const char *sound = tp_sound_create(tp);
+    if (sound) {
+        sound_play(sound);
     }
 
     return (child);

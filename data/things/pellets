@@ -16,6 +16,7 @@
  light_tint="orange"
  light_radius=0.1
  explodes_as="data/things/explosion1"
+ sound_create="shotgun"
  tiles={
   tile={
    tile="pellets"
