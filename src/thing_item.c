@@ -220,7 +220,7 @@ void thing_used (thingp t, tpp tp)
 
     item = thing_has_item(t, id);
     if (!item) {
-        ERR("Tried to use item which is %s not carried", 
+        ERR("Tried to use an item (%s) which is not carried", 
             tp_short_name(tp));
         return;
     }
@@ -323,7 +323,7 @@ int thing_wear_out (thingp t, tpp tp)
 
     item = thing_has_item(t, id);
     if (!item) {
-        ERR("Tried to use item which is %s not carried", 
+        ERR("Tried to wear out an item (%s) which is not carried", 
             tp_short_name(tp));
         return (false);
     }

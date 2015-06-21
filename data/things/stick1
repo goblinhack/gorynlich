@@ -1,7 +1,7 @@
 {
  short_name="very short stick"
  raw_name="stick1"
- tooltip="very very short stick"
+ tooltip="very short stick"
  z_depth="monst"
  cost=10
  is_treasure

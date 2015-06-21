@@ -1,7 +1,7 @@
 {
- short_name="energy1"
+ short_name="energy bolt"
  raw_name="energy1"
- tooltip="energy1"
+ tooltip="energy bolt"
  is_hidden_from_editor
  z_depth="explosion_top"
  speed=60

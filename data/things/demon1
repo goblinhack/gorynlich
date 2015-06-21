@@ -1,7 +1,7 @@
 {
- short_name="lesser demon"
+ short_name="lesser fire demon"
  raw_name="demon1"
- tooltip="lesser demon"
+ tooltip="lesser fire demon"
  z_depth="monst"
  speed=3
  max_hp=350

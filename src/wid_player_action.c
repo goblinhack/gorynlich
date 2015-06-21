@@ -351,7 +351,7 @@ static void wid_player_action_tooltip (widp w, widp tooltip)
     wid_get_pct(w, &px, &py);
 
     wid_move_end(tooltip);
-    wid_move_to_pct_centered(tooltip, px + 0.1, py - 0.1);
+    wid_move_to_pct_centered(tooltip, px + 0.1, py - 0.2);
 
     color c = CYAN;
     c.a = 50;

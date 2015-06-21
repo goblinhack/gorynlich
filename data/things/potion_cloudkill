@@ -1,7 +1,7 @@
 {
  short_name="cloudkill potion"
  raw_name="potion_cloudkill"
- tooltip="potion of purply death"
+ tooltip="cloudkill potion"
  z_depth="monst"
  cost=100
  is_treasure
