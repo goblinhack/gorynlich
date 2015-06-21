@@ -1846,6 +1846,16 @@ static int thing_hit_ (thingp t,
      */
     THING_LOG(t, "hit, hp %d, damage %d", thing_stats_get_hp(t), damage);
 
+    /*
+     * Clash of swords?
+     */
+    const char *sound = tp_sound_hitting(orig_hitter->tp);
+    if (sound) {
+        if (thing_is_player(real_hitter)) {
+            MSG_SERVER_SHOUT_AT_PLAYER(SOUND, real_hitter, "%s", sound);
+        }
+    }
+
     while (damage > 0) {
         if (thing_stats_get_hp(t) <= damage) {
             damage -= thing_stats_get_hp(t);
