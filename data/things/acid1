@@ -1,5 +1,5 @@
 {
- short_name="acid"
+ short_name="corrosive acid"
  raw_name="acid1"
  tooltip="corrosive acid"
  mob_spawn={ 1000 "data/things/acid1" }

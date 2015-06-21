@@ -54,13 +54,13 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
     }
 
     if (font == large_font) {
-        chars_per_line = 38;
+        chars_per_line = 48;
         max_rows = 6;
     } else if (font == med_font) {
-        chars_per_line = 40;
+        chars_per_line = 50;
         max_rows = 8;
     } else {
-        chars_per_line = 50;
+        chars_per_line = 60;
         max_rows = 12;
     }
 

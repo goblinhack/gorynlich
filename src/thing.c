@@ -1356,7 +1356,7 @@ void thing_destroy (thingp t, const char *why)
     myfree(t);
 }
 
-static void thing_dead_ (thingp t, thingp killer, char *reason)
+static void thing_dead_ (thingp t, char *reason)
 {
     /*
      * Detach from the owner
@@ -1669,10 +1669,10 @@ CON("  %s real_killer ",thing_logname(real_killer));
      */
     if (reason) {
         va_start(args, reason);
-        thing_dead_(t, real_killer, dynvprintf(reason, args));
+        thing_dead_(t, dynvprintf(reason, args));
         va_end(args);
     } else {
-        thing_dead_(t, real_killer, 0);
+        thing_dead_(t, 0);
     }
 
     /*
@@ -1801,7 +1801,10 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
     }
 }
 
-static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, 
+static int thing_hit_ (thingp t, 
+                       thingp orig_hitter, 
+                       thingp real_hitter, 
+                       thingp hitter, 
                        int32_t damage)
 {
     int32_t orig_damage = damage;
@@ -1859,19 +1862,9 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter,
              * Record who dun it.
              */
             if (thing_is_player(t)) {
-                if (orig_hitter) {
-                    thing_dying(t, orig_hitter, "%s", 
-                                tp_short_name(orig_hitter->tp));
-                } else {
-                    thing_dying(t, orig_hitter, "hit");
-                }
+                thing_dying(t, orig_hitter, "%s", tp_short_name(real_hitter->tp));
             } else {
-                if (orig_hitter) {
-                    thing_dead(t, orig_hitter, "%s", 
-                               tp_short_name(orig_hitter->tp));
-                } else {
-                    thing_dead(t, orig_hitter, "hit");
-                }
+                thing_dead(t, orig_hitter, "%s", tp_short_name(real_hitter->tp));
             }
 
             /*
@@ -1971,6 +1964,19 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter,
 int thing_hit (thingp t, thingp hitter, uint32_t damage)
 {
     thingp orig_hitter = hitter;
+
+    /*
+     * If an arrow, this might be an elf.
+     */
+    thingp real_hitter = 0;
+
+    if (hitter) {
+        real_hitter = thing_owner(hitter);
+        if (!real_hitter) {
+            real_hitter = hitter;
+        }
+    }
+
     tpp weapon = 0;
 
 #if 0
@@ -2225,7 +2231,7 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
 
     int r;
 
-    r = thing_hit_(t, orig_hitter, hitter, damage);
+    r = thing_hit_(t, orig_hitter, real_hitter, hitter, damage);
 
     /*
      * Do we need to kill the original hitter?
