@@ -47,6 +47,9 @@ void tile_blit_fat (tile *tile, char *name, fpoint tl, fpoint br)
         tile = tile_find(name);
     }
 #endif
+    if (!tile) {
+        return;
+    }
 
     blit(tile->gl_surface_binding,
          tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
@@ -67,6 +70,9 @@ void tile_blit_fat_black_and_white (tile *tile, char *name, fpoint tl, fpoint br
         tile = tile_find(name);
     }
 #endif
+    if (!tile) {
+        return;
+    }
 
     if (!tile->gl_surface_binding_black_and_white) {
         blit(tile->gl_surface_binding,
