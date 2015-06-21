@@ -63,6 +63,7 @@ void shop_enter (thingp t, thingp floor)
             "Sale on today. All items must be sold!",
         };
 
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "shotgun_reload");
         MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%%%%fg=green$%s", messages[myrand() % ARRAY_SIZE(messages)]);
     }
 
