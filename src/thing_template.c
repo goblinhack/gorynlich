@@ -274,6 +274,10 @@ static void tp_destroy_internal (tpp t)
         myfree(t->sound_create);
     }
 
+    if (t->sound_hitting) {
+        myfree(t->sound_hitting);
+    }
+
     if (t->weapon_carry_anim) {
         myfree(t->weapon_carry_anim);
     }
@@ -503,6 +507,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
         GET_OPT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
         GET_OPT_NAMED_STRING(ctx, "sound_create", t->sound_create);
+        GET_OPT_NAMED_STRING(ctx, "sound_hitting", t->sound_hitting);
         GET_OPT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
         GET_OPT_NAMED_STRING(ctx, "shield_carry_anim", t->shield_carry_anim);
         GET_OPT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
@@ -790,6 +795,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
     PUT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
     PUT_NAMED_STRING(ctx, "sound_create", t->sound_create);
+    PUT_NAMED_STRING(ctx, "sound_hitting", t->sound_hitting);
     PUT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
     PUT_NAMED_STRING(ctx, "shield_carry_anim", t->shield_carry_anim);
     PUT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
@@ -1036,6 +1042,11 @@ const char *tp_explodes_as (tpp t)
 const char *tp_sound_create (tpp t)
 {
     return (t->sound_create);
+}
+
+const char *tp_sound_hitting (tpp t)
+{
+    return (t->sound_hitting);
 }
 
 const char *tp_weapon_carry_anim (tpp t)
