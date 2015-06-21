@@ -485,8 +485,10 @@ LOG("  owner");
 
     if (thing_is_shopkeeper(me)) {
         if (thing_is_monst(it)) {
-            thing_possible_hit_add(me, it);
-            return;
+            if (!thing_is_shopkeeper(it)) {
+                thing_possible_hit_add(me, it);
+                return;
+            }
         }
 
         if (thing_is_angry(me)) {
