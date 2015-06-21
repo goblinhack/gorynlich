@@ -26,3 +26,4 @@ void sound_play_paper(void);
 void sound_play_thief(void);
 void sound_play_explosion(void);
 void sound_play_slime(void);
+void sound_load_all(void);

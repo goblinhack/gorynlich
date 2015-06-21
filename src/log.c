@@ -26,6 +26,7 @@
 #include "wid_tooltip.h"
 #include "socket_util.h"
 #include "wid_notify.h"
+#include "sound.h"
 #include "wid_game_map_client.h"
 
 uint8_t debug_enabled = 0;
@@ -151,6 +152,11 @@ static void msg_ (uint32_t level,
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    if (level == SOUND) {
+        sound_play(buf);
+        return;
+    }
 
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
@@ -546,6 +552,11 @@ static void msg_over_thing_ (uint32_t level,
     }
 
     vsnprintf(buf, sizeof(buf), fmt, args);
+
+    if (level == SOUND) {
+        sound_play(buf);
+        return;
+    }
 
     /*
      * Center a widget over the thing.
