@@ -1821,6 +1821,8 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
      */
     socket_server_tx_map_update(0 /* all clients */, server_active_things,
                                 "open door");
+
+    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(SOUND, "door");
 }
 
 void marshal_level (marshal_p ctx, levelp level)

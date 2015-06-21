@@ -1131,7 +1131,13 @@ wid_game_map_client_replace_tile (widp w,
 
     const char *sound = tp_sound_create(tp);
     if (sound) {
-        sound_play(sound);
+        if (thing_is_cloud_effect(t)) {
+            if (t->is_epicenter) {
+                sound_play_at(sound, t->x, t->y);
+            }
+        } else {
+            sound_play_at(sound, t->x, t->y);
+        }
     }
 
     return (child);
