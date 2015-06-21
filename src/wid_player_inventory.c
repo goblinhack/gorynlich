@@ -277,13 +277,13 @@ void wid_player_inventory_button_style (widp w,
         if (tp_is_degradable(tp)) {
             const char *str;
             if (quality >= THING_ITEM_QUALITY_MAX) {
-                str = "mint condition";
+                str = "%%fg=green$mint condition";
             } else if (quality >= THING_ITEM_QUALITY_MAX - 2) {
-                str = "second hand condition";
+                str = "%%fg=green$second hand condition";
             } else if (quality >= THING_ITEM_QUALITY_MAX / 2) {
-                str = "damaged";
+                str = "%%fg=red$damaged";
             } else {
-                str = "heavily damaged";
+                str = "%%fg=red$heavily damaged";
             }
 
             char *tmp2 = dynprintf(
@@ -335,22 +335,22 @@ void wid_player_inventory_button_style (widp w,
         uint32_t val = tp_get_d10000_chance_of_breaking(tp);
         if (val) {
             const char *str;
-            if (val >= 10000) {
-                str = "masterwork";
-            } else if (val >= 5000) {
-                str = "very low";
-            } else if (val >= 4000) {
-                str = "low";
-            } else if (val >= 3000) {
-                str = "fair";
-            } else if (val >= 2000) {
-                str = "moderate";
-            } else if (val >= 1000) {
-                str = "unreliable";
-            } else if (val >= 500) {
-                str = "dodgy";
+            if (val == 0) {
+                str = "%%fg=green$near indestructible item";
+            } else if (val <= 3) {
+                str = "%%fg=green$very low, masterwork item";
+            } else if (val <= 5) {
+                str = "%%fg=green$very low, high quality";
+            } else if (val <= 10) {
+                str = "%%fg=green$fair chance of failing";
+            } else if (val <= 20) {
+                str = "%%fg=red$high chance of failing";
+            } else if (val <= 50) {
+                str = "%%fg=red$high chance of failing";
+            } else if (val <= 100) {
+                str = "%%fg=red$very high, poor quality item";
             } else {
-                str = "terrible";
+                str = "this item is rubbish";
             }
 
             char *tmp2 = dynprintf("%%%%fmt=left$"
