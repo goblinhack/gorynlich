@@ -16,6 +16,7 @@
  light_tint="white"
  light_radius=1.0
  sound_create="swoosh"
+ sound_hitting="sword"
  tiles={
   tile={
    tile="weapon_swing2.1"
