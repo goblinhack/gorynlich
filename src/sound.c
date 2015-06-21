@@ -67,10 +67,10 @@ soundp sound_load (const char *filename, const char *name_alias)
 
     if (!filename) {
         if (!name_alias) {
-            ERR("no file for sound");
+            ERR("no filename for sound");
             return (0);
         } else {
-            ERR("no file for sound loading %s", name_alias);
+            ERR("no filename for loading sound %s", name_alias);
             return (0);
         }
     }
@@ -88,7 +88,7 @@ soundp sound_load (const char *filename, const char *name_alias)
 
     m->data = ramdisk_load(filename, &m->len);
     if (!m->data) {
-        ERR("cannot load sound %s", filename);
+        ERR("cannot load sound %s from ramdisk", filename);
         return (0);
     }
 
@@ -145,7 +145,7 @@ void sound_play (const char *name_alias)
 
     soundp sound = sound_load(0, name_alias);
     if (!sound) {
-        LOG("cannot load sound %s: %s", sound->tree.key, Mix_GetError());
+        LOG("cannot load sound %s: %s", name_alias, Mix_GetError());
 
         return;
     }
@@ -256,21 +256,6 @@ void sound_play_slime (void)
 
 void sound_load_all (void)
 {
-    sound_load("data/sound/ratdeath.wav", "dead");
-    sound_load("data/sound/click.wav", "click");
-    sound_load("data/sound/chomp.wav", "chomp");
-    sound_load("data/sound/chomp2.wav", "chomp2");
-    sound_load("data/sound/powerup.wav", "powerup");
-    sound_load("data/sound/spam.wav", "spam");
-    sound_load("data/sound/letter.wav", "letter");
-    sound_load("data/sound/rocket.wav", "rocket");
-    sound_load("data/sound/level_end.wav", "level_end");
-    sound_load("data/sound/doorbell.wav", "doorbell");
-    sound_load("data/sound/paper.wav", "paper");
-    sound_load("data/sound/thief.wav", "thief");
-    sound_load("data/sound/explosion.wav", "explosion");
-    sound_load("data/sound/slime.wav", "slime");
-    sound_load("data/sound/shotgun.wav", "shotgun");
     sound_load("data/sound/ratdeath.wav", "dead");
     sound_load("data/sound/click.wav", "click");
     sound_load("data/sound/chomp.wav", "chomp");
