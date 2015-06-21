@@ -54,6 +54,7 @@ void sound_fini (void)
 soundp sound_load (const char *filename, const char *name_alias)
 {
     if (!music_init_done) {
+        DIE("need music init")
         return (0);
     }
 
@@ -67,8 +68,10 @@ soundp sound_load (const char *filename, const char *name_alias)
     if (!filename) {
         if (!name_alias) {
             ERR("no file for sound");
+            return (0);
         } else {
             ERR("no file for sound loading %s", name_alias);
+            return (0);
         }
     }
 
@@ -80,23 +83,26 @@ soundp sound_load (const char *filename, const char *name_alias)
     m->tree.key = dupstr(name_alias, "TREE KEY: sound");
 
     if (!tree_insert(all_sound, &m->tree.node)) {
-        ERR("sound insert name_alias [%s] failed", name_alias);
+        DIE("sound insert name_alias [%s] failed", name_alias);
     }
 
     m->data = ramdisk_load(filename, &m->len);
     if (!m->data) {
         ERR("cannot load sound %s", filename);
+        return (0);
     }
 
     SDL_RWops *rw = SDL_RWFromMem(m->data, m->len);
     if (!rw) {
         ERR("cannot make RW sound %s", filename);
+        return (0);
     }
 
     m->sound = Mix_LoadWAV_RW(rw, 0 /* freesrc */);
     if (!m->sound) {
         ERR("cannot make sound %s: %s %s", filename, Mix_GetError(),
             SDL_GetError());
+        return (0);
     }
 
     DBG("Load %s", filename);
@@ -138,6 +144,11 @@ void sound_play (const char *name_alias)
     }
 
     soundp sound = sound_load(0, name_alias);
+    if (!sound) {
+        LOG("cannot load sound %s: %s", sound->tree.key, Mix_GetError());
+
+        return;
+    }
 
     if (Mix_PlayChannel(-1, sound->sound, 0) == -1) {
         LOG("cannot play %s: %s", sound->tree.key, Mix_GetError());
@@ -175,84 +186,105 @@ void sound_play_n (const char *name_alias, int32_t n)
 
 void sound_play_dead (void)
 {
-    sound_load("data/sound/ratdeath.wav", "dead");
     sound_play("dead");
 }
 
 void sound_play_click (void)
 {
-    sound_load("data/sound/click.wav", "click");
     sound_play("click");
 }
 
 void sound_play_chomp (void)
 {
-    sound_load("data/sound/chomp.wav", "chomp");
     sound_play("chomp");
 }
 
 void sound_play_chomp2 (void)
 {
-    sound_load("data/sound/chomp2.wav", "chomp2");
     sound_play("chomp2");
 }
 
 void sound_play_powerup (void)
 {
-    sound_load("data/sound/powerup.wav", "powerup");
     sound_play("powerup");
 }
 
 void sound_play_spam (void)
 {
-    sound_load("data/sound/spam.wav", "spam");
     sound_play("spam");
 }
 
 void sound_play_letter (void)
 {
-    sound_load("data/sound/letter.wav", "letter");
     sound_play("letter");
 }
 
 void sound_play_rocket (void)
 {
-    sound_load("data/sound/rocket.wav", "rocket");
     sound_play_n("rocket", 1);
 }
 
 void sound_play_level_end (void)
 {
-    sound_load("data/sound/level_end.wav", "level_end");
     sound_play("level_end");
 }
 
 void sound_play_doorbell (void)
 {
-    sound_load("data/sound/doorbell.wav", "doorbell");
     sound_play("doorbell");
 }
 
 void sound_play_paper (void)
 {
-    sound_load("data/sound/paper.wav", "paper");
     sound_play("paper");
 }
 
 void sound_play_thief (void)
 {
-    sound_load("data/sound/thief.wav", "thief");
     sound_play("thief");
 }
 
 void sound_play_explosion (void)
 {
-    sound_load("data/sound/explosion.wav", "explosion");
     sound_play("explosion");
 }
 
 void sound_play_slime (void)
 {
-    sound_load("data/sound/slime.wav", "slime");
     sound_play("slime");
+}
+
+void sound_load_all (void)
+{
+    sound_load("data/sound/ratdeath.wav", "dead");
+    sound_load("data/sound/click.wav", "click");
+    sound_load("data/sound/chomp.wav", "chomp");
+    sound_load("data/sound/chomp2.wav", "chomp2");
+    sound_load("data/sound/powerup.wav", "powerup");
+    sound_load("data/sound/spam.wav", "spam");
+    sound_load("data/sound/letter.wav", "letter");
+    sound_load("data/sound/rocket.wav", "rocket");
+    sound_load("data/sound/level_end.wav", "level_end");
+    sound_load("data/sound/doorbell.wav", "doorbell");
+    sound_load("data/sound/paper.wav", "paper");
+    sound_load("data/sound/thief.wav", "thief");
+    sound_load("data/sound/explosion.wav", "explosion");
+    sound_load("data/sound/slime.wav", "slime");
+    sound_load("data/sound/shotgun.wav", "shotgun");
+    sound_load("data/sound/ratdeath.wav", "dead");
+    sound_load("data/sound/click.wav", "click");
+    sound_load("data/sound/chomp.wav", "chomp");
+    sound_load("data/sound/chomp2.wav", "chomp2");
+    sound_load("data/sound/powerup.wav", "powerup");
+    sound_load("data/sound/spam.wav", "spam");
+    sound_load("data/sound/letter.wav", "letter");
+    sound_load("data/sound/rocket.wav", "rocket");
+    sound_load("data/sound/level_end.wav", "level_end");
+    sound_load("data/sound/doorbell.wav", "doorbell");
+    sound_load("data/sound/paper.wav", "paper");
+    sound_load("data/sound/thief.wav", "thief");
+    sound_load("data/sound/explosion.wav", "explosion");
+    sound_load("data/sound/slime.wav", "slime");
+    sound_load("data/sound/shotgun.wav", "shotgun");
+    sound_load("data/sound/cash_register2.wav", "cash_register");
 }

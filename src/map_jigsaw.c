@@ -34,7 +34,7 @@
 #include "wid.h"
 #include "map_jigsaw.h"
 #include "ramdisk.h"
-#include "socket_util.h"
+#include "thing_shop.h"
 
 /*
  * Creates a map somewhat like this
@@ -2992,7 +2992,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 tp = tp_find("data/things/shop_floor1"); 
                 if (!shop_notify) {
                     shop_notify = true;
-                    socket_tx_server_shout_at_all_players(INFO, "You hear the chime of a cash register");
+                    shop_on_level();
                 }
                 break;
 
