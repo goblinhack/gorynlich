@@ -320,6 +320,8 @@ void shop_pay_for_items (thingp t)
     thing_stats_modify_cash(t, -t->money_owed);
 
     t->money_owed = 0;
+
+    MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "payment");
 }
 
 void shop_steal_message (thingp t)
@@ -380,6 +382,8 @@ void shop_steal_message (thingp t)
 
     MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
                                "%%%%fg=red$%s", messages[myrand() % ARRAY_SIZE(messages)]);
+
+    MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "thief");
 }
 
 void shop_break_message (thingp t, thingp shopkeeper)

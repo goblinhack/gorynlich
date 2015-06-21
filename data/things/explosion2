@@ -14,6 +14,7 @@
  is_collision_map_large
  scale=0.4
  damage=5
+ sound_create="boom"
  hit_delay_tenths=1
  tiles={
   tile={

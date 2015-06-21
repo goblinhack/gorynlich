@@ -13,6 +13,7 @@
  is_light_source
  light_radius=0.5
  is_collision_map_medium
+ sound_create="fireball"
  explodes_as="data/things/explosion1"
  tiles={
   tile={
