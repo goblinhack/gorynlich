@@ -1,7 +1,7 @@
 {
  short_name="chest"
  raw_name="chest1"
- tooltip="treasure chest"
+ tooltip="small treasure chest"
  z_depth="monst"
  is_inactive
  is_treasure

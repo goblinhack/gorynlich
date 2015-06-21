@@ -1,7 +1,7 @@
 {
  short_name="acid"
  raw_name="acid1"
- tooltip="acid"
+ tooltip="corrosive acid"
  mob_spawn={ 1000 "data/things/acid1" }
  z_depth="floor2"
  is_acid

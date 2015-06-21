@@ -1,7 +1,7 @@
 {
- short_name="gobbler"
+ short_name="treasure gobbler"
  raw_name="gobbler"
- tooltip="gobbler"
+ tooltip="treasure gobbler"
  z_depth="monst"
  speed=30
  max_hp=55
