@@ -180,7 +180,7 @@ void music_play (const char *file,
     }
 }
 
-void music_play_game (void)
+void music_play_game (level_pos_t level_pos)
 {
     static const char *music[] = {
         "data/music/charlotte.ogg",
@@ -199,7 +199,11 @@ void music_play_game (void)
         "data/music/charlotte_slow.ogg",
     };
 
-    int x = myrand() % ARRAY_SIZE(music);
+    /*
+     * So we get the same music for each player on the same level.
+     */
+    int r = level_pos.x + (level_pos.y * 10);
+    int x = r % ARRAY_SIZE(music);
 
     music_play(music[x], music[x], 22050);
 }

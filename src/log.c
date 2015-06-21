@@ -148,15 +148,17 @@ static void msg_ (uint32_t level,
     char buf[MAXSTR];
     uint32_t len;
 
+    if (level == SOUND) {
+        vsnprintf(buf, sizeof(buf), fmt, args);
+        sound_play(buf);
+        return;
+    }
+
     buf[0] = '\0';
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    if (level == SOUND) {
-        sound_play(buf);
-        return;
-    }
 
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
@@ -546,17 +548,18 @@ static void msg_over_thing_ (uint32_t level,
         return;
     }
 
+    if (level == SOUND) {
+        vsnprintf(buf, sizeof(buf), fmt, args);
+        sound_play(buf);
+        return;
+    }
+
     widp wid_thing = thing_wid(t);
     if (!wid_thing) {
         return;
     }
 
     vsnprintf(buf, sizeof(buf), fmt, args);
-
-    if (level == SOUND) {
-        sound_play(buf);
-        return;
-    }
 
     /*
      * Center a widget over the thing.
