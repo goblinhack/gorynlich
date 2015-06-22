@@ -29,7 +29,6 @@
 #include "map.h"
 #include "thing_shop.h"
 
-static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;
 static uint8_t level_server_init_done;
 static void level_reset_players(levelp level);
@@ -53,9 +52,6 @@ static uint8_t level_server_side_one_time_init (void)
 
     level_server_init_done = true;
 
-    command_add(level_command_dead, 
-                "dead", "internal command for thing suicide");
-
     return (true);
 }
 
@@ -72,41 +68,6 @@ void level_fini (void)
     if (client_timers) {
         ERR("client timers still set on level fini");
     }
-}
-
-/*
- * User has entered a command, run it
- */
-static uint8_t level_command_dead (tokens_t *tokens, void *context)
-{
-    thingp t;
-
-    if (!context) {
-        return (false);
-    }
-
-    t = (typeof(t)) context;
-    verify(t);
-
-    if (thing_is_seedpod(t)) {
-        tpp tp = tp_find("data/things/plant");
-
-        wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
-                                         thing_grid_x(t),
-                                         thing_grid_y(t),
-                                         0, /* thing */
-                                         tp,
-                                         0 /* tpp_data */,
-                                         0 /* item */,
-                                         0 /* stats */);
-
-        sound_play_slime();
-
-        thing_dead(t, 0 /* killer */, "turned into plant");
-        return (true);
-    }
-
-    return (true);
 }
 
 levelp level_new (widp map, 
@@ -568,74 +529,7 @@ void level_set_walls (levelp level)
                     if (thing_is_door(t)) {
                         level->doors.walls[x][y] = '+';
                     }
-
-                    if (thing_is_pipe(t)) {
-                        level->pipes.walls[x][y] = '+';
-                    }
                 }
-            }
-        }
-    }
-}
-
-void level_pipe_find_ends (levelp level)
-{
-    int32_t x;
-    int32_t y;
-
-    memset(&level->end_pipe, ' ', sizeof(level->end_pipe));
-
-    for (x = 1; x < MAP_WIDTH-1; x++) {
-        for (y = 1; y < MAP_HEIGHT-1; y++) {
-
-            if (level->pipes.walls[x][y] == ' ') {
-                continue;
-            }
-
-            level->walls.walls[x][y] = '+';
-
-            //  .
-            // .x.
-            // ?x?
-            if ((level->pipes.walls[x][y+1] == '+') &&
-                (level->pipes.walls[x][y-1] == ' ') &&
-                (level->pipes.walls[x+1][y] == ' ') &&
-                (level->pipes.walls[x+1][y] == ' ')) {
-                level->end_pipe.walls[x][y] = '+';
-                level->walls.walls[x][y] = ' ';
-            }
-
-            // ?x?
-            // .x.
-            //  .
-            if ((level->pipes.walls[x][y-1] == '+') &&
-                (level->pipes.walls[x][y+1] == ' ') &&
-                (level->pipes.walls[x+1][y] == ' ') &&
-                (level->pipes.walls[x+1][y] == ' ')) {
-                level->end_pipe.walls[x][y] = '+';
-                level->walls.walls[x][y] = ' ';
-            }
-
-            //  .?
-            // .xx
-            //  .?
-            if ((level->pipes.walls[x+1][y] == '+') &&
-                (level->pipes.walls[x-1][y] == ' ') &&
-                (level->pipes.walls[x][y-1] == ' ') &&
-                (level->pipes.walls[x][y+1] == ' ')) {
-                level->end_pipe.walls[x][y] = '+';
-                level->walls.walls[x][y] = ' ';
-            }
-
-            //  .?
-            // .xx
-            //  .?
-            if ((level->pipes.walls[x-1][y] == '+') &&
-                (level->pipes.walls[x+1][y] == ' ') &&
-                (level->pipes.walls[x][y-1] == ' ') &&
-                (level->pipes.walls[x][y+1] == ' ')) {
-                level->walls.walls[x][y] = ' ';
-                level->end_pipe.walls[x][y] = '+';
             }
         }
     }
@@ -1500,24 +1394,9 @@ uint32_t level_count_is_valid_for_action_bar (levelp level)
     return (level_count_is_x(level, tp_is_valid_for_action_bar));
 }
 
-uint32_t level_count_is_seedpod (levelp level)
-{
-    return (level_count_is_x(level, tp_is_seedpod));
-}
-
-uint32_t level_count_is_spam (levelp level)
-{
-    return (level_count_is_x(level, tp_is_spam));
-}
-
 uint32_t level_count_is_door (levelp level)
 {
     return (level_count_is_x(level, tp_is_door));
-}
-
-uint32_t level_count_is_pipe (levelp level)
-{
-    return (level_count_is_x(level, tp_is_pipe));
 }
 
 uint32_t level_count_is_mob_spawner (levelp level)

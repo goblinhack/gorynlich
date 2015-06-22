@@ -638,10 +638,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_carryable", t->is_carryable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_valid_for_action_bar", t->is_valid_for_action_bar);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
         GET_OPT_NAMED_BITFIELD(ctx, "is_door", t->is_door);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
         GET_OPT_NAMED_BITFIELD(ctx, "is_mob_spawner", t->is_mob_spawner);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr1", t->is_rrr1);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
@@ -879,10 +876,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_carryable", t->is_carryable);
     PUT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
     PUT_NAMED_BITFIELD(ctx, "is_valid_for_action_bar", t->is_valid_for_action_bar);
-    PUT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
-    PUT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
     PUT_NAMED_BITFIELD(ctx, "is_door", t->is_door);
-    PUT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
     PUT_NAMED_BITFIELD(ctx, "is_mob_spawner", t->is_mob_spawner);
     PUT_NAMED_BITFIELD(ctx, "is_rrr1", t->is_rrr1);
     PUT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);

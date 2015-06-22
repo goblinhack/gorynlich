@@ -191,8 +191,6 @@ static void debug_explosion (levelp level, int ix, int iy)
             if (map_find_wall_at(level, x, y, &w)) {
                 fprintf(fp,"x");
                 mywid = w;
-            } else if (map_find_pipe_at(level, x, y, &w)) {
-                mywid = w;
             } else if (map_find_door_at(level, x, y, &w)) {
                 fprintf(fp,"D");
                 mywid = w;

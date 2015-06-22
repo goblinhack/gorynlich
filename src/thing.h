@@ -442,7 +442,6 @@ enum {
     THING_POISON1,
     THING_POISON2,
     THING_CLOUDKILL1,
-    THING_SPAM,
     THING_POTION_MONSTICIDE,
     THING_POTION_FIRE,
     THING_POTION_CLOUDKILL,
@@ -1154,32 +1153,11 @@ static inline uint8_t thing_is_valid_for_action_bar (thingp t)
     return (tp_is_valid_for_action_bar(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_seedpod (thingp t)
-{
-    verify(t);
-
-    return (tp_is_seedpod(thing_tp(t)));
-}
-
-static inline uint8_t thing_is_spam (thingp t)
-{
-    verify(t);
-
-    return (tp_is_spam(thing_tp(t)));
-}
-
 static inline uint8_t thing_is_door (thingp t)
 {
     verify(t);
 
     return (tp_is_door(thing_tp(t)));
-}
-
-static inline uint8_t thing_is_pipe (thingp t)
-{
-    verify(t);
-
-    return (tp_is_pipe(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_rrr1 (thingp t)
@@ -2024,24 +2002,9 @@ static inline uint8_t thing_is_valid_for_action_bar_noverify (thingp t)
     return (t->tp->is_valid_for_action_bar);
 }
 
-static inline uint8_t thing_is_seedpod_noverify (thingp t)
-{
-    return (t->tp->is_seedpod);
-}
-
-static inline uint8_t thing_is_spam_noverify (thingp t)
-{
-    return (t->tp->is_spam);
-}
-
 static inline uint8_t thing_is_door_noverify (thingp t)
 {
     return (t->tp->is_door);
-}
-
-static inline uint8_t thing_is_pipe_noverify (thingp t)
-{
-    return (t->tp->is_pipe);
 }
 
 static inline uint8_t thing_is_rrr1_noverify (thingp t)
