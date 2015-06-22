@@ -246,18 +246,9 @@ void sound_play_slime (void)
 
 void sound_load_all (void)
 {
-    sound_load("data/sound/ratdeath.wav", "dead");
     sound_load("data/sound/click.wav", "click");
-    sound_load("data/sound/chomp.wav", "chomp");
-    sound_load("data/sound/chomp2.wav", "chomp2");
     sound_load("data/sound/powerup.wav", "powerup");
-    sound_load("data/sound/spam.wav", "spam");
-    sound_load("data/sound/letter.wav", "letter");
-    sound_load("data/sound/rocket.wav", "rocket");
     sound_load("data/sound/level_end.wav", "level_end");
-    sound_load("data/sound/doorbell.wav", "doorbell");
-    sound_load("data/sound/paper.wav", "paper");
-    sound_load("data/sound/thief.wav", "thief");
     sound_load("data/sound/explosion.wav", "explosion");
     sound_load("data/sound/slime.wav", "slime");
     sound_load("data/sound/swords_collide_sound_explorer_2015600826.wav", "sword");
@@ -276,4 +267,10 @@ void sound_load_all (void)
     sound_load("data/sound/effect.wav", "effect");
     sound_load("data/sound/zombie_SoundBible.com_1966938763.wav", "zombie");
     sound_load("data/sound/Bite_SoundBible.com_2056759375.wav", "bite");
+    sound_load("data/sound/bite_SoundBible.com_1625781385.wav", "urgh");
+    sound_load("data/sound/zombie_in_painSoundBible.com_134322253.wav", "urgh2");
+    sound_load("data/sound/demon_die.wav", "urgh3");
+    sound_load("data/sound/82388__robinhood76__01308_man_hit_9.wav", "player_hit");
+    sound_load("data/sound/173126__replix__death_sound_male.wav", "male_death");
+    sound_load("data/sound/168567__psychentist__ratdeath.mp3.wav", "female_death");
 }

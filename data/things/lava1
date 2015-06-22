@@ -6,6 +6,7 @@
  z_depth="floor2"
  is_mob_spawner
  is_lava
+ sound_death="urgh"
  is_monst
  hit_delay_tenths=5
  speed=1

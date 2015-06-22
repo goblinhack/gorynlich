@@ -1430,6 +1430,13 @@ static void thing_dead_ (thingp t, char *reason)
             }
         }
     }
+
+    if (t->on_server) {
+        const char *sound = tp_sound_death(t->tp);
+        if (sound) {
+            MSG_SERVER_SHOUT_AT_ALL_PLAYERS(SOUND, "%s", sound);
+        }
+    }
 }
 
 void thing_dead (thingp t, thingp killer, const char *reason, ...)
@@ -1853,6 +1860,11 @@ static int thing_hit_ (thingp t,
     if (sound) {
         if (thing_is_player(real_hitter)) {
             MSG_SERVER_SHOUT_AT_PLAYER(SOUND, real_hitter, "%s", sound);
+        } else if (thing_is_player(t)) {
+            /*
+             * Orc hitting player
+             */
+            MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "%s", sound);
         }
     }
 

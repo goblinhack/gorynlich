@@ -10,6 +10,7 @@
  is_effect_rotate_2way
  vision_distance=10
  hit_delay_tenths=10
+ sound_death="urgh2"
  is_monst
  is_shadow_caster
  is_shadow_caster_soft
