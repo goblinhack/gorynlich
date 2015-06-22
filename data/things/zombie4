@@ -19,6 +19,7 @@
  d10000_chance_of_appearing=100
  min_appear_depth=1
  max_appear_depth=80
+ sound_hitting="zombie"
  tiles={
   tile={
    delay=200

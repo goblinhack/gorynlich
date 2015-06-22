@@ -253,24 +253,9 @@ uint8_t map_is_valid_for_action_bar_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_valid_for_action_bar));
 }
 
-uint8_t map_is_seedpod_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, tp_is_seedpod));
-}
-
-uint8_t map_is_spam_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, tp_is_spam));
-}
-
 uint8_t map_is_door_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, tp_is_door));
-}
-
-uint8_t map_is_pipe_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, tp_is_pipe));
 }
 
 uint8_t map_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
@@ -710,24 +695,9 @@ thingp map_thing_is_valid_for_action_bar_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_valid_for_action_bar));
 }
 
-thingp map_thing_is_seedpod_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, tp_is_seedpod));
-}
-
-thingp map_thing_is_spam_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, tp_is_spam));
-}
-
 thingp map_thing_is_door_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, tp_is_door));
-}
-
-thingp map_thing_is_pipe_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, tp_is_pipe));
 }
 
 thingp map_thing_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
@@ -1183,24 +1153,9 @@ tree_rootp map_all_things_is_valid_for_action_bar_at (levelp level, int32_t x, i
     return (map_all_things_is_x_at(level, x, y, tp_is_valid_for_action_bar));
 }
 
-tree_rootp map_all_things_is_seedpod_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, tp_is_seedpod));
-}
-
-tree_rootp map_all_things_is_spam_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, tp_is_spam));
-}
-
 tree_rootp map_all_things_is_door_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, tp_is_door));
-}
-
-tree_rootp map_all_things_is_pipe_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, tp_is_pipe));
 }
 
 tree_rootp map_all_things_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
@@ -1636,24 +1591,9 @@ tpp map_find_is_valid_for_action_bar_at (levelp level, int32_t x, int32_t y, wid
     return (map_find_x_at(level, x, y, tp_is_valid_for_action_bar, w));
 }
 
-tpp map_find_seedpod_at (levelp level, int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_seedpod, w));
-}
-
-tpp map_find_spam_at (levelp level, int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_spam, w));
-}
-
 tpp map_find_door_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_door, w));
-}
-
-tpp map_find_pipe_at (levelp level, int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_pipe, w));
 }
 
 tpp map_find_generator_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -1927,8 +1867,6 @@ if (level != server_level)
                 fprintf(fp,"x");
 #endif
                 mywid = w;
-            } else if ((tp = map_find_pipe_at(level, x, y, &w))) {
-                mywid = w;
             } else if ((tp = map_find_door_at(level, x, y, &w))) {
 #ifdef GORY_DEBUG
 if (level != server_level)
@@ -1964,19 +1902,6 @@ if (level != server_level)
 
                         nbrs[dx + 1][dy + 1] = tp;
 
-                    }
-
-                    if (map_find_pipe_at(level, x, y, &w)) {
-                        if (thing_wid_is_active(w)) {
-                            continue;
-                        }
-
-                        tp = map_find_pipe_at(level, x + dx, y + dy, &w);
-                        if (thing_wid_is_active(w)) {
-                            continue;
-                        }
-
-                        nbrs[dx + 1][dy + 1] = tp;
                     }
 
                     if (map_find_door_at(level, x, y, &w)) {
@@ -2187,74 +2112,6 @@ if (level != server_level)
 #endif
 }
 
-static char this_pipe[MAP_WIDTH][MAP_HEIGHT];
-
-static void pipe_flood (levelp level, int32_t x, int32_t y)
-{
-    if (!map_thing_is_pipe_at(level, x, y)) {
-        return;
-    }
-
-    if (this_pipe[x][y] == '+') {
-        return;
-    }
-
-    this_pipe[x][y] = '+';
-
-    pipe_flood(level, x-1, y);
-    pipe_flood(level, x+1, y);
-    pipe_flood(level, x, y-1);
-    pipe_flood(level, x, y+1);
-}
-
-uint8_t level_pipe_find_exit (levelp level,
-                              int32_t ix, int32_t iy,
-                              int32_t *exit_x, int32_t *exit_y)
-{
-    int32_t exits_x[MAP_WIDTH];
-    int32_t exits_y[MAP_WIDTH];
-    int32_t nexits;
-    int32_t x;
-    int32_t y;
-
-    memset(this_pipe, ' ', sizeof(this_pipe));
-    memset(exits_x, 0, sizeof(exits_x));
-    memset(exits_y, 0, sizeof(exits_y));
-    nexits = 0;
-
-    pipe_flood(level, ix, iy);
-
-    for (x = 1; x < MAP_WIDTH-1; x++) {
-        for (y = 1; y < MAP_HEIGHT-1; y++) {
-
-            if ((x == ix) && (y == iy)) {
-                continue;
-            }
-
-            if (this_pipe[x][y] != '+') {
-                continue;
-            }
-
-            if (level->end_pipe.walls[x][y] != ' ') {
-                exits_x[nexits] = x;
-                exits_y[nexits] = y;
-                nexits++;
-            }
-        }
-    }
-
-    if (!nexits) {
-        return (false);
-    }
-
-    int32_t exit = myrand() % nexits;
-
-    *exit_x = exits_x[exit];
-    *exit_y = exits_y[exit];
-
-    return (true);
-}
-
 static tree_rootp map_all_things_is_x (levelp level,
                                        map_is_at_callback callback)
 {
@@ -2434,24 +2291,9 @@ tree_rootp map_all_things_is_valid_for_action_bar (levelp level)
     return (map_all_things_is_x(level, tp_is_valid_for_action_bar));
 }
 
-tree_rootp map_all_things_is_seedpod (levelp level)
-{
-    return (map_all_things_is_x(level, tp_is_seedpod));
-}
-
-tree_rootp map_all_things_is_spam (levelp level)
-{
-    return (map_all_things_is_x(level, tp_is_spam));
-}
-
 tree_rootp map_all_things_is_door (levelp level)
 {
     return (map_all_things_is_x(level, tp_is_door));
-}
-
-tree_rootp map_all_things_is_pipe (levelp level)
-{
-    return (map_all_things_is_x(level, tp_is_pipe));
 }
 
 tree_rootp map_all_things_is_mob_spawner (levelp level)
