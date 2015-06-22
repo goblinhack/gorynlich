@@ -15,7 +15,7 @@
  d10000_chance_of_appearing=600
  damage=1
  bonus_xp_on_death=80
- mob_spawn_delay_tenths=80
+ mob_spawn_delay_tenths=50
  polymorph_on_death="data/things/bonepile2"
  tiles={
   tile={
