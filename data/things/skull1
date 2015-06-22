@@ -10,6 +10,7 @@
  is_effect_rotate_2way
  vision_distance=8
  hit_delay_tenths=10
+ sound_death="urgh"
  is_monst
  min_appear_depth=1
  max_appear_depth=20

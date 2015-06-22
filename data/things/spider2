@@ -9,8 +9,9 @@
  bonus_xp_on_death=250
  jump_speed=20
  vision_distance=8
- hit_delay_tenths=3
+ hit_delay_tenths=10
  is_warm_blooded
+ sound_death="urgh"
  is_monst
  is_cats_eyes
  scale=0.7

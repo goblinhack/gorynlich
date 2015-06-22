@@ -11,6 +11,7 @@
  vision_distance=5
  hit_delay_tenths=10
  is_warm_blooded
+ sound_death="urgh"
  is_monst
  is_cats_eyes
  scale=0.3
