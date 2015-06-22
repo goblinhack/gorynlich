@@ -19,6 +19,7 @@
 #include "client.h"
 #include "thing.h"
 #include "time_util.h"
+#include "sound.h"
 
 static widp wid_player_action;
 static uint8_t wid_player_action_init_done;
@@ -609,7 +610,10 @@ static void wid_player_action_create (thing_statsp s, int fast)
         }
 
         static int last_hp;
+
         if (last_hp != stats_get_hp(s)) {
+            int delta = stats_get_hp(s) - last_hp;
+
             if (last_hp > stats_get_hp(s)) {
                 if (stats_get_hp(s) >= stats_get_max_hp(s)) {
                     /*
@@ -627,8 +631,12 @@ static void wid_player_action_create (thing_statsp s, int fast)
                     wid_set_mode(w, WID_MODE_ACTIVE);
                     wid_set_color(w, WID_COLOR_TEXT, RED);
                 }
+
+                if (delta < -3) {
+                    sound_play("player_hit");
+                }
+
             } else if (player && last_hp) {
-                int delta = stats_get_hp(s) - last_hp;
                 int count = (rand() % delta) + 1;
 
                 if (count > 10) {
