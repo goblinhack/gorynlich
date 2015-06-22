@@ -2047,7 +2047,7 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
      * If this is a thing on the edge of the level acting as a indestructable
      * wall, then don't allow it to be destroyed.
      */
-    if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
+    if (thing_is_wall(t) || thing_is_door(t)) {
         if ((t->x <= 0) || (t->x >= MAP_WIDTH - 1) ||
             (t->y <= 0) || (t->y >= MAP_HEIGHT - 1)) {
             return (false);
@@ -3777,7 +3777,6 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 //CON("rx id %d create thing",id);
             if (!need_fixup &&
                 (tp_is_wall(tp) ||
-                 tp_is_pipe(tp) ||
                  tp_is_door(tp))) {
                 need_fixup = true;
             }
@@ -3810,7 +3809,6 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                 } else {
                     if (!need_fixup &&
                         (tp_is_wall(tp) ||
-                         tp_is_pipe(tp) ||
                          tp_is_door(tp))) {
                         need_fixup = true;
                     }
@@ -3915,7 +3913,6 @@ if (t->is_jumping) {
 
                     if (!need_fixup &&
                         (thing_is_wall(t) ||
-                         thing_is_pipe(t) ||
                          thing_is_door(t))) {
                         need_fixup = true;
                     }

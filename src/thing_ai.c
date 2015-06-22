@@ -82,10 +82,6 @@ static void dmap_print (levelp level, level_walls *dmap)
                 fprintf(fp, " Ex ");
                 continue;
             }
-            if (map_is_spam_at(level, x, y)) {
-                fprintf(fp, " Sp ");
-                continue;
-            }
             if (map_is_door_at(level, x, y)) {
                 fprintf(fp, " Do ");
                 continue;

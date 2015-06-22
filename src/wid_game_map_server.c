@@ -564,8 +564,7 @@ wid_game_map_server_replace_tile (widp w,
     }
 
     if (thing_is_wall(t) ||
-        thing_is_door(t) ||
-        thing_is_pipe(t)) {
+        thing_is_door(t)) {
         map_fixup(level);
     }
 

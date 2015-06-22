@@ -1734,6 +1734,10 @@ void thing_stats_modify_max_hp (thingp t, int32_t val)
 {
     thing_stats_verify(t);
 
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+    }
+
     stats_modify_max_hp(&t->stats, val);
 }
 
@@ -1747,6 +1751,10 @@ void thing_stats_modify_magic (thingp t, int32_t val)
 void thing_stats_modify_max_magic (thingp t, int32_t val)
 {
     thing_stats_verify(t);
+
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+    }
 
     stats_modify_max_magic(&t->stats, val);
 }
@@ -1762,12 +1770,20 @@ void thing_stats_modify_attack_melee (thingp t, int32_t val)
 {
     thing_stats_verify(t);
 
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+    }
+
     stats_modify_attack_melee(&t->stats, val);
 }
 
 void thing_stats_modify_attack_ranged (thingp t, int32_t val)
 {
     thing_stats_verify(t);
+
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+    }
 
     stats_modify_attack_ranged(&t->stats, val);
 }
@@ -1776,12 +1792,20 @@ void thing_stats_modify_attack_magical (thingp t, int32_t val)
 {
     thing_stats_verify(t);
 
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+    }
+
     stats_modify_attack_magical(&t->stats, val);
 }
 
 void thing_stats_modify_speed (thingp t, int32_t val)
 {
     thing_stats_verify(t);
+
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+    }
 
     stats_modify_speed(&t->stats, val);
 }
@@ -1790,12 +1814,20 @@ void thing_stats_modify_spending_points (thingp t, int32_t val)
 {
     thing_stats_verify(t);
 
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+    }
+
     stats_modify_spending_points(&t->stats, val);
 }
 
 void thing_stats_modify_vision (thingp t, int32_t val)
 {
     thing_stats_verify(t);
+
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+    }
 
     stats_modify_vision(&t->stats, val);
 }
@@ -1804,12 +1836,20 @@ void thing_stats_modify_healing (thingp t, int32_t val)
 {
     thing_stats_verify(t);
 
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+    }
+
     stats_modify_healing(&t->stats, val);
 }
 
 void thing_stats_modify_defense (thingp t, int32_t val)
 {
     thing_stats_verify(t);
+
+    if (val > 0) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+    }
 
     stats_modify_defense(&t->stats, val);
 }
