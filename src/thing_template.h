@@ -274,10 +274,7 @@ typedef struct tp_ {
     uint8_t is_carryable:1;
     uint8_t is_item_unusable:1;
     uint8_t is_valid_for_action_bar:1;
-    uint8_t is_seedpod:1;
-    uint8_t is_spam:1;
     uint8_t is_door:1;
-    uint8_t is_pipe:1;
     uint8_t is_mob_spawner:1;
     uint8_t is_rrr1:1;
     uint8_t is_rrr2:1;
@@ -649,24 +646,9 @@ static inline uint8_t tp_is_valid_for_action_bar (tpp t)
     return (t->is_valid_for_action_bar);
 }
 
-static inline uint8_t tp_is_seedpod (tpp t)
-{
-    return (t->is_seedpod);
-}
-
-static inline uint8_t tp_is_spam (tpp t)
-{
-    return (t->is_spam);
-}
-
 static inline uint8_t tp_is_door (tpp t)
 {
     return (t->is_door);
-}
-
-static inline uint8_t tp_is_pipe (tpp t)
-{
-    return (t->is_pipe);
 }
 
 static inline uint8_t tp_is_mob_spawner (tpp t)

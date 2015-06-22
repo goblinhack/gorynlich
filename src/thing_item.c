@@ -244,6 +244,10 @@ void thing_used (thingp t, tpp tp)
         bonus_hp = -bonus_hp;
     }
 
+    if (tp_is_food(tp)) {
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "bite");
+    }
+
     thing_stats_modify_hp(t, bonus_hp);
 
     /*

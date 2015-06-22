@@ -234,59 +234,9 @@ void sound_play_click (void)
     sound_play("click");
 }
 
-void sound_play_chomp (void)
-{
-    sound_play("chomp");
-}
-
-void sound_play_chomp2 (void)
-{
-    sound_play("chomp2");
-}
-
-void sound_play_powerup (void)
-{
-    sound_play("powerup");
-}
-
-void sound_play_spam (void)
-{
-    sound_play("spam");
-}
-
-void sound_play_letter (void)
-{
-    sound_play("letter");
-}
-
-void sound_play_rocket (void)
-{
-    sound_play_n("rocket", 1);
-}
-
 void sound_play_level_end (void)
 {
     sound_play("level_end");
-}
-
-void sound_play_doorbell (void)
-{
-    sound_play("doorbell");
-}
-
-void sound_play_paper (void)
-{
-    sound_play("paper");
-}
-
-void sound_play_thief (void)
-{
-    sound_play("thief");
-}
-
-void sound_play_explosion (void)
-{
-    sound_play("explosion");
 }
 
 void sound_play_slime (void)
@@ -323,4 +273,7 @@ void sound_load_all (void)
     sound_load("data/sound/Electric_Zap.wav", "shield");
     sound_load("data/sound/Red_Alert_FX_001.wav", "thief");
     sound_load("data/sound/boom.wav", "boom");
+    sound_load("data/sound/effect.wav", "effect");
+    sound_load("data/sound/zombie_SoundBible.com_1966938763.wav", "zombie");
+    sound_load("data/sound/Bite_SoundBible.com_2056759375.wav", "bite");
 }
