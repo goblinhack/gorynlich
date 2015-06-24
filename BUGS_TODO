@@ -3,6 +3,8 @@
 - fireball2/3 sound
 - slime death sound
 - arrow fire sound
+- player death noise needed?
+- treasure gobblers bounce around with nowhere to go when no treasure
 --------------------------------------- plan for jul --------------------------------------
 - imp that teleports and steals
 - cheese bomb turns enemies into cheese
@@ -23,6 +25,7 @@
 - rolling boulders?
 - pop bouncing "help!" and arrow over player to give them a clue what to do
 - dart and rock traps
+- mirror traps that bounce back weapon fire?
 --------------------------------------- plan for aug --------------------------------------
 - manually generate lots of levels
 - ice and fire blocks? ice blocks move; add yetis and other monst for cold levels?
@@ -43,6 +46,9 @@
 - thief, kill thief to recover items
 --------------------------------------- plan for dec --------------------------------------
 - add bot to test out multiplayer ?
+
+Tue Jun 23 21:41:03 EDT 2015
+- death by shotgun should be by shopkeeper
 
 Sat Jun 20 12:18:47 EDT 2015
 - add money

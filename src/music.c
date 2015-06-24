@@ -145,8 +145,8 @@ void music_play (const char *file,
                  uint32_t rate)
 {
     int audio_format = MIX_DEFAULT_FORMAT;
-    int audio_channels = 4;
-    int audio_buffers = 1024;
+    int audio_channels = 6;
+    int audio_buffers = 1024 * 8;
 
     Mix_CloseAudio();
 
@@ -175,8 +175,8 @@ void music_play (const char *file,
         return;
     }
 
-    if (Mix_PlayMusic(music->music, 2) == -1) {
-        WARN("cannot play %s: %s", music->tree.key, Mix_GetError());
+    if (Mix_PlayMusic(music->music, -1) == -1) {
+        WARN("cannot play music %s: %s", music->tree.key, Mix_GetError());
     }
 }
 
