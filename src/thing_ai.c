@@ -750,12 +750,10 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
             } else {
                 t->dmap = 0;
             }
+        } else if (thing_is_treasure_eater(t)) {
+            t->dmap = &dmap_map_treasure_target_treat_doors_as_passable;
         } else {
-            if (thing_is_treasure_eater(t)) {
-                t->dmap = &dmap_map_treasure_target_treat_doors_as_passable;
-            } else {
-                t->dmap = &dmap_map_player_target_treat_doors_as_passable;
-            }
+            t->dmap = &dmap_map_player_target_treat_doors_as_passable;
         }
     }
 
@@ -807,7 +805,26 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     }
 
     /*
-     * Try the wander map.
+     * Still can't move, if we're a treasure eater, now consider the player as 
+     * a secondary target.
+     */
+    if (thing_is_treasure_eater(t)) {
+        if (t->dmap == &dmap_map_player_target_treat_doors_as_passable) {
+            t->dmap = &dmap_map_player_target_treat_doors_as_walls;
+        } else {
+            t->dmap = &dmap_map_player_target_treat_doors_as_passable;
+        }
+
+        if (t->dmap) {
+            if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
+                                false /* can_change_dir_without_moving */)) {
+                return (true);
+            }
+        }
+    }
+
+    /*
+     * Still nowhere to move? Try the wander map.
      */
     if (t->dmap_wander) {
         if (!t->dmap_wander->walls[(int)t->x][(int)t->y]) {
@@ -832,8 +849,16 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         y = myrand() % MAP_HEIGHT;
 
         tries++;
-        if (tries > 1000) {
+        if (tries > 100) {
             break;
+        }
+
+        /*
+         * Make sure we can at least reach the target we chose
+         */
+        int cost_to_this_target = dmap_map_wander[x][y].walls[(int)t->x][(int)t->y];
+        if (cost_to_this_target >= not_preferred) {
+            continue;
         }
 
         thing_map_cell *cell = &map->cells[x][y];
@@ -905,7 +930,9 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     /*
      * Try a new wander map next time.
      */
-    t->dmap_wander = &dmap_map_wander[x][y];
+//    t->dmap_wander = &dmap_map_wander[x][y];
+//    shouldn't this be 0 to get a new map?
+    t->dmap_wander = 0;
 
     return (false);
 }
