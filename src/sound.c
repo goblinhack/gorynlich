@@ -153,7 +153,7 @@ void sound_play_at (const char *name_alias, double x, double y)
     }
 
     if (Mix_PlayChannel(-1, sound->sound, 0) == -1) {
-        LOG("cannot play %s: %s", sound->tree.key, Mix_GetError());
+        LOG("cannot play sound %s: %s", sound->tree.key, Mix_GetError());
 
         return;
     }
@@ -181,6 +181,8 @@ void sound_play (const char *name_alias)
     if (!music_init_done) {
         return;
     }
+
+    LOG("play: %s", name_alias);
 
     soundp sound = sound_load(0, name_alias);
     if (!sound) {
