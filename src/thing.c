@@ -1430,13 +1430,6 @@ static void thing_dead_ (thingp t, char *reason)
             }
         }
     }
-
-    if (t->on_server) {
-        const char *sound = tp_sound_death(t->tp);
-        if (sound) {
-            MSG_SERVER_SHOUT_AT_ALL_PLAYERS(SOUND, "%s", sound);
-        }
-    }
 }
 
 void thing_dead (thingp t, thingp killer, const char *reason, ...)
@@ -1754,25 +1747,6 @@ void thing_wake (thingp t)
     thing_set_is_sleeping(t, false);
 }
 
-static void thing_dying_ (thingp t, thingp killer, char *reason)
-{
-    /*
-     * Why did I die!? 8(
-     */
-    if (reason) {
-        if (t->dead_reason) {
-            myfree(t->dead_reason);
-            t->dead_reason = 0;
-        }
-
-        t->dead_reason = reason;
-    }
-
-    if (thing_is_player(t)) {
-        THING_LOG(t, "dying (%s)", reason);
-    }
-}
-
 void thing_dying (thingp t, thingp killer, const char *reason, ...)
 {
     va_list args;
@@ -1789,6 +1763,11 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
         if (thing_is_player(t)) {
             level_set_walls(server_level);
         }
+
+        const char *sound = tp_sound_death(t->tp);
+        if (sound) {
+            MSG_SERVER_SHOUT_AT_ALL_PLAYERS(SOUND, "%s", sound);
+        }
     } else {
         /*
          * Move the weapon behind the poor thing.
@@ -1797,15 +1776,23 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
     }
 
     /*
-     * Log the means of death!
+     * Only save death reasons for players to save resources
      */
-    if (reason) {
-        va_start(args, reason);
-        thing_dying_(t, killer, dynvprintf(reason, args));
-        va_end(args);
-    } else {
-        thing_dying_(t, killer, 0);
+    if (!thing_is_player(t)) {
+        return;
     }
+
+    if (t->dead_reason) {
+        return;
+    }
+
+    if (!reason) {
+        return;
+    }
+
+    va_start(args, reason);
+    t->dead_reason = dynvprintf(reason, args);
+    va_end(args);
 }
 
 static int thing_hit_ (thingp t, 
