@@ -30,7 +30,7 @@
  light_radius=5.0
  is_collision_map_medium
  spawn_on_death="data/things/bonepile2"
- sound_death="female_death"
+ sound_death="player_death"
  is_animated
  tiles={
   tile={

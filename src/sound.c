@@ -273,6 +273,5 @@ void sound_load_all (void)
     sound_load("data/sound/zombie_in_painSoundBible.com_134322253.wav", "urgh2");
     sound_load("data/sound/demon_die.wav", "urgh3");
     sound_load("data/sound/82388__robinhood76__01308_man_hit_9.wav", "player_hit");
-    sound_load("data/sound/173126__replix__death_sound_male.wav", "male_death");
-    sound_load("data/sound/168567__psychentist__ratdeath.wav", "female_death");
+    sound_load("data/sound/45137__dj_chronos__dark_church_bell.wav", "player_death");
 }
