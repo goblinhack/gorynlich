@@ -1449,10 +1449,12 @@ void socket_tx_client_status (gsocketp s)
     memcpy(&msg.stats, &s->stats, sizeof(thing_stats));
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Client: Tx Client Status to %s \"%s\"", 
-        socket_get_remote_logname(s), s->stats.pname);
-    thing_stats_dump(&s->stats);
-// LOG("client, tx version: %d",s->stats.client_version);
+    if (!single_player_mode) {
+        LOG("Client: Tx Client Status ver %d to %s \"%s\"", 
+            s->stats.client_version,
+            socket_get_remote_logname(s), s->stats.pname);
+        thing_stats_dump(&s->stats);
+    }
 
     packet->len = sizeof(msg);
 
@@ -2381,9 +2383,7 @@ void socket_tx_server_status (gsocketp s_in)
                     msg_tx->stats.shield = thing_stats_get_hp(shield_carry_anim);
                 }
 
-LOG("server, tx version: %d",t->stats.client_version);
-thing_stats_dump(&t->stats);
-                if (0) {
+                if (!single_player_mode) {
                     LOG("Server: Tx Server Status to %s", socket_get_remote_logname(s));
                     thing_dump(t);
                 }
