@@ -270,16 +270,16 @@ static void tp_destroy_internal (tpp t)
         myfree(t->explodes_as);
     }
 
-    if (t->sound_create) {
-        myfree(t->sound_create);
+    if (t->sound_on_creation) {
+        myfree(t->sound_on_creation);
     }
 
-    if (t->sound_hitting) {
-        myfree(t->sound_hitting);
+    if (t->sound_on_hitting_something) {
+        myfree(t->sound_on_hitting_something);
     }
 
-    if (t->sound_death) {
-        myfree(t->sound_death);
+    if (t->sound_on_death) {
+        myfree(t->sound_on_death);
     }
 
     if (t->weapon_carry_anim) {
@@ -510,9 +510,9 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_STRING(ctx, "light_tint", t->light_tint);
         GET_OPT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
         GET_OPT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
-        GET_OPT_NAMED_STRING(ctx, "sound_create", t->sound_create);
-        GET_OPT_NAMED_STRING(ctx, "sound_hitting", t->sound_hitting);
-        GET_OPT_NAMED_STRING(ctx, "sound_death", t->sound_death);
+        GET_OPT_NAMED_STRING(ctx, "sound_on_creation", t->sound_on_creation);
+        GET_OPT_NAMED_STRING(ctx, "sound_on_hitting_something", t->sound_on_hitting_something);
+        GET_OPT_NAMED_STRING(ctx, "sound_on_death", t->sound_on_death);
         GET_OPT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
         GET_OPT_NAMED_STRING(ctx, "shield_carry_anim", t->shield_carry_anim);
         GET_OPT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
@@ -796,9 +796,9 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_STRING(ctx, "light_tint", t->light_tint);
     PUT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
     PUT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
-    PUT_NAMED_STRING(ctx, "sound_create", t->sound_create);
-    PUT_NAMED_STRING(ctx, "sound_hitting", t->sound_hitting);
-    PUT_NAMED_STRING(ctx, "sound_death", t->sound_death);
+    PUT_NAMED_STRING(ctx, "sound_on_creation", t->sound_on_creation);
+    PUT_NAMED_STRING(ctx, "sound_on_hitting_something", t->sound_on_hitting_something);
+    PUT_NAMED_STRING(ctx, "sound_on_death", t->sound_on_death);
     PUT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
     PUT_NAMED_STRING(ctx, "shield_carry_anim", t->shield_carry_anim);
     PUT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
@@ -1039,19 +1039,19 @@ const char *tp_explodes_as (tpp t)
     return (t->explodes_as);
 }
 
-const char *tp_sound_create (tpp t)
+const char *tp_sound_on_creation (tpp t)
 {
-    return (t->sound_create);
+    return (t->sound_on_creation);
 }
 
-const char *tp_sound_hitting (tpp t)
+const char *tp_sound_on_hitting_something (tpp t)
 {
-    return (t->sound_hitting);
+    return (t->sound_on_hitting_something);
 }
 
-const char *tp_sound_death (tpp t)
+const char *tp_sound_on_death (tpp t)
 {
-    return (t->sound_death);
+    return (t->sound_on_death);
 }
 
 const char *tp_weapon_carry_anim (tpp t)

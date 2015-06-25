@@ -1764,7 +1764,7 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
             level_set_walls(server_level);
         }
 
-        const char *sound = tp_sound_death(t->tp);
+        const char *sound = tp_sound_on_death(t->tp);
         if (sound) {
             MSG_SERVER_SHOUT_AT_ALL_PLAYERS(SOUND, "%s", sound);
         }
@@ -1843,7 +1843,7 @@ static int thing_hit_ (thingp t,
     /*
      * Clash of swords?
      */
-    const char *sound = tp_sound_hitting(orig_hitter->tp);
+    const char *sound = tp_sound_on_hitting_something(orig_hitter->tp);
     if (sound) {
         if (thing_is_player(real_hitter)) {
             MSG_SERVER_SHOUT_AT_PLAYER(SOUND, real_hitter, "%s", sound);

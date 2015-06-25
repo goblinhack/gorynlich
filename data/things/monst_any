@@ -3,7 +3,7 @@
  raw_name="monst_any"
  tooltip="random monst"
  z_depth="monst"
- sound_death="urgh"
+ sound_on_death="urgh"
  is_monst
  is_internal
  tiles={
