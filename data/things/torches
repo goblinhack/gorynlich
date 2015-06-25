@@ -16,31 +16,31 @@
  d10000_chance_of_appearing=20
  tiles={
   tile={
-   tile="torch3"
+   tile="torches3"
    delay=100
   }
   tile={
-   tile="torch1"
+   tile="torches1"
    delay=100
   }
   tile={
-   tile="torch2"
+   tile="torches2"
    delay=100
   }
   tile={
-   tile="torch4"
+   tile="torches4"
    delay=100
   }
   tile={
-   tile="torch3"
+   tile="torches3"
    delay=100
   }
   tile={
-   tile="torch3"
+   tile="torches3"
    delay=100
   }
   tile={
-   tile="torch4"
+   tile="torches4"
    delay=100
   }
  }
