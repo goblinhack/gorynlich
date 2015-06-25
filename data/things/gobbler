@@ -24,6 +24,7 @@
  weapon_fire_delay_hundredths=200
  min_appear_depth=1
  max_appear_depth=100
+ sound_on_death="squelch"
  is_animated
  tiles={
   tile={

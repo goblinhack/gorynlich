@@ -10,6 +10,7 @@
  is_carryable
  is_given_randomly_at_start
  d10000_chance_of_appearing=200
+ sound_on_death="squelch"
  is_fragile
  bonus_hp_on_use=15
  message_on_use="%%fg=green$crunch"
