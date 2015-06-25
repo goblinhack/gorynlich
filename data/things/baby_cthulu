@@ -8,7 +8,7 @@
  damage=20
  is_effect_rotate_2way
  bonus_xp_on_death=1500
- vision_distance=20
+ vision_distance=15
  hit_delay_tenths=10
  sound_on_death="urgh"
  is_monst

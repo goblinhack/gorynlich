@@ -8,7 +8,7 @@
  damage=4
  polymorph_on_death="data/things/ghost1"
  bonus_xp_on_death=15
- vision_distance=20
+ vision_distance=12
  hit_delay_tenths=5
  sound_on_death="urgh"
  is_monst
