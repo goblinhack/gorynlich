@@ -7,7 +7,7 @@
  max_hp=1
  damage=2
  bonus_xp_on_death=5
- vision_distance=20
+ vision_distance=10
  hit_delay_tenths=5
  sound_on_death="urgh"
  is_monst

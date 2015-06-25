@@ -1,16 +1,11 @@
 --------------------------------------- plan for june --------------------------------------
-- sound effects for weapons and hits http://www.bfxr.net/
-- fireball2/3 sound
-- slime death sound
-- arrow fire sound
-- player death noise needed?
 - make level jig tiles 13x13?
+- web walking boots, lava and acid boots
+- boots of speed?
 --------------------------------------- plan for jul --------------------------------------
 - imp that teleports and steals
 - cheese bomb turns enemies into cheese
 - more slime molds? chocolate / vampiric etc?
-- web walking boots, lava and acid boots
-- boots of speed?
 - ring of fire? ice?
 - sword of life sucking, steals hp and gives to you
 - power attack, diver defense to attack
@@ -48,7 +43,12 @@
 - add bot to test out multiplayer ?
 
 Wed Jun 24 19:20:31 EDT 2015
+- sound effects for weapons and hits http://www.bfxr.net/
 - player death bell
+- fireball2/3 sound
+- slime death sound
+- arrow fire sound
+- player death noise needed?
 
 Tue Jun 23 21:41:03 EDT 2015
 - treasure gobblers bounce around with nowhere to go when no treasure
