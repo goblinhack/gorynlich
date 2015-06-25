@@ -258,7 +258,9 @@ void sound_load_all (void)
     sound_load("data/sound/shotgun_reload_by_ra_the_sun_god.wav", "shotgun_reload");
     sound_load("data/sound/shotgun_by_ra_the_sun_god.wav", "shotgun");
     sound_load("data/sound/swoosh_3_SoundBible.com_1573211927.wav", "swoosh");
-    sound_load("data/sound/flame_Arrow_SoundBible.com_618067908.wav", "fireball");
+    sound_load("data/sound/flame_Arrow_SoundBible.com_618067908.wav", "fireball1");
+    sound_load("data/sound/105016__julien_matthey__jm_fx_fireball_01.wav", "fireball2");
+    sound_load("data/sound/273586__n_audioman__flame06.wav", "fireball3");
     sound_load("data/sound/coin_roll.wav", "payment");
     sound_load("data/sound/treasure.wav", "treasure");
     sound_load("data/sound/Object_Drop_001.wav", "drop");
@@ -275,4 +277,5 @@ void sound_load_all (void)
     sound_load("data/sound/82388__robinhood76__01308_man_hit_9.wav", "player_hit");
     sound_load("data/sound/45137__dj_chronos__dark_church_bell.wav", "player_death");
     sound_load("data/sound/205563__everheat__arrow.wav", "arrow");
+    sound_load("data/sound/49676__ejfortin__energy_short_sword_5.wav", "energy1");
 }
