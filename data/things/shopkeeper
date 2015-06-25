@@ -13,7 +13,7 @@
  vision_distance=30
  hit_delay_tenths=2
  is_shopkeeper
- sound_death="urgh"
+ sound_on_death="urgh"
  is_monst
  is_fires_when_angry
  is_warm_blooded

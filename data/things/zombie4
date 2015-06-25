@@ -9,7 +9,7 @@
  bonus_xp_on_death=35
  vision_distance=20
  hit_delay_tenths=5
- sound_death="urgh"
+ sound_on_death="urgh"
  is_monst
  is_warm_blooded
  is_shadow_caster
@@ -20,7 +20,7 @@
  d10000_chance_of_appearing=100
  min_appear_depth=1
  max_appear_depth=80
- sound_hitting="zombie"
+ sound_on_hitting_something="zombie"
  tiles={
   tile={
    delay=200

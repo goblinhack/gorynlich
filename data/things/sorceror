@@ -7,7 +7,7 @@
  max_hp=20
  max_magic=200
  hit_priority=20
- sound_death="urgh"
+ sound_on_death="urgh"
  is_monst
  is_animate_only_when_moving
  is_warm_blooded
