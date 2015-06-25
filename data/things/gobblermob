@@ -14,6 +14,7 @@
  is_collision_map_medium
  bonus_xp_on_death=200
  d10000_chance_of_appearing=5
+ sound_on_death="squelch"
  max_hp=100
  mob_spawn_delay_tenths=100
  tiles={
