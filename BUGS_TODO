@@ -3,20 +3,20 @@
 - web walking boots, lava and acid boots
 - boots of speed?
 --------------------------------------- plan for jul --------------------------------------
-- imp that teleports and steals
-- cheese bomb turns enemies into cheese
-- more slime molds? chocolate / vampiric etc?
+- ring of reaper resistance
+- ring of resurrection?
 - ring of fire? ice?
+- money/xp doubler ring
+- add dragon on wheels?
+- cheese bomb turns enemies into cheese
+- imp that teleports and steals
+- more slime molds? chocolate / vampiric etc?
 - sword of life sucking, steals hp and gives to you
 - power attack, diver defense to attack
 - possession ghost, cursed weapon, hit self
-- ring of reaper resistance
 - speed potion
-- money/xp doubler ring
-- ring of resurrection?
 - double fire double arrows
 - cheese, lots of
-- magic gives health to other players
 - rolling boulders?
 - pop bouncing "help!" and arrow over player to give them a clue what to do
 - dart and rock traps
@@ -29,7 +29,6 @@
 - minor: lifespan code not used
 - minor: increase move granulariy on server so projectiles line up with player more
 --------------------------------------- plan for sep --------------------------------------
-- add dragon on wheels?
 - giant worm like creature?
 - first baddy, large ghost, drops bone piles
 - bosses drop exit on death
@@ -40,9 +39,14 @@
 - backpack drop on death
 - thief, kill thief to recover items
 --------------------------------------- plan for dec --------------------------------------
+
+multiplayer
+-----------
+- magic gives health to other players
 - add bot to test out multiplayer ?
 
 Wed Jun 24 19:20:31 EDT 2015
+- torches icon
 - sound effects for weapons and hits http://www.bfxr.net/
 - player death bell
 - fireball2/3 sound
