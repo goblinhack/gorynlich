@@ -116,17 +116,17 @@ typedef struct tp_ {
     /*
      * Sound on thing creation
      */
-    char *sound_create;
+    char *sound_on_creation;
 
     /*
      * Sound on hitting a thing
      */
-    char *sound_hitting;
+    char *sound_on_hitting_something;
 
     /*
      * Sound on thing death
      */
-    char *sound_death;
+    char *sound_on_death;
 
     /*
      * How this weapon appears on screen when it is used.
@@ -428,9 +428,9 @@ const char *tp_light_tint(tpp);
 color tp_light_color(tpp);
 const char *tp_spawn_on_death(tpp);
 const char *tp_explodes_as(tpp);
-const char *tp_sound_create(tpp);
-const char *tp_sound_hitting(tpp);
-const char *tp_sound_death(tpp);
+const char *tp_sound_on_creation(tpp);
+const char *tp_sound_on_hitting_something(tpp);
+const char *tp_sound_on_death(tpp);
 const char *tp_weapon_carry_anim(tpp);
 const char *tp_shield_carry_anim(tpp);
 const char *tp_magic_anim(tpp);

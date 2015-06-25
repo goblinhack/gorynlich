@@ -15,7 +15,7 @@
  is_effect_pulse
  is_variable_size
  scale=0.3
- sound_create="energy1"
+ sound_on_creation="energy1"
  is_collision_map_medium
  tiles={
   tile={

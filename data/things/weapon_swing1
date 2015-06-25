@@ -15,8 +15,8 @@
  is_candle_light
  light_tint="white"
  light_radius=1.0
- sound_create="swoosh"
- sound_hitting="sword"
+ sound_on_creation="swoosh"
+ sound_on_hitting_something="sword"
  tiles={
   tile={
    tile="weapon_swing2.1"

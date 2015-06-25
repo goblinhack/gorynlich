@@ -13,7 +13,7 @@
  bonus_xp_on_death=55
  vision_distance=30
  hit_delay_tenths=5
- sound_death="urgh2"
+ sound_on_death="urgh2"
  is_monst
  is_warm_blooded
  is_shadow_caster
