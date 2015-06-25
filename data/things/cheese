@@ -11,6 +11,7 @@
  is_given_randomly_at_start
  d10000_chance_of_appearing=250
  is_fragile
+ sound_on_death="squelch"
  bonus_hp_on_use=40
  message_on_use="%%fg=yellow$more cheese gromit?"
  tiles={
