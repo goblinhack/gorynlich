@@ -10,7 +10,7 @@
  max_hp=1500
  damage=1
  bonus_xp_on_death=5000
- vision_distance=30
+ vision_distance=20
  hit_delay_tenths=2
  is_shopkeeper
  sound_on_death="urgh"
