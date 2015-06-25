@@ -11,7 +11,7 @@
  is_projectile
  is_animated
  is_collision_map_medium
- sound_create="arrow"
+ sound_on_creation="arrow"
  tiles={
   tile={
    is_dir_up

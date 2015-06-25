@@ -15,7 +15,7 @@
  is_effect_pulse
  is_variable_size
  is_collision_map_medium
- sound_create="fireball3"
+ sound_on_creation="fireball3"
  tiles={
   tile={
    tile="fireball3-1"

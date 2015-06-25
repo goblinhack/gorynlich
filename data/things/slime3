@@ -12,7 +12,7 @@
  bonus_xp_on_death=50
  vision_distance=10
  hit_delay_tenths=10
- sound_death="urgh"
+ sound_on_death="urgh"
  is_monst
  is_shadow_caster
  is_shadow_caster_soft
@@ -29,7 +29,7 @@
  max_appear_depth=100
  is_mob_spawner
  mob_spawn_delay_tenths=300
- sound_death="squelch"
+ sound_on_death="squelch"
  tiles={
   tile={ delay=50 tile="slime-3-1-4" }
   tile={ delay=50 tile="slime-3-2-4" }

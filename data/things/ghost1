@@ -9,7 +9,7 @@
  bonus_xp_on_death=5
  vision_distance=20
  hit_delay_tenths=5
- sound_death="urgh"
+ sound_on_death="urgh"
  is_monst
  hit_priority=10
  is_cats_eyes

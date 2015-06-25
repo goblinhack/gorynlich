@@ -1129,7 +1129,7 @@ wid_game_map_client_replace_tile (widp w,
         }
     }
 
-    const char *sound = tp_sound_create(tp);
+    const char *sound = tp_sound_on_creation(tp);
     if (sound) {
         if (thing_is_cloud_effect(t)) {
             if (t->is_epicenter) {
