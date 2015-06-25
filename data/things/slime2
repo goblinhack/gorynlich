@@ -26,6 +26,7 @@
  max_appear_depth=100
  is_mob_spawner
  mob_spawn_delay_tenths=300
+ sound_death="squelch"
  tiles={
   tile={ delay=75 tile="slime-2-1-4" }
   tile={ delay=75 tile="slime-2-2-4" }
