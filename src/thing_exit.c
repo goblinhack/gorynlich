@@ -47,10 +47,24 @@ void thing_reached_exit (thingp t, thingp exit)
                   global_config.server_level_pos.y,
                   global_config.server_level_pos.x);
     } else {
-        global_config.server_level_pos.x++;
+        /*
+         * Jump a few levels at at time.
+         */
+        global_config.server_level_pos.x += myrand() % 3;
+
         if (global_config.server_level_pos.x >= LEVELS_ACROSS) {
-            global_config.server_level_pos.x = (myrand() % 10) + 1;
-            global_config.server_level_pos.y++;
+            if (global_config.server_level_pos.y == LEVELS_DOWN) {
+                /*
+                 * Game end level
+                 */
+                global_config.server_level_pos.x = LEVELS_ACROSS;
+            } else {
+                /*
+                 * Next block of levels.
+                 */
+                global_config.server_level_pos.x = 1;
+                global_config.server_level_pos.y++;
+            }
         }
 
         THING_LOG(t, "exit to next consecutive level %d.%d",
