@@ -260,7 +260,7 @@ void sound_load_all (void)
     sound_load("data/sound/swoosh_3_SoundBible.com_1573211927.wav", "swoosh");
     sound_load("data/sound/flame_Arrow_SoundBible.com_618067908.wav", "fireball1");
     sound_load("data/sound/105016__julien_matthey__jm_fx_fireball_01.wav", "fireball2");
-    sound_load("data/sound/273586__n_audioman__flame06.wav", "fireball3");
+    sound_load("data/sound/39016__wildweasel__dsfirxpl.wav", "fireball3");
     sound_load("data/sound/coin_roll.wav", "payment");
     sound_load("data/sound/treasure.wav", "treasure");
     sound_load("data/sound/Object_Drop_001.wav", "drop");
@@ -278,4 +278,5 @@ void sound_load_all (void)
     sound_load("data/sound/45137__dj_chronos__dark_church_bell.wav", "player_death");
     sound_load("data/sound/205563__everheat__arrow.wav", "arrow");
     sound_load("data/sound/49676__ejfortin__energy_short_sword_5.wav", "energy1");
+    sound_load("data/sound/148975__adam_n__squelch_1.wav", "squelch");
 }
