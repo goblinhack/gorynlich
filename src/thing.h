@@ -525,6 +525,18 @@ enum {
     THING_PLASMABALL1,
     THING_SILKBALL,
     THING_COBWEB,
+    THING_BOOTS1,
+    THING_BOOTS2,
+    THING_BOOTS3,
+    THING_BOOTS4,
+    THING_ARMOUR1,
+    THING_ARMOUR2,
+    THING_ARMOUR3,
+    THING_ARMOUR4,
+    THING_HELMET1,
+    THING_HELMET2,
+    THING_HELMET3,
+    THING_HELMET4,
 };
 
 typedef struct thing_ {
@@ -1676,11 +1688,11 @@ static inline uint8_t thing_is_helmet (thingp t)
     return (tp_is_helmet(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_armor (thingp t)
+static inline uint8_t thing_is_armour (thingp t)
 {
     verify(t);
 
-    return (tp_is_armor(thing_tp(t)));
+    return (tp_is_armour(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_given_randomly_at_start (thingp t)
@@ -2358,9 +2370,9 @@ static inline uint8_t thing_is_helmet_noverify (thingp t)
     return (t->tp->is_helmet);
 }
 
-static inline uint8_t thing_is_armor_noverify (thingp t)
+static inline uint8_t thing_is_armour_noverify (thingp t)
 {
-    return (t->tp->is_armor);
+    return (t->tp->is_armour);
 }
 
 static inline uint8_t thing_is_given_randomly_at_start_noverify (thingp t)
