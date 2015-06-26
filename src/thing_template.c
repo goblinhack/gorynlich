@@ -719,7 +719,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_hand_item", t->is_hand_item);
         GET_OPT_NAMED_BITFIELD(ctx, "is_boots", t->is_boots);
         GET_OPT_NAMED_BITFIELD(ctx, "is_helmet", t->is_helmet);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_armor", t->is_armor);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_armour", t->is_armour);
         GET_OPT_NAMED_BITFIELD(ctx, "is_given_randomly_at_start", t->is_given_randomly_at_start);
         GET_OPT_NAMED_BITFIELD(ctx, "is_magical", t->is_magical);
         GET_OPT_NAMED_BITFIELD(ctx, "is_degradable", t->is_degradable);
@@ -956,7 +956,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_hand_item", t->is_hand_item);
     PUT_NAMED_BITFIELD(ctx, "is_boots", t->is_boots);
     PUT_NAMED_BITFIELD(ctx, "is_helmet", t->is_helmet);
-    PUT_NAMED_BITFIELD(ctx, "is_armor", t->is_armor);
+    PUT_NAMED_BITFIELD(ctx, "is_armour", t->is_armour);
     PUT_NAMED_BITFIELD(ctx, "is_given_randomly_at_start", t->is_given_randomly_at_start);
     PUT_NAMED_BITFIELD(ctx, "is_magical", t->is_magical);
     PUT_NAMED_BITFIELD(ctx, "is_degradable", t->is_degradable);

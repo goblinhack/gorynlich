@@ -1,7 +1,7 @@
 {
- short_name="ring"
- raw_name="ring1"
- tooltip="generic magical ring tm"
+ short_name="acid boots"
+ raw_name="boots2"
+ tooltip="acid boots"
  z_depth="monst"
  cost=1000
  is_treasure
@@ -9,13 +9,13 @@
  hit_priority=1
  is_carryable
  is_given_randomly_at_start
- is_ring
+ is_boots
  can_be_enchanted
- d10000_chance_of_appearing=10
+ d10000_chance_of_appearing=5
  is_hand_item
  tiles={
   tile={
-   tile="ring1"
+   tile="boots2"
   }
  }
 }
