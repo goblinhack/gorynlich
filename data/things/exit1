@@ -8,49 +8,50 @@
  light_radius=1.0
  is_animated
  d10000_chance_of_appearing=10000
+ is_effect_fade_in_out
  tiles={
   tile={
-   tile="tunnel1.1"
+   tile="exit1.1"
    delay=5
   }
   tile={
-   tile="tunnel1.2"
+   tile="exit1.2"
    delay=5
   }
   tile={
-   tile="tunnel1.1"
+   tile="exit1.1"
    delay=5
   }
   tile={
-   tile="tunnel1.3"
+   tile="exit1.3"
    delay=5
   }
   tile={
-   tile="tunnel1.1"
+   tile="exit1.1"
    delay=5
   }
   tile={
-   tile="tunnel1.1"
+   tile="exit1.1"
    delay=5
   }
   tile={
-   tile="tunnel1.4"
+   tile="exit1.4"
    delay=5
   }
   tile={
-   tile="tunnel1.1"
+   tile="exit1.1"
    delay=5
   }
   tile={
-   tile="tunnel1.5"
+   tile="exit1.5"
    delay=5
   }
   tile={
-   tile="tunnel1.6"
+   tile="exit1.6"
    delay=5
   }
   tile={
-   tile="tunnel1.1"
+   tile="exit1.1"
    delay=5
   }
  }
