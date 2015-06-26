@@ -125,7 +125,7 @@ void thing_stats_dump (const thing_statsp s)
             char *ib = item2str(b);
 
             LOG("    %-10s: %-30s %-10s: %-30s", 
-                "armor", ia ? ia : "-", 
+                "armour", ia ? ia : "-", 
                 "helmet", ib ? ib : "-");
 
             if (ia) {
@@ -986,7 +986,7 @@ int thing_stats_item_add (thingp t,
     /*
      * Can it be worn?
      */
-    if (tp_is_armor(it)) {
+    if (tp_is_armour(it)) {
         oitem = &player_stats->worn[THING_WORN_ARMOR];
         if (item_push(oitem, item)) {
             return (true);

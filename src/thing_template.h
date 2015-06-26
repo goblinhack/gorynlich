@@ -354,7 +354,7 @@ typedef struct tp_ {
     uint8_t is_hand_item:1;
     uint8_t is_boots:1;
     uint8_t is_helmet:1;
-    uint8_t is_armor:1;
+    uint8_t is_armour:1;
     uint8_t is_given_randomly_at_start:1;
     uint8_t is_magical:1;
     uint8_t is_degradable:1;
@@ -1027,9 +1027,9 @@ static inline uint8_t tp_is_helmet (tpp t)
     return (t->is_helmet);
 }
 
-static inline uint8_t tp_is_armor (tpp t)
+static inline uint8_t tp_is_armour (tpp t)
 {
-    return (t->is_armor);
+    return (t->is_armour);
 }
 
 static inline uint8_t tp_is_given_randomly_at_start (tpp t)
