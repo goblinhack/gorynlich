@@ -1806,16 +1806,16 @@ static void maze_add_decorations (void)
 
     for (x = 0; x < MAP_WIDTH; x++) {
         map_jigsaw_buffer_goto(x, 0);
-        map_jigsaw_buffer_putchar(MAP_CONCRETE);
+        map_jigsaw_buffer_putchar(MAP_ROCK);
         map_jigsaw_buffer_goto(x, MAP_HEIGHT - 1);
-        map_jigsaw_buffer_putchar(MAP_CONCRETE);
+        map_jigsaw_buffer_putchar(MAP_ROCK);
     }
 
     for (y = 0; y < MAP_HEIGHT; y++) {
         map_jigsaw_buffer_goto(0, y);
-        map_jigsaw_buffer_putchar(MAP_CONCRETE);
+        map_jigsaw_buffer_putchar(MAP_ROCK);
         map_jigsaw_buffer_goto(MAP_WIDTH - 1, y);
-        map_jigsaw_buffer_putchar(MAP_CONCRETE);
+        map_jigsaw_buffer_putchar(MAP_ROCK);
     }
 
     LOG("Maze: Added borders:");
@@ -2741,7 +2741,6 @@ static void init (void)
     map_fg[MAP_SHOP_FLOOR]     = TERM_COLOR_GREEN;
     map_fg[MAP_ROCK]           = TERM_COLOR_BLUE;
     map_fg[MAP_WALL]           = TERM_COLOR_WHITE;
-    map_fg[MAP_CONCRETE]       = TERM_COLOR_WHITE;
     map_fg[MAP_CORRIDOR]       = TERM_COLOR_YELLOW;
     map_fg[MAP_CORRIDOR_WALL]  = TERM_COLOR_BLUE;
     map_fg[MAP_MONST]          = TERM_COLOR_BLUE;
@@ -2773,7 +2772,6 @@ static void init (void)
     map_bg[MAP_SHOP_FLOOR]     = TERM_COLOR_BLACK;
     map_bg[MAP_ROCK]           = TERM_COLOR_BLACK;
     map_bg[MAP_WALL]           = TERM_COLOR_BLUE;
-    map_bg[MAP_CONCRETE]       = TERM_COLOR_RED;
     map_bg[MAP_CORRIDOR]       = TERM_COLOR_BLACK;
     map_bg[MAP_CORRIDOR_WALL]  = TERM_COLOR_BLACK;
     map_bg[MAP_MONST]          = TERM_COLOR_BLACK;
@@ -2803,7 +2801,6 @@ static void init (void)
     valid_frag_char[MAP_SHOP_FLOOR]     = true;
     valid_frag_char[MAP_ROCK]           = true;
     valid_frag_char[MAP_WALL]           = true;
-    valid_frag_char[MAP_CONCRETE]       = true;
     valid_frag_char[MAP_CORRIDOR]       = true;
     valid_frag_char[MAP_CORRIDOR_WALL]  = false;
     valid_frag_char[MAP_MONST]          = true;
@@ -2834,7 +2831,6 @@ static void init (void)
     valid_frag_alt_char[MAP_SHOP_FLOOR]     = true;
     valid_frag_alt_char[MAP_ROCK]           = true;
     valid_frag_alt_char[MAP_WALL]           = true;
-    valid_frag_alt_char[MAP_CONCRETE]       = true;
     valid_frag_alt_char[MAP_CORRIDOR]       = true;
     valid_frag_alt_char[MAP_CORRIDOR_WALL]  = true;
     valid_frag_alt_char[MAP_MONST]          = true;
