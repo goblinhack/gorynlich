@@ -2036,6 +2036,39 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     }
 
     /*
+     * Check for various invulnerabilities
+     */
+    if (hitter) {
+        tpp boots = thing_boots(t);
+        if (boots) {
+            if (thing_is_lava(hitter)) {
+                if (tp_is_lava_proof(boots)) {
+                    THING_LOG(t, "no damage from acid, acid proof boots");
+                    return (false);
+                }
+            }
+
+            if (thing_is_acid(hitter)) {
+                if (tp_is_acid_proof(boots)) {
+                    THING_LOG(t, "no damage from acid, acid proof boots");
+                    return (false);
+                }
+            }
+
+            /*
+             * TBD
+             *
+            if (thing_is_water(hitter)) {
+                if (tp_is_water_proof(boots)) {
+                    THING_LOG(t, "no damage from water, water proof boots");
+                    return (false);
+                }
+            }
+             */
+        }
+    }
+
+    /*
      * If the player has a shield, let the shield take the hit.
      */
     if (t->shield) {
