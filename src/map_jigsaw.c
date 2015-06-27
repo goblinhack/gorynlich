@@ -2971,7 +2971,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 
                 if ((c == ',') || corridor_floor) {
                     if (!floor2) {
-                        floor2 = random_floor();
+                        floor2 = random_corridor();
                     }
 
                     tp = floor2;
@@ -2992,7 +2992,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 
             case '+': 
                 if (!wall2) {
-                    wall2 = random_wall();
+                    wall2 = random_corridor_wall();
                 }
                 tp = wall2;
                 break;

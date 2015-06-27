@@ -72,35 +72,6 @@ uint8_t thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
 uint8_t thing_hit_any_obstacle(widp grid, thingp t, double nx, double ny);
 uint8_t thing_server_hit_solid_obstacle(widp grid, 
                                         thingp t, double nx, double ny);
-void thing_inc_powerup_spam_count(thingp t, uint8_t val);
-void thing_dec_powerup_spam_count(thingp t, uint8_t val);
-uint8_t thing_has_powerup_spam_count(thingp t);
-void thing_inc_powerup2_count(thingp t, uint8_t val);
-void thing_dec_powerup2_count(thingp t, uint8_t val);
-uint8_t thing_has_powerup2_count(thingp t);
-void thing_inc_powerup3_count(thingp t, uint8_t val);
-void thing_dec_powerup3_count(thingp t, uint8_t val);
-uint8_t thing_has_powerup3_count(thingp t);
-void thing_inc_powerup4_count(thingp t, uint8_t val);
-void thing_dec_powerup4_count(thingp t, uint8_t val);
-uint8_t thing_has_powerup4_count(thingp t);
-void thing_inc_powerup5_count(thingp t, uint8_t val);
-void thing_dec_powerup5_count(thingp t, uint8_t val);
-uint8_t thing_has_powerup5_count(thingp t);
-void thing_inc_powerup6_count(thingp t, uint8_t val);
-void thing_dec_powerup6_count(thingp t, uint8_t val);
-uint8_t thing_has_powerup6_count(thingp t);
-void thing_inc_powerup7_count(thingp t, uint8_t val);
-void thing_dec_powerup7_count(thingp t, uint8_t val);
-uint8_t thing_has_powerup7_count(thingp t);
-void thing_inc_powerup8_count(thingp t, uint8_t val);
-void thing_dec_powerup8_count(thingp t, uint8_t val);
-uint8_t thing_has_powerup8_count(thingp t);
-void thing_inc_powerup_rocket_count(thingp t, uint8_t val);
-void thing_dec_powerup_rocket_count(thingp t, uint8_t val);
-uint8_t thing_has_powerup_rocket_count(thingp t);
-void thing_set_is_qqq1(thingp t, uint8_t val);
-uint8_t thing_is_qqq1(thingp t);
 void thing_set_is_light_source(thingp t, uint8_t val);
 uint8_t thing_is_light_source(thingp t);
 void thing_set_is_candle_light(thingp t, uint8_t val);
@@ -323,6 +294,7 @@ enum {
     THING_WALL1,
     THING_WALL_LIT1,
     THING_ROCK1,
+    THING_CORRIDOR_WALL1,
     THING_WALL2,
     THING_WALL3,
     THING_WALL4,
@@ -346,6 +318,7 @@ enum {
     THING_CHEESE,
     THING_BREAD,
     THING_SHOP_FLOOR1,
+    THING_CORRIDOR1,
     THING_FLOOR1,
     THING_FLOOR2,
     THING_FLOOR3,
@@ -1283,18 +1256,18 @@ static inline uint8_t thing_is_rrr17 (thingp t)
     return (tp_is_rrr17(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr18 (thingp t)
+static inline uint8_t thing_is_corridor_wall (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr18(thing_tp(t)));
+    return (tp_is_corridor_wall(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr19 (thingp t)
+static inline uint8_t thing_is_corridor (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr19(thing_tp(t)));
+    return (tp_is_corridor(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_water_proof (thingp t)
@@ -2096,14 +2069,14 @@ static inline uint8_t thing_is_rrr17_noverify (thingp t)
     return (t->tp->is_rrr17);
 }
 
-static inline uint8_t thing_is_rrr18_noverify (thingp t)
+static inline uint8_t thing_is_corridor_wall_noverify (thingp t)
 {
-    return (t->tp->is_rrr18);
+    return (t->tp->is_corridor_wall);
 }
 
-static inline uint8_t thing_is_rrr19_noverify (thingp t)
+static inline uint8_t thing_is_corridor_noverify (thingp t)
 {
-    return (t->tp->is_rrr19);
+    return (t->tp->is_corridor);
 }
 
 static inline uint8_t thing_is_water_proof_noverify (thingp t)

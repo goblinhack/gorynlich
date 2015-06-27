@@ -28,6 +28,10 @@ tpp random_wall (void)
             continue;
         }
 
+        if (tp_is_corridor_wall(tp)) {
+            continue;
+        }
+
         if (tp_is_wall(tp)) {
             /*
              * Exclude lit walls as we run out of light sources
@@ -36,6 +40,31 @@ tpp random_wall (void)
                 continue;
             }
 
+            return (tp);
+        }
+    }
+}
+
+tpp random_corridor_wall (void)
+{
+    int loop = 0;
+
+    for (;;) {
+
+        if (loop++ > 100000) {
+            ERR("couldn't find random wall");
+            return (0);
+        }
+
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+
+        if (tp_is_internal(tp)) {
+            continue;
+        }
+
+        if (tp_is_corridor_wall(tp)) {
             return (tp);
         }
     }
@@ -89,7 +118,40 @@ tpp random_floor (void)
             continue;
         }
 
+        if (tp_is_corridor(tp)) {
+            continue;
+        }
+
         if (tp_is_floor(tp)) {
+            return (tp);
+        }
+    }
+}
+
+tpp random_corridor (void)
+{
+    int loop = 0;
+
+    for (;;) {
+
+        if (loop++ > 100000) {
+            ERR("couldn't find random floor");
+            return (0);
+        }
+
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+
+        if (tp_is_internal(tp)) {
+            continue;
+        }
+
+        if (tp_is_shop_floor(tp)) {
+            continue;
+        }
+
+        if (tp_is_corridor(tp)) {
             return (tp);
         }
     }
