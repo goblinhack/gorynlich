@@ -298,8 +298,8 @@ typedef struct tp_ {
     uint8_t is_rrr15:1;
     uint8_t is_rrr16:1;
     uint8_t is_rrr17:1;
-    uint8_t is_rrr18:1;
-    uint8_t is_rrr19:1;
+    uint8_t is_corridor_wall:1;
+    uint8_t is_corridor:1;
     uint8_t is_water_proof:1;
     uint8_t is_lava_proof:1;
     uint8_t is_spider_proof:1;
@@ -747,14 +747,14 @@ static inline uint8_t tp_is_rrr17 (tpp t)
     return (t->is_rrr17);
 }
 
-static inline uint8_t tp_is_rrr18 (tpp t)
+static inline uint8_t tp_is_corridor_wall (tpp t)
 {
-    return (t->is_rrr18);
+    return (t->is_corridor_wall);
 }
 
-static inline uint8_t tp_is_rrr19 (tpp t)
+static inline uint8_t tp_is_corridor (tpp t)
 {
-    return (t->is_rrr19);
+    return (t->is_corridor);
 }
 
 static inline uint8_t tp_is_water_proof (tpp t)
@@ -1153,8 +1153,10 @@ static inline uint8_t tp_is_effect_rotate_2way (tpp t)
 }
 
 tpp random_wall(void);
+tpp random_corridor_wall(void);
 tpp random_door(void);
 tpp random_floor(void);
+tpp random_corridor(void);
 tpp random_player(void);
 tpp random_exit(void);
 tpp random_food(void);

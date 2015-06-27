@@ -662,8 +662,8 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_corridor_wall", t->is_corridor_wall);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_corridor", t->is_corridor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_water_proof", t->is_water_proof);
         GET_OPT_NAMED_BITFIELD(ctx, "is_lava_proof", t->is_lava_proof);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spider_proof", t->is_spider_proof);
@@ -901,8 +901,8 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
     PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
     PUT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
+    PUT_NAMED_BITFIELD(ctx, "is_corridor_wall", t->is_corridor_wall);
+    PUT_NAMED_BITFIELD(ctx, "is_corridor", t->is_corridor);
     PUT_NAMED_BITFIELD(ctx, "is_water_proof", t->is_water_proof);
     PUT_NAMED_BITFIELD(ctx, "is_lava_proof", t->is_lava_proof);
     PUT_NAMED_BITFIELD(ctx, "is_spider_proof", t->is_spider_proof);
