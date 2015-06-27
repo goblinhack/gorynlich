@@ -27,6 +27,26 @@ int32_t thing_stats_get_total_damage_minus_defense (thingp t,
     double d = damage;
     double modifier = thing_stats_val_to_modifier(thing_stats_get_defense(t));
 
+    tpp helmet = thing_helmet(t);
+    if (helmet) {
+        modifier += tp_get_stats_defense(helmet);
+    }
+
+    tpp armour = thing_armour(t);
+    if (armour) {
+        modifier += tp_get_stats_defense(armour);
+    }
+
+    tpp left_arm = thing_arm_left(t);
+    if (left_arm) {
+        modifier += tp_get_stats_defense(left_arm);
+    }
+
+    tpp right_arm = thing_arm_right(t);
+    if (right_arm) {
+        modifier += tp_get_stats_defense(right_arm);
+    }
+
     if (modifier < 0) {
         d *= -(modifier - 1.0);
     } else if (modifier == 0) {
