@@ -20,10 +20,11 @@
 #include <time.h>
 #include <unistd.h>
 
-#define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        100
+#define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        20
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 100000
 #define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           50
 #define MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS   10
+#define MAX_MAP_NUMBER_OF_TIMES_TO_TRY_AND_PLACE_FRAG 200
 
 #undef MAZE_DEBUG_PRINT_EXITS
 #undef MAZE_DEBUG_SHOW_AS_GENERATING
@@ -400,7 +401,7 @@ static void map_jigsaw_buffer_print (void)
                 c = ' ';
             }
 
-            if (c == MAP_FLOOR) {
+            if ((c == MAP_FLOOR) | (c == MAP_CORRIDOR)) {
                 if (map_jigsaw_buffer_solved[x][y]) {
                     c = '*';
                 }
@@ -719,6 +720,7 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
 static int32_t jigpiece_char_is_occupiable (char c)
 {
     return (c == MAP_FLOOR) ||
+           (c == MAP_CORRIDOR) ||
            (c == MAP_MONST) ||
            (c == MAP_MOB_SPAWN) ||
            (c == MAP_TREASURE);
@@ -727,23 +729,17 @@ static int32_t jigpiece_char_is_occupiable (char c)
 static int32_t jigpiece_char_is_passable (char c)
 {
     return (c == MAP_FLOOR) ||
+           (c == MAP_CORRIDOR) ||
            (c == MAP_MONST) ||
            (c == MAP_START) ||
            (c == MAP_END) ||
            (c == MAP_MOB_SPAWN) ||
            (c == MAP_DOOR) ||
            (c == MAP_WEAPON) ||
+           (c == MAP_GENERATOR) ||
+           (c == MAP_BRAZIER) ||
            (c == MAP_POTION) ||
            (c == MAP_TREASURE);
-}
-
-/*
- * jigpiece_char_is_ground
- */
-static int32_t jigpiece_char_is_ground (char c)
-{
-    return ((c == MAP_WALL) ||
-            (c == MAP_CORRIDOR_WALL));
 }
 
 /*
@@ -1229,7 +1225,7 @@ static void jigpiece_add_frag (dungeon_t *dg)
                  * Try and place the frag.
                  */
                 tries = 0;
-                while (tries++ < MAP_WIDTH * MAP_HEIGHT) {
+                while (tries++ < MAX_MAP_NUMBER_OF_TIMES_TO_TRY_AND_PLACE_FRAG) {
 
                     ax = myrand() % (MAP_WIDTH + JIGPIECE_WIDTH);
                     ay = myrand() % (MAP_HEIGHT + JIGPIECE_HEIGHT);
@@ -1875,7 +1871,7 @@ static void maze_add_decorations (void)
      */
     {
         int thick;
-        int depth = myrand() % 3;
+        int depth = myrand() % 2;
 
         for (thick = 0; thick < depth; thick++) {
             memcpy(map_jigsaw_buffer_old,
@@ -1911,7 +1907,7 @@ static void maze_add_decorations (void)
      */
     {
         int count;
-        int depth = myrand() % 3;
+        int depth = myrand() % 2;
 
         for (count = 0; count < MAP_WIDTH * MAP_HEIGHT * depth; count++) {
             x = myrand() % MAP_WIDTH;
@@ -2059,7 +2055,10 @@ maze_replace_room_char (char new_char)
         uint32_t cy = myrand() % MAP_HEIGHT;
         
         if (jigpiece_char_is_floor_or_corridor(map_jigsaw_buffer_getchar(cx, cy)) &&
-            jigpiece_char_is_ground((map_jigsaw_buffer_getchar(cx, cy+1))) &&
+            jigpiece_char_is_floor_or_corridor(map_jigsaw_buffer_getchar(cx - 1, cy)) &&
+            jigpiece_char_is_floor_or_corridor(map_jigsaw_buffer_getchar(cx, cy - 1)) &&
+            jigpiece_char_is_floor_or_corridor(map_jigsaw_buffer_getchar(cx + 1, cy)) &&
+            jigpiece_char_is_floor_or_corridor(map_jigsaw_buffer_getchar(cx, cy + 1)) &&
             !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx-1, cy))) &&
             !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx-2, cy))) &&
             !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx+1, cy))) &&
@@ -2225,7 +2224,6 @@ static uint8_t maze_jigsaw_generate_all_possible_pieces (dungeon_t *dg)
             if (!mcell->possible_jigpieces_size) {
                 printf("cell %d %d\n",x,y);
                 maze_print_cells(dg);
-                exit(0);
 
                 return (false);
             }
@@ -2739,7 +2737,6 @@ static void init (void)
     map_fg[MAP_SPACE]          = TERM_COLOR_WHITE;
     map_fg[MAP_WATER]          = TERM_COLOR_BLACK;
     map_fg[MAP_FLOOR]          = TERM_COLOR_WHITE;
-    map_fg[MAP_DUSTY_FLOOR]    = TERM_COLOR_GREEN;
     map_fg[MAP_SHOPKEEPER]     = TERM_COLOR_RED;
     map_fg[MAP_SHOP_FLOOR]     = TERM_COLOR_GREEN;
     map_fg[MAP_ROCK]           = TERM_COLOR_BLUE;
@@ -2753,7 +2750,7 @@ static void init (void)
     map_fg[MAP_TELEPORT]       = TERM_COLOR_BLUE;
     map_fg[MAP_TREASURE]       = TERM_COLOR_WHITE;
     map_fg[MAP_FOOD]           = TERM_COLOR_GREEN;
-    map_fg[MAP_LAVA]           = TERM_COLOR_YELLOW;
+    map_fg[MAP_LAVA]           = TERM_COLOR_RED;
     map_fg[MAP_ACID]           = TERM_COLOR_GREEN;
     map_fg[MAP_EXIT_WEST]      = TERM_COLOR_BLUE;
     map_fg[MAP_EXIT_EAST]      = TERM_COLOR_BLUE;
@@ -2764,13 +2761,14 @@ static void init (void)
     map_fg[MAP_PADDING]        = TERM_COLOR_WHITE;
     map_fg[MAP_DOOR]           = TERM_COLOR_CYAN;
     map_fg[MAP_WEAPON]         = TERM_COLOR_RED;
+    map_fg[MAP_GENERATOR]      = TERM_COLOR_RED;
+    map_fg[MAP_BRAZIER]        = TERM_COLOR_YELLOW;
     map_fg[MAP_POTION]         = TERM_COLOR_RED;
 
     map_bg[MAP_EMPTY]          = TERM_COLOR_BLACK;
     map_bg[MAP_SPACE]          = TERM_COLOR_BLACK;
     map_bg[MAP_WATER]          = TERM_COLOR_CYAN;
     map_bg[MAP_FLOOR]          = TERM_COLOR_BLACK;
-    map_bg[MAP_DUSTY_FLOOR]    = TERM_COLOR_BLACK;
     map_bg[MAP_SHOPKEEPER]     = TERM_COLOR_BLACK;
     map_bg[MAP_SHOP_FLOOR]     = TERM_COLOR_BLACK;
     map_bg[MAP_ROCK]           = TERM_COLOR_BLACK;
@@ -2784,8 +2782,8 @@ static void init (void)
     map_bg[MAP_TELEPORT]       = TERM_COLOR_BLACK;
     map_bg[MAP_TREASURE]       = TERM_COLOR_YELLOW;
     map_bg[MAP_FOOD]           = TERM_COLOR_BLACK;
-    map_bg[MAP_LAVA]           = TERM_COLOR_BLUE;
-    map_bg[MAP_ACID]           = TERM_COLOR_BLUE;
+    map_bg[MAP_LAVA]           = TERM_COLOR_BLACK;
+    map_bg[MAP_ACID]           = TERM_COLOR_BLACK;
     map_bg[MAP_EXIT_WEST]      = TERM_COLOR_BLACK;
     map_bg[MAP_EXIT_EAST]      = TERM_COLOR_BLACK;
     map_bg[MAP_EXIT_SOUTH]     = TERM_COLOR_BLACK;
@@ -2794,14 +2792,13 @@ static void init (void)
     map_bg[MAP_START]          = TERM_COLOR_BLACK;
     map_bg[MAP_PADDING]        = TERM_COLOR_BLACK;
     map_bg[MAP_DOOR]           = TERM_COLOR_CYAN;
-    map_fg[MAP_WEAPON]         = TERM_COLOR_CYAN;
+    map_fg[MAP_BRAZIER]        = TERM_COLOR_YELLOW;
     map_fg[MAP_POTION]         = TERM_COLOR_CYAN;
 
     valid_frag_char[MAP_EMPTY]          = true;
     valid_frag_char[MAP_SPACE]          = true;
     valid_frag_char[MAP_WATER]          = true;
     valid_frag_char[MAP_FLOOR]          = true;
-    valid_frag_char[MAP_DUSTY_FLOOR]    = true;
     valid_frag_char[MAP_SHOPKEEPER]     = true;
     valid_frag_char[MAP_SHOP_FLOOR]     = true;
     valid_frag_char[MAP_ROCK]           = true;
@@ -2826,12 +2823,13 @@ static void init (void)
     valid_frag_char[MAP_DOOR]           = true;
     valid_frag_char[MAP_POTION]         = true;
     valid_frag_char[MAP_WEAPON]         = true;
+    valid_frag_char[MAP_GENERATOR]      = true;
+    valid_frag_char[MAP_BRAZIER]        = true;
 
     valid_frag_alt_char[MAP_EMPTY]          = true;
     valid_frag_alt_char[MAP_SPACE]          = false;
     valid_frag_alt_char[MAP_WATER]          = true;
     valid_frag_alt_char[MAP_FLOOR]          = true;
-    valid_frag_alt_char[MAP_DUSTY_FLOOR]    = true;
     valid_frag_alt_char[MAP_SHOPKEEPER]     = true;
     valid_frag_alt_char[MAP_SHOP_FLOOR]     = true;
     valid_frag_alt_char[MAP_ROCK]           = true;
@@ -2857,6 +2855,8 @@ static void init (void)
     valid_frag_alt_char[MAP_DOOR]           = true;
     valid_frag_alt_char[MAP_POTION]         = true;
     valid_frag_alt_char[MAP_WEAPON]         = true;
+    valid_frag_alt_char[MAP_GENERATOR]      = true;
+    valid_frag_alt_char[MAP_BRAZIER]        = true;
 }
 
 /*
@@ -2890,7 +2890,6 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
         ERR("failed to generate a maze!");
     }
 
-    exit(0);
     return (rc);
 }
 
@@ -2925,10 +2924,12 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
     int32_t z;
 
     tpp wall = 0;
+    tpp wall2 = 0;
     tpp door = 0;
     tpp floor = 0;
+    tpp floor2 = 0;
     tpp rock = 0;
-
+    tpp gen = 0;
 
     for (y = 0; y < MAP_HEIGHT; y++) {
         for (x = 0; x < MAP_WIDTH; x++) {
@@ -2948,6 +2949,15 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 shop_floor |= (map_jigsaw_buffer[x][y+1] == '_') ? 1 : 0;
             }
 
+            int corridor_floor = false;
+            if ((x > 0) && (x < MAP_WIDTH - 1) && (y > 0) && (y < MAP_HEIGHT - 1)) {
+                corridor_floor  = (map_jigsaw_buffer[x][y] == ',') ? 1 : 0;
+                corridor_floor |= (map_jigsaw_buffer[x-1][y] == ',') ? 1 : 0;
+                corridor_floor |= (map_jigsaw_buffer[x+1][y] == ',') ? 1 : 0;
+                corridor_floor |= (map_jigsaw_buffer[x][y-1] == ',') ? 1 : 0;
+                corridor_floor |= (map_jigsaw_buffer[x][y+1] == ',') ? 1 : 0;
+            }
+
             if (c != ' ') {
                 if (!floor) {
                     floor = random_floor();
@@ -2957,6 +2967,14 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 
                 if (shop_floor) {
                     tp = tp_find("data/things/shop_floor1");
+                }
+
+                if ((c == ',') || corridor_floor) {
+                    if (!floor2) {
+                        floor2 = random_floor();
+                    }
+
+                    tp = floor2;
                 }
 
                 map_tp[x][y][tp_get_z_depth(tp)] = tp;
@@ -2970,6 +2988,13 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                     wall = random_wall();
                 }
                 tp = wall;
+                break;
+
+            case '+': 
+                if (!wall2) {
+                    wall2 = random_wall();
+                }
+                tp = wall2;
                 break;
 
             case 'D': 
@@ -3001,6 +3026,13 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
             case 'S': tp = random_player(); break;
             case 'E': tp = random_exit(); break;
             case 'f': tp = random_food(); break;
+            case 'G': 
+                    if (!gen) {
+                        gen = random_mob(depth); 
+                    }
+                    tp = gen;
+                    break;
+
             case 'M': 
                 if ((myrand() % 100) < 20) {
                     /*
@@ -3016,6 +3048,8 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
             case 'w': tp = random_weapon(shop_floor); break;
             case 'p': tp = random_potion(shop_floor); break;
             case 'm': tp = random_monst(depth); break;
+            case 'b': tp = tp_find("data/things/brazier"); break;
+
             case '$': {
                 int r = myrand() % 100;
 

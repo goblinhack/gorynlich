@@ -17,6 +17,20 @@
  */
 
 /*
+ * How many jigsaw pieces across and down make up the map. We substract
+ * one so we can have a small border and center the tiles.
+ */
+#define MAP_JIGSAW_PIECES_ACROSS    ((MAP_WIDTH / JIGPIECE_WIDTH))
+#define MAP_JIGSAW_PIECES_DOWN      ((MAP_WIDTH / JIGPIECE_WIDTH))
+
+/*
+ * The map is made up of jigsaw pieces that are joined togethere. This is the 
+ * size of one piece in tiles.
+ */
+#define JIGPIECE_WIDTH              13
+#define JIGPIECE_HEIGHT             13
+
+/*
  * A single jigpiece used to build the level.
  *
  * +---------+
@@ -79,7 +93,6 @@ enum {
     MAP_SPACE           = 's',
     MAP_FLOOR           = '.',
     MAP_SHOP_FLOOR      = '_',
-    MAP_DUSTY_FLOOR     = ',',
     MAP_SHOPKEEPER      = 'K',
     MAP_ROCK            = 'r',
     MAP_WALL            = 'x',
@@ -104,6 +117,8 @@ enum {
     MAP_DOOR            = 'D',
     MAP_POTION          = 'p',
     MAP_WEAPON          = 'w',
+    MAP_GENERATOR       = 'G',
+    MAP_BRAZIER         = 'b',
     MAP_MAX             = 255,
 };
 
