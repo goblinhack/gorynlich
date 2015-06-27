@@ -83,13 +83,6 @@
 #define DEFAULT_VIDEO_HEIGHT        672
 
 /*
- * The map is made up of jigsaw pieces that are joined togethere. This is the 
- * size of one piece in tiles.
- */
-#define JIGPIECE_WIDTH              8
-#define JIGPIECE_HEIGHT             8
-
-/*
  * Map. How many tiles across and down.
  */
 #define LEVELS_ACROSS               11
@@ -113,13 +106,6 @@
 #define MAP_LIGHT_CANDLELIGHT_FLICKER_RATE      20
 #define MAP_LIGHT_CANDLELIGHT_FLICKER_RADIUS    10
 #define MAP_LIGHT_CANDLELIGHT_RADIUS            50
-
-/*
- * How many jigsaw pieces across and down make up the map. We substract
- * one so we can have a small border and center the tiles.
- */
-#define MAP_JIGSAW_PIECES_ACROSS    ((MAP_WIDTH / JIGPIECE_WIDTH) - 3)
-#define MAP_JIGSAW_PIECES_DOWN      ((MAP_WIDTH / JIGPIECE_WIDTH) - 3)
 
 #define MAP_THINGS_PER_CELL         32
 
