@@ -96,7 +96,6 @@ enum {
     MAP_SHOPKEEPER      = 'K',
     MAP_ROCK            = 'r',
     MAP_WALL            = 'x',
-    MAP_CONCRETE        = 'O',
     MAP_CORRIDOR        = ',',
     MAP_CORRIDOR_WALL   = '+',
     MAP_MONST           = 'm',
