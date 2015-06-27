@@ -1179,6 +1179,16 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
              * You can walk closer to a cobweb, but not back out...
              */
             if (thing_is_cobweb(it)) {
+                /*
+                 * Got spider boots?
+                 */
+                tpp boots = thing_boots(me);
+                if (boots) {
+                    if (tp_is_spider_proof(boots)) {
+                        continue;
+                    }
+                }
+
                 double dist_now = DISTANCE(t->x, t->y, it->x, it->y);
                 double dist_then = DISTANCE(nx, ny, it->x, it->y);
 

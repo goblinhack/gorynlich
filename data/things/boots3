@@ -10,6 +10,7 @@
  is_carryable
  is_given_randomly_at_start
  is_boots
+ is_water_proof
  can_be_enchanted
  d10000_chance_of_appearing=5
  is_hand_item

@@ -300,10 +300,10 @@ typedef struct tp_ {
     uint8_t is_rrr17:1;
     uint8_t is_rrr18:1;
     uint8_t is_rrr19:1;
-    uint8_t is_rrr20:1;
-    uint8_t is_rrr21:1;
-    uint8_t is_rrr22:1;
-    uint8_t is_rrr23:1;
+    uint8_t is_water_proof:1;
+    uint8_t is_lava_proof:1;
+    uint8_t is_spider_proof:1;
+    uint8_t is_acid_proof:1;
     uint8_t is_fires_when_angry:1;
     uint8_t is_shopkeeper:1;
     uint8_t is_shop_floor:1;
@@ -757,24 +757,24 @@ static inline uint8_t tp_is_rrr19 (tpp t)
     return (t->is_rrr19);
 }
 
-static inline uint8_t tp_is_rrr20 (tpp t)
+static inline uint8_t tp_is_water_proof (tpp t)
 {
-    return (t->is_rrr20);
+    return (t->is_water_proof);
 }
 
-static inline uint8_t tp_is_rrr21 (tpp t)
+static inline uint8_t tp_is_lava_proof (tpp t)
 {
-    return (t->is_rrr21);
+    return (t->is_lava_proof);
 }
 
-static inline uint8_t tp_is_rrr22 (tpp t)
+static inline uint8_t tp_is_spider_proof (tpp t)
 {
-    return (t->is_rrr22);
+    return (t->is_spider_proof);
 }
 
-static inline uint8_t tp_is_rrr23 (tpp t)
+static inline uint8_t tp_is_acid_proof (tpp t)
 {
-    return (t->is_rrr23);
+    return (t->is_acid_proof);
 }
 
 static inline uint8_t tp_is_fires_when_angry (tpp t)

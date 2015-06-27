@@ -1,7 +1,7 @@
 {
- short_name="spider boots"
+ short_name="web walking boots"
  raw_name="boots4"
- tooltip="spider boots"
+ tooltip="web walking boots"
  z_depth="monst"
  cost=1000
  is_treasure
@@ -10,6 +10,7 @@
  is_carryable
  is_given_randomly_at_start
  is_boots
+ is_spider_proof
  can_be_enchanted
  d10000_chance_of_appearing=5
  is_hand_item
