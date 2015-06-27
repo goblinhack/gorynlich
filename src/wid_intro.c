@@ -304,17 +304,23 @@ static void wid_intro_bg_create (void)
 
     if (!wid_intro_man) {
         widp wid = wid_intro_man = wid_new_window("bg");
-        fpoint tl = { 0.0, 0.56 };
-        fpoint br = { 0.3, 1.0 };
+        fpoint tl = { 0.0, 0.36 };
+        fpoint br = { 0.2, 1.0 };
 
         wid_set_tl_br_pct(wid, tl, br);
 
-        tpp tp = tp_find("data/things/anim_man");
-        wid_set_thing_template(wid, tp);
+        wid_set_tex(wid, 0, "player1");
 
         wid_raise(wid);
 
         wid_set_mode(wid, WID_MODE_NORMAL);
+
+        color c;
+        c = WHITE;
+        wid_set_mode(wid, WID_MODE_NORMAL);
+        wid_set_color(wid, WID_COLOR_TL, c);
+        wid_set_color(wid, WID_COLOR_BR, c);
+        wid_set_color(wid, WID_COLOR_BG, c);
 
         wid_update(wid);
         wid_move_to_pct_centered(wid_intro_man, -0.8f, 0.70f);
