@@ -121,14 +121,17 @@ int32_t thing_stats_get_total_damage (thingp t)
 
     left_arm = thing_arm_left(t);
     if (left_arm) {
+        modifier += tp_get_stats_attack_melee(left_arm);
         modifier += tp_get_stats_attack_ranged(left_arm);
+        modifier += tp_get_stats_attack_magical(left_arm);
     }
 
     right_arm = thing_arm_right(t);
     if (right_arm) {
+        modifier += tp_get_stats_attack_melee(right_arm);
         modifier += tp_get_stats_attack_ranged(right_arm);
+        modifier += tp_get_stats_attack_magical(right_arm);
     }
-
 
     /*
      * Modifier of 1 maps to +10 % in damage.
