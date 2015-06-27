@@ -176,9 +176,13 @@ wid_player_info_button_style_mouse_down (widp w,
     } else {
         int valid = true;
 
-        tpp item_tp = id_to_tp(over_item->id);
+        uint32_t add_item_id = (typeof(id)) 
+                    (uintptr_t) wid_get_client_context(wid_mouse_template);
+
+        tpp item_tp = id_to_tp(add_item_id);
         if (!item_tp) {
             ERR("no item to place");
+            return (false);
         }
 
         switch (id) {
@@ -191,7 +195,7 @@ wid_player_info_button_style_mouse_down (widp w,
             break;
 
         case THING_WORN_HELMET:
-            if (!tp_is_armour(item_tp)) {
+            if (!tp_is_helmet(item_tp)) {
                 valid = false;
                 MSG(WARNING, "This item wont work as a helmet");
                 break;
@@ -199,7 +203,7 @@ wid_player_info_button_style_mouse_down (widp w,
             break;
 
         case THING_WORN_BOOTS:
-            if (!tp_is_armour(item_tp)) {
+            if (!tp_is_boots(item_tp)) {
                 valid = false;
                 MSG(WARNING, "This item wont work as a boots");
                 break;
@@ -489,8 +493,8 @@ static void wid_player_info_create (thing_statsp s, int fast)
         widp w = wid_new_square_button(wid_player_info, 
                                        "wid intro item helmet");
 
-        fpoint tl = {0.3, 0.55};
-        fpoint br = {0.45, 0.63};
+        fpoint tl = {0.8, 0.55};
+        fpoint br = {0.95, 0.63};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your helmet", 0 /* font */);
@@ -514,8 +518,8 @@ static void wid_player_info_create (thing_statsp s, int fast)
         widp w = wid_new_square_button(wid_player_info, 
                                        "wid intro item armour");
 
-        fpoint tl = {0.8, 0.55};
-        fpoint br = {0.95, 0.63};
+        fpoint tl = {0.3, 0.55};
+        fpoint br = {0.45, 0.63};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your armour", 0 /* font */);

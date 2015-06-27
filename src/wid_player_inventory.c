@@ -93,8 +93,8 @@ void wid_player_inventory_button_style (widp w,
     wid_set_mode(w, WID_MODE_NORMAL);
 
     if (action_bar_item) {
-        c = GRAY50;
-        c.a = 100;
+        c = WHITE;
+        c.a = 150;
         wid_set_color(w, WID_COLOR_TL, c);
 
         c = GRAY10;
@@ -112,8 +112,8 @@ void wid_player_inventory_button_style (widp w,
         wid_set_color(w, WID_COLOR_BR, c);
     }
 
-    c = BLACK;
-    c.a = 0;
+    c = WHITE;
+    c.a = 100;
     wid_set_color(w, WID_COLOR_BG, c);
 
     wid_set_blit_center(w, true);
@@ -371,17 +371,17 @@ void wid_player_inventory_button_style (widp w,
             if (val >= 20) {
                 str = 0;
             } else if (val >= 10) {
-                str = "Uncommon";
+                str = "Uncommon item";
             } else if (val >= 5) {
-                str = "Rare";
+                str = "Rare item";
             } else if (val >= 1) {
                 str = "Very rare";
             } else {
-                str = "Unique";
+                str = "Very very rare item";
             }
 
             if (str) {
-                char *tmp2 = dynprintf("%%%%fmt=left$Rarity: %s\n", str);
+                char *tmp2 = dynprintf("%%%%fmt=left$%s\n", str);
 
                 char *old = tmp;
                 tmp = strappend(old, tmp2);
