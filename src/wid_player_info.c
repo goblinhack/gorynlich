@@ -176,10 +176,7 @@ wid_player_info_button_style_mouse_down (widp w,
     } else {
         int valid = true;
 
-        uint32_t add_item_id = (typeof(id)) 
-                    (uintptr_t) wid_get_client_context(wid_mouse_template);
-
-        tpp item_tp = id_to_tp(add_item_id);
+        tpp item_tp = id_to_tp(wid_item.id);
         if (!item_tp) {
             ERR("no item to place");
             return (false);
