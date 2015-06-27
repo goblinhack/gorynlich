@@ -529,6 +529,7 @@ enum {
     THING_BOOTS2,
     THING_BOOTS3,
     THING_BOOTS4,
+    THING_BOOTS5,
     THING_ARMOUR1,
     THING_ARMOUR2,
     THING_ARMOUR3,
@@ -1296,32 +1297,32 @@ static inline uint8_t thing_is_rrr19 (thingp t)
     return (tp_is_rrr19(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr20 (thingp t)
+static inline uint8_t thing_is_water_proof (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr20(thing_tp(t)));
+    return (tp_is_water_proof(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr21 (thingp t)
+static inline uint8_t thing_is_lava_proof (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr21(thing_tp(t)));
+    return (tp_is_lava_proof(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr22 (thingp t)
+static inline uint8_t thing_is_spider_proof (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr22(thing_tp(t)));
+    return (tp_is_spider_proof(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr23 (thingp t)
+static inline uint8_t thing_is_acid_proof (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr23(thing_tp(t)));
+    return (tp_is_acid_proof(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_fires_when_angry (thingp t)
@@ -2105,24 +2106,24 @@ static inline uint8_t thing_is_rrr19_noverify (thingp t)
     return (t->tp->is_rrr19);
 }
 
-static inline uint8_t thing_is_rrr20_noverify (thingp t)
+static inline uint8_t thing_is_water_proof_noverify (thingp t)
 {
-    return (t->tp->is_rrr20);
+    return (t->tp->is_water_proof);
 }
 
-static inline uint8_t thing_is_rrr21_noverify (thingp t)
+static inline uint8_t thing_is_lava_proof_noverify (thingp t)
 {
-    return (t->tp->is_rrr21);
+    return (t->tp->is_lava_proof);
 }
 
-static inline uint8_t thing_is_rrr22_noverify (thingp t)
+static inline uint8_t thing_is_spider_proof_noverify (thingp t)
 {
-    return (t->tp->is_rrr22);
+    return (t->tp->is_spider_proof);
 }
 
-static inline uint8_t thing_is_rrr23_noverify (thingp t)
+static inline uint8_t thing_is_acid_proof_noverify (thingp t)
 {
-    return (t->tp->is_rrr23);
+    return (t->tp->is_acid_proof);
 }
 
 static inline uint8_t thing_is_fires_when_angry_noverify (thingp t)
@@ -2629,6 +2630,19 @@ static inline tpp thing_helmet (const thingp t)
     thing_statsp s = &t->stats;
 
     item_t item = s->worn[THING_WORN_HELMET];
+
+    if (!item.id) {
+        return (0);
+    }
+
+    return (id_to_tp(item.id));
+}
+
+static inline tpp thing_boots (const thingp t)
+{
+    thing_statsp s = &t->stats;
+
+    item_t item = s->worn[THING_WORN_BOOTS];
 
     if (!item.id) {
         return (0);
