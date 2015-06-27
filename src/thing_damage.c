@@ -61,6 +61,76 @@ int32_t thing_stats_get_total_damage (thingp t)
     }
 
     /*
+     * Melee
+     */
+    tpp helmet = thing_helmet(t);
+    if (helmet) {
+        modifier += tp_get_stats_attack_melee(helmet);
+    }
+
+    tpp armour = thing_armour(t);
+    if (armour) {
+        modifier += tp_get_stats_attack_melee(armour);
+    }
+
+    tpp left_arm = thing_arm_left(t);
+    if (left_arm) {
+        modifier += tp_get_stats_attack_melee(left_arm);
+    }
+
+    tpp right_arm = thing_arm_right(t);
+    if (right_arm) {
+        modifier += tp_get_stats_attack_melee(right_arm);
+    }
+
+    /*
+     * Magical
+     */
+    helmet = thing_helmet(t);
+    if (helmet) {
+        modifier += tp_get_stats_attack_magical(helmet);
+    }
+
+    armour = thing_armour(t);
+    if (armour) {
+        modifier += tp_get_stats_attack_magical(armour);
+    }
+
+    left_arm = thing_arm_left(t);
+    if (left_arm) {
+        modifier += tp_get_stats_attack_magical(left_arm);
+    }
+
+    right_arm = thing_arm_right(t);
+    if (right_arm) {
+        modifier += tp_get_stats_attack_magical(right_arm);
+    }
+
+    /*
+     * Ranged
+     */
+    helmet = thing_helmet(t);
+    if (helmet) {
+        modifier += tp_get_stats_attack_ranged(helmet);
+    }
+
+    armour = thing_armour(t);
+    if (armour) {
+        modifier += tp_get_stats_attack_ranged(armour);
+    }
+
+    left_arm = thing_arm_left(t);
+    if (left_arm) {
+        modifier += tp_get_stats_attack_ranged(left_arm);
+    }
+
+    right_arm = thing_arm_right(t);
+    if (right_arm) {
+        modifier += tp_get_stats_attack_ranged(right_arm);
+    }
+
+
+    /*
      * Modifier of 1 maps to +10 % in damage.
      */
     int32_t final_damage = ceil(damage + (damage * (modifier / 10.0)));

@@ -9,6 +9,7 @@
  hit_priority=1
  is_carryable
  is_given_randomly_at_start
+ is_hand_item
  is_ring
  can_be_enchanted
  d10000_chance_of_appearing=10

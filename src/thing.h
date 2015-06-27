@@ -2611,6 +2611,58 @@ static inline tpp thing_weapon (const thingp t)
     return (id_to_tp(item->id));
 }
 
+static inline tpp thing_armour (const thingp t)
+{
+    thing_statsp s = &t->stats;
+
+    item_t item = s->worn[THING_WORN_ARMOR];
+
+    if (!item.id) {
+        return (0);
+    }
+
+    return (id_to_tp(item.id));
+}
+
+static inline tpp thing_helmet (const thingp t)
+{
+    thing_statsp s = &t->stats;
+
+    item_t item = s->worn[THING_WORN_HELMET];
+
+    if (!item.id) {
+        return (0);
+    }
+
+    return (id_to_tp(item.id));
+}
+
+static inline tpp thing_arm_left (const thingp t)
+{
+    thing_statsp s = &t->stats;
+
+    item_t item = s->worn[THING_WORN_ARM_LEFT];
+
+    if (!item.id) {
+        return (0);
+    }
+
+    return (id_to_tp(item.id));
+}
+
+static inline tpp thing_arm_right (const thingp t)
+{
+    thing_statsp s = &t->stats;
+
+    item_t item = s->worn[THING_WORN_ARM_RIGHT];
+
+    if (!item.id) {
+        return (0);
+    }
+
+    return (id_to_tp(item.id));
+}
+
 static inline tpp thing_shield (const thingp t)
 {
     return (t->shield);
