@@ -18,11 +18,11 @@ double gaussrand (double mean, double stddev)
 
     if (phase == 0) {
         do {
-            double U1 = pcg32_boundedrand(RAND_MAX);
-            double U2 = pcg32_boundedrand(RAND_MAX);
+            double U1 = pcg32_boundedrand(((uint32_t)-1));
+            double U2 = pcg32_boundedrand(((uint32_t)-1));
 
-            U1 /= (double) RAND_MAX;
-            U2 /= (double) RAND_MAX;
+            U1 /= (double) ((uint32_t)-1);
+            U2 /= (double) ((uint32_t)-1);
 
             V1 = 2 * U1 - 1;
             V2 = 2 * U2 - 1;
@@ -40,4 +40,29 @@ double gaussrand (double mean, double stddev)
     val += mean;
 
     return (val);
+}
+
+double gauss (const double m, const double s)
+{
+    static int use_last = 0;
+    static double y2;
+    double x1, x2, w, y1;
+
+    if (use_last) {
+        y1 = y2;
+    } else {
+        do { // ming don't have random
+            x1 = 2.0 * ((double)myrand() / (double)((uint32_t)-1)) - 1.0;
+            x2 = 2.0 * ((double)myrand() / (double)((uint32_t)-1)) - 1.0;
+            w = x1 * x1 + x2 * x2;
+        } while (w >= 1.0);
+
+        w = sqrt((-2.0 * log(w)) / w);
+        y1 = x1 * w;
+        y2 = x2 * w;
+    }
+
+    use_last = !use_last;
+
+    return (m + y1 * s);
 }
