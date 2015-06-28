@@ -795,7 +795,7 @@ static void wid_server_join_menu_create (void)
             continue;
         }
 
-        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT + 1);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (!sp) {
             continue;
         }
@@ -835,7 +835,7 @@ static void wid_server_join_menu_create (void)
             continue;
         }
 
-        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT + 1);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (!sp) {
             continue;
         }

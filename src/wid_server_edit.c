@@ -34,7 +34,7 @@ static const char *
     wid_server_edit_button_name[WID_SERVER_CREATE_MAX_SETTINGS] = {
     "%%fmt=left$Server IP",
     "%%fmt=left$Port",
-    "%%fmt=left$%%fg=red$Join server",
+    "%%fmt=left$Join the server",
 };
 
 static int saved_focus;
