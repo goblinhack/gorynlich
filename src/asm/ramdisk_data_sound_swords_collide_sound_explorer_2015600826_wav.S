@@ -1,0 +1,6 @@
+.globl data_sound_swords_collide_sound_explorer_2015600826_wav_start_
+data_sound_swords_collide_sound_explorer_2015600826_wav_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/swords_collide_sound_explorer_2015600826.wav"
+.globl data_sound_swords_collide_sound_explorer_2015600826_wav_end_
+data_sound_swords_collide_sound_explorer_2015600826_wav_end_:
+
