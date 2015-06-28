@@ -49,31 +49,6 @@ void math_init (void)
     fcos_init();
 }
 
-double gauss (const double m, const double s)
-{
-    static int use_last = 0;
-    static double y2;
-    double x1, x2, w, y1;
-
-    if (use_last) {
-        y1 = y2;
-    } else {
-        do { // ming don't have random
-            x1 = 2.0 * ((double)myrand() / (double)RAND_MAX) - 1.0;
-            x2 = 2.0 * ((double)myrand() / (double)RAND_MAX) - 1.0;
-            w = x1 * x1 + x2 * x2;
-        } while (w >= 1.0);
-
-        w = sqrt((-2.0 * log(w)) / w);
-        y1 = x1 * w;
-        y2 = x2 * w;
-    }
-
-    use_last = !use_last;
-
-    return (m + y1 * s);
-}
-
 /*
  * true if perpendicular line from point is in line segment.
  */
