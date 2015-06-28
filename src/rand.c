@@ -66,4 +66,3 @@ double gauss (const double m, const double s)
 
     return (m + y1 * s);
 }
-
