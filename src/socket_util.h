@@ -506,11 +506,11 @@ static inline int address_resolve (IPaddress *address,
     unsigned int n4;
     uint32_t addr;
 
-    if (!strcasecmp(host, "localhost")) {
-        n1 = 127;
+    if (!host || !strcasecmp(host, "localhost")) {
+        n1 = 0;
         n2 = 0;
         n3 = 0;
-        n4 = 1;
+        n4 = 0;
 
         addr = (n1 << 24) | (n2 << 16) | (n3 << 8) | n4;
 
@@ -524,10 +524,10 @@ static inline int address_resolve (IPaddress *address,
 
         SDLNet_Write32(addr, &address->host);
     } else {
-        LOG("Resolving address %s...", host);
+        LOG("Resolving address [%s]...", host);
 
         if ((SDLNet_ResolveHost(address, host, port)) == -1) {
-            ERR("Cannot resolve host %s port %u", host, port);
+            ERR("Cannot resolve host [%s] port %u", host, port);
 
             return (-1);
         }

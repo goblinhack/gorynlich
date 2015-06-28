@@ -144,6 +144,10 @@ static void wid_menu_update (widp w)
     }
 
     wid_update(w);
+
+    if (ctx->on_update) {
+        (ctx->on_update)(w, ctx->focus);
+    }
 }
 
 static uint8_t wid_menu_mouse_event (widp w,
@@ -955,6 +959,7 @@ static void wid_menu_destroy_begin (widp w)
 widp wid_menu (widp parent,
                fontp focus_font,
                fontp normal_font,
+               on_update_t on_update,
                double x,
                double y,
                int cols,
@@ -972,6 +977,8 @@ widp wid_menu (widp parent,
      * changes
      */
     wid_menu_ctx *ctx = myzalloc(sizeof(*ctx), "wid menu");
+
+    ctx->on_update = on_update;
 
     /*
      * Work out how large each button bar should be.
@@ -1139,7 +1146,6 @@ widp wid_menu (widp parent,
     wid_move_to_pct_centered(w, x, y);
 
     wid_update(wrapper);
-    wid_menu_update(wrapper);
     wid_set_do_not_lower(wrapper, 1);
     wid_raise(wrapper);
 

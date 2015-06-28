@@ -303,6 +303,10 @@ static void wid_server_edit_menu (void)
     memset(keys, 0, sizeof(keys));
     memset(values, 0, sizeof(values));
 
+    if (!new_ip) {
+        new_ip = dupstr("0.0.0.0", "new ip");
+    }
+
     int i;
     for (i = WID_SERVER_CREATE_ROW_IP; 
          i < WID_SERVER_CREATE_MAX_SETTINGS; i++) {
@@ -337,6 +341,7 @@ static void wid_server_edit_menu (void)
     menu = wid_menu(0,
                 vlarge_font,
                 large_font,
+                0, // on_update
                 0.5, /* x */
                 0.4, /* y */
                 2, /* columns */
