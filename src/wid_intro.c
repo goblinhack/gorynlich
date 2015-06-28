@@ -304,14 +304,34 @@ static void wid_intro_bg_create (void)
 
     if (!wid_intro_man) {
         widp wid = wid_intro_man = wid_new_window("bg");
+
         fpoint tl = { 0.0, 0.36 };
         fpoint br = { 0.2, 1.0 };
+        double x = 0.08;
 
-        wid_set_tl_br_pct(wid, tl, br);
-
-        wid_set_tex(wid, 0, "player1");
+        if (!global_config.stats.pclass[0]) {
+            wid_set_tex(wid, 0, "player1");
+        } else {
+            if (!strcmp("warrior", global_config.stats.pclass)) {
+                wid_set_tex(wid, 0, "player1");
+            } else if (!strcmp("dwarf", global_config.stats.pclass)) {
+                wid_set_tex(wid, 0, "player2");
+            } else if (!strcmp("valkyrie", global_config.stats.pclass)) {
+                wid_set_tex(wid, 0, "player3");
+            } else if (!strcmp("elf", global_config.stats.pclass)) {
+                tl.y = 0.1;
+                br.y = 0.9;
+                wid_set_tex(wid, 0, "player4");
+            } else if (!strcmp("wizard", global_config.stats.pclass)) {
+                br.x = 0.4;
+                x = 0.20;
+                wid_set_tex(wid, 0, "player5");
+            }
+        }
 
         wid_raise(wid);
+
+        wid_set_tl_br_pct(wid, tl, br);
 
         wid_set_mode(wid, WID_MODE_NORMAL);
 
@@ -324,7 +344,7 @@ static void wid_intro_bg_create (void)
 
         wid_update(wid);
         wid_move_to_pct_centered(wid_intro_man, -0.8f, 0.70f);
-        wid_move_to_pct_centered_in(wid_intro_man, 0.08f, 0.70f, 1000);
+        wid_move_to_pct_centered_in(wid_intro_man, x, 0.70f, 1000);
     }
 
     if (!wid_intro_treasure_chest) {
