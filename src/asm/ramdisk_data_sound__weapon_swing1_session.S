@@ -1,6 +1,0 @@
-.globl data_sound__weapon_swing1_session_start_
-data_sound__weapon_swing1_session_start_:
-.incbin "/Users/nmcgill/gorynlich/data/sound/.weapon_swing1.session"
-.globl data_sound__weapon_swing1_session_end_
-data_sound__weapon_swing1_session_end_:
-

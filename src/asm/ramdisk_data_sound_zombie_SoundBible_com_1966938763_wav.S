@@ -1,6 +1,0 @@
-.globl data_sound_zombie_SoundBible_com_1966938763_wav_start_
-data_sound_zombie_SoundBible_com_1966938763_wav_start_:
-.incbin "/Users/nmcgill/gorynlich/data/sound/zombie_SoundBible.com_1966938763.wav"
-.globl data_sound_zombie_SoundBible_com_1966938763_wav_end_
-data_sound_zombie_SoundBible_com_1966938763_wav_end_:
-
