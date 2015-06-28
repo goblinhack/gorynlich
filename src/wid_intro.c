@@ -326,6 +326,8 @@ static void wid_intro_bg_create (void)
                 br.x = 0.4;
                 x = 0.20;
                 wid_set_tex(wid, 0, "player5");
+            } else {
+                wid_set_tex(wid, 0, "player1");
             }
         }
 
