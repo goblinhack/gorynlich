@@ -1,6 +1,0 @@
-.globl data_sound_45137__dj_chronos__dark_church_bell_wav_start_
-data_sound_45137__dj_chronos__dark_church_bell_wav_start_:
-.incbin "/Users/nmcgill/gorynlich/data/sound/45137__dj_chronos__dark_church_bell.wav"
-.globl data_sound_45137__dj_chronos__dark_church_bell_wav_end_
-data_sound_45137__dj_chronos__dark_church_bell_wav_end_:
-
