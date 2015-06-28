@@ -25,7 +25,7 @@
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/gorynlich.exe</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/ghack2.ico</windowsIcon>
+                    <windowsIcon>${installdir}/ghack.ico</windowsIcon>
                     <windowsPath>${installdir}/</windowsPath>
                 </shortcut>
             </desktopShortcutList>
