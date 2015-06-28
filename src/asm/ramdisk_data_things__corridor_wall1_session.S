@@ -1,6 +1,0 @@
-.globl data_things__corridor_wall1_session_start_
-data_things__corridor_wall1_session_start_:
-.incbin "/Users/nmcgill/gorynlich/data/things/.corridor_wall1.session"
-.globl data_things__corridor_wall1_session_end_
-data_things__corridor_wall1_session_end_:
-
