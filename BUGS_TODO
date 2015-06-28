@@ -1,5 +1,3 @@
---------------------------------------- plan for june --------------------------------------
-- too many lights?
 --------------------------------------- plan for jul --------------------------------------
 - ring of reaper resistance
 - ring of resurrection?
@@ -27,23 +25,19 @@
 - minor: lifespan code not used
 - minor: increase move granulariy on server so projectiles line up with player more
 --------------------------------------- plan for sep --------------------------------------
-- giant worm like creature?
 - first baddy, large ghost, drops bone piles
 - bosses drop exit on death
 --------------------------------------- plan for oct --------------------------------------
-- add story slides, nine princesses or prince that the kingdom of pixelvania has ad captured by gorynlich the she dragon
 - add game end
 --------------------------------------- plan for nov --------------------------------------
 - backpack drop on death
 - thief, kill thief to recover items
 --------------------------------------- plan for dec --------------------------------------
-
-multiplayer
------------
+- multi player
 - magic gives health to other players
-- add bot to test out multiplayer ?
 
 Sat Jun 27 17:59:56 EDT 2015
+- mplayer server experimental
 - added corridors
 - make level jig tiles 13x13?
 

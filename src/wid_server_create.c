@@ -35,7 +35,7 @@ static const char *
     "%%fmt=left$Server name",
     "%%fmt=left$Port",
     "%%fmt=left$Max Players",
-    "%%fmt=left$Start server",
+    "%%fmt=left$Start the server",
 };
 
 static const char *wid_server_create_button_value_string
