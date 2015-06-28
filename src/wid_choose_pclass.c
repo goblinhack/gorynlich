@@ -18,6 +18,7 @@
 #include "wid_menu.h"
 #include "name.h"
 
+static widp wid_pclass;
 static widp wid_choose_pclass;
 static widp wid_choose_pclass_background;
 
@@ -84,6 +85,11 @@ void wid_choose_pclass_hide (void)
 
     if (menu) {
         wid_destroy(&menu);
+    }
+
+    if (wid_pclass) {
+        wid_destroy_in(wid_pclass, 3000);
+        wid_pclass = 0;
     }
 }
 
@@ -196,6 +202,64 @@ static void wid_choose_pclass_bg_create (void)
     }
 }
 
+static void wid_choose_pclass_update (widp w, int focus)
+{
+    if (wid_pclass) {
+        wid_move_to_pct_centered_in(wid_pclass, 2.8f, 0.70f, 500);
+        wid_destroy_in(wid_pclass, 3000);
+        wid_pclass = 0;
+    }
+
+    wid_pclass = wid_new_window("bg");
+
+    fpoint tl = { 0.0, 0.36 };
+    fpoint br = { 0.2, 1.0 };
+    double x = 0.08;
+
+    switch (focus) {
+    case 1:
+        wid_set_tex(wid_pclass, 0, "player1");
+        break;
+    case 2:
+        wid_set_tex(wid_pclass, 0, "player2");
+        break;
+    case 3:
+        wid_set_tex(wid_pclass, 0, "player3");
+        break;
+    case 4:
+        tl.y = 0.1;
+        br.y = 0.9;
+        wid_set_tex(wid_pclass, 0, "player4");
+        break;
+    case 5:
+        br.x = 0.4;
+        x = 0.20;
+        wid_set_tex(wid_pclass, 0, "player5");
+        break;
+    default:
+        wid_destroy(&wid_pclass);
+        wid_pclass = 0;
+        return;
+    }
+
+    wid_raise(wid_pclass);
+
+    wid_set_tl_br_pct(wid_pclass, tl, br);
+
+    wid_set_mode(wid_pclass, WID_MODE_NORMAL);
+
+    color c;
+    c = WHITE;
+    wid_set_mode(wid_pclass, WID_MODE_NORMAL);
+    wid_set_color(wid_pclass, WID_COLOR_TL, c);
+    wid_set_color(wid_pclass, WID_COLOR_BR, c);
+    wid_set_color(wid_pclass, WID_COLOR_BG, c);
+
+    wid_update(wid_pclass);
+    wid_move_to_pct_centered(wid_pclass, -0.8f, 0.70f);
+    wid_move_to_pct_centered_in(wid_pclass, x, 0.70f, 500);
+}
+
 static void wid_choose_pclass_create (void)
 {
     if (wid_choose_pclass) {
@@ -241,6 +305,7 @@ static void wid_choose_pclass_create (void)
     menu = wid_menu(0,
                  vvlarge_font,
                  vlarge_font,
+                 wid_choose_pclass_update,
                  0.5, /* x */
                  0.5, /* y */
                  1, /* columns */
@@ -248,10 +313,10 @@ static void wid_choose_pclass_create (void)
                  pclass_count() + 2, /* items */
 
                  (int) '\0', "Choose your pedigree", (on_mouse_down_t) 0,
-                 (int) 'z', "wizard",   wid_choose_pclass_callback,
-                 (int) 'd', "dwarf",    wid_choose_pclass_callback,
                  (int) 'w', "warrior",  wid_choose_pclass_callback,
+                 (int) 'd', "dwarf",    wid_choose_pclass_callback,
                  (int) 'v', "valkyrie", wid_choose_pclass_callback,
                  (int) 'e', "elf",      wid_choose_pclass_callback,
+                 (int) 'z', "wizard",   wid_choose_pclass_callback,
                  (int) 'b', "back",     wid_choose_pclass_go_back);
 }

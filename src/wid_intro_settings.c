@@ -394,6 +394,7 @@ static uint8_t wid_intro_restart_selected (void)
         wid_menu(0,
                  vvlarge_font,
                  large_font,
+                 0,
                  0.5, /* x */
                  0.5, /* y */
                  1, /* columns */
@@ -507,6 +508,7 @@ static void wid_intro_settings_create (void)
     wid_intro_menu = wid_menu(wid_intro_settings,
                 vvlarge_font,
                 large_font,
+                0, // on_update
                 0.5, /* x */
                 0.6, /* y */
                 2, /* columns */

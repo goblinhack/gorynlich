@@ -35,7 +35,7 @@ static const char *
     "%%fmt=left$Server name",
     "%%fmt=left$Port",
     "%%fmt=left$Max Players",
-    "%%fmt=left$%%fg=red$Start server",
+    "%%fmt=left$Start server",
 };
 
 static const char *wid_server_create_button_value_string
@@ -688,6 +688,7 @@ static void wid_server_create_menu (void)
     menu = wid_menu(0,
                 vlarge_font,
                 large_font,
+                0, // on_update
                 0.5, /* x */
                 0.4, /* y */
                 2, /* columns */
