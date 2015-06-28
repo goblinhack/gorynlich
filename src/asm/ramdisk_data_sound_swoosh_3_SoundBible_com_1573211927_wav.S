@@ -1,0 +1,6 @@
+.globl data_sound_swoosh_3_SoundBible_com_1573211927_wav_start_
+data_sound_swoosh_3_SoundBible_com_1573211927_wav_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/swoosh_3_SoundBible.com_1573211927.wav"
+.globl data_sound_swoosh_3_SoundBible_com_1573211927_wav_end_
+data_sound_swoosh_3_SoundBible_com_1573211927_wav_end_:
+
