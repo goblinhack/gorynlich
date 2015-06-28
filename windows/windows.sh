@@ -2,3 +2,6 @@
 
 cp /c/Users/nmcgill/Documents/InstallBuilder/output/gorynlich-0.01-windows-installer.exe ../gorynlich-installer.exe
 
+if [ -d /c/Users/nmcgill/Google\ Drive/ ]; then
+    cp ../gorynlich-installer.exe  /c/Users/nmcgill/Google\ Drive/
+fi
