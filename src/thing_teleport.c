@@ -68,8 +68,16 @@ void thing_reached_teleport (thingp t, thingp teleport)
                 continue;
             }
 
-            const char *tcol = teleport->data->col_name;
-            const char *col = tile->data.col_name;
+            const char *tcol;
+            const char *col;
+
+            if (teleport->data) {
+                tcol = teleport->data->col_name;
+            } else {
+                tcol = 0;
+            }
+
+            col = tile->data.col_name;
 
             if (!col || !tcol) {
                 tx[poss] = x;
