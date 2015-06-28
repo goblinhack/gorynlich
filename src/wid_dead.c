@@ -194,6 +194,7 @@ static void wid_dead_gravestone_appeared (void *context)
             wid_menu(0,
                     vvlarge_font,
                     large_font,
+                    0, // on_update
                     0.5, /* x */
                     0.3, /* y */
                     1, /* columns */
@@ -210,6 +211,7 @@ static void wid_dead_gravestone_appeared (void *context)
             wid_menu(0,
                     vvlarge_font,
                     large_font,
+                    0, // on_update
                     0.5, /* x */
                     0.3, /* y */
                     1, /* columns */

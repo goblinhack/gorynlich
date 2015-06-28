@@ -469,6 +469,7 @@ static void wid_choose_stats_create (void)
     menu = wid_menu(0,
                 vvlarge_font,
                 vlarge_font,
+                0, // on_update
                 0.5, /* x */
                 0.5, /* y */
                 3, /* columns */

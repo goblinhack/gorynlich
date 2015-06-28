@@ -87,7 +87,7 @@ static void server_add (const server *s_in)
     s->port = s_in->port;
 
     if ((address_resolve(&s->ip, s->host, s->port)) == -1) {
-        LOG("Cannot resolve host %s port %u", s->host, s->port);
+        LOG("Cannot resolve host [%s] port %u", s->host, s->port);
 
         s->host_and_port_str = dynprintf("%s:%u", s->host, s->port);
     } else {
@@ -755,8 +755,7 @@ static void wid_server_join_tick (widp w)
      */
     if (ctx->focus != saved_focus) {
         saved_focus = ctx->focus;
-    CON("moved");
-    wid_server_join_redo(true);
+        wid_server_join_redo(true);
     }
 }
 
@@ -890,6 +889,7 @@ static void wid_server_join_menu_create (void)
     wid_server_join_menu = wid_menu(0,
                 med_font,
                 med_font,
+                0, // on_update
                 0.5, /* x */
                 0.4, /* y */
                 5, /* columns */
