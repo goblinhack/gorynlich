@@ -1,4 +1,5 @@
 - multiple shops, stealing seems to work
+- remove poop level
 --------------------------------------- plan for jul --------------------------------------
 - ring of reaper resistance
 - ring of resurrection?
@@ -62,6 +63,10 @@ Wed Jun 24 19:20:31 EDT 2015
 Tue Jun 23 21:41:03 EDT 2015
 - treasure gobblers bounce around with nowhere to go when no treasure
 - death by shotgun should be by shopkeeper
+
+Sun Jun 28 11:40:32 EDT 2015
+- windows build working
+- choose valkyrie, get wrong player
 
 Sat Jun 20 12:18:47 EDT 2015
 - add money
