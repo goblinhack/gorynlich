@@ -65,14 +65,14 @@ static void wid_intro_about_create (void)
 
     wid_intro_about = 
         wid_menu(0,
-                vvlarge_font,
                 vlarge_font,
+                large_font,
                 0, // on_update
                 0.55, /* x */
                 0.5, /* y */
                 2, /* columns */
                 6, /* focus */
-                7, /* items */
+                8, /* items */
 
                 /*
                  * Column widths
@@ -86,11 +86,11 @@ static void wid_intro_about_create (void)
 
                 (int) '0', 
                 "%%fmt=left$%%fg=gray$Code monkey #2",
-                "%%fg=red$Richard Franks",
+                "%%fg=red$Alexandra Franks",
                 (void*) 0,
 
                 (int) '0', 
-                "%%fmt=left$%%fg=gray$Music",
+                "%%fmt=left$%%fg=gray$Music and Art",
                 "%%fg=purple$Charlotte McGill",
                 (void*) 0,
 
@@ -102,6 +102,11 @@ static void wid_intro_about_create (void)
                 (int) '0',
                 "%%fmt=left$%%fg=gray$Music",
                 "%%fg=cyan$  (nosoapradio.us)",
+                (void*) 0,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Level design",
+                "%%fg=cyan$Ben McGill",
                 (void*) 0,
 
                 (int) '0', 
