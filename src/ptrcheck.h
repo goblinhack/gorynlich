@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Neil McGill
+ * Copyright (C) 2011-2015 goblinhack@gmail.com
  *
  * See the README file for license.
  * A useful hack to help debug stale/free/bad pointers.
