@@ -67,6 +67,7 @@ static void wid_intro_about_create (void)
         wid_menu(0,
                 vvlarge_font,
                 vlarge_font,
+                0, // on_update
                 0.55, /* x */
                 0.5, /* y */
                 2, /* columns */

@@ -393,23 +393,24 @@ static void wid_choose_game_type_create (void)
     const char *server_text;
 
     if (server_socket) {
-        server_text = "Stop server";
+        server_text = "Stop server (experimental)";
         server_fn = wid_choose_game_type_stop_server_mouse_event;
     } else {
-        server_text = "Start a server";
+        server_text = "Start a server (experimental)";
         server_fn = wid_choose_game_type_start_server_mouse_event;
     }
 
     menu = wid_menu(0,
                  vvlarge_font,
                  large_font,
+                 0, // on_update
                  0.5, /* x */
                  0.4, /* y */
                  1, /* columns */
                  1, /* focus */
                  4, /* items */
 
-                 (int) 'j', "Join server", 
+                 (int) 'j', "Join server (experimental)", 
                     wid_choose_game_type_join_game_mouse_event,
 
                  (int) 's', "Single player", 

@@ -9,6 +9,8 @@
 #define WID_MENU_MAX_ITEMS 100
 #define WID_MENU_MAX_COLS  10
 
+typedef void(*on_update_t)(widp, int focus);
+
 typedef struct {
     /*
      * Parent widget
@@ -74,11 +76,14 @@ typedef struct {
      */
     char shortcut[WID_MENU_MAX_ITEMS];
 
+    on_update_t on_update;
+
 } wid_menu_ctx;
 
 widp wid_menu(widp parent,
               fontp focus_font,
               fontp other_font,
+              on_update_t on_update,
               double x,
               double y,
               int cols,
