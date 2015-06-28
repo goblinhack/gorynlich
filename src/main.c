@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Neil McGill
+ * Copyright (C) 2011-2015 goblinhack@gmail.com
  *
  * See the LICENSE file for license.
  */
@@ -486,7 +486,7 @@ static void usage (void)
     CON("        -quickstart");
     CON("        -q");
     CON(" ");
-    CON("Written by Neil McGill, goblinhack@gmail.com");
+    CON("Written by goblinhack@gmail.com");
 }
 
 static void parse_args (int32_t argc, char *argv[])
