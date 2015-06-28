@@ -11,11 +11,11 @@
 #include "name.h"
 
 static const char *classes[] = {
-    "wizard",
-    "dwarf",
     "warrior",
+    "dwarf",
     "valkyrie",
     "elf",
+    "wizard",
 };
 
 int pclass_count (void)
