@@ -524,34 +524,8 @@ static uint8_t wid_menu_credits_selected (widp w,
     return (true);
 }
 
-widp wid_cmap_map_dialog;
-
-static void wid_cmap_exit_selected (const char *name)
-{
-    wid_cmap_map_dialog = 0;
-}
-
-static void wid_cmap_exit_cancelled (void)
-{
-    wid_cmap_map_dialog = 0;
-}
-
 static void wid_intro_create (void)
 {
-    if (0) {
-level_pos_t level_pos;
-level_pos.x = 2;
-level_pos.y = 1;
-wid_editor(level_pos);
-return;
-    }
-    if (0) {
-        wid_cmap_map_dialog = wid_cmap("Choose color",
-                                      wid_cmap_exit_selected, 
-                                      wid_cmap_exit_cancelled);
-        return;
-    }
-    
     if (wid_intro) {
         return;
     }

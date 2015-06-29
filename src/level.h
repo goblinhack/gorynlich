@@ -37,9 +37,6 @@ void level_set_destroy_reason(levelp level, const char *val);
 widp level_get_map(levelp level);
 void level_set_map(levelp level, widp val);
 void level_set_walls(levelp level);
-void level_pipe_find_ends(levelp level);
-uint8_t level_pipe_find_exit(levelp level,
-                    int32_t ix, int32_t iy, int32_t *exit_x, int32_t *exit_y);
 level_pos_t level_get_level_pos(levelp level);
 void level_set_level_pos(levelp level, level_pos_t val);
 const char *level_get_logname(levelp level);

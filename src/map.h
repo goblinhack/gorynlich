@@ -130,7 +130,6 @@ tpp map_find_is_valid_for_action_bar_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_bomb_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_spam_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_door_at(levelp, int32_t x, int32_t y, widp *);
-tpp map_find_pipe_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_generator_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_is_explosion_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_hidden_from_editor_at(levelp, int32_t x, int32_t y, widp *);
