@@ -24,6 +24,7 @@
 #include "tile.h"
 #include "string_util.h"
 #include "wid_tooltip.h"
+#include "ramdisk.h"
 
 static widp wid_map_window;
 static wid_map_ctx *wid_map_window_ctx;
@@ -1326,10 +1327,60 @@ widp wid_editor_level_map_thing_replace_template (widp w,
     return (0);
 }
 
+static void wid_map_load_level (wid_map_ctx *ctx, const char *name, int x, int y)
+{
+    level_pos_t level_pos;
+
+    level_pos.x = x;
+    level_pos.y = y;
+
+    ctx->loading_x = x;
+    ctx->loading_y = y;
+
+    /*
+     * Ignore out of bounds levels like the test level.
+     */
+    if ((ctx->loading_x >= LEVELS_ACROSS) || 
+        (ctx->loading_y >= LEVELS_DOWN)) {
+        return;
+    }
+
+    if ((ctx->loading_x < 0) || 
+        (ctx->loading_y < 0)) {
+        return;
+    }
+
+    levelp l = level_load(level_pos, 
+                          ctx->w,
+                          false, /* is_editor */
+                          true, /* is_map_editor */
+                          false /* on_server */);
+    if (!l) {
+        ERR("Failed to load level %d.%d", y, x);
+        return;
+    }
+
+    ctx->levels[y][x].level = l;
+
+    widp b = ctx->buttons[y][x];
+
+    char *tmp = dynprintf("%d.%d %s", y, x, level_get_title(l));
+    wid_set_tooltip(b, tmp, med_font);
+    myfree(tmp);
+
+    wid_set_font(b, vsmall_font);
+
+    wid_map_find_player_start(x, y);
+    wid_map_find_exits(x, y);
+}
+
 static void wid_map_load_levels (wid_map_ctx *ctx)
 {
     tree_file_node *n;
     tree_root *d;
+
+    int loaded[LEVELS_ACROSS][LEVELS_DOWN];
+    memset(loaded, 0, sizeof(loaded));
 
     d = dirlist(LEVELS_PATH,
                 0 /* context->include_suffix */,
@@ -1348,62 +1399,39 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
             continue;
         }
 
-        level_pos_t level_pos;
         int x, y;
 
         if (sscanf(name, "%d.%d", &y, &x) != 2) {
-            WARN("bad format in level name [%s], expecting a,b format", name);
+            LOG("bad format in level name [%s], expecting a,b format", name);
             continue;
         }
 
-        level_pos.x = x;
-        level_pos.y = y;
+        loaded[y][x] = 1;
 
-        ctx->loading_x = x;
-        ctx->loading_y = y;
-
-        /*
-         * Ignore out of bounds levels like the test level.
-         */
-        if ((ctx->loading_x >= LEVELS_ACROSS) || 
-            (ctx->loading_y >= LEVELS_DOWN)) {
-            continue;
-        }
-
-        if ((ctx->loading_x < 0) || 
-            (ctx->loading_y < 0)) {
-            continue;
-        }
-
-        levelp l = level_load(level_pos, 
-                              ctx->w,
-                              false, /* is_editor */
-                              true, /* is_map_editor */
-                              false /* on_server */);
-        if (!l) {
-            ERR("Failed to load level %d.%d", y, x);
-            continue;
-        }
-
-        ctx->levels[y][x].level = l;
-
-        widp b = ctx->buttons[y][x];
-
-        char *tmp = dynprintf("%d.%d %s",
-                              y,
-                              x,
-                              level_get_title(l));
-
-        wid_set_tooltip(b, tmp, med_font);
-        myfree(tmp);
-
-        wid_set_font(b, vsmall_font);
-
-        wid_map_find_player_start(x, y);
-        wid_map_find_exits(x, y);
+        wid_map_load_level(ctx, name, x, y);
     } }
 
     dirlist_free(&d);
+
+    ramdisk_t *ramfile = ramdisk_get_data();
+
+    while (ramfile->filename) {
+        int x, y;
+
+        if (sscanf(ramfile->filename, "data/levels/%d.%d", &y, &x) != 2) {
+            LOG("bad format in level name [%s], expecting a,b format", ramfile->filename);
+            ramfile++;
+            continue;
+        }
+
+        if (loaded[y][x]) {
+            ramfile++;
+            continue;
+        }
+
+        wid_map_load_level(ctx, ramfile->filename, x, y);
+        ramfile++;
+    }
 }
 
 widp wid_map (const char *title, 
