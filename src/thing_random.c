@@ -188,7 +188,7 @@ tpp random_exit (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
+        if (loop++ > 10000000) {
             ERR("couldn't find random exit");
             return (0);
         }
@@ -202,10 +202,7 @@ tpp random_exit (void)
         }
 
         if (tp_is_exit(tp)) {
-            int r =  myrand() % 10000;
-            if (r < tp_get_d10000_chance_of_appearing(tp)) {
-                return (tp);
-            }
+            return (tp);
         }
     }
 }

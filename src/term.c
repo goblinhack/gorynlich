@@ -197,7 +197,7 @@ static void term_core_putc (const char c)
 
 static void term_core_puts (const char *str)
 {
-    const int l = strlen(str);
+    const size_t l = strlen(str);
 
     if (term_core_buffer_pos + l >= term_core_buffer_size) {
         while (term_core_buffer_pos + l >= term_core_buffer_size) {

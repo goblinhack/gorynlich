@@ -184,7 +184,7 @@ static int32_t command_matches (const char *input,
 
             if (slre_match(&command->tokens.regexp[t],
                            input_tokens.args[t],
-                           strlen(input_tokens.args[t]),
+                           (int) strlen(input_tokens.args[t]),
                            0 /* captures */)) {
                 /*
                  * Success
@@ -220,7 +220,7 @@ static int32_t command_matches (const char *input,
 
             if (slre_match(&command->tokens.regexp[t],
                            input_tokens.args[t],
-                           strlen(input_tokens.args[t]),
+                           (int) strlen(input_tokens.args[t]),
                            0 /* captures */)) {
                 /*
                  * Success
@@ -285,7 +285,7 @@ static int32_t command_matches (const char *input,
 
                     if (slre_match(&command->tokens.regexp[t],
                                 input_tokens.args[t],
-                                strlen(input_tokens.args[t]),
+                                (int) strlen(input_tokens.args[t]),
                                 0 /* captures */)) {
                         /*
                          * Success
@@ -468,7 +468,7 @@ void console_tick (void)
      */
     int fd = STDIN_FILENO;
     int flags = fcntl(fd, F_GETFL, 0);
-    int nread;
+    size_t nread;
     fcntl(fd, F_SETFL, flags | O_NONBLOCK);
     nread = read(fd,&c,1);
     fcntl(fd, F_SETFL, flags & ~O_NONBLOCK);
