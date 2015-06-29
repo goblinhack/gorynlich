@@ -474,8 +474,6 @@ void level_set_walls (levelp level)
            sizeof(level->walls.walls));
     memset(level->doors.walls, ' ',
            sizeof(level->doors.walls));
-    memset(level->pipes.walls, ' ',
-           sizeof(level->pipes.walls));
 
     for (z = MAP_DEPTH_WALL; z < MAP_DEPTH_PLAYER; z++) {
         for (x = 0; x < MAP_WIDTH; x++) {
@@ -786,12 +784,6 @@ void level_server_tick (levelp level)
             ts = time_get_time_ms();
 
             level_set_walls(level);
-            if (0) {
-                /*
-                 * Not used yet.
-                 */
-                level_pipe_find_ends(level);
-            }
         }
     }
 }
