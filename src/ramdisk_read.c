@@ -34,7 +34,6 @@ extern ramdisk_t ramdisk_data[];
 unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
 {
     ramdisk_t *ramfile = ramdisk_data;
-    unsigned long outlenl;
     unsigned char *out;
     char *alt_filename;
 
@@ -203,12 +202,6 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
             *outlen = (int)outlenl;
         }
 #endif
-
-        DBG("Ramdisk %s, %d->%lu bytes", filename, ramfile->len, outlenl);
-
-        if (alt_filename) {
-            myfree(alt_filename);
-        }
 
         return (out);
     }

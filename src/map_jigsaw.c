@@ -240,7 +240,9 @@ typedef struct {
  */
 int32_t opt_seed;
 
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
 static void maze_debug(dungeon_t *dg);
+#endif
 
 static char *dieat (int32_t line, int32_t col, const char *why)
 {
@@ -345,6 +347,7 @@ static uint8_t map_jigsaw_buffer_old_getchar (int32_t x, int32_t y)
     return (map_jigsaw_buffer_old[x][y]);
 }
 
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
 /*
  * map_jigsaw_buffer_set_fgbg
  */
@@ -419,6 +422,7 @@ static void map_jigsaw_buffer_print (void)
         }
     }
 }
+#endif
 
 /*
  * map_jigsaw_buffer_print_file
@@ -2140,6 +2144,7 @@ static void dump_jigpieces_to_map (dungeon_t *dg)
     }
 }
 
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
 /*
  * maze_debug
  */
@@ -2155,6 +2160,7 @@ static void maze_debug (dungeon_t *dg)
 
     putchar('\n');
 }
+#endif
 
 /*
  * maze_convert_to_map
@@ -2262,13 +2268,8 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
     }
 
 #ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-    if (1) 
-#else
-    if (0) 
+    maze_debug(dg);
 #endif
-    {
-        maze_debug(dg);
-    }
 
     /*
      * Already solved this cell?
@@ -2635,7 +2636,7 @@ static int32_t generate_level (const char *jigsaw_map,
     if (opt_seed) {
         maze_seed = opt_seed;
     } else {
-        maze_seed = time(0);
+        maze_seed = myrand();
     }
 
     mysrand(maze_seed);
@@ -3101,5 +3102,4 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
     }
 
     server_level_is_being_loaded = 0;
-
 }

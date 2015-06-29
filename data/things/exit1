@@ -7,7 +7,6 @@
  is_light_source
  light_radius=1.0
  is_animated
- d10000_chance_of_appearing=10000
  is_effect_fade_in_out
  tiles={
   tile={

@@ -1062,33 +1062,33 @@ static void thing_remove_hooks (thingp t)
      */
     thingp owner = 0;
 
-    if (0) {
+#ifdef THING_DEBUG
         THING_LOG(t, "remove hooks");
-    }
+#endif
 
     if (t->owner_thing_id) {
         owner = thing_owner(t);
     }
 
     if (t->owner_thing_id && owner) {
-        if (0) {
+#ifdef THING_DEBUG
             THING_LOG(t, "detach from owner %s", thing_logname(owner));
-        }
+#endif
 
         if (t->thing_id == owner->weapon_carry_anim_thing_id) {
             thing_unwield(owner);
 
-            if (0) {
+#ifdef THING_DEBUG
                 THING_LOG(t, "detach from carry anim owner %s", thing_logname(owner));
-            }
+#endif
 
             thing_set_weapon_carry_anim(owner, 0);
         }
 
         if (t->thing_id == owner->weapon_swing_anim_thing_id) {
-            if (0) {
+#ifdef THING_DEBUG
                 THING_LOG(t, "detach from swing anim owner %s", thing_logname(owner));
-            }
+#endif
 
             thing_set_weapon_swing_anim(owner, 0);
 
@@ -1112,9 +1112,9 @@ static void thing_remove_hooks (thingp t)
         if (t->thing_id == owner->shield_carry_anim_thing_id) {
             thing_unwield_shield(owner);
 
-            if (0) {
+#ifdef THING_DEBUG
                 THING_LOG(t, "detach from carry anim owner %s", thing_logname(owner));
-            }
+#endif
 
             thing_set_shield_carry_anim(owner, 0);
         }
@@ -1886,10 +1886,9 @@ static int thing_hit_ (thingp t,
                                       t->x, t->y);
             }
 
-            if (0) {
-                THING_LOG(t, "hit by (%s) for %u, now dead",
-                          thing_logname(orig_hitter), damage);
-            }
+#ifdef THING_DEBUG
+            THING_LOG(t, "hit by (%s) for %u, now dead", thing_logname(orig_hitter), damage);
+#endif
 
             /*
              * If polymorphed, hit again?
@@ -3534,7 +3533,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         /*
          * We reached the limit for this packet? Send now.
          */
-        packet->len = data - odata;
+        packet->len = (int)(data - odata);
 
         /*
          * Broadcast to all clients.
@@ -3579,7 +3578,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
     if (data - odata > 1) {
         gsocketp sp;
 
-        packet->len = data - odata;
+        packet->len = (int)(data - odata);
 
         if (packet->len > PACKET_LEN_COMPRESS_THRESHOLD) {
             packet_compress(packet);
@@ -3750,6 +3749,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             torch_light_radius_present = true;
 //CON("  torch light %d -> %f", *(data - 1), torch_light_radius);
         } else {
+            torch_light_radius = 0;
             torch_light_radius_present = false;
         }
 
@@ -4131,15 +4131,15 @@ void thing_set_owner (thingp t, thingp owner)
             THING_LOG(t, "owner change %s->%s",
                       thing_logname(old_owner), thing_logname(owner));
         } else {
-            if (0) {
+#ifdef THING_DEBUG
                 THING_LOG(t, "remove owner %s", thing_logname(old_owner));
-            }
+#endif
         }
     } else {
         if (owner) {
-            if (0) {
+#ifdef THING_DEBUG
                 THING_LOG(t, "owner %s", thing_logname(owner));
-            }
+#endif
         }
     }
 

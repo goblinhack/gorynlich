@@ -112,17 +112,15 @@ void thing_set_weapon_swing_anim (thingp t, thingp weapon_swing_anim)
                       thing_logname(old_weapon_swing_anim),
                       thing_logname(weapon_swing_anim));
         } else {
-            if (0) {
-                THING_LOG(t, "remove weapon_swing_anim %s",
-                          thing_logname(old_weapon_swing_anim));
-            }
+#ifdef THING_DEBUG
+            THING_LOG(t, "remove weapon_swing_anim %s", thing_logname(old_weapon_swing_anim));
+#endif
         }
     } else {
         if (weapon_swing_anim) {
-            if (0) {
-                THING_LOG(t, "weapon_swing_anim %s",
-                          thing_logname(weapon_swing_anim));
-            }
+#ifdef THING_DEBUG
+            THING_LOG(t, "weapon_swing_anim %s", thing_logname(weapon_swing_anim));
+#endif
         }
     }
 
