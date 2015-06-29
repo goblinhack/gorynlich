@@ -272,3 +272,8 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
 
     return (0);
 }
+
+ramdisk_t *ramdisk_get_data (void)
+{
+    return (ramdisk_data);
+}

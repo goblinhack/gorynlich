@@ -285,7 +285,13 @@ levelp level_load (level_pos_t level_pos,
 
     char *dir_and_file;
 
-    dir_and_file = dynprintf("data/levels/%d.%d", level_pos.y, level_pos.x);
+    dir_and_file = dynprintf("%s%d.%d", LEVELS_PATH, level_pos.y, level_pos.x);
+
+    if (!file_exists(dir_and_file)) {
+        myfree(dir_and_file);
+
+        dir_and_file = dynprintf("data/levels/%d.%d", level_pos.y, level_pos.x);
+    }
 
     LEVEL_LOG(level, "Level %s: loading", dir_and_file);
 
