@@ -44,7 +44,7 @@ RAMDISK_FILES=.ramdisk_files
 
 log_info "Creating ramdisk filelist"
 
-find data -type f | grep -v Resources | grep -v DS_Store | grep -v "\.ttf$" | grep -v "xcf" | grep -v "mp3" > $RAMDISK_FILES
+find data -type f | grep -v Resources | grep -v DS_Store | grep -v "\.ttf$" | grep -v "xcf" | grep -v "mp3" | grep -v "\.session" | grep -v "^\." > $RAMDISK_FILES
 if [ ! -s $ramdisk_files ]
 then
     cd src

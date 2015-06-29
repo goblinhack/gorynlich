@@ -15,3 +15,5 @@ typedef struct ramdisk_t_ {
 } ramdisk_t;
 
 void ramdisk_init(void);
+
+extern ramdisk_t *ramdisk_get_data(void);
