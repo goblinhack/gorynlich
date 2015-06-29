@@ -47,8 +47,6 @@ typedef struct level_t_ {
 
     level_walls walls;
     level_walls doors;
-    level_walls pipes;
-    level_walls end_pipe;
 
     /*
      * Possible places for players to start.

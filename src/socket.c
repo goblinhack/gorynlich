@@ -2400,7 +2400,7 @@ void socket_tx_server_status (gsocketp s_in)
 
         memcpy(packet->data, &msg, sizeof(msg));
 
-        if (0) {
+        if (debug_socket_ping_enabled) {
             LOG("Server: Tx Server Status to %s", socket_get_remote_logname(s));
         }
 
@@ -2440,7 +2440,7 @@ void socket_rx_server_status (gsocketp s, UDPpacket *packet, uint8_t *data,
     p->remote_ip.host = SDLNet_Read32(&msg_rx->remote_ip.host);
     p->remote_ip.port = SDLNet_Read16(&msg_rx->remote_ip.port);
 
-    if (0) {
+    if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
         if (msg->you_are_playing_on_this_server) {
             LOG("Client: Rx Server Status from %s, current player \"%s\"", 
