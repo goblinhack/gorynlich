@@ -509,9 +509,9 @@ static void parse_args (int32_t argc, char *argv[])
     /*
      * Parse format args
      */
-    CON("%s", argv[0]);
+    CON("program: %s", argv[0]);
     for (i = 1; i < argc; i++) {
-        CON("  %s", argv[i]);
+        CON("  arg: \"%s\"", argv[i]);
     }
 
     for (i = 1; i < argc; i++) {
