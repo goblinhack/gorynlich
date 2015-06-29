@@ -331,7 +331,7 @@ static uint8_t wid_dirlist_receive_input (widp w, const SDL_KEYSYM *key)
 
                         wid_set_cursor(w, len);
 
-                        best = strlen(wid_get_text(child));
+                        best = (int) strlen(wid_get_text(child));
                     }
 
                     n = tree_get_next(r, r->node, n);

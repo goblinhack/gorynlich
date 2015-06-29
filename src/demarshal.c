@@ -349,11 +349,7 @@ void demarshal_fini (tree_demarshal *ctx)
 
 static void demarshal_print_node (tree_demarshal_node *n)
 {
-#ifndef ENABLE_DEMARSHAL_DEBUG
-    return;
-#endif
-
-    int8_t depth = n->depth;
+    int depth = n->depth;
 
     while (depth--) {
         putchar(' ');
@@ -618,7 +614,6 @@ tree_demarshal *demarshal (const char *filename)
                 tmp_mul = 1;
                 continue;
             }
-            continue;
 
         case MARSHAL_PARSE_STATE_INT:
             while (isdigit(c)) {
