@@ -464,6 +464,13 @@ static void find_file_locations (void)
 
 static void usage (void)
 {
+    static int whinged;
+
+    if (whinged) {
+        return;
+    }
+    whinged = true;
+
     CON("Gorynlich, options:");
     CON(" ");
     CON("        --server      run as a server");
@@ -494,7 +501,7 @@ static void parse_args (int32_t argc, char *argv[])
     uint16_t port = SERVER_DEFAULT_PORT;
     int32_t i;
 
-    LOG("Hello");
+    LOG("Greetings");
 
     on_server = false;
     is_client = true;
@@ -502,7 +509,13 @@ static void parse_args (int32_t argc, char *argv[])
     /*
      * Parse format args
      */
+    CON("%s", argv[0]);
     for (i = 1; i < argc; i++) {
+        CON("  %s", argv[i]);
+    }
+
+    for (i = 1; i < argc; i++) {
+
         /*
          * -server
          */

@@ -1352,7 +1352,7 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
         int x, y;
 
         if (sscanf(name, "%d.%d", &y, &x) != 2) {
-            WARN("bad format in level name %s, expecting a,b format", name);
+            WARN("bad format in level name [%s], expecting a,b format", name);
             continue;
         }
 
