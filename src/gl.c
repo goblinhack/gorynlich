@@ -209,7 +209,7 @@ void blit_init (void)
     /*
      * Our array size requirements.
      */
-    uint64_t gl_array_size_required;
+    uint32_t gl_array_size_required;
 
     /*
      * If the screen size has changed or this is the first run, allocate our
@@ -253,7 +253,7 @@ void blit_flush (void)
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    static uint32_t nvertices;
+    static long nvertices;
 
     nvertices = ((char*)bufp - (char*)gl_array_buf) /
                     NUMBER_BYTES_PER_VERTICE;
@@ -284,7 +284,7 @@ void blit_flush (void)
             sizeof(GLfloat) *        // skip (u,v)
             NUMBER_DIMENSIONS_PER_COORD);
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, nvertices);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei) nvertices);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -307,7 +307,7 @@ void blit_flush_colored_triangles (void)
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    static uint32_t nvertices;
+    static long nvertices;
 
     static const GLsizei stride = 
                         sizeof(GLfloat) *
@@ -331,7 +331,7 @@ void blit_flush_colored_triangles (void)
             sizeof(GLfloat) *        // skip (x,y)
             NUMBER_DIMENSIONS_PER_COORD);
 
-    glDrawArrays(GL_TRIANGLES, 0, nvertices);
+    glDrawArrays(GL_TRIANGLES, 0, (GLsizei) nvertices);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
@@ -351,7 +351,7 @@ void blit_flush_triangle_fan (void)
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    static uint32_t nvertices;
+    static long nvertices;
 
     static const GLsizei stride = 
                         sizeof(GLfloat) *
@@ -375,7 +375,7 @@ void blit_flush_triangle_fan (void)
             sizeof(GLfloat) *        // skip (x,y)
             NUMBER_DIMENSIONS_PER_COORD);
 
-    glDrawArrays(GL_TRIANGLE_FAN, 0, nvertices);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, (GLsizei) nvertices);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
@@ -395,7 +395,7 @@ void blit_flush_triangle_strip (void)
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    static uint32_t nvertices;
+    static long nvertices;
 
     static const GLsizei stride = 
                         sizeof(GLfloat) *
@@ -419,7 +419,7 @@ void blit_flush_triangle_strip (void)
             sizeof(GLfloat) *        // skip (x,y)
             NUMBER_DIMENSIONS_PER_COORD);
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, nvertices);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei) nvertices);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
@@ -438,10 +438,10 @@ void blit_flush_triangles (void)
      */
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    static uint32_t number_bytes_per_vertice =
+    static long number_bytes_per_vertice =
                     sizeof(GLfloat) * NUMBER_DIMENSIONS_PER_COORD;
 
-    uint32_t nvertices = ((char*)bufp - (char*)gl_array_buf) /
+    long nvertices = ((char*)bufp - (char*)gl_array_buf) /
                     number_bytes_per_vertice;
 
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -452,7 +452,7 @@ void blit_flush_triangles (void)
         0, // stride
         ((char*)gl_array_buf));
 
-    glDrawArrays(GL_TRIANGLES, 0, nvertices);
+    glDrawArrays(GL_TRIANGLES, 0, (GLsizei) nvertices);
 
     glDisableClientState(GL_VERTEX_ARRAY);
 
