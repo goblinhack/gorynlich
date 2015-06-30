@@ -2982,6 +2982,18 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 corridor_floor |= (map_jigsaw_buffer[x][y+1] == ',') ? 1 : 0;
             }
 
+            /*
+             * For things outside the normal rooms
+             */
+            int null_floor = false;
+            if ((x > 0) && (x < MAP_WIDTH - 1) && (y > 0) && (y < MAP_HEIGHT - 1)) {
+                null_floor  = (map_jigsaw_buffer[x][y] == ' ') ? 1 : 0;
+                null_floor |= (map_jigsaw_buffer[x-1][y] == ' ') ? 1 : 0;
+                null_floor |= (map_jigsaw_buffer[x+1][y] == ' ') ? 1 : 0;
+                null_floor |= (map_jigsaw_buffer[x][y-1] == ' ') ? 1 : 0;
+                null_floor |= (map_jigsaw_buffer[x][y+1] == ' ') ? 1 : 0;
+            }
+
             if (c != ' ') {
                 if (!floor) {
                     floor = random_floor();
@@ -3001,7 +3013,9 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                     tp = floor2;
                 }
 
-                map_tp[x][y][tp_get_z_depth(tp)] = tp;
+                if (!null_floor) {
+                    map_tp[x][y][tp_get_z_depth(tp)] = tp;
+                }
             }
 
             tp = 0;
