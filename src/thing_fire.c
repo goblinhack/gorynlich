@@ -501,7 +501,7 @@ LOG("  owner");
         return;
     }
 
-    if (thing_is_monst(me)) {
+    if (thing_is_monst(me) || thing_is_trap(me)) {
         if (thing_is_player(it)) {
             thing_possible_hit_add(me, it);
             return;
