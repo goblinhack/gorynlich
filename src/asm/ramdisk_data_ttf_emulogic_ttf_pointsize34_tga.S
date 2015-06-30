@@ -1,6 +1,0 @@
-.globl data_ttf_emulogic_ttf_pointsize34_tga_start_
-data_ttf_emulogic_ttf_pointsize34_tga_start_:
-.incbin "/Users/nmcgill/gorynlich/data/ttf/emulogic.ttf_pointsize34.tga"
-.globl data_ttf_emulogic_ttf_pointsize34_tga_end_
-data_ttf_emulogic_ttf_pointsize34_tga_end_:
-
