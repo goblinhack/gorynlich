@@ -1,0 +1,30 @@
+{
+ short_name="fireball trap"
+ raw_name="trap3"
+ tooltip="fireball trap"
+ z_depth="monst"
+ speed=0
+ max_hp=500
+ bonus_xp_on_death=500
+ vision_distance=4
+ hit_delay_tenths=10
+ is_trap
+ min_appear_depth=1
+ max_appear_depth=100
+ is_shadow_caster
+ is_shadow_caster_soft
+ hit_priority=10
+ scale=1.5
+ is_effect_fade_in_out
+ is_collision_map_medium
+ is_animated
+ fires="data/things/fireball3"
+ weapon_fire_delay_hundredths=50
+ d10000_chance_of_appearing=800
+ tiles={
+  tile={ delay=50 tile="trap3-1" }
+  tile={ delay=50 tile="trap3-2" }
+  tile={ delay=50 tile="trap3-3" }
+  tile={ delay=50 tile="trap3-4" }
+ }
+}

@@ -387,6 +387,51 @@ tpp random_monst (int depth)
             continue;
         }
 
+        if (tp_is_trap(tp)) {
+            continue;
+        }
+
+        /*
+         * Unique? like death?
+         */
+        if (!tp_get_d10000_chance_of_appearing(tp)) {
+            continue;
+        }
+
+        if (depth < tp_get_min_appear_depth(tp)) {
+            continue;
+        }
+
+        if (depth > tp_get_max_appear_depth(tp)) {
+            continue;
+        }
+
+        int r = myrand() % 10000;
+        if (r < (tp_get_d10000_chance_of_appearing(tp) + depth)) {
+            return (tp);
+        }
+    }
+}
+
+tpp random_trap (int depth)
+{
+    int loop = 0;
+
+    for (;;) {
+
+        if (loop++ > 100000) {
+            ERR("couldn't find random trap");
+            return (0);
+        }
+
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+
+        if (!tp_is_trap(tp)) {
+            continue;
+        }
+
         /*
          * Unique? like death?
          */
