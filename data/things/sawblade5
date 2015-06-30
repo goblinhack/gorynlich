@@ -15,6 +15,7 @@
  can_be_hit_chance=500000
  is_sawblade
  is_animated
+ is_trap
  tiles={
   tile={
    tile="sawblade5.1"

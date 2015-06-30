@@ -726,7 +726,8 @@ static int32_t jigpiece_char_is_occupiable (char c)
     return (c == MAP_FLOOR) ||
            (c == MAP_CORRIDOR) ||
            (c == MAP_MONST) ||
-           (c == MAP_MOB_SPAWN) ||
+           (c == MAP_MONST_OR_MOB) ||
+           (c == MAP_GENERATOR) ||
            (c == MAP_TREASURE);
 }
 
@@ -737,7 +738,8 @@ static int32_t jigpiece_char_is_passable (char c)
            (c == MAP_MONST) ||
            (c == MAP_START) ||
            (c == MAP_END) ||
-           (c == MAP_MOB_SPAWN) ||
+           (c == MAP_MONST_OR_MOB) ||
+           (c == MAP_GENERATOR) ||
            (c == MAP_DOOR) ||
            (c == MAP_WEAPON) ||
            (c == MAP_GENERATOR) ||
@@ -752,7 +754,8 @@ static int32_t jigpiece_char_is_passable (char c)
 static int32_t jigpiece_char_is_monst (char c)
 {
     return ((c == MAP_MONST) ||
-            (c == MAP_MOB_SPAWN));
+            (c == MAP_GENERATOR) ||
+            (c == MAP_MONST_OR_MOB));
 }
 
 /*
@@ -2778,7 +2781,7 @@ static void init (void)
     map_fg[MAP_CORRIDOR]       = TERM_COLOR_YELLOW;
     map_fg[MAP_CORRIDOR_WALL]  = TERM_COLOR_BLUE;
     map_fg[MAP_MONST]          = TERM_COLOR_BLUE;
-    map_fg[MAP_MOB_SPAWN]      = TERM_COLOR_BLACK;
+    map_fg[MAP_MONST_OR_MOB]      = TERM_COLOR_BLACK;
     map_fg[MAP_TRAP]           = TERM_COLOR_BLUE;
     map_fg[MAP_TELEPORT]       = TERM_COLOR_BLUE;
     map_fg[MAP_TREASURE]       = TERM_COLOR_WHITE;
@@ -2809,7 +2812,7 @@ static void init (void)
     map_bg[MAP_CORRIDOR]       = TERM_COLOR_BLACK;
     map_bg[MAP_CORRIDOR_WALL]  = TERM_COLOR_BLACK;
     map_bg[MAP_MONST]          = TERM_COLOR_BLACK;
-    map_bg[MAP_MOB_SPAWN]      = TERM_COLOR_RED;
+    map_bg[MAP_MONST_OR_MOB]      = TERM_COLOR_RED;
     map_bg[MAP_TRAP]           = TERM_COLOR_BLACK;
     map_bg[MAP_TELEPORT]       = TERM_COLOR_BLACK;
     map_bg[MAP_TREASURE]       = TERM_COLOR_YELLOW;
@@ -2838,7 +2841,7 @@ static void init (void)
     valid_frag_char[MAP_CORRIDOR]       = true;
     valid_frag_char[MAP_CORRIDOR_WALL]  = false;
     valid_frag_char[MAP_MONST]          = true;
-    valid_frag_char[MAP_MOB_SPAWN]      = true;
+    valid_frag_char[MAP_MONST_OR_MOB]      = true;
     valid_frag_char[MAP_TRAP]           = true;
     valid_frag_char[MAP_TELEPORT]       = true;
     valid_frag_char[MAP_TREASURE]       = true;
@@ -2868,7 +2871,7 @@ static void init (void)
     valid_frag_alt_char[MAP_CORRIDOR]       = true;
     valid_frag_alt_char[MAP_CORRIDOR_WALL]  = true;
     valid_frag_alt_char[MAP_MONST]          = true;
-    valid_frag_alt_char[MAP_MOB_SPAWN]      = true;
+    valid_frag_alt_char[MAP_MONST_OR_MOB]      = true;
     valid_frag_alt_char[MAP_TRAP]           = true;
     valid_frag_alt_char[MAP_TELEPORT]       = true;
     valid_frag_alt_char[MAP_TREASURE]       = true;
@@ -3027,37 +3030,43 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
             tp = 0;
 
             switch (c) {
-            case 'x': 
+            case MAP_WALL: 
                 if (!wall) {
                     wall = random_wall();
                 }
                 tp = wall;
                 break;
 
-            case '+': 
+            case MAP_CORRIDOR_WALL: 
                 if (!wall2) {
                     wall2 = random_corridor_wall();
                 }
                 tp = wall2;
                 break;
 
-            case 'D': 
+            case MAP_DOOR: 
                 if (!door) {
                     door = random_door();
                 }
                 tp = door;
                 break;
 
-            case 'r': 
+            case MAP_ROCK: 
                 if (!rock) {
                     rock = random_rock();
                 }
                 tp = rock;
                 break;
 
-            case 'L': tp = tp_find("data/things/lava1"); break;
-            case 'T': tp = tp_find("data/things/teleport1"); break;
-            case '_': 
+            case MAP_LAVA:
+                tp = tp_find("data/things/lava1");
+                break;
+
+            case MAP_TELEPORT:
+                tp = tp_find("data/things/teleport1");
+                break;
+
+            case MAP_SHOP_FLOOR: 
                 tp = tp_find("data/things/shop_floor1"); 
                 if (!shop_notify) {
                     shop_notify = true;
@@ -3065,19 +3074,28 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 }
                 break;
 
-            case 'K': tp = tp_find("data/things/shopkeeper"); break;
+            case MAP_SHOPKEEPER: tp = tp_find("data/things/shopkeeper"); break;
 
-            case 'S': tp = random_player(); break;
-            case 'E': tp = random_exit(); break;
-            case 'f': tp = random_food(); break;
-            case 'G': 
-                    if (!gen) {
-                        gen = random_mob(depth); 
-                    }
-                    tp = gen;
-                    break;
+            case MAP_START: 
+                tp = random_player(); 
+                break;
 
-            case 'M': 
+            case MAP_END: 
+                tp = random_exit(); 
+                break;
+
+            case MAP_FOOD: 
+                tp = random_food(); 
+                break;
+
+            case MAP_GENERATOR: 
+                if (!gen) {
+                    gen = random_mob(depth); 
+                }
+                tp = gen;
+                break;
+
+            case MAP_MONST_OR_MOB:
                 if ((myrand() % 100) < 20) {
                     /*
                      * Nothing
@@ -3089,12 +3107,27 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 }
                 break;
 
-            case 'w': tp = random_weapon(shop_floor); break;
-            case 'p': tp = random_potion(shop_floor); break;
-            case 'm': tp = random_monst(depth); break;
-            case 'b': tp = tp_find("data/things/brazier"); break;
+            case MAP_TRAP:
+                tp = random_trap(depth); 
+                break;
 
-            case '$': {
+            case MAP_WIDTH: 
+                tp = random_weapon(shop_floor); 
+                break;
+
+            case MAP_POTION: 
+                tp = random_potion(shop_floor); 
+                break;
+
+            case MAP_MONST: 
+                tp = random_monst(depth); 
+                break;
+
+            case MAP_BRAZIER: 
+                tp = tp_find("data/things/brazier"); 
+                break;
+
+            case MAP_TREASURE: {
                 int r = myrand() % 100;
 
                 if (shop_floor) {

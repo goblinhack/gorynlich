@@ -99,7 +99,7 @@ enum {
     MAP_CORRIDOR        = ',',
     MAP_CORRIDOR_WALL   = '+',
     MAP_MONST           = 'm',
-    MAP_MOB_SPAWN       = 'M',
+    MAP_MONST_OR_MOB       = 'M',
     MAP_TRAP            = '!',
     MAP_TELEPORT        = 'T',
     MAP_TREASURE        = '$',
