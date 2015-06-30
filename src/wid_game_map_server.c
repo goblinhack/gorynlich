@@ -248,6 +248,7 @@ wid_game_map_server_replace_tile (widp w,
             flip_y = 0;
             rot = 0;
 
+#if 0
             if ((myrand() % 100) < 50) {
                 flip_x = 1;
             }
@@ -259,6 +260,7 @@ wid_game_map_server_replace_tile (widp w,
             if ((myrand() % 100) < 50) {
                 rot = 1;
             }
+#endif
         }
 
         if (flip_x) {
