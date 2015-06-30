@@ -985,7 +985,7 @@ static void client_check_still_in_game (level_pos_t level_pos)
 
             MSG(INFO, "%s joined", p->stats.pname);
 
-            LOG("%s joined, ID %d", p->stats.pname, p->stats.thing_id);
+            LOG("Client: %s joined, ID %d", p->stats.pname, p->stats.thing_id);
 
             /*
              * Needed twice for some reason to adjust the scrollbar as the

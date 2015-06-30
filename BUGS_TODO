@@ -37,6 +37,15 @@
 - multi player
 - magic gives health to other players
 
+Tue Jun 30 08:56:52 EDT 2015
+- quieter logs in single player
+- faster ghosts
+- less frequent shops
+- audio crash with 6 channels
+- removed level flipping as messed up directions on triggers
+- items outside level to not get floor tiles
+- faster single player sockets
+
 Sun Jun 28 22:07:30 EDT 2015
 - multiple shops, stealing seems to work
 - level load in installed image

@@ -15,7 +15,7 @@
  d10000_chance_of_appearing=1000
  damage=1
  bonus_xp_on_death=10
- mob_spawn_delay_tenths=50
+ mob_spawn_delay_tenths=30
  tiles={
   tile={
    tile="bonepile1"
