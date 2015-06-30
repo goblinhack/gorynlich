@@ -1117,8 +1117,8 @@ static void wid_map_preview_do (int thumbnail)
         fpoint tl;
         fpoint br;
 
-        double dx = 0.005;
-        double dy = 0.005;
+        double dx = 0.008;
+        double dy = 0.008;
 
         if (thumbnail) {
             dx /= 2.0;

@@ -7,7 +7,6 @@
  is_light_source
  light_radius=1.0
  is_animated
- is_effect_fade_in_out
  tiles={
   tile={
    tile="exit1.1"
