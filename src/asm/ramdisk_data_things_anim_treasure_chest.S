@@ -1,6 +1,0 @@
-.globl data_things_anim_treasure_chest_start_
-data_things_anim_treasure_chest_start_:
-.incbin "/Users/nmcgill/gorynlich/data/things/anim_treasure_chest"
-.globl data_things_anim_treasure_chest_end_
-data_things_anim_treasure_chest_end_:
-
