@@ -1627,7 +1627,9 @@ CON("  %s real_killer ",thing_logname(real_killer));
 
             /*
              * Breaking stuff in a shop? bad idea.
-             */
+             * 
+             * Not sure about this as things like keys are not collected
+             *
             if (thing_is_treasure(t)) {
                 if (owner && thing_is_shopkeeper(owner)) {
                     if (thing_is_player(real_killer)) {
@@ -1637,6 +1639,8 @@ CON("  %s real_killer ",thing_logname(real_killer));
                     }
                 }
             }
+             *
+             */
         } else {
             /*
              * Collecting a thing?
@@ -2563,7 +2567,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
 
         {
             TREE_WALK(server_boring_things, t) {
-                thing_destroy(t, "level destroyed");
+                thing_destroy(t, 0);
             }
         }
 
@@ -2613,7 +2617,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
 
         {
             TREE_WALK(client_boring_things, t) {
-                thing_destroy(t, "level destroyed");
+                thing_destroy(t, 0);
             }
         }
 
