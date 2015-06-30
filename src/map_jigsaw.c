@@ -29,7 +29,7 @@
 #undef MAZE_DEBUG_PRINT_EXITS
 #undef MAZE_DEBUG_SHOW_AS_GENERATING
 #undef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
-#undef MAZE_DEBUG_SHOW_CONSOLE
+#define MAZE_DEBUG_SHOW_CONSOLE
 
 #include "main.h"
 #include "wid.h"
@@ -194,7 +194,8 @@ typedef struct maze_cell_t_ {
     struct maze_cell_t_ *exit[4];
     int32_t possible_jigpieces[JIGPIECE_MAX];
     int32_t possible_jigpieces_size;
-    int32_t jigpiece;
+    int32_t jigpiece_index;
+    jigpiece_t *jp;
     int32_t x;
     int32_t y;
     uint8_t exits:4;
@@ -347,7 +348,6 @@ static uint8_t map_jigsaw_buffer_old_getchar (int32_t x, int32_t y)
     return (map_jigsaw_buffer_old[x][y]);
 }
 
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
 /*
  * map_jigsaw_buffer_set_fgbg
  */
@@ -378,7 +378,8 @@ static void map_jigsaw_buffer_set_fgbg (uint8_t fg, uint8_t bg)
 /*
  * map_jigsaw_buffer_print
  */
-static void map_jigsaw_buffer_print (void)
+void map_jigsaw_buffer_print(void);
+void map_jigsaw_buffer_print (void)
 {
     int32_t need_nl;
     int32_t x;
@@ -422,7 +423,6 @@ static void map_jigsaw_buffer_print (void)
         }
     }
 }
-#endif
 
 /*
  * map_jigsaw_buffer_print_file
@@ -2135,10 +2135,10 @@ static void dump_jigpieces_to_map (dungeon_t *dg)
 
             maze_cell_t *c = MAZE_CELL(dg->maze, x, y);
 
-            if (c->jigpiece) {
+            if (c->jigpiece_index) {
                 jigpiece_printat(dg,
                                 (JIGPIECE_WIDTH * x) + dx,
-                                (JIGPIECE_HEIGHT * y) + dy, c->jigpiece);
+                                (JIGPIECE_HEIGHT * y) + dy, c->jigpiece_index);
             }
         }
     }
@@ -2274,7 +2274,7 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
     /*
      * Already solved this cell?
      */
-    if (mcell->jigpiece) {
+    if (mcell->jigpiece_index) {
         return (1);
     }
 
@@ -2319,7 +2319,7 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
              * If no neighbor in a given direction, we can't determine what to
              * put.
              */
-            if (!ocell->jigpiece) {
+            if (!ocell->jigpiece_index) {
                 continue;
             }
 
@@ -2328,7 +2328,7 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
              * half.
              */
             if (dg->jigpiece[c].has[MAP_FLOOR]) {
-                if (dg->jigpiece[ocell->jigpiece].has[MAP_FLOOR]) {
+                if (dg->jigpiece[ocell->jigpiece_index].has[MAP_FLOOR]) {
                     if ((myrand() % 100) > MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE) {
                         break;
                     }
@@ -2338,7 +2338,7 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
             /*
              * If the cells join exactly then this is a possibility.
              */
-            if (!jigpiece_intersect_score(dg, c, dir, ocell->jigpiece)) {
+            if (!jigpiece_intersect_score(dg, c, dir, ocell->jigpiece_index)) {
                 break;
             }
         }
@@ -2349,7 +2349,7 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
     }
 
     if (!intersect_list_size) {
-        mcell->jigpiece = 0;
+        mcell->jigpiece_index = 0;
         return (0);
     }
 
@@ -2357,7 +2357,34 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
      * Choose a random jigsaw piece. 
      */
     for (i=0; i < 1 + (myrand() % 3); i++) {
-        mcell->jigpiece = intersect_list[myrand() % intersect_list_size];
+
+        uint32_t j = intersect_list[myrand() % intersect_list_size];
+        jigpiece_t *jp = &dg->jigpiece[j];
+
+        /*
+         * Only allow one shop per level.
+         */
+        int skip = false;
+        int m;
+
+        if (jp->has[MAP_SHOP_FLOOR]) {
+            for (m = 0; m < MAP_JIGSAW_PIECES_ACROSS * MAP_JIGSAW_PIECES_DOWN; m++) {
+                uint32_t k = dg->maze[m].jigpiece_index;
+                if (k) {
+                    jigpiece_t *kp = &dg->jigpiece[k];
+                    if (kp->has[MAP_SHOP_FLOOR]) {
+                        skip = true;
+                    }
+                }
+            }
+        }
+
+        if (skip) {
+            continue;
+        }
+
+        mcell->jigpiece_index = j;
+        mcell->jp = jp;
 
         exits = 0;
         ok = 1;
@@ -2375,7 +2402,7 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
                 continue;
             }
 
-            if (ocell->jigpiece) {
+            if (ocell->jigpiece_index) {
                 continue;
             }
 
@@ -2410,7 +2437,7 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
         return (1);
     }
 
-    mcell->jigpiece = 0;
+    mcell->jigpiece_index = 0;
 
     return (ok);
 }
@@ -2448,13 +2475,13 @@ static int32_t maze_jigsaw_solve (dungeon_t *dg)
         for (y = 0; y < h; y++) {
             for (x = 0; x < w; x++) {
                 ocell = MAZE_CELL(dg->maze, x, y);
-                ocell->jigpiece = 0;
+                ocell->jigpiece_index = 0;
             }
         }
 
         x = 0;
         y = 0;
-        mcell->jigpiece =
+        mcell->jigpiece_index =
             mcell->possible_jigpieces[myrand() % mcell->possible_jigpieces_size];
 
         for (dir = 0; dir < DIR_MAX; dir++) {
