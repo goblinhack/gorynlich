@@ -148,18 +148,18 @@ void music_play (const char *file,
     int audio_channels = 6;
     int audio_buffers = 1024 * 8;
 
-    Mix_CloseAudio();
+    if (!music_init_done) {
+        if (Mix_OpenAudio(rate,
+                          audio_format,
+                          audio_channels,
+                          audio_buffers) != 0) {
 
-    if (Mix_OpenAudio(rate,
-                      audio_format,
-                      audio_channels,
-                      audio_buffers) != 0) {
+            MSG_BOX("Mix_OpenAudio fail: %s %s",
+                    Mix_GetError(), SDL_GetError());
+        }
 
-        MSG_BOX("Mix_OpenAudio fail: %s %s",
-		Mix_GetError(), SDL_GetError());
+        music_init_done = true;
     }
-
-    music_init_done = true;
 
     musicp music = music_load(file, alias);
 

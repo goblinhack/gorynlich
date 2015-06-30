@@ -231,24 +231,30 @@ wid_game_map_server_replace_tile (widp w,
                                   itemp item,
                                   thing_statsp stats)
 {
+#if 0
     static levelp last_level;
     static int flip_x;
     static int flip_y;
     static int rot;
+#endif
 
     verify(w);
     levelp level = (typeof(level)) wid_get_client_context(w);
     verify(level);
 
+#if 0
     if (server_level_is_being_loaded) {
         if (level != last_level) {
             last_level = level;
 
+            /*
+             * Need to change direction triggers too... Not sure if this is 
+             * worth the complexity...
+             */
             flip_x = 0;
             flip_y = 0;
             rot = 0;
 
-#if 0
             if ((myrand() % 100) < 50) {
                 flip_x = 1;
             }
@@ -260,7 +266,6 @@ wid_game_map_server_replace_tile (widp w,
             if ((myrand() % 100) < 50) {
                 rot = 1;
             }
-#endif
         }
 
         if (flip_x) {
@@ -280,6 +285,7 @@ wid_game_map_server_replace_tile (widp w,
             return (0);
         }
     }
+#endif
 
     int z = tp_get_z_depth(tp);
     tree_rootp thing_tiles;

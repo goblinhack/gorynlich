@@ -690,7 +690,7 @@ void ptrcheck_leak_print (void)
     }
 
     if (!leak) {
-        LOG("No memory leaks!");
+        DIE("No memory leaks!");
     }
 }
 
