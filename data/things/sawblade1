@@ -15,6 +15,7 @@
  is_sawblade
  is_animated
  is_fragile
+ is_trap
  polymorph_on_death="data/things/sawblade2"
  tiles={
   tile={

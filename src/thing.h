@@ -385,7 +385,6 @@ enum {
     THING_AXE2_ANIM,
     THING_SHIELD1_ANIM,
     THING_SCYTHE1_ANIM,
-//    THING_ANIM_MAN,
     THING_ANIM_TREASURE_CHEST,
     THING_ANIM_EYES,
     THING_WEAPON_HIT1,
@@ -431,6 +430,9 @@ enum {
     THING_MASK1,
     THING_RING2,
     THING_RING3,
+    THING_TRAP1,
+    THING_TRAP2,
+    THING_TRAP3,
     THING_GEM1,
     THING_GEM2,
     THING_GEM3,
@@ -1249,11 +1251,11 @@ static inline uint8_t thing_is_rrr16 (thingp t)
     return (tp_is_rrr16(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr17 (thingp t)
+static inline uint8_t thing_is_trap (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr17(thing_tp(t)));
+    return (tp_is_trap(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_corridor_wall (thingp t)
@@ -2064,9 +2066,9 @@ static inline uint8_t thing_is_rrr16_noverify (thingp t)
     return (t->tp->is_rrr16);
 }
 
-static inline uint8_t thing_is_rrr17_noverify (thingp t)
+static inline uint8_t thing_is_trap_noverify (thingp t)
 {
-    return (t->tp->is_rrr17);
+    return (t->tp->is_trap);
 }
 
 static inline uint8_t thing_is_corridor_wall_noverify (thingp t)
