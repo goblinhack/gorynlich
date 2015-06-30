@@ -4,20 +4,6 @@
 :horiz-flip
 :rotatable
 +-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
-|xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxx.xxxxxx|xxxxxxxxxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxxDxxxxxx|xxxxxxxxxxxxx|
-|x$_________$x|x$_________bx|x$_x_x_x_x_$x|xb_________bx|x___________x|x$___x_x___$x|x__x$x_x$x__x|x___________x|
-|x___x___x___x|x____b_____xx|x____x_x_x__x|x___$___$___x|x_b__$_$__b_x|x____x_x____x|xx_________xx|x_b_x___x_b_x|
-|x$__x___x__$x|x$_________bx|xxxx_x_x____x|x___________x|x___________x|x____b_b____x|x$_________$x|x___x$$$x___x|
-|x___x___x___x|x____b_____xx|xb___x_x____x|x___$___$___x|x____$_$____x|x___________x|xx____b____xx|x___xxxxx___x|
-|x$__x___x__$x|x$______K_xxx|x____bKb____x|xb____K____bx|x_____K_____x|xxxb__K__bxxx|x_____K_____x|x____K______x|
-|x___x___x___x|x____b______D|x___________x|.___________.|.____$_$____x|.___________.|D___________.|D___________.|
-|x_____K_____x|x$________xxx|x___________x|xb__$___$__bx|x___________x|xxxb_____bxxx|x___________x|x___xxxxx___x|
-|x___________x|x____b_____xx|x___________x|x___________x|x____$_$____x|x___________x|xx_________xx|x___x$$$x___x|
-|x___________x|x$_________bx|x$_________$x|x___$___$___x|x___________x|x____b_b____x|x$____b____$x|x___x___x___x|
-|xxxxb___bxxxx|x____b_____xx|x___________x|x___________x|x_b_______b_x|x____x_x____x|xx_________xx|x_b_______b_x|
-|xxxxx___xxxxx|x$___x_x___bx|x$___b_b___$x|x____b_b____x|x___________x|x$___x_x___$x|x__x$x_x$x__x|x___________x|
-|xxxxxxDxxxxxx|xxxxxxDxxxxxx|xxxxxx.xxxxxx|xxxxxxDxxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxxDxxxxxx|xxxxxxDxxxxxx|
-+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
 |xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxx.xxxxxx|xxxxxxxxxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxxxxxxxxx|
 |x...........x|x...........x|x...........x|x...........x|x...........x|x...........x|x...........x|x...........x|
 |x...........x|x...........x|x...........x|x...........x|x...........x|x...........x|x...........x|x...........x|
@@ -129,6 +115,20 @@
 |   x....xx..x|x......x     |   x........x|   x.....x   |     x...x   | x.......x   |    x...x    |x......x     |
 |    xx......x|x......x     |    x.......x|    x...x    |     x...x   |  x.....x    |    x...x    |x......x     |
 |     x.xxxxxx|xxxxxx.x     |     x.xxxxxx|    xx.xx    |     x.xxx   |   xxx.xx    |    xx.xx    |xxxxxx.x     |
++-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+|xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxx.xxxxxx|xxxxxxxxxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxxDxxxxxx|xxxxxxxxxxxxx|
+|x$_________$x|x$_________bx|x$_x_x_x_x_$x|xb_________bx|x___________x|x$___x_x___$x|x__x$x_x$x__x|x___________x|
+|x___x___x___x|x____b_____xx|x____x_x_x__x|x___$___$___x|x_b__$_$__b_x|x____x_x____x|xx_________xx|x_b_x___x_b_x|
+|x$__x___x__$x|x$_________bx|xxxx_x_x____x|x___________x|x___________x|x____b_b____x|x$_________$x|x___x$$$x___x|
+|x___x___x___x|x____b_____xx|xb___x_x____x|x___$___$___x|x____$_$____x|x___________x|xx____b____xx|x___xxxxx___x|
+|x$__x___x__$x|x$______K_xxx|x____bKb____x|xb____K____bx|x_____K_____x|xxxb__K__bxxx|x_____K_____x|x____K______x|
+|x___x___x___x|x____b______D|x___________x|.___________.|.____$_$____x|.___________.|D___________.|D___________.|
+|x_____K_____x|x$________xxx|x___________x|xb__$___$__bx|x___________x|xxxb_____bxxx|x___________x|x___xxxxx___x|
+|x___________x|x____b_____xx|x___________x|x___________x|x____$_$____x|x___________x|xx_________xx|x___x$$$x___x|
+|x___________x|x$_________bx|x$_________$x|x___$___$___x|x___________x|x____b_b____x|x$____b____$x|x___x___x___x|
+|xxxxb___bxxxx|x____b_____xx|x___________x|x___________x|x_b_______b_x|x____x_x____x|xx_________xx|x_b_______b_x|
+|xxxxx___xxxxx|x$___x_x___bx|x$___b_b___$x|x____b_b____x|x___________x|x$___x_x___$x|x__x$x_x$x__x|x___________x|
+|xxxxxxDxxxxxx|xxxxxxDxxxxxx|xxxxxx.xxxxxx|xxxxxxDxxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxxDxxxxxx|xxxxxxDxxxxxx|
 +-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
 |      ,      |             |             |             |      ,      |             |             |             |
 |      ,      |             |             |             |      ,      |             |             |             |

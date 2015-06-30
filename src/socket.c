@@ -3064,6 +3064,10 @@ uint8_t *packet_decompress (UDPpacket *packet, uint8_t *uncompressed)
 
 void packet_compress (UDPpacket *packet)
 {
+    if (single_player_mode) {
+        return;
+    }
+
 #ifdef ENABLE_PACKET_DUMP
     LOG("Tx pre compressed:");
     hex_dump_CON(packet->data, 0, packet->len);
@@ -3535,19 +3539,27 @@ void socket_tx_tick (void)
 {
     gsocketp s;
 
-    TREE_WALK(sockets, s) {
-        int loop = 0;
-
-        while (loop++ < MAX_SOCKET_TX_PACKETS_PER_LOOP) {
-            if (!socket_tx_queue_send_packet(s)) {
-                break;
+    if (single_player_mode) {
+        TREE_WALK(sockets, s) {
+            while (socket_tx_queue_send_packet(s)) {
             }
         }
 
-        if (s->tx_queue_size > MAX_SOCKET_QUEUE_SIZE / 2) {
-            socket_tx_queue_flush(s);
+    } else {
+        TREE_WALK(sockets, s) {
+            int loop = 0;
+
+            while (loop++ < MAX_SOCKET_TX_PACKETS_PER_LOOP) {
+                if (!socket_tx_queue_send_packet(s)) {
+                    break;
+                }
+            }
+
+            if (s->tx_queue_size > MAX_SOCKET_QUEUE_SIZE / 2) {
+                socket_tx_queue_flush(s);
+            }
         }
-    }
+    } 
 }
 
 void socket_rx_tick (void)

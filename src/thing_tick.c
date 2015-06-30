@@ -34,7 +34,10 @@ static void thing_tick_server_all (void)
     static uint32_t last_slow_tick;
     int slow_tick = false;
 
-    if (time_have_x_secs_passed_since(1, last_slow_tick)) {
+    /*
+     * Not too slow or shop items show prices too quickly.
+     */
+    if (time_have_x_secs_passed_since(2, last_slow_tick)) {
         slow_tick = true;
         last_slow_tick = time_get_time_ms();
     }
