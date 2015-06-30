@@ -2050,8 +2050,10 @@ void socket_tx_server_shout_at_all_players (uint32_t level, const char *txt)
             continue;
         }
 
-        LOG("Server: Tx Shout \"%s\" to (all players) %s", txt,
-            socket_get_remote_logname(sp));
+        if (!single_player_mode) {
+            LOG("Server: Tx Shout \"%s\" to (all players) %s", txt,
+                socket_get_remote_logname(sp));
+        }
 
         UDPpacket *packet = packet_alloc();
 
@@ -2107,8 +2109,10 @@ socket_tx_server_shout_over (uint32_t level,
 
         packet->len = sizeof(msg);
 
-        LOG("Client: Tx Shout %s over \"%s\"", 
-            socket_get_remote_logname(sp), txt);
+        if (!single_player_mode) {
+            LOG("Client: Tx Shout %s over \"%s\"", 
+                socket_get_remote_logname(sp), txt);
+        }
 
         write_address(packet, socket_get_remote_ip(sp));
 
@@ -2154,8 +2158,10 @@ socket_tx_server_shout_at_all_players_except (gsocketp except,
 
         packet->len = sizeof(msg);
 
-        LOG("Server: Tx Shout \"%s\" to (all except one) %s", txt,
-            socket_get_remote_logname(sp));
+        if (!single_player_mode) {
+            LOG("Server: Tx Shout \"%s\" to (all except one) %s", txt,
+                socket_get_remote_logname(sp));
+        }
 
         write_address(packet, socket_get_remote_ip(sp));
 
@@ -2200,8 +2206,10 @@ void socket_tx_server_shout_only_to (gsocketp target,
 
         packet->len = sizeof(msg);
 
-        LOG("Server: Tx Shout \"%s\" to (one player) %s", txt,
-            socket_get_remote_logname(sp));
+        if (!single_player_mode) {
+            LOG("Server: Tx Shout \"%s\" to (one player) %s", txt,
+                socket_get_remote_logname(sp));
+        }
 
         write_address(packet, socket_get_remote_ip(sp));
 

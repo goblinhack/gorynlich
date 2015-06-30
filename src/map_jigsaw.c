@@ -1906,6 +1906,11 @@ static void maze_add_decorations (void)
         }
     }
 
+#if 0
+    /*
+     * Not so great as it can encase monsters.
+     */
+
     /*
      * Random thick walls.
      */
@@ -1936,6 +1941,7 @@ static void maze_add_decorations (void)
             map_jigsaw_buffer_print_file(MY_STDOUT);
         }
     }
+#endif
 }
 
 static int maze_flood_find (int32_t x, int32_t y, char find, int depth)

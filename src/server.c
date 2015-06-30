@@ -351,6 +351,10 @@ static void server_alive_check (void)
 {
     gsocketp s;
 
+    if (single_player_mode) {
+        return;
+    }
+
     sockets_quality_check();
 
     TREE_WALK(sockets, s) {

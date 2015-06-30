@@ -3,7 +3,7 @@
  raw_name="ghost1"
  tooltip="weak spirit"
  z_depth="monst"
- speed=5
+ speed=15
  max_hp=1
  damage=2
  bonus_xp_on_death=5
