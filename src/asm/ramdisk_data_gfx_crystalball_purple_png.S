@@ -1,0 +1,6 @@
+.globl data_gfx_crystalball_purple_png_start_
+data_gfx_crystalball_purple_png_start_:
+.incbin "/Users/nmcgill/gorynlich/data/gfx/crystalball_purple.png"
+.globl data_gfx_crystalball_purple_png_end_
+data_gfx_crystalball_purple_png_end_:
+

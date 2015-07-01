@@ -1,0 +1,6 @@
+.globl data_sound_small_fireball_SoundBible_com_1381880822_wav_start_
+data_sound_small_fireball_SoundBible_com_1381880822_wav_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/small_fireball_SoundBible.com_1381880822.wav"
+.globl data_sound_small_fireball_SoundBible_com_1381880822_wav_end_
+data_sound_small_fireball_SoundBible_com_1381880822_wav_end_:
+
