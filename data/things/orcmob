@@ -9,6 +9,7 @@
     2 "data/things/orc4"
     1 "data/things/orc5"
  }
+ max_hp=20
  z_depth="monst"
  is_mob_spawner
  is_effect_pulse
