@@ -203,7 +203,7 @@ void math_init(void);
 /*
  * Fast cached sin/cos routines.
  */
-#define RAD_MAX 0xFFF
+#define RAD_MAX 0xFFFF
 #define RAD_STEP (RAD_360 / (double)RAD_MAX)
 
 static inline double fsin (double rad)
@@ -212,6 +212,14 @@ static inline double fsin (double rad)
     extern double FSIN[RAD_MAX];
 
     return (FSIN[index & (RAD_MAX-1)]);
+}
+
+static inline double fasin (double rad)
+{
+    const uint16_t index = (uint16_t)(rad / RAD_STEP);
+    extern double FASIN[RAD_MAX];
+
+    return (FASIN[index & (RAD_MAX-1)]);
 }
 
 static inline double fcos (double rad)
@@ -224,7 +232,14 @@ static inline double fcos (double rad)
 
 static inline double anglerot (fpoint p)
 {
-    double theta = asin(p.y / flength(p));
+    double theta;
+    double v = p.y / flength(p);
+
+    if (v < 0) {
+        theta = -fasin(-v);
+    } else {
+        theta = fasin(v);
+    }
 
     if (p.x > 0) {
         if (p.y > 0) {
