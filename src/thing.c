@@ -2611,7 +2611,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
                     continue;
                 }
 
-                thing_destroy(t, "level destroyed");
+                thing_destroy(t, 0);
             }
         }
 
