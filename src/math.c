@@ -23,6 +23,7 @@ uint32_t nextpoweroftwo (uint32_t val)
 }
 
 double FSIN[RAD_MAX];
+double FASIN[RAD_MAX];
 double FCOS[RAD_MAX];
 
 static void fsin_init (void)
@@ -31,6 +32,15 @@ static void fsin_init (void)
 
     for (i = 0; i < RAD_MAX; i++) {
         FSIN[i] = (double)sin(RAD_STEP * (double) i);
+    }
+}
+
+static void fasin_init (void)
+{
+    uint16_t i;
+
+    for (i = 0; i < RAD_MAX; i++) {
+        FASIN[i] = (double)asin(RAD_STEP * (double) i);
     }
 }
 
@@ -46,6 +56,7 @@ static void fcos_init (void)
 void math_init (void)
 {
     fsin_init();
+    fasin_init();
     fcos_init();
 }
 
