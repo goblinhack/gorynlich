@@ -31,7 +31,7 @@ static widp thing_place_ (thingp t,
         item.cursed = tp_is_cursed(tp);
     }
 
-    if (under) {
+    if (t && under) {
         double x = t->x;
         double y = t->y;
 

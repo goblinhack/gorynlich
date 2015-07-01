@@ -44,6 +44,10 @@ uint8_t thing_server_move (thingp t,
         return (false);
     }
 
+    if (thing_is_player(t)) {
+        level_place_light(server_level, t->x, t->y);
+    }
+
     widp grid = wid_game_map_server_grid_container;
 
     thing_move_set_dir(t, &x, &y, up, down, left, right);

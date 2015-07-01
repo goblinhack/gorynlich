@@ -19,6 +19,7 @@
 #include "thing.h"
 #include "client.h"
 #include "socket_util.h"
+#include "wid_game_map_server.h"
 
 double thing_stats_get_total_vision (thingp t, double vision)
 {
@@ -39,4 +40,24 @@ double thing_stats_get_total_vision (thingp t, double vision)
     }
 
     return (final_vision);
+}
+
+void level_place_light (levelp level, double x, double y)
+{
+    int ix = (int)x;
+    int iy = (int)y;
+
+    if (level->map_grid.lit[ix][iy]) {
+        return;
+    }
+
+CON("%d %d",ix,iy);
+    level->map_grid.lit[ix][iy] = 1;
+
+    (void) wid_game_map_server_replace_tile(wid_game_map_server_grid_container, x, y,
+                                              0, /* thing */
+                                              id_to_tp(THING_LIGHT),
+                                              0 /* tpp_data */,
+                                              0 /* item */,
+                                              0 /* stats */);
 }
