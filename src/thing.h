@@ -487,6 +487,7 @@ enum {
     THING_KEY,
     THING_KEYS2,
     THING_KEYS3,
+    THING_LIGHT,
     THING_TORCH,
     THING_TORCHES,
     THING_COINS1,
@@ -2871,6 +2872,7 @@ int32_t thing_stats_get_total_damage_minus_defense(thingp t,
  * thing_vision.c
  */
 double thing_stats_get_total_vision(thingp t, double vision);
+void level_place_light(levelp level, double x, double y);
 
 /*
  * thing_health.c
