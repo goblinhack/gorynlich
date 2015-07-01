@@ -4,6 +4,7 @@
  tooltip="large bone pile"
  mob_spawn={ 1000 "data/things/ghost3" }
  z_depth="monst"
+ max_hp=10
  is_mob_spawner
  is_effect_pulse
  is_light_source
