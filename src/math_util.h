@@ -136,9 +136,29 @@ static inline fpoint3d fnormal3d (fpoint3d v)
     return (n);
 }
 
+static inline float SquareRootFloat (float number) {
+    long i;
+    float x, y;
+    const float f = 1.5F;
+
+    x = number * 0.5F;
+    y  = number;
+    i  = * ( long * ) &y;
+    i  = 0x5f3759df - ( i >> 1 );
+    y  = * ( float * ) &i;
+    y  = y * ( f - ( x * y * y ) );
+    y  = y * ( f - ( x * y * y ) );
+    return number * y;
+}
+
 static inline double flength (const fpoint a)
 {
     return ((double)sqrt(a.x*a.x + a.y*a.y));
+
+    //
+    // Seems to be no faster
+    //
+    // return ((double)SquareRootFloat(a.x*a.x + a.y*a.y));
 }
 
 static inline double fdist (const fpoint a, const fpoint b)
