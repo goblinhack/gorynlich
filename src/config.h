@@ -190,7 +190,7 @@
 /*
  * Maximum pre-compression packet size
  */
-#define MAX_PACKET_SIZE             1500
+#define MAX_PACKET_SIZE             4000
 
 /*
  * Debug check to enable sequence numbers and checksum
