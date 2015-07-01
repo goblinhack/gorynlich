@@ -220,7 +220,7 @@ void level_load_new (void)
     }
 
     int r = (myrand() % 100);
-    if ((r < 5) && file_exists(tmp)) {
+    if ((r < 20) && file_exists(tmp)) {
         fixed = true;
     }
 
