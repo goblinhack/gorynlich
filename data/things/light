@@ -1,0 +1,47 @@
+{
+ short_name="light ember"
+ raw_name="ember"
+ tooltip="light ember"
+ z_depth="monst"
+ is_light_source
+ light_radius=1.5
+ is_animated
+ scale=0.01
+ light_tint="blue"
+ is_floor
+ d10000_chance_of_appearing=1000
+ tiles={
+  tile={
+   tile="torch1"
+   delay=100
+  }
+  tile={
+   tile="torch3"
+   delay=100
+  }
+  tile={
+   tile="torch2"
+   delay=100
+  }
+  tile={
+   tile="torch1"
+   delay=100
+  }
+  tile={
+   tile="torch3"
+   delay=100
+  }
+  tile={
+   tile="torch1"
+   delay=100
+  }
+  tile={
+   tile="torch4"
+   delay=100
+  }
+  tile={
+   tile="torch3"
+   delay=100
+  }
+ }
+}
