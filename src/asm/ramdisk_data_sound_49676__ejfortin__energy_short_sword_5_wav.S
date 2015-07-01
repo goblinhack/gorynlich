@@ -1,0 +1,6 @@
+.globl data_sound_49676__ejfortin__energy_short_sword_5_wav_start_
+data_sound_49676__ejfortin__energy_short_sword_5_wav_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/49676__ejfortin__energy_short_sword_5.wav"
+.globl data_sound_49676__ejfortin__energy_short_sword_5_wav_end_
+data_sound_49676__ejfortin__energy_short_sword_5_wav_end_:
+
