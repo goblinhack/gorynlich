@@ -1,0 +1,6 @@
+.globl data_sound_82388__robinhood76__01308_man_hit_9_wav_start_
+data_sound_82388__robinhood76__01308_man_hit_9_wav_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/82388__robinhood76__01308_man_hit_9.wav"
+.globl data_sound_82388__robinhood76__01308_man_hit_9_wav_end_
+data_sound_82388__robinhood76__01308_man_hit_9_wav_end_:
+
