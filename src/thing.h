@@ -666,8 +666,8 @@ typedef struct thing_ {
     /*
      * Last co-ords sent to the client
      */
-    uint8_t last_tx;
-    uint8_t last_ty;
+    uint16_t last_tx;
+    uint16_t last_ty;
 
     /*
      * For animation.
@@ -2670,7 +2670,7 @@ static inline tpp thing_magic (const thingp t)
  */
 static inline void thing_round (thingp t, double *x, double *y)
 {
-    const double scale = 256 / MAP_WIDTH;
+    const double scale = 256.0;
 
     *x = round(*x * scale) / scale;
     *y = round(*y * scale) / scale;

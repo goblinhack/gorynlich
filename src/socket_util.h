@@ -172,9 +172,9 @@ typedef struct {
      */
     uint8_t data;
     uint8_t ext;
-    uint8_t template_id;        // optional
-    uint8_t x;                  // optional
-    uint8_t y;                  // optional
+    uint16_t template_id;       // optional
+    uint16_t x;                 // optional
+    uint16_t y;                 // optional
     uint16_t id;                // optional
 
     /*
@@ -456,7 +456,8 @@ extern uint32_t socket_get_tx(gsocketp s);
 extern uint32_t socket_get_rx_error(gsocketp s);
 extern uint32_t socket_get_tx_error(gsocketp s);
 extern uint32_t socket_get_rx_bad_msg(gsocketp s);
-extern void socket_server_tx_map_update(gsocketp, tree_rootp, const char *type);
+extern void socket_server_tx_map_update(gsocketp, 
+                                        tree_rootp, const char *type);
 extern void socket_client_rx_map_update(gsocketp s, 
                                         UDPpacket *packet, uint8_t *data);
 extern void socket_server_tx_player_update(thingp);
