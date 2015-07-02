@@ -1245,11 +1245,11 @@ static inline uint8_t thing_is_rrr15 (thingp t)
     return (tp_is_rrr15(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr16 (thingp t)
+static inline uint8_t thing_is_hidden (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr16(thing_tp(t)));
+    return (tp_is_hidden(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_trap (thingp t)
@@ -2062,9 +2062,9 @@ static inline uint8_t thing_is_rrr15_noverify (thingp t)
     return (t->tp->is_rrr15);
 }
 
-static inline uint8_t thing_is_rrr16_noverify (thingp t)
+static inline uint8_t thing_is_hidden_noverify (thingp t)
 {
-    return (t->tp->is_rrr16);
+    return (t->tp->is_hidden);
 }
 
 static inline uint8_t thing_is_trap_noverify (thingp t)

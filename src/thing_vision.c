@@ -51,7 +51,6 @@ void level_place_light (levelp level, double x, double y)
         return;
     }
 
-CON("%d %d",ix,iy);
     level->map_grid.lit[ix][iy] = 1;
 
     (void) wid_game_map_server_replace_tile(wid_game_map_server_grid_container, x, y,
