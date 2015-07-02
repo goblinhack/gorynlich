@@ -3342,19 +3342,19 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
          */
         uint8_t template_id = tp_to_id(tp);
         uint32_t id = t->thing_id;
-        uint8_t tx;
-        uint8_t ty;
+        uint16_t tx;
+        uint16_t ty;
 
         widp w = thing_wid(t);
         if (w) {
             double rx = t->x;
             double ry = t->y;
             thing_round(t, &rx, &ry);
-            tx = (uint8_t)(int)((rx * ((double)256)) / MAP_WIDTH);
-            ty = (uint8_t)(int)((ry * ((double)256)) / MAP_HEIGHT);
+            tx = (uint16_t)(int)(rx * 256.0);
+            ty = (uint16_t)(int)(ry * 256.0);
         } else {
-            tx = 0xFF;
-            ty = 0xFF;
+            tx = 0xFFFF;
+            ty = 0xFFFF;
         }
 
         uint8_t state = t->dir;
@@ -3423,7 +3423,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
             state |= 1 << THING_STATE_BIT_SHIFT_XY_PRESENT;
         }
 
-        if ((tx == 0xFF) && (ty == 0xFF)) {
+        if ((tx == 0xFFFF) && (ty == 0xFFFF)) {
             /*
              * Do not send.
              */
@@ -3475,10 +3475,12 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
-            *data++ = tx;
-//CON("  tx       0x%02x", tx);
-            *data++ = ty;
-//CON("  ty       0x%02x", ty);
+            SDLNet_Write16(tx, data);
+            data += sizeof(uint16_t);
+            SDLNet_Write16(ty, data);
+            data += sizeof(uint16_t);
+//CON("  tx       0x%04x", tx);
+//CON("  ty       0x%04x", ty);
         }
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT)) {
@@ -3645,8 +3647,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
         thingp t;
         double x;
         double y;
-        uint8_t tx;
-        uint8_t ty;
+        uint16_t tx;
+        uint16_t ty;
 
         if (state & (1 << THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT)) {
             /*
@@ -3698,21 +3700,25 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             /*
              * Full move update.
              */
-            tx = *data++;
-            ty = *data++;
-//CON("  tx       0x%02x", tx);
-//CON("  ty       0x%02x", ty);
+            tx = SDLNet_Read16(data);
+            data += sizeof(uint16_t);
 
-            x = ((double)tx) / (double) (256 / MAP_WIDTH);
-            y = ((double)ty) / (double) (256 / MAP_HEIGHT);
+            ty = SDLNet_Read16(data);
+            data += sizeof(uint16_t);
+
+//CON("  tx       0x%04x", tx);
+//CON("  ty       0x%04x", ty);
+
+            x = ((double)tx) / 256.0;
+            y = ((double)ty) / 256.0;
         } else {
-            tx = 0xFF;
-            ty = 0xFF;
+            tx = 0xFFFF;
+            ty = 0xFFFF;
             x = -1;
             y = -1;
         }
 
-        if ((tx == 0xFF) && (ty == 0xFF)) {
+        if ((tx == 0xFFFF) && (ty == 0xFFFF)) {
             on_map = false;
         } else {
             on_map = true;
