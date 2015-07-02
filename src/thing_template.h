@@ -193,6 +193,11 @@ typedef struct tp_ {
     uint8_t vision_distance;
 
     /*
+     * How close a thing tries to get to you
+     */
+    uint8_t approach_distance;
+
+    /*
      * Various bounties.
      */
     int32_t bonus_xp_on_death;
@@ -446,6 +451,7 @@ uint16_t tp_get_damage(tpp);
 uint16_t tp_get_cost(tpp);
 int32_t tp_get_bonus_xp_on_death(tpp);
 uint32_t tp_get_vision_distance(tpp);
+uint32_t tp_get_approach_distance(tpp);
 int32_t tp_get_bonus_cash_on_collect(tpp);
 
 uint32_t tp_get_stats_attack_melee(tpp);
