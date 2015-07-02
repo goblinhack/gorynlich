@@ -296,7 +296,7 @@ typedef struct tp_ {
     uint8_t is_rrr13:1;
     uint8_t is_rrr14:1;
     uint8_t is_rrr15:1;
-    uint8_t is_rrr16:1;
+    uint8_t is_hidden:1;
     uint8_t is_trap:1;
     uint8_t is_corridor_wall:1;
     uint8_t is_corridor:1;
@@ -737,9 +737,9 @@ static inline uint8_t tp_is_rrr15 (tpp t)
     return (t->is_rrr15);
 }
 
-static inline uint8_t tp_is_rrr16 (tpp t)
+static inline uint8_t tp_is_hidden (tpp t)
 {
-    return (t->is_rrr16);
+    return (t->is_hidden);
 }
 
 static inline uint8_t tp_is_trap (tpp t)
