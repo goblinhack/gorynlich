@@ -1327,6 +1327,8 @@ widp wid_editor_level_map_thing_replace_template (widp w,
     return (0);
 }
 
+static int wid_map_loaded_levels[LEVELS_ACROSS][LEVELS_DOWN];
+
 static void wid_map_load_level (wid_map_ctx *ctx, const char *name, int x, int y)
 {
     level_pos_t level_pos;
@@ -1349,6 +1351,8 @@ static void wid_map_load_level (wid_map_ctx *ctx, const char *name, int x, int y
         (ctx->loading_y < 0)) {
         return;
     }
+
+    wid_map_loaded_levels[y][x] = 1;
 
     levelp l = level_load(level_pos, 
                           ctx->w,
@@ -1376,11 +1380,10 @@ static void wid_map_load_level (wid_map_ctx *ctx, const char *name, int x, int y
 
 static void wid_map_load_levels (wid_map_ctx *ctx)
 {
+    memset(wid_map_loaded_levels, 0, sizeof(wid_map_loaded_levels));
+
     tree_file_node *n;
     tree_root *d;
-
-    int loaded[LEVELS_ACROSS][LEVELS_DOWN];
-    memset(loaded, 0, sizeof(loaded));
 
     d = dirlist(LEVELS_PATH,
                 0 /* context->include_suffix */,
@@ -1406,8 +1409,6 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
             continue;
         }
 
-        loaded[y][x] = 1;
-
         wid_map_load_level(ctx, name, x, y);
     } }
 
@@ -1424,7 +1425,22 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
             continue;
         }
 
-        if (loaded[y][x]) {
+        /*
+         * Ignore out of bounds levels like the test level.
+         */
+        if ((ctx->loading_x >= LEVELS_ACROSS) || 
+            (ctx->loading_y >= LEVELS_DOWN)) {
+            ramfile++;
+            continue;
+        }
+
+        if ((ctx->loading_x < 0) || 
+            (ctx->loading_y < 0)) {
+            ramfile++;
+            continue;
+        }
+
+        if (wid_map_loaded_levels[y][x]) {
             ramfile++;
             continue;
         }

@@ -46,6 +46,11 @@ Tue Jun 30 08:56:52 EDT 2015
 - items outside level to not get floor tiles
 - faster single player sockets
 
+Wed Jul  1 23:29:06 EDT 2015
+- blue tracking lights
+- glowing ghosts
+- fast small lights
+
 Sun Jun 28 22:07:30 EDT 2015
 - multiple shops, stealing seems to work
 - level load in installed image

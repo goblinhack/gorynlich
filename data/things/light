@@ -4,11 +4,11 @@
  tooltip="light ember"
  z_depth="monst"
  is_light_source
- light_radius=1.5
+ light_radius=0.5
  is_animated
- scale=0.01
  light_tint="blue"
  is_floor
+ is_hidden
  d10000_chance_of_appearing=1000
  tiles={
   tile={
