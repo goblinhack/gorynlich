@@ -645,6 +645,25 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
     h = dmap->walls[x  ][y+1];
     i = dmap->walls[x+1][y+1];
 
+    /*
+     * Some things like archers want to stay a distance away
+     * from the player.
+     */
+    tpp tp;
+    tp = thing_tp(t);
+    uint32_t min_distance = tp_get_approach_distance(tp);
+    if (min_distance) {
+        if (a < min_distance) { a += not_preferred; }
+        if (b < min_distance) { b += not_preferred; }
+        if (c < min_distance) { c += not_preferred; }
+        if (d < min_distance) { d += not_preferred; }
+        if (e < min_distance) { e += not_preferred; }
+        if (f < min_distance) { f += not_preferred; }
+        if (g < min_distance) { g += not_preferred; }
+        if (h < min_distance) { h += not_preferred; }
+        if (i < min_distance) { i += not_preferred; }
+    }
+
     lowest = min(a, min(b, min(c, min(d, min(e, min(f, min(g, min(h,i))))))));
 
     if (a != lowest) { a += not_preferred; }
@@ -685,10 +704,6 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
     if (lowest == is_a_wall) {
         return (false);
     }
-
-    tpp tp;
-
-    tp = thing_tp(t);
 
     if (lowest > (int) tp_get_vision_distance(tp)) {
         return (false);
