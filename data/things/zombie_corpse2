@@ -1,0 +1,17 @@
+{
+ short_name="zombie corpse"
+ raw_name="zombie_corpse2"
+ tooltip="zombie corpse"
+ z_depth="monst"
+ max_hp=100
+ is_undead
+ is_monst
+ hit_priority=10
+ spawn_on_death="data/things/zombie1"
+ lifespan=10
+ tiles={
+  tile={
+   tile="wizard-dying10"
+  }
+ }
+}

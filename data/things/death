@@ -13,6 +13,7 @@
  vision_distance=60
  hit_delay_tenths=1
  sound_on_death="urgh"
+ is_undead
  is_monst
  is_shadow_caster
  hit_priority=10
