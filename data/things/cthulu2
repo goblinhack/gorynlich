@@ -11,8 +11,8 @@
     1000 "data/things/zombie5"
  }
  z_depth="monst"
- speed=1
- max_hp=1000
+ speed=10
+ max_hp=500
  damage=20
  is_effect_rotate_2way
  bonus_xp_on_death=4500
