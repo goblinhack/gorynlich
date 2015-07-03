@@ -8,6 +8,7 @@
  max_hp=20
  damage=10
  jump_speed=30
+ is_monst
  is_effect_rotate_2way
  bonus_xp_on_death=100
  vision_distance=10

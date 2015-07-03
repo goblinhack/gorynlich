@@ -1,8 +1,8 @@
 {
  short_name="lava"
- raw_name="lava1"
- tooltip="lava"
- mob_spawn={ 1000 "data/things/lava1" }
+ raw_name="lava2"
+ tooltip="slow lava"
+ mob_spawn={ 1000 "data/things/lava2" }
  z_depth="floor2"
  is_mob_spawner
  is_lava
@@ -15,7 +15,7 @@
  is_candle_light
  hit_priority=20
  damage=20
- mob_spawn_delay_tenths=50
+ mob_spawn_delay_tenths=200
  can_be_hit_chance=2000000
  is_effect_pulse
  tiles={
