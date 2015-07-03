@@ -14,7 +14,7 @@
  is_generator
  is_effect_pulse
  is_light_source
- light_radius=1.0
+ light_radius=0.5
  light_tint="green"
  is_candle_light
  hit_priority=22
