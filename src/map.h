@@ -44,6 +44,7 @@ uint8_t map_is_valid_for_action_bar_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_door_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_mob_spawner_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_acid_at(levelp, int32_t x, int32_t y);
+uint8_t map_is_water_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_lava_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_teleport_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_potion_at(levelp, int32_t x, int32_t y);
