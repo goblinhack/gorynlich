@@ -298,8 +298,8 @@ typedef struct tp_ {
     uint8_t is_rrr10:1;
     uint8_t is_rrr11:1;
     uint8_t is_rrr12:1;
-    uint8_t is_rrr13:1;
-    uint8_t is_rrr14:1;
+    uint8_t is_generator:1;
+    uint8_t is_water:1;
     uint8_t is_undead:1;
     uint8_t is_hidden:1;
     uint8_t is_trap:1;
@@ -728,14 +728,14 @@ static inline uint8_t tp_is_rrr12 (tpp t)
     return (t->is_rrr12);
 }
 
-static inline uint8_t tp_is_rrr13 (tpp t)
+static inline uint8_t tp_is_generator (tpp t)
 {
-    return (t->is_rrr13);
+    return (t->is_generator);
 }
 
-static inline uint8_t tp_is_rrr14 (tpp t)
+static inline uint8_t tp_is_water (tpp t)
 {
-    return (t->is_rrr14);
+    return (t->is_water);
 }
 
 static inline uint8_t tp_is_undead (tpp t)
