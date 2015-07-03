@@ -412,7 +412,7 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
     if (thing_is_projectile(A) &&
         (thing_is_monst(B)          ||
          thing_is_shield(B)         ||
-         thing_is_mob_spawner(B))) {
+         thing_is_generator(B))) {
 
         Bpx1 = collision_map_large_x1;
         Bpx2 = collision_map_large_x2;
@@ -427,7 +427,7 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
         (thing_is_monst(B)          ||
          thing_is_player(B)         ||
          thing_is_shield(B)         ||
-         thing_is_mob_spawner(B))) {
+         thing_is_generator(B))) {
         Bpx1 = collision_map_large_x1;
         Bpx2 = collision_map_large_x2;
         Bpy1 = collision_map_large_y1;
@@ -595,6 +595,7 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
             return;
         }
     }
+//CON("%s vs %s",thing_logname(me), thing_logname(it));
 
     if (thing_is_player(me)) {
         /*
@@ -646,6 +647,7 @@ if (debug) {
 LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
+//CON("  %d",__LINE__);
             thing_possible_hit_add(it, "player hit thing");
             return;
         }
@@ -672,12 +674,20 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
     if (thing_is_lava(me)                  ||
         thing_is_acid(me)) {
 
+        /*
+         * Allow weapon blasts to sail over lava
+         */
+        if (thing_is_projectile(it)) {
+            return;
+        }
+
         if (thing_is_levitating(it)) {
             return;
         }
 
         if (thing_is_fragile(it)         ||
             thing_is_combustable(it)) {
+//CON("  %d",__LINE__);
             thing_possible_hit_add(it, "monst hit thing");
             return;
         }
@@ -685,6 +695,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 
     if (thing_is_treasure_eater(me)) {
         if (thing_is_treasure(it)) {
+//CON("  %d",__LINE__);
             thing_possible_hit_add(it, "monst ate thing");
             return;
         }
@@ -708,6 +719,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
+//CON("  %d",__LINE__);
             thing_possible_hit_add(it, "monst hit thing");
             return;
         }
@@ -768,7 +780,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_potion(it)                 ||
             thing_is_food(it)                   ||
             thing_is_door(it)                   ||
-            thing_is_mob_spawner(it)            ||
+            thing_is_generator(it)              ||
             thing_is_shield(it)                 ||
             thing_is_monst(it)) {
             /*
@@ -780,6 +792,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
+//CON("  %d",__LINE__);
             thing_possible_hit_add(it, "object hit thing");
             return;
         }
@@ -834,7 +847,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
                    thing_is_fragile(it)         ||
                    thing_is_shield(it)          ||
                    thing_is_combustable(it)     ||
-                   thing_is_mob_spawner(it)) {
+                   thing_is_generator(it)) {
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             if (owner_me == it) {
                 /*
@@ -848,8 +861,10 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 
                     thing_stats_modify_hp(me, -thing_stats_get_hp(it));
 
+//CON("  %d",__LINE__);
                     thing_possible_hit_add(it, "projectile hit");
                 } else {
+//CON("  %d",__LINE__);
                     thing_possible_hit_add_hitter_killed_on_hit_or_miss(
                                                     it, "projectile hit");
                 }
@@ -871,6 +886,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
                 /*
                  * Weapon hits monster or generator
                  */
+//CON("  %d",__LINE__);
                 thing_possible_hit_add_hitter_killed_on_hit_or_miss(
                                                 it, "projectile hit");
                 return;
@@ -885,11 +901,12 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 
         if (thing_is_monst(it)                  || 
             thing_is_player(it)                 ||
-            thing_is_mob_spawner(it)) {
+            thing_is_generator(it)) {
             /*
              * Weapon hits monster or generator
              */
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
+//CON("  %d",__LINE__);
             thing_possible_hit_add_hitter_killed_on_hit_or_miss(
                                             it, "projection hit thing");
             return;
@@ -909,11 +926,12 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             /*
              * Don't hit walls. It's daft.
              */
-            thing_is_mob_spawner(it)) {
+            thing_is_generator(it)) {
             /*
              * Weapon hits monster or generator.
              */
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
+//CON("  %d",__LINE__);
             thing_possible_hit_add_hitter_killed_on_hitting(
                                             it, "sword hit thing");
             return;
@@ -925,7 +943,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
      */
     if (thing_is_shield(me)) {
         if (thing_is_monst(it) ||
-            thing_is_mob_spawner(it)) {
+            thing_is_generator(it)) {
             /*
              * Weapon hits monster or generator.
              */
@@ -935,6 +953,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 }
 #endif
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
+//CON("  %d",__LINE__);
             thing_possible_hit_add(it, "shield hit thing");
             return;
         }

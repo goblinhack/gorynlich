@@ -1,14 +1,22 @@
 {
- short_name="baby cthulu"
- raw_name="baby cthulu1"
- tooltip="baby cthulu"
+ short_name="cthulu"
+ raw_name="cthulu2"
+ tooltip="cthulu"
+ mob_spawn={
+    100 "data/things/cthulu1"
+    1000 "data/things/zombie1"
+    10 "data/things/zombie2"
+    1000 "data/things/zombie3"
+    1000 "data/things/zombie4"
+    1000 "data/things/zombie5"
+ }
  z_depth="monst"
- speed=2
- max_hp=500
+ speed=1
+ max_hp=1000
  damage=20
  is_effect_rotate_2way
- bonus_xp_on_death=1500
- vision_distance=15
+ bonus_xp_on_death=4500
+ vision_distance=25
  hit_delay_tenths=10
  sound_on_death="urgh"
  is_monst
@@ -17,7 +25,7 @@
  hit_priority=10
  is_cats_eyes
  is_levitating
- scale=1.5
+ scale=5.0
  is_collision_map_medium
  is_animated
  fires="data/things/plasmaball1"
@@ -25,6 +33,12 @@
  d10000_chance_of_appearing=2
  min_appear_depth=20
  max_appear_depth=100
+ spawn_on_death="data/things/exit1"
+ mob_spawn_delay_tenths=200
+ is_mob_spawner
+ is_light_source
+ light_radius=8.5
+ light_tint="green"
  tiles={
   tile={ delay=150 tile="baby-cthulu1" }
   tile={ delay=150 tile="baby-cthulu2" }

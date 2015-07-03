@@ -30,6 +30,11 @@ void thing_server_effect (thingp t, int effect)
         /*
          * Let the shield show the hit
          */
+    } else if (thing_is_projectile(t)) {
+        /*
+         * Do we need these to flash red?
+         */
+        return;
     } else {
         /*
          * Let the owner show the hit?
