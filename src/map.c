@@ -268,6 +268,11 @@ uint8_t map_is_acid_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_acid));
 }
 
+uint8_t map_is_water_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_water));
+}
+
 uint8_t map_is_lava_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, tp_is_lava));

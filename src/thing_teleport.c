@@ -106,6 +106,34 @@ void thing_reached_teleport (thingp t, thingp teleport)
     double nx = tx[poss];
     double ny = ty[poss];
 
+    /*
+     * Don't let lava spawn continually on top of itself.
+     */
+    if (thing_is_lava(t) && map_is_lava_at(server_level, nx, ny)) {
+        return;
+    }
+
+    /*
+     * Don't let acid spawn continually on top of itself.
+     */
+    if (thing_is_acid(t) && map_is_acid_at(server_level, nx, ny)) {
+        return;
+    }
+
+    /*
+     * Don't let water spawn continually on top of itself.
+     */
+    if (thing_is_water(t) && map_is_water_at(server_level, nx, ny)) {
+        return;
+    }
+
+    /*
+     * Don't let monsters spawn continually on top of themselves.
+     */
+    if (thing_is_monst(t) && map_is_monst_at(server_level, nx, ny)) {
+        return;
+    }
+
     THING_LOG(t, "teleport");
 
     wid_move_end(t->wid);

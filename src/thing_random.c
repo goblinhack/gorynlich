@@ -474,7 +474,7 @@ tpp random_mob (int depth)
             continue;
         }
 
-        if (!tp_is_mob_spawner(tp)) {
+        if (!tp_is_generator(tp)) {
             continue;
         }
 

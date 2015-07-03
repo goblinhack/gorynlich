@@ -5,6 +5,7 @@
  mob_spawn={ 1000 "data/things/ghost1" }
  z_depth="monst"
  is_mob_spawner
+ is_generator
  is_effect_pulse
  is_light_source
  light_radius=0.2
