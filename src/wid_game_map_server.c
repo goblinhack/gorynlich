@@ -521,7 +521,10 @@ wid_game_map_server_replace_tile (widp w,
                 LOG("Create exit to level %d.%d", 
                     t->data->exit.y, t->data->exit.x);
             } else {
-                WARN("An exit was present on level %d.%d with no exit level set",
+                /*
+                 * Not an issue, just choose the next one.
+                 */
+                LOG("An exit was present on level %d.%d with no exit level set",
                     t->data->exit.y, t->data->exit.x);
             }
         }
