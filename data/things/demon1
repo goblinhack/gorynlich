@@ -11,6 +11,7 @@
  vision_distance=10
  hit_delay_tenths=10
  sound_on_death="urgh2"
+ is_lava_proof
  is_monst
  is_shadow_caster
  is_shadow_caster_soft
