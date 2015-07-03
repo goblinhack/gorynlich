@@ -3059,7 +3059,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 break;
 
             case MAP_LAVA:
-                tp = tp_find("data/things/lava1");
+                tp = random_lava();
                 break;
 
             case MAP_TELEPORT:
@@ -3074,7 +3074,9 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 }
                 break;
 
-            case MAP_SHOPKEEPER: tp = tp_find("data/things/shopkeeper"); break;
+            case MAP_SHOPKEEPER: 
+                tp = tp_find("data/things/shopkeeper"); 
+                break;
 
             case MAP_START: 
                 tp = random_player(); 

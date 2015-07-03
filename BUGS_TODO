@@ -38,6 +38,8 @@
 - magic gives health to other players
 
 Fri Jul  3 17:35:07 EDT 2015
+- editor style would use shop floor tiles
+- slow lava option
 - traps were trying to shoot through walls
 - disable teleport of lava onto lava
 - create generator class, different from mob spawners like slime molds
