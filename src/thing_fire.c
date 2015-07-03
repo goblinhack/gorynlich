@@ -350,14 +350,7 @@ static void thing_fire_at (thingp t, thingp target)
 static void 
 thing_possible_hit_add (thingp me, thingp target)
 {
-    /*
-     * Why do this ? Explosions can't bend around corners.
-     */
-    if (!can_see(server_level, me->x, me->y, target->x, target->y) &&
-        !can_see(server_level, me->x, me->y, target->x - 1, target->y) &&
-        !can_see(server_level, me->x, me->y, target->x + 1, target->y) &&
-        !can_see(server_level, me->x, me->y, target->x, target->y - 1) &&
-        !can_see(server_level, me->x, me->y, target->x, target->y + 1)) {
+    if (!can_see(server_level, me->x, me->y, target->x, target->y)) {
         return;
     }
 
