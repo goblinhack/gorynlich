@@ -4,13 +4,15 @@
  tooltip="skull minion"
  z_depth="monst"
  speed=3
- max_hp=10
+ max_hp=5
  damage=3
  bonus_xp_on_death=50
  is_effect_rotate_2way
  vision_distance=8
  hit_delay_tenths=10
  sound_on_death="urgh"
+ is_undead
+ approach_distance=3
  is_monst
  min_appear_depth=1
  max_appear_depth=20

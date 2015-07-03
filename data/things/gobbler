@@ -4,7 +4,7 @@
  tooltip="treasure gobbler"
  z_depth="monst"
  speed=30
- max_hp=55
+ max_hp=15
  damage=15
  bonus_xp_on_death=100
  vision_distance=60

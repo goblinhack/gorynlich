@@ -147,6 +147,14 @@ static void thing_tick_server_all (void)
                                     (myrand() % (delay * 100));
                 }
             }
+
+            if (tp_get_lifespan(tp)) {
+                if (time_have_x_secs_passed_since(tp_get_lifespan(tp),
+                                                  t->timestamp_born)) {
+                    thing_dead(t, 0, "out of life"); 
+                    continue;
+                }
+            }
         }
 
         /*

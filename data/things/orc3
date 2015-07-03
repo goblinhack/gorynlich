@@ -7,12 +7,13 @@
  }
  z_depth="monst"
  speed=15
- max_hp=30
+ max_hp=5
  damage=1
  bonus_xp_on_death=55
  vision_distance=15
  hit_delay_tenths=5
  sound_on_death="urgh"
+ approach_distance=5
  is_monst
  is_warm_blooded
  is_shadow_caster

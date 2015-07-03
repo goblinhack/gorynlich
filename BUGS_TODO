@@ -1,5 +1,3 @@
-- skeleton archer
-00:04:51.249: ERROR: Server: Thing lava[0x7ff07211fe10, id 27453] (server): No weapon to swing
 --------------------------------------- plan for jul --------------------------------------
 - ring of resistance
 - ring of resurrection
@@ -19,13 +17,13 @@
 - pop bouncing "help!" and arrow over player to give them a clue what to do
 - dart and rock traps
 - mirror traps that bounce back weapon fire?
+- teletrap monster
 --------------------------------------- plan for aug --------------------------------------
 - manually generate lots of levels
 - ice and fire blocks? ice blocks move; add yetis and other monst for cold levels?
 - minor: tx socket thing loop is too slow could use a thing array to update
 - minor: colision map tiny not used
 - minor: lifespan code not used
-- minor: increase move granulariy on server so projectiles line up with player more
 --------------------------------------- plan for sep --------------------------------------
 - first baddy, large ghost, drops bone piles
 - bosses drop exit on death
@@ -37,6 +35,12 @@
 --------------------------------------- plan for dec --------------------------------------
 - multi player
 - magic gives health to other players
+
+Thu Jul  2 19:07:46 EDT 2015
+- template ids > 256
+- skeleton archer
+00:04:51.249: ERROR: Server: Thing lava[0x7ff07211fe10, id 27453] (server): No weapon to swing
+- minor: increase move granulariy on server so projectiles line up with player more
 
 Tue Jun 30 08:56:52 EDT 2015
 - quieter logs in single player

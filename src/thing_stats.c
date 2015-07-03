@@ -1088,7 +1088,7 @@ static void thing_stats_get_random_items (thing_statsp player_stats)
         tpp t = 0;
 
         for (;;) {
-            t = id_to_tp(myrand() % THING_MAX);
+            t = id_to_tp(myrand() % THING_MAX_ID);
 
             if (!tp_is_carryable(t)) {
                 continue;
@@ -1143,7 +1143,7 @@ static void player_stats_generate_fixed_items (thing_statsp player_stats)
      */
     int32_t i;
 
-    for (i = 0; i < THING_MAX; i++) {
+    for (i = 0; i < THING_MAX_ID; i++) {
 
         if (!tp->base_items[i].quantity) {
             continue;

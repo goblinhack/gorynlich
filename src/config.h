@@ -228,7 +228,7 @@
  * Maximum number of thing types. This cannot be exceeded without changing
  * the message format in tx updates.
  */
-#define THING_MAX                   256
+#define THING_MAX                   512
 
 /*
  * Thumb in air. Needs to be big enough so wrap arounds and id reuse is less 
