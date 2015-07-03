@@ -38,6 +38,8 @@
 - magic gives health to other players
 
 Fri Jul  3 17:35:07 EDT 2015
+- no lava hitting projectiles
+- fireball receving damage does not cause effect on caster
 - editor style would use shop floor tiles
 - slow lava option
 - traps were trying to shoot through walls
