@@ -7,7 +7,7 @@
  }
  z_depth="monst"
  speed=15
- max_hp=350
+ max_hp=150
  damage=20
  scale=1.2
  bonus_xp_on_death=55

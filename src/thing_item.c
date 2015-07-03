@@ -407,7 +407,7 @@ tpp thing_is_carrying_thing (thingp t, tp_is fn)
 {
     uint32_t i;
 
-    for (i = 0; i < THING_MAX; i++) {
+    for (i = 0; i < THING_MAX_ID; i++) {
         tpp tp = id_to_tp(i);
 
         if (!(*fn)(tp)) {
@@ -428,7 +428,7 @@ uint32_t thing_is_carrying_thing_count (thingp t, tp_is fn)
     uint32_t count = 0;
     uint32_t i;
 
-    for (i = 0; i < THING_MAX; i++) {
+    for (i = 0; i < THING_MAX_ID; i++) {
         tpp tp = id_to_tp(i);
 
         if (!(*fn)(tp)) {
