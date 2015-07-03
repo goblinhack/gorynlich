@@ -341,6 +341,11 @@ enum {
     THING_ZOMBIE3,
     THING_ZOMBIE4,
     THING_ZOMBIE5,
+    THING_ZOMBIE_CORPSE1,
+    THING_ZOMBIE_CORPSE2,
+    THING_ZOMBIE_CORPSE3,
+    THING_ZOMBIE_CORPSE4,
+    THING_ZOMBIE_CORPSE5,
     THING_SKELETON1,
     THING_ORC1,
     THING_ORC2,
@@ -515,6 +520,7 @@ enum {
     THING_HELMET2,
     THING_HELMET3,
     THING_HELMET4,
+    THING_MAX_ID,
 };
 
 typedef struct thing_ {
@@ -728,6 +734,11 @@ typedef struct thing_ {
      * When did we last send our state to the client?
      */
     uint32_t timestamp_tx_map_update;
+
+    /*
+     * When life sputtered into this corpse
+     */
+    uint32_t timestamp_born;
 
     /*
      * Last time it fired at a player.
@@ -1239,11 +1250,11 @@ static inline uint8_t thing_is_rrr14 (thingp t)
     return (tp_is_rrr14(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr15 (thingp t)
+static inline uint8_t thing_is_undead (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr15(thing_tp(t)));
+    return (tp_is_undead(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_hidden (thingp t)
@@ -2058,9 +2069,9 @@ static inline uint8_t thing_is_rrr14_noverify (thingp t)
     return (t->tp->is_rrr14);
 }
 
-static inline uint8_t thing_is_rrr15_noverify (thingp t)
+static inline uint8_t thing_is_undead_noverify (thingp t)
 {
-    return (t->tp->is_rrr15);
+    return (t->tp->is_undead);
 }
 
 static inline uint8_t thing_is_hidden_noverify (thingp t)

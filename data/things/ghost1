@@ -10,6 +10,7 @@
  vision_distance=10
  hit_delay_tenths=5
  sound_on_death="urgh"
+ is_undead
  is_monst
  hit_priority=10
  is_cats_eyes

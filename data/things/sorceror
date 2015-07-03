@@ -8,6 +8,7 @@
  max_magic=200
  hit_priority=20
  sound_on_death="urgh"
+ approach_distance=8
  is_monst
  is_animate_only_when_moving
  is_warm_blooded

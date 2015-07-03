@@ -6,6 +6,7 @@
 
 #include "main.h"
 #include "tree.h"
+#include "thing.h"
 #include "thing_template.h"
 #include "wid_game_map_server.h"
 
@@ -20,7 +21,7 @@ tpp random_wall (void)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -56,7 +57,7 @@ tpp random_corridor_wall (void)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -81,7 +82,7 @@ tpp random_door (void)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -106,7 +107,7 @@ tpp random_floor (void)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -139,7 +140,7 @@ tpp random_corridor (void)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -168,7 +169,7 @@ tpp random_player (void)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -193,7 +194,7 @@ tpp random_exit (void)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -218,7 +219,7 @@ tpp random_food (void)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -246,7 +247,7 @@ tpp random_treasure (int shop_floor)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -281,7 +282,7 @@ tpp random_weapon (int shop_floor)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -316,7 +317,7 @@ tpp random_potion (int shop_floor)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -351,7 +352,7 @@ tpp random_rock (void)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -379,7 +380,7 @@ tpp random_monst (int depth)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -424,7 +425,7 @@ tpp random_trap (int depth)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
@@ -465,7 +466,7 @@ tpp random_mob (int depth)
             return (0);
         }
 
-        uint16_t id = myrand() % THING_MAX;
+        uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
 
