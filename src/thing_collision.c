@@ -829,6 +829,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             /*
              * No hitting this.
              */
+            return;
         } else if (thing_is_monst(it)           || 
                    thing_is_fragile(it)         ||
                    thing_is_shield(it)          ||
@@ -865,6 +866,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
                 /*
                  * Don't hit your owner.
                  */
+                return;
             } else {
                 /*
                  * Weapon hits monster or generator

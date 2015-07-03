@@ -140,11 +140,11 @@ int32_t thing_stats_get_total_damage (thingp t)
 
     if (thing_is_monst(t) || thing_is_player(t)) {
         if (weapon) {
-            THING_LOG(t, "attack damage, modifier %d, damage %d -> %d", 
-                      (int) modifier, (int) damage, final_damage);
-        } else {
             THING_LOG(t, "attack damage (from %s), modifier %d, damage %d -> %d", 
                       weapon ? tp_name(weapon) : 0,
+                      (int) modifier, (int) damage, final_damage);
+        } else {
+            THING_LOG(t, "attack damage, modifier %d, damage %d -> %d", 
                       (int) modifier, (int) damage, final_damage);
         }
     }
