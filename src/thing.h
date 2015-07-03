@@ -1236,18 +1236,18 @@ static inline uint8_t thing_is_rrr12 (thingp t)
     return (tp_is_rrr12(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr13 (thingp t)
+static inline uint8_t thing_is_generator (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr13(thing_tp(t)));
+    return (tp_is_generator(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr14 (thingp t)
+static inline uint8_t thing_is_water (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr14(thing_tp(t)));
+    return (tp_is_water(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_undead (thingp t)
@@ -2059,14 +2059,14 @@ static inline uint8_t thing_is_rrr12_noverify (thingp t)
     return (t->tp->is_rrr12);
 }
 
-static inline uint8_t thing_is_rrr13_noverify (thingp t)
+static inline uint8_t thing_is_generator_noverify (thingp t)
 {
-    return (t->tp->is_rrr13);
+    return (t->tp->is_generator);
 }
 
-static inline uint8_t thing_is_rrr14_noverify (thingp t)
+static inline uint8_t thing_is_water_noverify (thingp t)
 {
-    return (t->tp->is_rrr14);
+    return (t->tp->is_water);
 }
 
 static inline uint8_t thing_is_undead_noverify (thingp t)

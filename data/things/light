@@ -2,7 +2,7 @@
  short_name="light ember"
  raw_name="ember"
  tooltip="light ember"
- z_depth="monst"
+ z_depth="explosion_top"
  is_light_source
  light_radius=0.5
  is_animated

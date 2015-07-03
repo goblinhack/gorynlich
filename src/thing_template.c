@@ -658,8 +658,8 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_generator", t->is_generator);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_water", t->is_water);
         GET_OPT_NAMED_BITFIELD(ctx, "is_undead", t->is_undead);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hidden", t->is_hidden);
         GET_OPT_NAMED_BITFIELD(ctx, "is_trap", t->is_trap);
@@ -898,8 +898,8 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
     PUT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
     PUT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
+    PUT_NAMED_BITFIELD(ctx, "is_generator", t->is_generator);
+    PUT_NAMED_BITFIELD(ctx, "is_water", t->is_water);
     PUT_NAMED_BITFIELD(ctx, "is_undead", t->is_undead);
     PUT_NAMED_BITFIELD(ctx, "is_hidden", t->is_hidden);
     PUT_NAMED_BITFIELD(ctx, "is_trap", t->is_trap);
