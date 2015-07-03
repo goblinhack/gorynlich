@@ -111,9 +111,9 @@ static void wid_map_update_buttons (void)
                  */
                 wid_set_color(b, WID_COLOR_TL, WHITE);
                 wid_set_color(b, WID_COLOR_BR, BLACK);
-                wid_set_bevel(b, 1);
+                wid_set_bevel(b, 0);
 
-            } else if (map->player_count) {
+            } else if (!map->player_count) {
                 /*
                  * No player start
                  */
@@ -124,9 +124,9 @@ static void wid_map_update_buttons (void)
                 /*
                  * No exit
                  */
-                wid_set_color(b, WID_COLOR_TL, RED);
-                wid_set_color(b, WID_COLOR_BR, RED);
-                wid_set_bevel(b, 3);
+                wid_set_color(b, WID_COLOR_TL, GOLD);
+                wid_set_color(b, WID_COLOR_BR, GOLD);
+                wid_set_bevel(b, 0);
             }
 
             wid_set_color(b, WID_COLOR_BG, c);
