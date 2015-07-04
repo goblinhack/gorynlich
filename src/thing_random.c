@@ -119,6 +119,10 @@ tpp random_floor (void)
             continue;
         }
 
+        if (tp_is_light_source(tp)) {
+            continue;
+        }
+
         if (tp_is_corridor(tp)) {
             continue;
         }
@@ -149,6 +153,10 @@ tpp random_corridor (void)
         }
 
         if (tp_is_shop_floor(tp)) {
+            continue;
+        }
+
+        if (tp_is_light_source(tp)) {
             continue;
         }
 
@@ -389,10 +397,7 @@ tpp random_lava (void)
         }
 
         if (tp_is_lava(tp)) {
-            int r =  myrand() % 10000;
-            if (r < tp_get_d10000_chance_of_appearing(tp)) {
-                return (tp);
-            }
+            return (tp);
         }
     }
 }
