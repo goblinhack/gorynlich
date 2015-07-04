@@ -20,7 +20,7 @@
  is_animated
  d10000_chance_of_appearing=10
  min_appear_depth=1
- max_appear_depth=80
+ max_appear_depth=100
  spawn_on_death="data/things/zombie_corpse5"
  sound_on_hitting_something="zombie"
  tiles={
