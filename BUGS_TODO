@@ -1,4 +1,5 @@
 --------------------------------------- plan for jul --------------------------------------
+- add game end
 - auto equip boots and rings
 - teleport wand
 - ring of resistance
@@ -21,27 +22,19 @@
 - mirror traps that bounce back weapon fire?
 - teletrap monster
 --------------------------------------- plan for aug --------------------------------------
-- manually generate lots of levels
 - ice and fire blocks? ice blocks move; add yetis and other monst for cold levels?
-- minor: tx socket thing loop is too slow could use a thing array to update
 - minor: colision map tiny not used
-- minor: lifespan code not used
---------------------------------------- plan for sep --------------------------------------
-- first baddy, large ghost, drops bone piles
-- bosses drop exit on death
---------------------------------------- plan for oct --------------------------------------
-- add game end
---------------------------------------- plan for nov --------------------------------------
 - backpack drop on death
 - thief, kill thief to recover items
---------------------------------------- plan for dec --------------------------------------
 - multi player
 - magic gives health to other players
 
 Sat Jul  4 11:02:23 EDT 2015
+- 100 LEVELS!
 - orc fortress
 - corridor wall hit prio
 - hard doors
+- minor: lifespan code not used
 
 Fri Jul  3 17:35:07 EDT 2015
 - large demon and cthulu
