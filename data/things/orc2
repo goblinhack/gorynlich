@@ -23,7 +23,7 @@
  d10000_chance_of_appearing=100
  weapon_fire_delay_hundredths=100
  min_appear_depth=1
- max_appear_depth=80
+ max_appear_depth=100
  tiles={
   tile={
    delay=200
