@@ -21,20 +21,21 @@
  hit_delay_tenths=10
  sound_on_death="urgh"
  is_monst
+ is_combustable
  is_shadow_caster
  is_shadow_caster_soft
  hit_priority=10
  is_cats_eyes
  is_levitating
- scale=5.0
+ scale=3.0
  is_collision_map_medium
  is_animated
  fires="data/things/plasmaball2"
  weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=0
- spawn_on_death="data/things/exit1"
+ explodes_as="data/things/explosion3"
  is_light_source
- light_radius=8.5
+ light_radius=1.5
  light_tint="green"
  tiles={
   tile={ delay=150 tile="baby-cthulu1" }
