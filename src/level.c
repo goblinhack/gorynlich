@@ -217,6 +217,45 @@ void level_load_new (void)
     if ((global_config.server_level_pos.x == 66) && 
         (global_config.server_level_pos.y == 66)) {
         fixed = true;
+    } else if ((global_config.server_level_pos.x == 2) && 
+               (global_config.server_level_pos.y == 2)) {
+        fixed = true;
+    } else if ((global_config.server_level_pos.x == 3) && 
+               (global_config.server_level_pos.y == 3)) {
+        fixed = true;
+    } else if ((global_config.server_level_pos.x == 4) && 
+               (global_config.server_level_pos.y == 4)) {
+        fixed = true;
+    } else if ((global_config.server_level_pos.x == 5) && 
+               (global_config.server_level_pos.y == 5)) {
+        fixed = true;
+    } else if ((global_config.server_level_pos.x == 6) && 
+               (global_config.server_level_pos.y == 6)) {
+        fixed = true;
+    } else if ((global_config.server_level_pos.x == 7) && 
+               (global_config.server_level_pos.y == 7)) {
+        fixed = true;
+    } else if ((global_config.server_level_pos.x == 8) && 
+               (global_config.server_level_pos.y == 8)) {
+        fixed = true;
+    } else if ((global_config.server_level_pos.x == 9) && 
+               (global_config.server_level_pos.y == 9)) {
+        fixed = true;
+    } else if ((global_config.server_level_pos.x == 10) && 
+               (global_config.server_level_pos.y == 10)) {
+        fixed = true;
+    } else if ((global_config.server_level_pos.x == 7) && 
+               (global_config.server_level_pos.y == 10)) {
+        /*
+         * cthulu
+         */
+        fixed = true;
+    } else if ((global_config.server_level_pos.x == 4) && 
+               (global_config.server_level_pos.y == 5)) {
+        /*
+         * demon lair
+         */
+        fixed = true;
     }
 
     int r = (myrand() % 100);
