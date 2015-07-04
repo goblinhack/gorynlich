@@ -1,0 +1,34 @@
+{
+ short_name="floor"
+ raw_name="floor11"
+ tooltip="floor11"
+ z_depth="floor"
+ is_inactive
+ is_floor
+ tiles={
+  tile={
+   tile="floor11a"
+  }
+  tile={
+   tile="floor11b"
+  }
+  tile={
+   tile="floor11c"
+  }
+  tile={
+   tile="floor11d"
+  }
+  tile={
+   tile="floor11e"
+  }
+  tile={
+   tile="floor11f"
+  }
+  tile={
+   tile="floor11g"
+  }
+  tile={
+   tile="floor11h"
+  }
+ }
+}
