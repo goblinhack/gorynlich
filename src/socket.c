@@ -123,15 +123,17 @@ static gsocketp socket_create (IPaddress address, int type)
         return (0);
     }
 
-    s->socklist = SDLNet_AllocSocketSet(1);
-    if (!s->socklist) {
-        char *tmp = iptodynstr(address);
-        ERR("SDLNet_AllocSocketSet %s failed", tmp);
-        WARN("  %s", SDLNet_GetError());
-        myfree(tmp);
+    if (!single_player_mode) {
+        s->socklist = SDLNet_AllocSocketSet(1);
+        if (!s->socklist) {
+            char *tmp = iptodynstr(address);
+            ERR("SDLNet_AllocSocketSet %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
+            myfree(tmp);
 
-        socket_disconnect(s);
-        return (0);
+            socket_disconnect(s);
+            return (0);
+        }
     }
 
     return (s);
@@ -152,47 +154,53 @@ gsocketp socket_listen (IPaddress address)
     } else {
         s = socket_create(address, SOCKET_LISTEN);
         if (!s) {
+            char *tmp = iptodynstr(address);
+            WARN("socket_create %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
+            myfree(tmp);
             return (0);
         }
     }
 
-    /*
-     * Use 0.0.0.0 for listening always as it is different from the client
-     * connecting on 127.0.0.1
-     */
-    address.host = 0;
+    if (!single_player_mode) {
+        /*
+         * Use 0.0.0.0 for listening always as it is different from the client
+         * connecting on 127.0.0.1
+         */
+        address.host = 0;
 
-    uint16_t port = SDLNet_Read16(&address.port);
-    s->udp_socket = SDLNet_UDP_Open(port);
-    if (!s->udp_socket) {
-        char *tmp = iptodynstr(address);
-        WARN("SDLNet_UDP_Open %s failed", tmp);
-        WARN("  %s", SDLNet_GetError());
-        myfree(tmp);
+        uint16_t port = SDLNet_Read16(&address.port);
+        s->udp_socket = SDLNet_UDP_Open(port);
+        if (!s->udp_socket) {
+            char *tmp = iptodynstr(address);
+            WARN("SDLNet_UDP_Open %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
+            myfree(tmp);
 
-        socket_disconnect(s);
-        return (0);
-    }
+            socket_disconnect(s);
+            return (0);
+        }
 
-    s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &listen_address);
-    if (s->channel < 0) {
-        char *tmp = iptodynstr(address);
-        WARN("SDLNet_UDP_Bind %s failed", tmp);
-        WARN("  %s", SDLNet_GetError());
-        myfree(tmp);
+        s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &listen_address);
+        if (s->channel < 0) {
+            char *tmp = iptodynstr(address);
+            WARN("SDLNet_UDP_Bind %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
+            myfree(tmp);
 
-        socket_disconnect(s);
-        return (0);
-    }
+            socket_disconnect(s);
+            return (0);
+        }
 
-    if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
-        char *tmp = iptodynstr(address);
-        WARN("SDLNet_UDP_AddSocket %s failed", tmp);
-        WARN("  %s", SDLNet_GetError());
-        myfree(tmp);
+        if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
+            char *tmp = iptodynstr(address);
+            WARN("SDLNet_UDP_AddSocket %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
+            myfree(tmp);
 
-        socket_disconnect(s);
-        return (0);
+            socket_disconnect(s);
+            return (0);
+        }
     }
 
     s->local_ip = address;
@@ -233,36 +241,38 @@ static gsocketp socket_connect (IPaddress address, uint8_t server_side_client)
         return (0);
     }
 
-    s->udp_socket = SDLNet_UDP_Open(0);
-    if (!s->udp_socket) {
-        char *tmp = iptodynstr(connect_address);
-        WARN("SDLNet_UDP_Open %s failed", tmp);
-        WARN("  %s", SDLNet_GetError());
-        myfree(tmp);
+    if (!single_player_mode) {
+        s->udp_socket = SDLNet_UDP_Open(0);
+        if (!s->udp_socket) {
+            char *tmp = iptodynstr(connect_address);
+            WARN("SDLNet_UDP_Open %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
+            myfree(tmp);
 
-        socket_disconnect(s);
-        return (0);
-    }
+            socket_disconnect(s);
+            return (0);
+        }
 
-    s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &connect_address);
-    if (s->channel < 0) {
-        char *tmp = iptodynstr(connect_address);
-        WARN("SDLNet_UDP_Bind %s failed", tmp);
-        WARN("  %s", SDLNet_GetError());
-        myfree(tmp);
+        s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &connect_address);
+        if (s->channel < 0) {
+            char *tmp = iptodynstr(connect_address);
+            WARN("SDLNet_UDP_Bind %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
+            myfree(tmp);
 
-        socket_disconnect(s);
-        return (0);
-    }
+            socket_disconnect(s);
+            return (0);
+        }
 
-    if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
-        char *tmp = iptodynstr(connect_address);
-        WARN("SDLNet_UDP_AddSocket %s failed", tmp);
-        WARN("  %s", SDLNet_GetError());
-        myfree(tmp);
+        if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
+            char *tmp = iptodynstr(connect_address);
+            WARN("SDLNet_UDP_AddSocket %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
+            myfree(tmp);
 
-        socket_disconnect(s);
-        return (0);
+            socket_disconnect(s);
+            return (0);
+        }
     }
 
     s->server_side_client = server_side_client;
@@ -272,7 +282,10 @@ static gsocketp socket_connect (IPaddress address, uint8_t server_side_client)
     }
 
     s->remote_ip = connect_address;
-    s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
+
+    if (!single_player_mode) {
+        s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
+    }
 
     LOG("Socket connect to %s", socket_get_remote_logname(s));
     LOG("       from       %s", socket_get_local_logname(s));
@@ -336,6 +349,10 @@ static void socket_destroy (gsocketp s)
     }
 
     socket_set_player(s, 0);
+
+    if (single_player_mode) {
+        socket_set_connected(s, false);
+    }
 
     if (s == server_socket) {
         server_socket = 0;
@@ -1236,6 +1253,11 @@ void packet_free (UDPpacket *packet)
 
 void socket_tx_ping (gsocketp s, uint8_t *seq, uint32_t ts)
 {
+    if (single_player_mode) {
+        socket_set_connected(s, true);
+        return;
+    }
+
     verify(s);
 
     if (!socket_get_udp_socket(s)) {
@@ -1295,6 +1317,10 @@ void socket_tx_ping (gsocketp s, uint8_t *seq, uint32_t ts)
 void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
 {
     verify(s);
+
+    if (!single_player_mode) {
+        return;
+    }
 
     if (!socket_get_udp_socket(s)) {
         return;
@@ -1426,10 +1452,6 @@ void socket_tx_client_status (gsocketp s)
 {
     verify(s);
 
-    if (!socket_get_udp_socket(s)) {
-        return;
-    }
-
     /*
      * Refresh the server with our name.
      */
@@ -1546,11 +1568,6 @@ void socket_rx_client_status (gsocketp s, UDPpacket *packet, uint8_t *data)
 uint8_t socket_tx_client_join (gsocketp s, uint32_t *key)
 {
     verify(s);
-
-    if (!socket_get_udp_socket(s)) {
-        WARN("no socket to join on");
-        return (false);
-    }
 
     /*
      * Refresh the server with our name.
@@ -1715,10 +1732,6 @@ void socket_tx_client_leave (gsocketp s)
 {
     verify(s);
 
-    if (!socket_get_udp_socket(s)) {
-        return;
-    }
-
     /*
      * Refresh the server with our name.
      */
@@ -1786,10 +1799,6 @@ uint8_t socket_rx_client_leave (gsocketp s, UDPpacket *packet, uint8_t *data)
 void socket_tx_client_close (gsocketp s)
 {
     verify(s);
-
-    if (!socket_get_udp_socket(s)) {
-        return;
-    }
 
     /*
      * Refresh the server with our name.
@@ -2252,10 +2261,6 @@ void socket_tx_tell (gsocketp s,
                      const char *txt)
 {
     verify(s);
-
-    if (!socket_get_udp_socket(s)) {
-        return;
-    }
 
     if (!s->connected) {
         return;
@@ -2768,10 +2773,6 @@ void socket_tx_player_move (gsocketp s,
                             const uint8_t fire,
                             const uint8_t magic)
 {
-    if (!socket_get_udp_socket(s)) {
-        return;
-    }
-
     /*
      * Allow firing to always be sent.
      */
@@ -2863,10 +2864,6 @@ void socket_tx_player_action (gsocketp s,
 {
     if (!s) {
         ERR("no socket");
-        return;
-    }
-
-    if (!socket_get_udp_socket(s)) {
         return;
     }
 
@@ -3102,11 +3099,10 @@ void packet_compress (UDPpacket *packet)
 #endif
 }
 
-static int socker_udp_send (gsocketp s, UDPpacket *packet)
+static int socket_udp_send (gsocketp s, UDPpacket *packet)
 {
-    int ret;
+    int ret = 0;
 
-#ifdef ENABLE_SINGLE_PLAYER_SOCKET
     /*
      * If single player mode and client and server are on the same machine.
      */
@@ -3206,10 +3202,10 @@ static int socker_udp_send (gsocketp s, UDPpacket *packet)
 
         return (1);
     }
-#endif
 
-    ret = SDLNet_UDP_Send(socket_get_udp_socket(s),
-                          socket_get_channel(s), packet);
+    if (socket_get_udp_socket(s)) {
+        ret = SDLNet_UDP_Send(socket_get_udp_socket(s), socket_get_channel(s), packet);
+    }
 
     packet_free(packet);
 
@@ -3242,10 +3238,14 @@ static int socket_tx_queue_send_packet (gsocketp s)
     hex_dump_CON(packet->data, 0, packet->len);
 #endif
 
-    if (socker_udp_send(s, packet) < 1) {
+    if (socket_udp_send(s, packet) < 1) {
         /*
          * Only warn about sockets we really care about.
          */
+        if (single_player_mode) {
+            return (1);
+        }
+
         if (s->connected) {
             ERR("no UDP packet sent to %s: %s",
                 socket_get_remote_logname(s),
@@ -3462,6 +3462,7 @@ static int socket_rx_queue_receive_packets (gsocketp s)
 {
     int count = 0;
     int waittime = 0;
+
     int numready = SDLNet_CheckSockets(socket_get_socklist(s), waittime);
     if (numready <= 0) {
         return (count);
@@ -3573,6 +3574,10 @@ void socket_tx_tick (void)
 void socket_rx_tick (void)
 {
     gsocketp s;
+
+    if (single_player_mode) {
+        return;
+    }
 
     TREE_WALK(sockets, s) {
         for (;;) {
