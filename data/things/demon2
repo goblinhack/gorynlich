@@ -3,7 +3,7 @@
  raw_name="demon2"
  tooltip="fire demon"
  z_depth="monst"
- speed=3
+ speed=10
  max_hp=550
  damage=20
  bonus_xp_on_death=800
