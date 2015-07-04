@@ -615,7 +615,7 @@ static uint8_t wid_keyboard_text_input_key_event (widp w, const SDL_KEYSYM *key)
         case SDLK_HOME:
         case SDLK_END:
             wid_receive_input(ctx->input, key);
-            break;
+            return (true);
 
         default:
             wid_keyboard_event(w, -1, -1, key);
