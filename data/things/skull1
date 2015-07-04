@@ -15,7 +15,7 @@
  approach_distance=3
  is_monst
  min_appear_depth=1
- max_appear_depth=20
+ max_appear_depth=100
  is_shadow_caster
  is_shadow_caster_soft
  hit_priority=10
