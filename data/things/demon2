@@ -13,6 +13,7 @@
  sound_on_death="urgh2"
  is_lava_proof
  is_monst
+ is_combustable
  is_shadow_caster
  is_shadow_caster_soft
  scale=4.0
@@ -26,9 +27,9 @@
  weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=0
  is_light_source
- light_radius=8.5
+ light_radius=1.5
  light_tint="red"
- spawn_on_death="data/things/exit1"
+ explodes_as="data/things/explosion3"
  tiles={
   tile={ delay=50 tile="demon1-1" }
   tile={ delay=50 tile="demon1-2" }

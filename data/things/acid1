@@ -14,7 +14,7 @@
  scale=1.2
  is_light_source
  is_candle_light
- hit_priority=20
+ hit_priority=0
  damage=10
  is_effect_pulse
  can_be_hit_chance=2000000

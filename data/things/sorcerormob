@@ -19,7 +19,7 @@
  is_animated
  d10000_chance_of_appearing=5 
  explodes_as="data/things/explosion2"
- mob_spawn_delay_tenths=200
+ mob_spawn_delay_tenths=100
  tiles={
   tile={
    tile="sorcerormob1"
