@@ -9,7 +9,7 @@
  vision_distance=4
  hit_delay_tenths=10
  is_trap
- min_appear_depth=1
+ min_appear_depth=10
  max_appear_depth=100
  is_shadow_caster
  is_shadow_caster_soft

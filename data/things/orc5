@@ -23,8 +23,8 @@
  is_animated
  d10000_chance_of_appearing=1
  weapon_fire_delay_hundredths=120
- min_appear_depth=1
- max_appear_depth=80
+ min_appear_depth=20
+ max_appear_depth=100
  tiles={
   tile={
    delay=200

@@ -25,7 +25,7 @@
  weapon_fire_delay_hundredths=500
  min_appear_depth=1
  approach_distance=5
- max_appear_depth=80
+ max_appear_depth=100
  tiles={
   tile={
    delay=200
