@@ -38,6 +38,11 @@
 - multi player
 - magic gives health to other players
 
+Sat Jul  4 11:02:23 EDT 2015
+- orc fortress
+- corridor wall hit prio
+- hard doors
+
 Fri Jul  3 17:35:07 EDT 2015
 - large demon and cthulu
 - no lava hitting projectiles
@@ -51,7 +56,7 @@ Fri Jul  3 17:35:07 EDT 2015
 Thu Jul  2 19:07:46 EDT 2015
 - template ids > 256
 - skeleton archer
-00:04:51.249: ERROR: Server: Thing lava[0x7ff07211fe10, id 27453] (server): No weapon to swing
+- lava: No weapon to swing
 - minor: increase move granulariy on server so projectiles line up with player more
 
 Tue Jun 30 08:56:52 EDT 2015
