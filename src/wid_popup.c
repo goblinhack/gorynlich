@@ -593,3 +593,52 @@ widp wid_popup_error (const char *text)
 
     return (w);
 }
+
+static void wid_popup_ok_close (widp wid)
+{
+    wid = wid_get_top_parent(wid);
+
+    wid_destroy(&wid);
+}
+
+static uint8_t wid_popup_ok_key_event (widp w, const SDL_KEYSYM *key)
+{
+    switch (key->sym) {
+        case 'q':
+        case SDLK_ESCAPE:
+            wid_popup_ok_close(w);
+            return (true);
+
+        default:
+            break;
+    }
+
+    return (false);
+}
+
+widp wid_popup_ok (const char *text)
+{
+    widp w;
+
+    if (!sdl_init_video) {
+        return (0);
+    }
+
+    w = wid_popup(text ? text : "", /* body text */
+                  "",               /* title */
+                  0.5f, 0.5f,       /* x,y postition in percent */
+                  0,                /* title font */
+                  0,                /* body font */
+                  0,                /* button font */
+                  1,                /* number args */
+                  "ok", wid_popup_ok_close);
+
+    wid_set_on_key_down(w, wid_popup_ok_key_event);
+
+    wid_set_tex(w, 0, "gothic_wide");
+    wid_set_square(w);
+
+    wid_set_color(w, WID_COLOR_BG, BLACK);
+
+    return (w);
+}
