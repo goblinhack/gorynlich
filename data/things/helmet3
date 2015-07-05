@@ -3,7 +3,7 @@
  raw_name="helmet3"
  tooltip="gold helmet"
  z_depth="monst"
- stats_defense=3
+ stats_defense=21
  cost=3000
  is_treasure
  is_stackable
@@ -13,7 +13,6 @@
  is_helmet
  can_be_enchanted
  d10000_chance_of_appearing=2
- is_hand_item
  tiles={
   tile={
    tile="helmet3"
