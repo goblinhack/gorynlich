@@ -65,22 +65,22 @@ int32_t thing_stats_get_total_damage (thingp t)
      */
     tpp helmet = thing_helmet(t);
     if (helmet) {
-        modifier += tp_get_stats_attack_melee(helmet);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_melee(helmet));
     }
 
     tpp armour = thing_armour(t);
     if (armour) {
-        modifier += tp_get_stats_attack_melee(armour);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_melee(armour));
     }
 
     tpp left_arm = thing_arm_left(t);
     if (left_arm) {
-        modifier += tp_get_stats_attack_melee(left_arm);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_melee(left_arm));
     }
 
     tpp right_arm = thing_arm_right(t);
     if (right_arm) {
-        modifier += tp_get_stats_attack_melee(right_arm);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_melee(right_arm));
     }
 
     /*
@@ -88,22 +88,22 @@ int32_t thing_stats_get_total_damage (thingp t)
      */
     helmet = thing_helmet(t);
     if (helmet) {
-        modifier += tp_get_stats_attack_magical(helmet);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_magical(helmet));
     }
 
     armour = thing_armour(t);
     if (armour) {
-        modifier += tp_get_stats_attack_magical(armour);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_magical(armour));
     }
 
     left_arm = thing_arm_left(t);
     if (left_arm) {
-        modifier += tp_get_stats_attack_magical(left_arm);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_magical(left_arm));
     }
 
     right_arm = thing_arm_right(t);
     if (right_arm) {
-        modifier += tp_get_stats_attack_magical(right_arm);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_magical(right_arm));
     }
 
     /*
@@ -111,26 +111,26 @@ int32_t thing_stats_get_total_damage (thingp t)
      */
     helmet = thing_helmet(t);
     if (helmet) {
-        modifier += tp_get_stats_attack_ranged(helmet);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_ranged(helmet));
     }
 
     armour = thing_armour(t);
     if (armour) {
-        modifier += tp_get_stats_attack_ranged(armour);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_ranged(armour));
     }
 
     left_arm = thing_arm_left(t);
     if (left_arm) {
-        modifier += tp_get_stats_attack_melee(left_arm);
-        modifier += tp_get_stats_attack_ranged(left_arm);
-        modifier += tp_get_stats_attack_magical(left_arm);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_melee(left_arm));
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_ranged(left_arm));
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_magical(left_arm));
     }
 
     right_arm = thing_arm_right(t);
     if (right_arm) {
-        modifier += tp_get_stats_attack_melee(right_arm);
-        modifier += tp_get_stats_attack_ranged(right_arm);
-        modifier += tp_get_stats_attack_magical(right_arm);
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_melee(right_arm));
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_ranged(right_arm));
+        modifier += thing_stats_val_to_modifier(tp_get_stats_attack_magical(right_arm));
     }
 
     /*

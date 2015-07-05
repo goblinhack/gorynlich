@@ -13,7 +13,6 @@
  is_water_proof
  can_be_enchanted
  d10000_chance_of_appearing=5
- is_hand_item
  tiles={
   tile={
    tile="boots3"
