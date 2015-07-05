@@ -1145,6 +1145,14 @@ wid_game_map_client_replace_tile (widp w,
 
 void wid_game_map_client_score_update (levelp level, uint8_t redo)
 {
+    /*
+     * Huge hack - we don't send ping/pong in single player mode, so
+     * we don't get the level name.
+     */
+    if (single_player_mode) {
+        level = server_level;
+    }
+
     if (!player) {
         return;
     }
