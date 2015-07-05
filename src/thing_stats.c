@@ -964,26 +964,6 @@ int thing_stats_item_add (thingp t,
     }
 
     /*
-     * All items go on the ation bar first if there is space.
-     */
-    for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-        oitem = &player_stats->action_bar[i];
-        if (item_push(oitem, item)) {
-            return (true);
-        }
-    }
-
-    /*
-     * If the item is already on the inventory, try and push onto it.
-     */
-    oitem = thing_stats_has_inventory_item(player_stats, item.id, 0);
-    if (oitem) {
-        if (item_push(oitem, item)) {
-            return (true);
-        }
-    }
-
-    /*
      * Can it be worn?
      */
     if (tp_is_armour(it)) {
@@ -1014,6 +994,26 @@ int thing_stats_item_add (thingp t,
         }
 
         oitem = &player_stats->worn[THING_WORN_ARM_RIGHT];
+        if (item_push(oitem, item)) {
+            return (true);
+        }
+    }
+
+    /*
+     * All items go on the ation bar first if there is space.
+     */
+    for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+        oitem = &player_stats->action_bar[i];
+        if (item_push(oitem, item)) {
+            return (true);
+        }
+    }
+
+    /*
+     * If the item is already on the inventory, try and push onto it.
+     */
+    oitem = thing_stats_has_inventory_item(player_stats, item.id, 0);
+    if (oitem) {
         if (item_push(oitem, item)) {
             return (true);
         }
