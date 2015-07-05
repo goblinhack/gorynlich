@@ -4,22 +4,31 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
-
-#include "main.h"
 #include "wid.h"
-#include "color.h"
-#include "wid_intro.h"
-#include "wid_popup.h"
 #include "wid_game_over.h"
-#include "music.h"
+#include "wid_choose_stats.h"
+#include "wid_choose_name.h"
+#include "wid_intro.h"
+#include "wid_server_join.h"
+#include "wid_server_create.h"
+#include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
+#include "timer.h"
+#include "glapi.h"
+#include "server.h"
+#include "wid_menu.h"
+#include "thing_template.h"
 
 static widp wid_game_over;
-static widp wid_game_over_credits;
+static widp wid_game_over_background;
+
+static void wid_game_over_play_selected(void);
+
 static uint8_t wid_game_over_init_done;
 static void wid_game_over_create(void);
-static void wid_game_over_destroy(void);
-static void wid_game_over_finished(widp wid);
+static widp menu;
+
+static int intro_effect_delay = 200;
 
 uint8_t wid_game_over_init (void)
 {
@@ -38,93 +47,327 @@ void wid_game_over_fini (void)
     if (wid_game_over_init_done) {
         wid_game_over_init_done = false;
 
-        wid_game_over_destroy();
+        if (wid_game_over) {
+            wid_destroy(&wid_game_over);
+            wid_destroy_in(wid_game_over_background, wid_hide_delay * 2);
+            wid_game_over_background = 0;
+        }
+
+        if (menu) {
+            wid_destroy(&menu);
+        }
     }
 }
 
+static uint8_t wid_game_over_is_hidden;
+static uint8_t wid_game_over_is_visible;
+
 void wid_game_over_hide (void)
 {
-    wid_game_over_destroy();
+    if (wid_game_over_is_hidden) {
+        return;
+    }
+
+    wid_game_over_is_hidden = true;
+    wid_game_over_is_visible = false;
+
+    if (!wid_game_over) {
+        ERR("no wid intro");
+    }
+
+    wid_fade_out(wid_game_over_background, intro_effect_delay);
+
+    wid_hide(wid_game_over, 0);
+    wid_raise(wid_game_over);
+    wid_update(wid_game_over);
+
+    wid_destroy(&wid_game_over);
+    wid_destroy_in(wid_game_over_background, wid_hide_delay * 2);
+    wid_game_over_background = 0;
+
+    if (menu) {
+        wid_destroy(&menu);
+    }
 }
 
 void wid_game_over_visible (void)
 {
+    if (wid_game_over_is_visible) {
+        wid_game_over_hide();
+    }
+
     wid_game_over_create();
-}
 
-static void wid_game_over_destroy (void)
-{
-    wid_destroy(&wid_game_over);
-    wid_destroy(&wid_game_over_credits);
-}
+    wid_game_over_is_visible = true;
+    wid_game_over_is_hidden = false;
 
-static void wid_game_over_finished (widp wid)
-{
-    if (sdl_is_exiting()) {
+    if (!wid_game_over) {
+        ERR("no wid intro");
+    }
+
+    if (global_config.game_over) {
+        global_config.game_over = false;
         return;
     }
 
+    wid_visible(wid_game_over, 0);
+    wid_raise(wid_game_over);
+    wid_update(wid_game_over);
+
+    wid_fade_in(wid_game_over_background, intro_effect_delay);
+}
+
+static void wid_server_create_selected (void)
+{
+    LOG("Server create selected");
+
+    wid_server_create_visible();
+}
+
+static void wid_choose_player_play_selected_cb (void *context)
+{
+    wid_game_map_server_visible();
+    wid_game_map_client_visible();
+
+    wid_intro_hide();
+}
+
+static void wid_choose_player_play_selected (void)
+{
+    LOG("Play from stats selection");
+
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_choose_player_play_selected_cb,
+            (action_timer_destroy_callback)0,
+            0, /* context */
+            "start game",
+            intro_effect_delay,
+            0 /* jitter */);
+
+    wid_game_over_hide();
+}
+
+static void wid_game_over_single_play_selected_cb (void *context)
+{
+    single_player_mode = 1;
+
+    wid_server_join_hide();
+    wid_server_create_hide();
+
+    wid_choose_player_play_selected();
+}
+
+static void wid_game_over_start_server_selected_cb (void *context)
+{
+    single_player_mode = 0;
+
+    wid_server_create_selected();
+}
+
+static void wid_game_over_start_server_selected (void)
+{
+    LOG("Start server selected");
+
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_game_over_start_server_selected_cb,
+            (action_timer_destroy_callback)0,
+            0, /* context */
+            "start server",
+            intro_effect_delay,
+            0 /* jitter */);
+
+    wid_destroy(&menu);
+}
+
+static void wid_game_over_play_selected (void)
+{
+    LOG("Single player selected");
+
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_game_over_single_play_selected_cb,
+            (action_timer_destroy_callback)0,
+            0, /* context */
+            "start game",
+            intro_effect_delay,
+            0 /* jitter */);
+
+    wid_game_over_hide();
+}
+
+static uint8_t wid_game_over_play_mouse_event (widp w, int32_t x, int32_t y,
+                                           uint32_t button)
+{
+    wid_game_over_play_selected();
+
+    return (true);
+}
+
+static uint8_t 
+wid_game_over_go_back_mouse_event (widp w, int32_t x, int32_t y,
+                                          uint32_t button)
+{
     wid_game_over_hide();
 
+    /*
+     * Don't go back to choose stats as all points are spent.
+     */
     wid_intro_visible();
+
+    return (true);
+}
+
+static uint8_t wid_game_over_play_key_event (widp w, const SDL_KEYSYM *key)
+{
+    switch (key->sym) {
+        case ' ':
+        case 's':
+            wid_game_over_play_selected();
+            return (true);
+
+        case 'm':
+            wid_game_over_start_server_selected();
+            return (true);
+
+        case 'b':
+        case 'q':
+        case SDLK_ESCAPE:
+            wid_game_over_hide();
+            wid_intro_visible();
+            return (true);
+
+        default:
+            break;
+    }
+
+    return (false);
+}
+
+static void wid_game_over_bg_create (void)
+{
+    widp wid;
+
+    if (wid_game_over_background) {
+        return;
+    }
+
+    {
+        wid = wid_game_over_background = wid_new_window("bg");
+
+        float f = (1024.0 / 880.0);
+
+        fpoint tl = { 0.0, 0.0 };
+        fpoint br = { 1.0, f };
+
+        wid_set_tl_br_pct(wid, tl, br);
+
+        wid_set_tex(wid, 0, "title6");
+
+        wid_lower(wid);
+
+        color c;
+        c = WHITE;
+        wid_set_mode(wid, WID_MODE_NORMAL);
+        wid_set_color(wid, WID_COLOR_TL, c);
+        wid_set_color(wid, WID_COLOR_BR, c);
+        wid_set_color(wid, WID_COLOR_BG, c);
+
+        wid_update(wid);
+    }
 }
 
 static void wid_game_over_create (void)
 {
-    if (sdl_is_exiting()) {
+    if (wid_game_over) {
         return;
     }
 
-    widp w = wid_new_window("game_over");
-    fpoint tl = { 0, 0 };
-    fpoint br = { 1, 1 };
+    wid_game_over = wid_new_window("intro buttons");
 
-    wid_set_tl_br_pct(w, tl, br);
+    wid_set_no_shape(wid_game_over);
 
-    wid_set_mode(w, WID_MODE_NORMAL);
-    wid_set_color(w, WID_COLOR_TL, BLACK);
-    wid_set_color(w, WID_COLOR_BR, BLACK);
-    wid_set_color(w, WID_COLOR_BG, BLACK);
+    fpoint tl = {0.0f, 0.0f};
+    fpoint br = {1.0f, 1.0f};
+    wid_set_tl_br_pct(wid_game_over, tl, br);
+    wid_set_on_mouse_down(wid_game_over, wid_game_over_play_mouse_event);
+    wid_set_on_key_down(wid_game_over, wid_game_over_play_key_event);
 
-    wid_destroy_in(w, 110000);
-    wid_set_on_destroy(w, wid_game_over_finished);
-    wid_move_to_pct_centered(w, 0.5f, 0.5f);
+    color col = BLACK;
+    col.a = 0;
+    glcolor(col);
 
-    music_play_game_over();
+    wid_set_mode(wid_game_over, WID_MODE_NORMAL);
+    wid_set_color(wid_game_over, WID_COLOR_TL, col);
+    wid_set_color(wid_game_over, WID_COLOR_BR, col);
+    wid_set_color(wid_game_over, WID_COLOR_BG, col);
 
-    wid_game_over_credits = wid_popup(
-          "",
-          "Game Over!\n"
-          "\n"
-          "\n"
-          "Congratulations!\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "This game was written badly\n"
-          "by Neil McGill\n"
-          "\n"
-          "Hope you liked it.\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "Bye!\n"
-          ,
-          0.5, 0.5,                 /* x,y postition in percent */
-          large_font,               /* title font */
-          large_font,               /* body font */
-          med_font,                 /* button font */
-          0);
+    wid_game_over_bg_create();
+    wid_update(wid_game_over);
 
-    wid_move_to_pct_centered(wid_game_over_credits, 0.5, 2.5);
-    wid_move_to_pct_centered_in(wid_game_over_credits, 0.5, 0.5, 2000);
+    wid_move_to_pct_centered(wid_game_over, 0.5f, 0.5f);
 
-    wid_raise(w);
-    wid_raise(wid_game_over_credits);
+    menu = wid_menu(0,
+                 vvlarge_font,
+                 large_font,
+                 0, // on_update
+                 0.5, /* x */
+                 0.4, /* y */
+                 1, /* columns */
+                 1, /* focus */
+                 6, /* items */
 
-    wid_update(w);
+                 0, "Game over!", 0,
+                 0, "", 0,
+                 0, "The golden cheese is returned", 0,
+                 0, "To the people of pixelvania", 0,
+                 0, "", 0,
+
+                 (int) 'b', "Back to main window",
+                 wid_game_over_go_back_mouse_event);
+
+    int i;
+
+    for (i = 0; i < 500; i++) {
+        fpoint tl;
+        fpoint br;
+
+        tl.x = 0.01 * ((float)(myrand() % 100));
+        tl.y = 0.01 * ((float)(myrand() % 100));
+
+        br.x = tl.x + 0.05;
+        br.y = tl.y + 0.05;
+
+        float dy = (float)(myrand() % 100) / 10.0;
+        tl.y -= dy;
+        br.y -= dy;
+
+        widp child = wid_new_square_button(wid_game_over, "cheese");
+
+        wid_set_tl_br_pct(child, tl, br);
+        wid_set_mode(child, WID_MODE_NORMAL);
+        wid_set_color(child, WID_COLOR_TEXT, RED);
+        wid_set_color(child, WID_COLOR_TL, BLACK);
+        wid_set_color(child, WID_COLOR_BG, BLACK);
+        wid_set_color(child, WID_COLOR_BR, BLACK);
+        wid_set_no_shape(child);
+
+        wid_rotate_to_pct_in(child,
+                             0.0, 
+                             myrand() % 1000,
+                             (myrand() % 5000) + 1000, 999);
+
+        tpp thing_template;
+        
+        if ((myrand() % 10) < 9) {
+            thing_template = tp_find("data/things/cheese");
+        } else {
+            thing_template = random_treasure(0);
+        }
+
+        wid_move_delta_pct_in(child, 0.0, 50.0, 200000);
+
+        wid_set_thing_template(child, thing_template);
+    }
 }

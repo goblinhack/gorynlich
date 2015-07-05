@@ -25,6 +25,7 @@
 - magic gives health to other players
 
 Sun Jul  5 11:28:21 EDT 2015
+- added game over screen
 - level name in single player missing due to ping pong missing
 - auto equip boots and rings
 
