@@ -1,5 +1,4 @@
 --------------------------------------- plan for jul --------------------------------------
-- backspace deletes twice in level title
 - auto equip boots and rings
 - add game end
 - ring of resistance
@@ -27,6 +26,8 @@
 - magic gives health to other players
 
 Sat Jul  4 11:02:23 EDT 2015
+- boots of speed work
+- backspace deletes twice in level title
 - 100 LEVELS!
 - orc fortress
 - corridor wall hit prio

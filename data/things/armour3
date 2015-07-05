@@ -3,7 +3,7 @@
  raw_name="armour3"
  tooltip="gold armour"
  z_depth="monst"
- stats_defense=4
+ stats_defense=21
  cost=4000
  is_treasure
  is_stackable
@@ -13,7 +13,6 @@
  is_armour
  can_be_enchanted
  d10000_chance_of_appearing=1
- is_hand_item
  tiles={
   tile={
    tile="armour3"
