@@ -36,6 +36,7 @@ thingp thing_mob_spawn_on_death(thingp);
 void thing_make_active(thingp t);
 void thing_make_inactive(thingp t);
 void thing_wake(thingp t);
+void thing_game_over(thingp);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 void thing_dying(thingp, thingp killer,
@@ -114,8 +115,7 @@ void thing_set_is_open(thingp t, uint8_t val);
 void thing_set_is_angry(thingp t, uint8_t val);
 void thing_set_is_projectile(thingp t, uint8_t val);
 void thing_set_is_dead(thingp t, uint8_t val);
-void thing_set_key20(thingp t, uint8_t val);
-uint8_t thing_key20(thingp t);
+void thing_set_is_game_over(thingp t, uint8_t val);
 const char *thing_name(thingp);
 const char *thing_short_name(thingp);
 const char *thing_tooltip(thingp);
