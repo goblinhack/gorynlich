@@ -718,7 +718,7 @@ static void level_finished (levelp level)
     socket_server_tx_map_update(0, server_active_things,
                                 "level destroy active things");
 
-    wid_game_map_server_wid_destroy(true /* keep players */);
+    wid_game_map_server_wid_destroy(false /* keep players */);
 
     { TREE_WALK(server_active_things, t) {
         if (!thing_is_player_or_owned_by_player(t)) {
@@ -727,6 +727,10 @@ static void level_finished (levelp level)
             continue;
         }
     } }
+
+    if (level->game_over) {
+        return;
+    }
 
     wid_game_map_server_wid_create();
 
@@ -785,7 +789,11 @@ void level_server_tick (levelp level)
      */
     if (level_exit_has_been_reached(level)) {
         if (!level->end_level_first_phase_fade_out_timer) {
-            socket_tx_server_shout_at_all_players(POPUP, "Level completed");
+            if (level->game_over) {
+                socket_tx_server_shout_at_all_players(POPUP, "Quest completed!");
+            } else {
+                socket_tx_server_shout_at_all_players(POPUP, "Level completed");
+            }
 
             level->end_level_first_phase_fade_out_timer = 
                 action_timer_create(
@@ -1252,6 +1260,18 @@ void level_set_exit_has_been_reached (levelp level, uint8_t val)
 {
     verify(level);
 
+    if ((level->level_pos.x >= 10) && (level->level_pos.y >= 10)) {
+        level->game_over = true;
+        thingp t;
+        { TREE_WALK(server_active_things, t) {
+            if (level->game_over) {
+                if (thing_is_player(t)) {
+                    thing_game_over(t);
+                }
+            }
+        } }
+    }
+    
     level->exit_has_been_reached = val;
 }
 

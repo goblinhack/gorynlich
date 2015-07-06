@@ -700,7 +700,10 @@ static void client_rx_server_status (gsocketp s,
          * To allow the player to be centered in the new level if it is a 
          * different size.
          */
-        wid_game_map_client_grid_container->grid->bounds_locked = 0;
+        if (wid_game_map_client_grid_container &&
+            wid_game_map_client_grid_container->grid) {
+            wid_game_map_client_grid_container->grid->bounds_locked = 0;
+        }
     }
 
     /*

@@ -32,6 +32,10 @@ void thing_reached_exit (thingp t, thingp exit)
     if (!level_exit_reached_when_open(server_level)) {
         level_set_exit_reached_when_open(server_level, true);
 
+        if (server_level->game_over) {
+            return;
+        }
+
         thing_set_got_to_exit_first(t, true);
 
         THING_LOG(t, "reached exit first");
