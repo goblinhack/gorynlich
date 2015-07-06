@@ -112,6 +112,8 @@ typedef struct level_t_ {
      */
     uint8_t exit_has_been_reached:1;
 
+    uint8_t game_over:1;
+
     /*
      * Exit has been reached and a long delay has passed. The level will be 
      * destoyed now.

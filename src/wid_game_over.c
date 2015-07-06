@@ -18,6 +18,7 @@
 #include "server.h"
 #include "wid_menu.h"
 #include "thing_template.h"
+#include "client.h"
 
 static widp wid_game_over;
 static widp wid_game_over_background;
@@ -209,12 +210,15 @@ static uint8_t
 wid_game_over_go_back_mouse_event (widp w, int32_t x, int32_t y,
                                           uint32_t button)
 {
-    wid_game_over_hide();
 
-    /*
-     * Don't go back to choose stats as all points are spent.
-     */
+    LOG("Client: Game over completed");
+
+    client_socket_close(0, 0);
+    wid_game_map_client_hide();
+    wid_game_map_client_wid_destroy();
+
     wid_intro_visible();
+    wid_game_over_hide();
 
     return (true);
 }

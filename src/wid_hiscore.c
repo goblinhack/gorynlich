@@ -324,9 +324,15 @@ static void wid_hiscore_create (void)
             wid_set_tl_br_pct(w, tl, br);
 
             if (h->death_reason && h->death_reason[0]) {
-                char *tmp = dynprintf("Killed by %s", h->death_reason);
-                wid_set_text(w, tmp);
-                myfree(tmp);
+                if (strcasecmp(h->death_reason, "quest completed")) {
+                    char *tmp = dynprintf("Killed by %s", h->death_reason);
+                    wid_set_text(w, tmp);
+                    myfree(tmp);
+                } else {
+                    char *tmp = dynprintf("%s", h->death_reason);
+                    wid_set_text(w, tmp);
+                    myfree(tmp);
+                }
             }
 
             color c = BLACK;
