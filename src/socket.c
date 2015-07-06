@@ -2360,6 +2360,11 @@ void socket_tx_server_status (gsocketp s_in)
         msg.level_pos = server_level->level_pos;
         msg.server_current_players = global_config.server_current_players;
         msg.level_hide = level_is_ready_to_fade_out(server_level);
+    } else {
+        /*
+         * Game over?
+         */
+        msg.level_hide = true;
     }
 
     gsocketp s;
