@@ -16,7 +16,7 @@
  is_combustable
  is_shadow_caster
  is_shadow_caster_soft
- scale=4.0
+ scale=2.0
  hit_priority=10
  is_ethereal
  is_levitating

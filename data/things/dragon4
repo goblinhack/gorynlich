@@ -1,0 +1,52 @@
+{
+ short_name="gorynlich"
+ raw_name="dragon4"
+ tooltip="gorynlich"
+ z_depth="explosion_top"
+ speed=20
+ max_hp=1250
+ damage=100
+ bonus_xp_on_death=30000
+ is_effect_rotate_2way
+ vision_distance=30
+ hit_delay_tenths=2
+ sound_on_death="urgh2"
+ is_lava_proof
+ is_monst
+ is_shadow_caster
+ is_shadow_caster_soft
+ scale=3.5
+ hit_priority=10
+ is_ethereal
+ is_levitating
+ is_collision_map_medium
+ is_animated
+ fires="data/things/explosion1"
+ weapon_fire_delay_hundredths=200
+ d10000_chance_of_appearing=0
+ min_appear_depth=99
+ max_appear_depth=100
+ light_tint="red"
+ is_light_source
+ is_dragon
+ light_radius=3.5
+ spawn_on_death="data/things/exit1"
+ tiles={
+  tile={ delay=100 tile="dragon1-1" }
+  tile={ delay=100 tile="dragon1-2" }
+  tile={ delay=100 tile="dragon1-3" }
+  tile={ delay=100 tile="dragon1-4" }
+  tile={ delay=100 tile="dragon1-5" }
+  tile={ delay=100 tile="dragon1-6" }
+  tile={ delay=100 tile="dragon1-7" }
+  tile={ delay=100 tile="dragon1-8" }
+  tile={ delay=100 tile="dragon1-9" }
+  tile={ delay=100 tile="dragon1-10" }
+  tile={ delay=100 tile="dragon1-11" }
+  tile={ delay=100 tile="dragon1-12" }
+  tile={ delay=100 tile="dragon1-13" }
+  tile={ delay=100 tile="dragon1-14" }
+  tile={ delay=100 tile="dragon1-15" }
+  tile={ delay=100 tile="dragon1-16" }
+ }
+}

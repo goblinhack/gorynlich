@@ -64,7 +64,7 @@ void level_place_explosion_at (levelp level,
         return;
     }
 
-    double delay = DISTANCE(ox, oy, x, y) * 150;
+    double delay = DISTANCE(ox, oy, x, y) * 50;
 
     /*
      * Make the delay on the server a lot smaller so we don't see things die 
@@ -213,6 +213,8 @@ static void debug_explosion (levelp level, int ix, int iy)
  */
 static void level_place_explosion_ (levelp level, 
                                     thingp owner,
+                                    double ox, 
+                                    double oy,
                                     double x, 
                                     double y,
                                     int radius,
@@ -328,8 +330,8 @@ static void level_place_explosion_ (levelp level,
 
     (void) level_place_explosion_at(level, 
                                     owner,
-                                    x,
-                                    y,
+                                    ox,
+                                    oy,
                                     x, 
                                     y, 
                                     0,
@@ -378,8 +380,8 @@ static void level_place_explosion_ (levelp level,
                 va_start(args, nargs);
                 (void) level_place_explosion_at(level, 
                                                 owner,
-                                                x,
-                                                y,
+                                                ox,
+                                                oy,
                                                 ix, 
                                                 iy, 
                                                 distance,
@@ -396,8 +398,8 @@ static void level_place_explosion_ (levelp level,
                         va_start(args, nargs);
                         (void) level_place_explosion_at(level, 
                                                         owner,
-                                                        x,
-                                                        y,
+                                                        ox,
+                                                        oy,
                                                         ex, 
                                                         ey, 
                                                         distance,
@@ -415,6 +417,7 @@ static void level_place_explosion_ (levelp level,
 void level_place_explosion (levelp level, 
                             thingp owner,
                             tpp tp,
+                            double ox, double oy,
                             double x, double y)
 {
     const char *explodes_as = 0;
@@ -455,6 +458,7 @@ void level_place_explosion (levelp level,
 
         level_place_explosion_(level, 
                                owner,
+                               ox, oy,
                                x, y,
                                explosion_radius,
                                0.5, // density
@@ -482,6 +486,7 @@ void level_place_explosion (levelp level,
 
     level_place_explosion_(level, 
                            owner,
+                           ox, oy,
                            x, y,
                            tp_get_explosion_radius(non_explosive_gas_cloud),
                            0.5, // density
