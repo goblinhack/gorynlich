@@ -1123,6 +1123,7 @@ wid_game_map_client_replace_tile (widp w,
             level_place_explosion(client_level,
                                   0, /* owner */
                                   tp,
+                                  t->x, t->y,
                                   t->x, t->y);
         } else {
             ERR("unknown explosion %s", thing_logname(t));

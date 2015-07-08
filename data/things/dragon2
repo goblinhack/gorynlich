@@ -1,0 +1,51 @@
+{
+ short_name="blue dragon"
+ raw_name="dragon2"
+ tooltip="blue dragon"
+ z_depth="explosion_top"
+ speed=10
+ max_hp=550
+ damage=70
+ bonus_xp_on_death=5000
+ is_effect_rotate_2way
+ vision_distance=15
+ hit_delay_tenths=8
+ sound_on_death="urgh2"
+ is_lava_proof
+ is_monst
+ is_shadow_caster
+ is_shadow_caster_soft
+ scale=2.0
+ hit_priority=10
+ is_ethereal
+ is_levitating
+ is_collision_map_medium
+ is_animated
+ fires="data/things/cloudkill1"
+ weapon_fire_delay_hundredths=400
+ d10000_chance_of_appearing=2
+ min_appear_depth=10
+ max_appear_depth=100
+ light_tint="red"
+ is_light_source
+ is_dragon
+ light_radius=3.5
+ tiles={
+  tile={ delay=100 tile="dragon2-1" }
+  tile={ delay=100 tile="dragon2-2" }
+  tile={ delay=100 tile="dragon2-3" }
+  tile={ delay=100 tile="dragon2-4" }
+  tile={ delay=100 tile="dragon2-5" }
+  tile={ delay=100 tile="dragon2-6" }
+  tile={ delay=100 tile="dragon2-7" }
+  tile={ delay=100 tile="dragon2-8" }
+  tile={ delay=100 tile="dragon2-9" }
+  tile={ delay=100 tile="dragon2-10" }
+  tile={ delay=100 tile="dragon2-11" }
+  tile={ delay=100 tile="dragon2-12" }
+  tile={ delay=100 tile="dragon2-13" }
+  tile={ delay=100 tile="dragon2-14" }
+  tile={ delay=100 tile="dragon2-15" }
+  tile={ delay=100 tile="dragon2-16" }
+ }
+}
