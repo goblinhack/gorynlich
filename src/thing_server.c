@@ -234,6 +234,7 @@ void thing_server_action (thingp t,
             level_place_explosion(server_level,
                                   t,
                                   tp,
+                                  t->x, t->y,
                                   t->x, t->y);
             break;
         } else if (item->id == THING_POTION_LIFE) {

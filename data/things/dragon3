@@ -1,0 +1,51 @@
+{
+ short_name="poison dragon"
+ raw_name="dragon3"
+ tooltip="poison dragon"
+ z_depth="explosion_top"
+ speed=15
+ max_hp=750
+ damage=80
+ bonus_xp_on_death=10000
+ is_effect_rotate_2way
+ vision_distance=15
+ hit_delay_tenths=6
+ sound_on_death="urgh2"
+ is_lava_proof
+ is_monst
+ is_shadow_caster
+ is_shadow_caster_soft
+ scale=2.5
+ hit_priority=10
+ is_ethereal
+ is_levitating
+ is_collision_map_medium
+ is_animated
+ fires="data/things/poison1"
+ weapon_fire_delay_hundredths=200
+ d10000_chance_of_appearing=1
+ min_appear_depth=30
+ max_appear_depth=100
+ light_tint="red"
+ is_light_source
+ is_dragon
+ light_radius=3.5
+ tiles={
+  tile={ delay=100 tile="dragon3-1" }
+  tile={ delay=100 tile="dragon3-2" }
+  tile={ delay=100 tile="dragon3-3" }
+  tile={ delay=100 tile="dragon3-4" }
+  tile={ delay=100 tile="dragon3-5" }
+  tile={ delay=100 tile="dragon3-6" }
+  tile={ delay=100 tile="dragon3-7" }
+  tile={ delay=100 tile="dragon3-8" }
+  tile={ delay=100 tile="dragon3-9" }
+  tile={ delay=100 tile="dragon3-10" }
+  tile={ delay=100 tile="dragon3-11" }
+  tile={ delay=100 tile="dragon3-12" }
+  tile={ delay=100 tile="dragon3-13" }
+  tile={ delay=100 tile="dragon3-14" }
+  tile={ delay=100 tile="dragon3-15" }
+  tile={ delay=100 tile="dragon3-16" }
+ }
+}

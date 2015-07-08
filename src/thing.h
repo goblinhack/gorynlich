@@ -367,6 +367,10 @@ enum {
     THING_SLIME3,
     THING_DEMON1,
     THING_DEMON2,
+    THING_DRAGON1,
+    THING_DRAGON2,
+    THING_DRAGON3,
+    THING_DRAGON4,
     THING_SKULL1,
     THING_SKULL2,
     THING_CTHULU1,
@@ -1241,11 +1245,11 @@ static inline uint8_t thing_is_rrr11 (thingp t)
     return (tp_is_rrr11(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr12 (thingp t)
+static inline uint8_t thing_is_dragon (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr12(thing_tp(t)));
+    return (tp_is_dragon(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_generator (thingp t)
@@ -2066,9 +2070,9 @@ static inline uint8_t thing_is_rrr11_noverify (thingp t)
     return (t->tp->is_rrr11);
 }
 
-static inline uint8_t thing_is_rrr12_noverify (thingp t)
+static inline uint8_t thing_is_dragon_noverify (thingp t)
 {
-    return (t->tp->is_rrr12);
+    return (t->tp->is_dragon);
 }
 
 static inline uint8_t thing_is_generator_noverify (thingp t)
@@ -2836,6 +2840,7 @@ void level_place_explosion_at(levelp level,
 void level_place_explosion(levelp level, 
                            thingp owner,
                            tpp explodes_as,
+                           double ox, double oy,
                            double x, double y);
 void explosion_flood(levelp level, uint8_t x, uint8_t y);
 
