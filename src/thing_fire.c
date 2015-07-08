@@ -219,6 +219,35 @@ void thing_server_fire (thingp t,
                       false  /* magic */);
 }
 
+static void thing_fire_conical_at (thingp t, thingp target)
+{
+    double distance = DISTANCE(t->x, t->y, target->x, target->y);
+
+    fpoint p1;
+
+    p1.x = target->x - t->x;
+    p1.y = target->y - t->y;
+
+    double angle = anglerot(p1);
+    double spread = RAD_360 / 40.0;
+    double density = 2.0;
+
+    double d;
+    for (d = 3.0; d < distance; d += 1.0) {
+
+        double a;
+        for (a = -spread; a <= spread; a += spread / density) {
+            double x = t->x + fcos(a + angle) * d;
+            double y = t->y + fsin(a + angle) * d;
+
+            level_place_explosion(server_level, t, 
+                                  tp_fires(t->tp),
+                                  t->x, t->y,
+                                  x, y);
+        }
+    }
+}
+
 /*
  * Used for monsters firing intrinsic weapons
  */
@@ -229,6 +258,11 @@ static void thing_fire_at (thingp t, thingp target)
      */
     if (!t->wid) {
         THING_LOG(t, "cannot fire yet, not on the level");
+        return;
+    }
+
+    if (thing_is_dragon(t)) {
+        thing_fire_conical_at(t, target);
         return;
     }
 
