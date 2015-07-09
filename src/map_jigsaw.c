@@ -23,19 +23,21 @@
 #define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        20
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 100000
 #define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           50
-#define MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS   10
+#define MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS   20
+#define MAZE_MIN_DISTANCE_START_AND_END             200
 #define MAX_MAP_NUMBER_OF_TIMES_TO_TRY_AND_PLACE_FRAG 200
 
 #undef MAZE_DEBUG_PRINT_EXITS
 #undef MAZE_DEBUG_SHOW_AS_GENERATING
 #undef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
-#undef MAZE_DEBUG_SHOW_CONSOLE
+#define MAZE_DEBUG_SHOW_CONSOLE
 
 #include "main.h"
 #include "wid.h"
 #include "map_jigsaw.h"
 #include "ramdisk.h"
 #include "thing_shop.h"
+#include "bits.h"
 
 /*
  * Creates a map somewhat like this
@@ -1776,7 +1778,7 @@ static void maze_generate_all_random_directions (dungeon_t *dg, maze_cell_t * c,
 
 
         if ((depth > 2) &&
-            (myrand() % 100) < MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS * depth) {
+            ((myrand() % 100) < MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS * depth)) {
             if (!c->exit[new_dir]->walked &&
                 !c->exit[new_dir]->exits) {
                 c->exit[new_dir]->walked = 1;
@@ -1962,36 +1964,40 @@ static int maze_flood_find (int32_t x, int32_t y, char find, int depth)
 
     if (map_jigsaw_buffer_getchar(x, y) == find) {
         map_jigsaw_buffer_solved[x][y] = 1;
-        return (true);
+        return (depth);
     }
 
     walked[x][y] = '.';
 
     if (jigpiece_char_is_passable(map_jigsaw_buffer_getchar(x-1, y))) {
-        if (maze_flood_find(x-1, y, find, depth + 1)) {
+        int solved = maze_flood_find(x-1, y, find, depth + 1);
+        if (solved) {
             map_jigsaw_buffer_solved[x][y] = 1;
-            return (true);
+            return (solved);
         }
     }
 
     if (jigpiece_char_is_passable(map_jigsaw_buffer_getchar(x+1, y))) {
-        if (maze_flood_find(x+1, y, find, depth + 1)) {
+        int solved = maze_flood_find(x+1, y, find, depth + 1);
+        if (solved) {
             map_jigsaw_buffer_solved[x][y] = 1;
-            return (true);
+            return (solved);
         }
     }
 
     if (jigpiece_char_is_passable(map_jigsaw_buffer_getchar(x, y-1))) {
-        if (maze_flood_find(x, y-1, find, depth + 1)) {
+        int solved = maze_flood_find(x, y-1, find, depth + 1);
+        if (solved) {
             map_jigsaw_buffer_solved[x][y] = 1;
-            return (true);
+            return (solved);
         }
     }
 
     if (jigpiece_char_is_passable(map_jigsaw_buffer_getchar(x, y+1))) {
-        if (maze_flood_find(x, y+1, find, depth + 1)) {
+        int solved = maze_flood_find(x, y+1, find, depth + 1);
+        if (solved) {
             map_jigsaw_buffer_solved[x][y] = 1;
-            return (true);
+            return (solved);
         }
     }
 
@@ -2048,7 +2054,8 @@ static int maze_check_exit_can_be_reached (void)
         return (false);
     }
 
-    if (!maze_flood_find(sx, sy, MAP_END, 0)) {
+    int depth = maze_flood_find(sx, sy, MAP_END, 0);
+    if (depth <= MAZE_MIN_DISTANCE_START_AND_END) {
         return (false);
     }
 
@@ -2218,6 +2225,18 @@ static uint8_t maze_jigsaw_generate_all_possible_pieces (dungeon_t *dg)
             mcell->y = y;
 
             for (c = 1; c < dg->jigpieces_cnt; c++) {
+
+                /*
+                 * DOn't have dead end corridors, so filter out all jigpieces 
+                 * that are just corridors where the maze cell has only one 
+                 * exit, i.e. it's a dead end.
+                 */
+                if (!MULTIPLE_BITS((int)mcell->exits)) {
+                    if (dg->jigpiece[c].has[MAP_CORRIDOR]) {
+                        continue;
+                    }
+                }
+
                 for (dir = 0; dir < DIR_MAX; dir++) {
                     /*
                      * Filter to pieces that have at least one exit in each of
