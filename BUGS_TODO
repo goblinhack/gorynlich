@@ -4,6 +4,8 @@
 - ring of triple damage
 - ring of quad damage
 - ring of resurrection
+- intro screens
+- jigsaw levels with actions
 - portion of teleport
 - money/xp doubler ring
 - cheese bomb turns enemies into cheese
@@ -23,6 +25,11 @@
 - multi player
 - magic gives health to other players
 
+Wed Jul  8 21:38:33 EDT 2015
+- removed dead ends in levels
+- ensure start and end of maze are far apart
+- dragons!!!
+
 Sun Jul  5 11:28:21 EDT 2015
 - added game over screen
 - level name in single player missing due to ping pong missing
@@ -38,7 +45,6 @@ Sat Jul  4 11:02:23 EDT 2015
 - minor: lifespan code not used
 
 Fri Jul  3 17:35:07 EDT 2015
-- dragons!!!
 - add game end
 - large demon and cthulu
 - no lava hitting projectiles
