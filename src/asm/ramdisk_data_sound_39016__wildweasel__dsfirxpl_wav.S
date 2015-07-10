@@ -1,0 +1,6 @@
+.globl data_sound_39016__wildweasel__dsfirxpl_wav_start_
+data_sound_39016__wildweasel__dsfirxpl_wav_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/39016__wildweasel__dsfirxpl.wav"
+.globl data_sound_39016__wildweasel__dsfirxpl_wav_end_
+data_sound_39016__wildweasel__dsfirxpl_wav_end_:
+
