@@ -1,6 +1,0 @@
-.globl data_ttf_emulogic_ttf_pointsize7_data_start_
-data_ttf_emulogic_ttf_pointsize7_data_start_:
-.incbin "/Users/nmcgill/gorynlich/data/ttf/emulogic.ttf_pointsize7.data"
-.globl data_ttf_emulogic_ttf_pointsize7_data_end_
-data_ttf_emulogic_ttf_pointsize7_data_end_:
-
