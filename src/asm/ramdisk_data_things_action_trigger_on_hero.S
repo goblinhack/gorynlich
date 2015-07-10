@@ -1,6 +1,0 @@
-.globl data_things_action_trigger_on_hero_start_
-data_things_action_trigger_on_hero_start_:
-.incbin "/Users/nmcgill/gorynlich/data/things/action_trigger_on_hero"
-.globl data_things_action_trigger_on_hero_end_
-data_things_action_trigger_on_hero_end_:
-
