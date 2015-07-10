@@ -1,0 +1,6 @@
+.globl data_sound_Red_Alert_FX_001_wav_start_
+data_sound_Red_Alert_FX_001_wav_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/Red_Alert_FX_001.wav"
+.globl data_sound_Red_Alert_FX_001_wav_end_
+data_sound_Red_Alert_FX_001_wav_end_:
+
