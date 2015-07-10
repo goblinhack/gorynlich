@@ -1,6 +1,0 @@
-.globl data_sound_148975__adam_n__squelch_1_wav_start_
-data_sound_148975__adam_n__squelch_1_wav_start_:
-.incbin "/Users/nmcgill/gorynlich/data/sound/148975__adam_n__squelch_1.wav"
-.globl data_sound_148975__adam_n__squelch_1_wav_end_
-data_sound_148975__adam_n__squelch_1_wav_end_:
-
