@@ -55,14 +55,12 @@ static void wid_intro_story6_destroy_done (widp w)
 static int wid_intro_story6_create (void)
 {
     widp w = wid_intro_story6 = wid_new_window("players");
-    texp tex = tex_find("players");
-    uint32_t tw = tex_get_width(tex);
-    uint32_t th = tex_get_height(tex);
 
-    fpoint tl = { 0, 0 };
-    fpoint br = { (float) tw, (float) th };
+    float f = (1024.0 / 680.0);
+    fpoint tl = { 0.0, 0.0 };
+    fpoint br = { 1.0, f };
+    wid_set_tl_br_pct(w, tl, br);
 
-    wid_set_tl_br(w, tl, br);
     wid_set_tex(w, 0, "players");
 
     wid_set_mode(w, WID_MODE_NORMAL);
@@ -126,14 +124,12 @@ static void wid_intro_story5_destroy_done (widp w)
 static int wid_intro_story5_create (void)
 {
     widp w = wid_intro_story5 = wid_new_window("intro5");
-    texp tex = tex_find("intro5");
-    uint32_t tw = tex_get_width(tex);
-    uint32_t th = tex_get_height(tex);
 
-    fpoint tl = { 0, 0 };
-    fpoint br = { (float) tw, (float) th };
+    float f = (1024.0 / 680.0);
+    fpoint tl = { 0.0, 0.0 };
+    fpoint br = { 1.0, f };
+    wid_set_tl_br_pct(w, tl, br);
 
-    wid_set_tl_br(w, tl, br);
     wid_set_tex(w, 0, "intro5");
 
     wid_set_mode(w, WID_MODE_NORMAL);
@@ -197,14 +193,12 @@ static void wid_intro_story4_destroy_done (widp w)
 static int wid_intro_story4_create (void)
 {
     widp w = wid_intro_story4 = wid_new_window("intro4");
-    texp tex = tex_find("intro4");
-    uint32_t tw = tex_get_width(tex);
-    uint32_t th = tex_get_height(tex);
 
-    fpoint tl = { 0, 0 };
-    fpoint br = { (float) tw, (float) th };
+    float f = (1024.0 / 680.0);
+    fpoint tl = { 0.0, 0.0 };
+    fpoint br = { 1.0, f };
+    wid_set_tl_br_pct(w, tl, br);
 
-    wid_set_tl_br(w, tl, br);
     wid_set_tex(w, 0, "intro4");
 
     wid_set_mode(w, WID_MODE_NORMAL);
@@ -240,7 +234,7 @@ static int wid_intro_story4_create (void)
 
     {
         widp w;
-        wid_text3 = w = wid_tooltip_transient("The great dragon gorynlich...!", 5 * ONESEC);
+        wid_text3 = w = wid_tooltip_transient("The %%fg=red$great dragon gorynlich...!", 5 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.7);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 11);
         wid_destroy_in(w, ONESEC * 10);
@@ -268,14 +262,12 @@ static void wid_intro_story3_destroy_done (widp w)
 static int wid_intro_story3_create (void)
 {
     widp w = wid_intro_story3 = wid_new_window("intro3");
-    texp tex = tex_find("intro3");
-    uint32_t tw = tex_get_width(tex);
-    uint32_t th = tex_get_height(tex);
 
-    fpoint tl = { 0, 0 };
-    fpoint br = { (float) tw, (float) th };
+    float f = (1024.0 / 680.0);
+    fpoint tl = { 0.0, 0.0 };
+    fpoint br = { 1.0, f };
+    wid_set_tl_br_pct(w, tl, br);
 
-    wid_set_tl_br(w, tl, br);
     wid_set_tex(w, 0, "intro3");
 
     wid_set_mode(w, WID_MODE_NORMAL);
@@ -339,14 +331,12 @@ static void wid_intro_story2_destroy_done (widp w)
 static int wid_intro_story2_create (void)
 {
     widp w = wid_intro_story2 = wid_new_window("intro2");
-    texp tex = tex_find("intro2");
-    uint32_t tw = tex_get_width(tex);
-    uint32_t th = tex_get_height(tex);
 
-    fpoint tl = { 0, 0 };
-    fpoint br = { (float) tw, (float) th };
+    float f = (1024.0 / 680.0);
+    fpoint tl = { 0.0, 0.0 };
+    fpoint br = { 1.0, f };
+    wid_set_tl_br_pct(w, tl, br);
 
-    wid_set_tl_br(w, tl, br);
     wid_set_tex(w, 0, "intro2");
 
     wid_set_mode(w, WID_MODE_NORMAL);
@@ -374,7 +364,7 @@ static int wid_intro_story2_create (void)
 
     {
         widp w;
-        wid_text2 = w = wid_tooltip_transient("The allcheese! was found", 4 * ONESEC);
+        wid_text2 = w = wid_tooltip_transient("The %%fg=gold$allcheese! was found", 4 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.4);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 8);
         wid_destroy_in(w, ONESEC * 7);
@@ -467,14 +457,12 @@ int wid_intro_story1_create (void)
     }
 
     widp w = wid_intro_story1 = wid_new_window("intro1");
-    texp tex = tex_find("intro1");
-    uint32_t tw = tex_get_width(tex);
-    uint32_t th = tex_get_height(tex);
 
-    fpoint tl = { 0, 0 };
-    fpoint br = { (float) tw, (float) th };
+    float f = (1024.0 / 680.0);
+    fpoint tl = { 0.0, 0.0 };
+    fpoint br = { 1.0, f };
+    wid_set_tl_br_pct(w, tl, br);
 
-    wid_set_tl_br(w, tl, br);
     wid_set_tex(w, 0, "intro1");
 
     wid_set_mode(w, WID_MODE_NORMAL);
