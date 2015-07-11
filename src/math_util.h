@@ -236,9 +236,9 @@ static inline double anglerot (fpoint p)
     double v = p.y / flength(p);
 
     if (v < 0) {
-        theta = -fasin(-v);
+        theta = -asin(-v);
     } else {
-        theta = fasin(v);
+        theta = asin(v);
     }
 
     if (p.x > 0) {
