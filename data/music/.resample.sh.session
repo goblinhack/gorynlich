@@ -4,7 +4,6 @@ let s:cpo_save=&cpo
 set cpo&vim
 imap <F9> 0obuginf("\nZZZ %s %d ",__FUNCTION__,__LINE__);0
 imap <F10> 0ofprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);0
-map! <D-v> *
 map  :call LoadSession()
 map  :grep "\<\>" *
 nmap 	p <Plug>VS_nextP       " previous misspelling
@@ -31,6 +30,7 @@ map ( -
 map ) +
 map + :cnkzz
 map - :cpkzz
+map <D-CR> :wq
 map = :Highlight 
 noremap D [D
 map E :bdelete
@@ -57,7 +57,6 @@ noremap n /zz
 map s :sbn
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetrwBrowseX(expand("<cWORD>"),0)
 map <F12> :1,$ s/
-map <D-CR> :wq
 vmap <F10> 0ofprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);0
 vmap <F9> 0obuginf("\nZZZ %s %d ",__FUNCTION__,__LINE__);0
 nmap <F9> 0obuginf("\nZZZ %s %d ",__FUNCTION__,__LINE__);0
@@ -68,11 +67,6 @@ map <F7> :r ~/tmp/.vi_buffer3
 map <F6> :'a,'b w! ~/tmp/.vi_buffer3
 map <F5> :'a,'b s/
 map <F4> :'a,'b d
-vmap <BS> "-d
-vmap <D-x> "*d
-vmap <D-c> "*y
-vmap <D-v> "-d"*P
-nmap <D-v> "*P
 imap  aThanks,Neil.:wq
 map ›[65~ <S-ScrollWheelDown>
 map ›[64~ <S-ScrollWheelUp>
@@ -82,7 +76,7 @@ inoremap ` :call DrChipCStubs()a
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autoindent
-set clipboard=unnamed
+set backspace=2
 set expandtab
 set formatoptions=cq
 set helplang=PO
@@ -91,7 +85,7 @@ set hlsearch
 set ignorecase
 set iskeyword=@,48-57,_,192-255,#
 set matchtime=2
-set mousemodel=extend
+set modelines=0
 set ruler
 set scrolloff=2
 set shiftround
@@ -99,6 +93,7 @@ set shiftwidth=4
 set softtabstop=4
 set tags=tags,/vob/ios/sys/tags
 set visualbell
+set window=0
 set nowritebackup
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -109,9 +104,7 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
 endif
 set shortmess=aoO
 badd +0 resample.sh
-argglobal
-silent! argdel *
-argadd resample.sh
+args resample.sh
 edit resample.sh
 set splitbelow splitright
 set nosplitbelow
@@ -119,8 +112,6 @@ set nosplitright
 wincmd t
 set winheight=1 winwidth=1
 argglobal
-setlocal keymap=
-setlocal noarabic
 setlocal autoindent
 setlocal nobinary
 setlocal bufhidden=
@@ -134,8 +125,6 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=#%s
 setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -172,11 +161,10 @@ setlocal includeexpr=
 setlocal indentexpr=GetShIndent()
 setlocal indentkeys=0{,0},!^F,o,O,e,0=then,0=do,0=else,0=elif,0=fi,0=esac,0=done,),0=;;,0=;&,0=fin,0=fil,0=fip,0=fir,0=fix
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,#,.
+setlocal iskeyword=@,48-57,_,192-255,#
 setlocal keywordprg=
 setlocal nolinebreak
 setlocal nolisp
-setlocal lispwords=
 setlocal nolist
 setlocal makeprg=
 setlocal matchpairs=(:),{:},[:]
@@ -192,8 +180,6 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=4
 setlocal noshortname
@@ -215,19 +201,18 @@ setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
-setlocal undolevels=-123456
 setlocal nowinfixheight
 setlocal nowinfixwidth
 set nowrap
 setlocal nowrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 17 - ((16 * winheight(0) + 19) / 39)
+let s:l = 19 - ((18 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-17
-normal! 09|
+19
+normal! 028l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
