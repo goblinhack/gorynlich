@@ -18,6 +18,7 @@
 #include "server.h"
 #include "wid_menu.h"
 #include "thing_template.h"
+#include "music.h"
 #include "client.h"
 
 static widp wid_game_over;
@@ -312,6 +313,8 @@ static void wid_game_over_create (void)
 
     wid_move_to_pct_centered(wid_game_over, 0.5f, 0.5f);
 
+    music_play_game_over();
+
     menu = wid_menu(0,
                  vvlarge_font,
                  large_font,
@@ -325,7 +328,7 @@ static void wid_game_over_create (void)
                  0, "Game over!", 0,
                  0, "", 0,
                  0, "The golden cheese is returned", 0,
-                 0, "To the people of pixelvania", 0,
+                 0, "Gorynlich is vanquished!", 0,
                  0, "", 0,
 
                  (int) 'b', "Back to main window",

@@ -16,6 +16,7 @@
 #include "thing_template.h"
 #include "wid_tooltip.h"
 #include "time_util.h"
+#include "music.h"
 
 #define MAX_DEMO_PLAYERS 20
 static int demo_player_count;
@@ -489,6 +490,8 @@ int wid_intro_story1_create (void)
     wid_raise(w);
 
     wid_destroy_delay_ms = 2000;
+
+    music_play_demo();
 
     {
         widp w;
