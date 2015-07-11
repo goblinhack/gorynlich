@@ -146,6 +146,8 @@ void wid_intro_hide (void)
 
 void wid_intro_visible (void)
 {
+    music_halt();
+
     if (!wid_intro || wid_intro_is_visible) {
         /*
          * Make sure the menu is visible.

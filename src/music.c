@@ -5,6 +5,7 @@
  */
 
 #include <SDL_mixer.h>
+#include <SDL.h>
 #include <stdlib.h>
 
 #include "main.h"
@@ -175,7 +176,8 @@ void music_play (const char *file,
         return;
     }
 
-    if (Mix_PlayMusic(music->music, -1) == -1) {
+    if (Mix_FadeInMusicPos(music->music, -1, 2000, 0) == -1) {
+//    if (Mix_PlayMusic(music->music, -1) == -1) {
         WARN("cannot play music %s: %s", music->tree.key, Mix_GetError());
     }
 }
@@ -208,6 +210,11 @@ void music_play_game (level_pos_t level_pos)
     music_play(music[x], music[x], 22050);
 }
 
+void music_play_demo (void)
+{
+    music_play("data/music/DST_BattleLands.ogg", "battl", 22050 );
+}
+
 void music_play_intro (void)
 {
     music_play("data/music/charlotte8bit.ogg", "intro", 22050 );
@@ -220,9 +227,13 @@ void music_play_dead (void)
 
 void music_play_game_over (void)
 {
-    music_play("data/music/DST_SuperWin.ogg", "game over", 22050 / 2);
+    music_play("data/music/DST_BattleLands.ogg", "game over", 22050 );
 }
 
 void music_halt (void)
 {
+    while (!Mix_FadeOutMusic(3000) && Mix_PlayingMusic()) {
+        // wait for any fades to complete
+        SDL_Delay(100);
+    }
 }
