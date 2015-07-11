@@ -155,7 +155,7 @@ uint8_t config_load (void)
     global_config.video_pix_height = 0;
     global_config.sound_volume = SOUND_MAX;
     global_config.music_volume = SOUND_MED;
-    global_config.display_sync = 1;
+    global_config.display_sync = 0;
     global_config.intro_screen = 1;
     global_config.fps_counter = 0;
     global_config.deathmatch = 0;
