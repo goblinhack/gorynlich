@@ -343,10 +343,12 @@ uint8_t sdl_init (void)
         DIE("SDL_Init failed %s", SDL_GetError());
     }
 
-    if (SDL_VideoInit(NULL) != 0) {
+#if SDL_MAJOR_VERSION == 2 /* { */
+    if (SDL_VideoInit(0) != 0) {
         SDL_MSG_BOX("SDL_VideoInit failed %s", SDL_GetError());
         DIE("SDL_VideoInit failed %s", SDL_GetError());
     }
+#endif /* } */
 
     sdl_init_joystick();
     sdl_init_rumble();
@@ -429,11 +431,11 @@ uint8_t sdl_init (void)
         video_flags = SDL_OPENGL;
 
         if (global_config.full_screen) {
-            video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
+            video_flags |= SDL_FULLSCREEN | SDL_NOFRAME;
         }
 
 #       ifdef __IPHONE_OS_VERSION_MIN_REQUIRED /* { */
-            video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
+            video_flags |= SDL_FULLSCREEN | SDL_NOFRAME;
 #       endif /* } */
 
         if (SDL_SetVideoMode(VIDEO_WIDTH, VIDEO_HEIGHT,
