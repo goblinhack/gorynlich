@@ -80,7 +80,7 @@ static int wid_intro_story6_create (void)
 
     {
         widp w;
-        wid_text1 = w = wid_tooltip_transient("Many were called for help...", 3 * ONESEC);
+        wid_text1 = w = wid_tooltip_transient("Many were called to retrieve the %%fg=gold$allcheese", 3 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.1);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 4);
         wid_destroy_in(w, ONESEC * 4);
@@ -165,7 +165,7 @@ static int wid_intro_story5_create (void)
 
     {
         widp w;
-        wid_text3 = w = wid_tooltip_transient("And the allcheese was gone!", 5 * ONESEC);
+        wid_text3 = w = wid_tooltip_transient("And the %%fg=gold$allcheese%%fg=reset$ was gone!", 5 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.7);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 11);
         wid_destroy_in(w, ONESEC * 10);
@@ -234,7 +234,7 @@ static int wid_intro_story4_create (void)
 
     {
         widp w;
-        wid_text3 = w = wid_tooltip_transient("The %%fg=red$great dragon gorynlich...!", 5 * ONESEC);
+        wid_text3 = w = wid_tooltip_transient("%%fg=red$The great dragon gorynlich...!", 5 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.7);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 11);
         wid_destroy_in(w, ONESEC * 10);
@@ -303,7 +303,7 @@ static int wid_intro_story3_create (void)
 
     {
         widp w;
-        wid_text3 = w = wid_tooltip_transient("The allcheese attracted tourists!", 5 * ONESEC);
+        wid_text3 = w = wid_tooltip_transient("The %%fg=gold$allcheese%%fg=reset$ attracted tourists!", 5 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.7);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 11);
         wid_destroy_in(w, ONESEC * 10);
@@ -364,7 +364,7 @@ static int wid_intro_story2_create (void)
 
     {
         widp w;
-        wid_text2 = w = wid_tooltip_transient("The %%fg=gold$allcheese! was found", 4 * ONESEC);
+        wid_text2 = w = wid_tooltip_transient("The %%fg=gold$allcheese!%%fg=reset$ was found", 4 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.4);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 8);
         wid_destroy_in(w, ONESEC * 7);
@@ -492,7 +492,7 @@ int wid_intro_story1_create (void)
 
     {
         widp w;
-        wid_text2 = w = wid_tooltip_transient("mined in search of great cheesy treasures", 4 * ONESEC);
+        wid_text2 = w = wid_tooltip_transient("mined in search of great cheese", 4 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.4);
         wid_move_to_pct_centered_in(w, 0.5, 0.3, ONESEC * 10);
         wid_destroy_in(w, ONESEC * 9);
