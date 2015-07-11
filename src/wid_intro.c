@@ -564,6 +564,8 @@ static void wid_intro_create (void)
 
 static void wid_intro_menu_create (void)
 {
+    wid_destroy_delay_ms = 500;
+
     if (wid_intro_menu) {
         return;
     }
