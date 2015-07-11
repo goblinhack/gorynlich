@@ -16,4 +16,5 @@ mpg123 -2 -w DST_SuperWin.wav DST_SuperWin.mp3
 mpg123 -2 -w charlotte.wav charlotte.mp3
 mpg123 -2 -w charlotte_slow.wav charlotte_slow.mp3
 mpg123 -2 -w charlotte8bit.wav charlotte8bit.mp3
+mpg123 -2 -w DST-Aronara.wav DST-Aronara.mp3
 ls -la *wav
