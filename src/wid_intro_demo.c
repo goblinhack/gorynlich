@@ -232,7 +232,7 @@ static int wid_intro_story4_create (void)
 
     {
         widp w;
-        wid_text2 = w = wid_tooltip_transient("Of those with great hunger", 4 * ONESEC);
+        wid_text2 = w = wid_tooltip_transient("From those with great hunger", 4 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.4);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 8);
         wid_destroy_in(w, ONESEC * 7);
@@ -240,7 +240,7 @@ static int wid_intro_story4_create (void)
 
     {
         widp w;
-        wid_text3 = w = wid_tooltip_transient("The great dragon gorynlich!", 5 * ONESEC);
+        wid_text3 = w = wid_tooltip_transient("The great dragon gorynlich...!", 5 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.7);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 11);
         wid_destroy_in(w, ONESEC * 10);
@@ -400,7 +400,6 @@ static widp wid_intro_story1;
 
 static void wid_intro_story1_destroy_done (widp w)
 {
-CON("done %d",done);
     if (!done) {
         wid_intro_story2_create();
     } else {
@@ -452,8 +451,6 @@ static uint8_t wid_intro_story_key_down (widp w, const SDL_KEYSYM *key)
         case SDLK_ESCAPE:
             wid_intro_story_destroy();
             return (true);
-        default:
-            break;
     }
 
     return (false);
@@ -542,7 +539,7 @@ static void wid_intro_demo_buttons_tick (widp wid)
 
         *x = X + 0.2 + elapsed * 0.000005 * demo_player_speed[index];
 
-        demo_player_x[index] *= 0.95;
+        demo_player_x[index] *= 0.85;
 
         wid_set_animate(wid, false);
     }
