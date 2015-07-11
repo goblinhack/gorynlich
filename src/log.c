@@ -159,7 +159,6 @@ static void msg_ (uint32_t level,
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
 

@@ -14,6 +14,7 @@
 #include "wid_intro.h"
 #include "glapi.h"
 #include "thing_template.h"
+#include "wid_tooltip.h"
 #include "time_util.h"
 
 #define MAX_DEMO_PLAYERS 20
@@ -28,7 +29,495 @@ static double x;
 static double X;
 static double y;
 static double elapsed;
-static const double wall_start = 0.25;
+
+static int done;
+
+static widp wid_text1;
+static widp wid_text2;
+static widp wid_text3;
+static void sdl_intro_demo_tick(widp w);
+
+/*************************************************************************************
+ * Story part 6
+ *************************************************************************************/
+static widp wid_intro_story6;
+
+static void wid_intro_story6_destroy_done (widp w)
+{
+    if (!done) {
+        sdl_intro_demo_tick(0);
+    } else {
+        wid_intro_visible();
+    }
+}
+
+static int wid_intro_story6_create (void)
+{
+    widp w = wid_intro_story6 = wid_new_window("players");
+    texp tex = tex_find("players");
+    uint32_t tw = tex_get_width(tex);
+    uint32_t th = tex_get_height(tex);
+
+    fpoint tl = { 0, 0 };
+    fpoint br = { (float) tw, (float) th };
+
+    wid_set_tl_br(w, tl, br);
+    wid_set_tex(w, 0, "players");
+
+    wid_set_mode(w, WID_MODE_NORMAL);
+    wid_set_color(w, WID_COLOR_TL, WHITE);
+    wid_set_color(w, WID_COLOR_BR, WHITE);
+    wid_set_color(w, WID_COLOR_BG, WHITE);
+
+    int duration = 14000;
+
+    wid_destroy_in(w, duration);
+    wid_set_on_destroy_begin(w, wid_intro_story6_destroy_done);
+    wid_move_delta_pct_in(w, 0.0f, -0.4f, duration);
+    wid_fade_in(w, 2000);
+    wid_raise(w);
+
+    wid_destroy_delay_ms = 2000;
+
+    {
+        widp w;
+        wid_text1 = w = wid_tooltip_transient("Many were called for help...", 3 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.1);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 4);
+        wid_destroy_in(w, ONESEC * 4);
+    }
+
+    {
+        widp w;
+        wid_text2 = w = wid_tooltip_transient("Only five answered...", 4 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.4);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 8);
+        wid_destroy_in(w, ONESEC * 7);
+    }
+
+    {
+        widp w;
+        wid_text3 = w = wid_tooltip_transient("They thought it would be easy...!", 5 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.7);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 11);
+        wid_destroy_in(w, ONESEC * 10);
+    }
+
+    wid_update(w);
+
+    return (true);
+}
+
+/*************************************************************************************
+ * Story part 5
+ *************************************************************************************/
+static widp wid_intro_story5;
+
+static void wid_intro_story5_destroy_done (widp w)
+{
+    if (!done) {
+        wid_intro_story6_create();
+    } else {
+        wid_intro_visible();
+    }
+}
+
+static int wid_intro_story5_create (void)
+{
+    widp w = wid_intro_story5 = wid_new_window("intro5");
+    texp tex = tex_find("intro5");
+    uint32_t tw = tex_get_width(tex);
+    uint32_t th = tex_get_height(tex);
+
+    fpoint tl = { 0, 0 };
+    fpoint br = { (float) tw, (float) th };
+
+    wid_set_tl_br(w, tl, br);
+    wid_set_tex(w, 0, "intro5");
+
+    wid_set_mode(w, WID_MODE_NORMAL);
+    wid_set_color(w, WID_COLOR_TL, WHITE);
+    wid_set_color(w, WID_COLOR_BR, WHITE);
+    wid_set_color(w, WID_COLOR_BG, WHITE);
+
+    int duration = 14000;
+
+    wid_destroy_in(w, duration);
+    wid_set_on_destroy_begin(w, wid_intro_story5_destroy_done);
+    wid_move_delta_pct_in(w, 0.0f, -0.1f, duration);
+    wid_fade_in(w, 2000);
+    wid_raise(w);
+
+    wid_destroy_delay_ms = 2000;
+
+    {
+        widp w;
+        wid_text1 = w = wid_tooltip_transient("The town burned...", 3 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.1);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 4);
+        wid_destroy_in(w, ONESEC * 4);
+    }
+
+    {
+        widp w;
+        wid_text2 = w = wid_tooltip_transient("The streets ran with cheese...", 4 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.4);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 8);
+        wid_destroy_in(w, ONESEC * 7);
+    }
+
+    {
+        widp w;
+        wid_text3 = w = wid_tooltip_transient("And the allcheese was gone!", 5 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.7);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 11);
+        wid_destroy_in(w, ONESEC * 10);
+    }
+
+    wid_update(w);
+
+    return (true);
+}
+
+/*************************************************************************************
+ * Story part 4
+ *************************************************************************************/
+static widp wid_intro_story4;
+
+static void wid_intro_story4_destroy_done (widp w)
+{
+    if (!done) {
+        wid_intro_story5_create();
+    } else {
+        wid_intro_visible();
+    }
+}
+
+static int wid_intro_story4_create (void)
+{
+    widp w = wid_intro_story4 = wid_new_window("intro4");
+    texp tex = tex_find("intro4");
+    uint32_t tw = tex_get_width(tex);
+    uint32_t th = tex_get_height(tex);
+
+    fpoint tl = { 0, 0 };
+    fpoint br = { (float) tw, (float) th };
+
+    wid_set_tl_br(w, tl, br);
+    wid_set_tex(w, 0, "intro4");
+
+    wid_set_mode(w, WID_MODE_NORMAL);
+    wid_set_color(w, WID_COLOR_TL, WHITE);
+    wid_set_color(w, WID_COLOR_BR, WHITE);
+    wid_set_color(w, WID_COLOR_BG, WHITE);
+
+    int duration = 14000;
+
+    wid_destroy_in(w, duration);
+    wid_set_on_destroy_begin(w, wid_intro_story4_destroy_done);
+    wid_move_delta_pct_in(w, 0.0f, -0.1f, duration);
+    wid_fade_in(w, 2000);
+    wid_raise(w);
+
+    wid_destroy_delay_ms = 2000;
+
+    {
+        widp w;
+        wid_text1 = w = wid_tooltip_transient("But the cheese drew unwanted attention...", 3 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.1);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 4);
+        wid_destroy_in(w, ONESEC * 4);
+    }
+
+    {
+        widp w;
+        wid_text2 = w = wid_tooltip_transient("Of those with great hunger", 4 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.4);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 8);
+        wid_destroy_in(w, ONESEC * 7);
+    }
+
+    {
+        widp w;
+        wid_text3 = w = wid_tooltip_transient("The great dragon gorynlich!", 5 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.7);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 11);
+        wid_destroy_in(w, ONESEC * 10);
+    }
+
+    wid_update(w);
+
+    return (true);
+}
+
+/*************************************************************************************
+ * Story part 3
+ *************************************************************************************/
+static widp wid_intro_story3;
+
+static void wid_intro_story3_destroy_done (widp w)
+{
+    if (!done) {
+        wid_intro_story4_create();
+    } else {
+        wid_intro_visible();
+    }
+}
+
+static int wid_intro_story3_create (void)
+{
+    widp w = wid_intro_story3 = wid_new_window("intro3");
+    texp tex = tex_find("intro3");
+    uint32_t tw = tex_get_width(tex);
+    uint32_t th = tex_get_height(tex);
+
+    fpoint tl = { 0, 0 };
+    fpoint br = { (float) tw, (float) th };
+
+    wid_set_tl_br(w, tl, br);
+    wid_set_tex(w, 0, "intro3");
+
+    wid_set_mode(w, WID_MODE_NORMAL);
+    wid_set_color(w, WID_COLOR_TL, WHITE);
+    wid_set_color(w, WID_COLOR_BR, WHITE);
+    wid_set_color(w, WID_COLOR_BG, WHITE);
+
+    int duration = 14000;
+
+    wid_destroy_in(w, duration);
+    wid_set_on_destroy_begin(w, wid_intro_story3_destroy_done);
+    wid_move_delta_pct_in(w, 0.0f, -0.1f, duration);
+    wid_fade_in(w, 2000);
+    wid_raise(w);
+
+    wid_destroy_delay_ms = 2000;
+
+    {
+        widp w;
+        wid_text1 = w = wid_tooltip_transient("All went well for a time...", 3 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.1);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 4);
+        wid_destroy_in(w, ONESEC * 4);
+    }
+
+    {
+        widp w;
+        wid_text2 = w = wid_tooltip_transient("The dairy tolerant dwarves ate well", 4 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.4);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 8);
+        wid_destroy_in(w, ONESEC * 7);
+    }
+
+    {
+        widp w;
+        wid_text3 = w = wid_tooltip_transient("The allcheese attracted tourists!", 5 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.7);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 11);
+        wid_destroy_in(w, ONESEC * 10);
+    }
+
+    wid_update(w);
+
+    return (true);
+}
+
+/*************************************************************************************
+ * Story part 2
+ *************************************************************************************/
+static widp wid_intro_story2;
+
+static void wid_intro_story2_destroy_done (widp w)
+{
+    if (!done) {
+        wid_intro_story3_create();
+    } else {
+        wid_intro_visible();
+    }
+}
+
+static int wid_intro_story2_create (void)
+{
+    widp w = wid_intro_story2 = wid_new_window("intro2");
+    texp tex = tex_find("intro2");
+    uint32_t tw = tex_get_width(tex);
+    uint32_t th = tex_get_height(tex);
+
+    fpoint tl = { 0, 0 };
+    fpoint br = { (float) tw, (float) th };
+
+    wid_set_tl_br(w, tl, br);
+    wid_set_tex(w, 0, "intro2");
+
+    wid_set_mode(w, WID_MODE_NORMAL);
+    wid_set_color(w, WID_COLOR_TL, WHITE);
+    wid_set_color(w, WID_COLOR_BR, WHITE);
+    wid_set_color(w, WID_COLOR_BG, WHITE);
+
+    int duration = 14000;
+
+    wid_destroy_in(w, duration);
+    wid_set_on_destroy_begin(w, wid_intro_story2_destroy_done);
+    wid_move_delta_pct_in(w, 0.0f, -0.3f, duration);
+    wid_fade_in(w, 2000);
+    wid_raise(w);
+
+    wid_destroy_delay_ms = 2000;
+
+    {
+        widp w;
+        wid_text1 = w = wid_tooltip_transient("Until the greatest of all cheeses,", 3 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.1);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 4);
+        wid_destroy_in(w, ONESEC * 4);
+    }
+
+    {
+        widp w;
+        wid_text2 = w = wid_tooltip_transient("The allcheese! was found", 4 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.4);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 8);
+        wid_destroy_in(w, ONESEC * 7);
+    }
+
+    {
+        widp w;
+        wid_text3 = w = wid_tooltip_transient("The cheesy heart of the mountain", 5 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.7);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 11);
+        wid_destroy_in(w, ONESEC * 10);
+    }
+
+    wid_update(w);
+
+    return (true);
+}
+
+/*************************************************************************************
+ * Story part 1
+ *************************************************************************************/
+static widp wid_intro_story1;
+
+static void wid_intro_story1_destroy_done (widp w)
+{
+CON("done %d",done);
+    if (!done) {
+        wid_intro_story2_create();
+    } else {
+        wid_intro_visible();
+    }
+}
+
+static widp wid_intro_story;
+
+static void wid_intro_story_destroy (void)
+{
+    done = true;
+
+    if (wid_intro_story1) {
+        wid_destroy(&wid_intro_story1);
+    }
+
+    if (wid_intro_story2) {
+        wid_destroy(&wid_intro_story2);
+    }
+
+    if (wid_intro_story) {
+        wid_destroy(&wid_intro_story);
+    }
+
+    if (wid_text1) {
+        wid_destroy(&wid_text1);
+    }
+
+    if (wid_text2) {
+        wid_destroy(&wid_text2);
+    }
+
+    if (wid_text3) {
+        wid_destroy(&wid_text3);
+    }
+}
+
+static uint8_t wid_intro_story_mouse_down (widp w, int32_t x, int32_t y, uint32_t button)
+{
+    wid_intro_story_destroy();
+    return (true);
+}
+
+static uint8_t wid_intro_story_key_down (widp w, const SDL_KEYSYM *key)
+{
+    switch (key->sym) {
+        case SDLK_BACKSPACE:
+        case SDLK_ESCAPE:
+            wid_intro_story_destroy();
+            return (true);
+    }
+
+    return (false);
+}
+
+int wid_intro_story1_create (void)
+{
+    {
+        widp w = wid_intro_story = wid_new_window("dummy");
+        wid_set_on_mouse_down(w, wid_intro_story_mouse_down);
+        wid_set_on_key_down(w, wid_intro_story_key_down);
+    }
+
+    widp w = wid_intro_story1 = wid_new_window("intro1");
+    texp tex = tex_find("intro1");
+    uint32_t tw = tex_get_width(tex);
+    uint32_t th = tex_get_height(tex);
+
+    fpoint tl = { 0, 0 };
+    fpoint br = { (float) tw, (float) th };
+
+    wid_set_tl_br(w, tl, br);
+    wid_set_tex(w, 0, "intro1");
+
+    wid_set_mode(w, WID_MODE_NORMAL);
+    wid_set_color(w, WID_COLOR_TL, WHITE);
+    wid_set_color(w, WID_COLOR_BR, WHITE);
+    wid_set_color(w, WID_COLOR_BG, WHITE);
+    wid_set_on_destroy_begin(w, wid_intro_story1_destroy_done);
+
+    int duration = 14000;
+
+    wid_destroy_in(w, duration);
+    wid_move_delta_pct_in(w, 0.0f, -0.3f, duration);
+    wid_fade_in(w, 2000);
+    wid_raise(w);
+
+    wid_destroy_delay_ms = 2000;
+
+    {
+        widp w;
+        wid_text1 = w = wid_tooltip_transient("For millenia, the dwarves of old", 3 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.1);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 6);
+        wid_destroy_in(w, ONESEC * 6);
+    }
+
+    {
+        widp w;
+        wid_text2 = w = wid_tooltip_transient("mined in search of great cheesy treasures", 4 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.4);
+        wid_move_to_pct_centered_in(w, 0.5, 0.3, ONESEC * 10);
+        wid_destroy_in(w, ONESEC * 9);
+    }
+
+    {
+        widp w;
+        wid_text3 = w = wid_tooltip_transient("ever deeper they dug...", 5 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.7);
+        wid_move_to_pct_centered_in(w, 0.5, 0.4, ONESEC * 14);
+        wid_destroy_in(w, ONESEC * 13);
+    }
+
+    wid_update(w);
+
+    return (true);
+}
 
 static void wid_intro_demo_buttons_tick (widp wid)
 {
@@ -100,16 +589,12 @@ static uint8_t wid_intro_demo_buttons_add_tiles (const tree_node *node, void *ar
     return (true);
 }
 
-int sdl_intro_demo_update (void)
+static void sdl_intro_demo_tick (widp w)
 {
+    static const double wall_start = 0.25;
     static widp wid_intro;
     static widp wid_rock;
     static widp wid_wall_floor;
-
-    if (opt_quickstart || !global_config.intro_screen) {
-        wid_intro_init();
-        return (false);
-    }
 
     if (!wid_intro) {
         wid_intro = wid_new_window("splash icon");
@@ -123,6 +608,8 @@ int sdl_intro_demo_update (void)
 
         wid_raise(wid_intro);
         wid_update(wid_intro);
+
+        wid_set_on_tick(wid_intro, sdl_intro_demo_tick);
     }
 
     if (!wid_wall_floor) {
@@ -252,8 +739,5 @@ int sdl_intro_demo_update (void)
                 wid_destroy(&demo_players[i]);
             }
         }
-        return (false);
     }
-
-    return (true);
 }

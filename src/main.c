@@ -32,6 +32,7 @@
 #include "wid_server_edit.h"
 #include "wid_server_create.h"
 #include "wid_intro.h"
+#include "wid_intro_demo.h"
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
 #include "wid_choose_game_type.h"
@@ -842,6 +843,16 @@ int32_t main (int32_t argc, char *argv[])
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)client_init,
                           0, "client_init");
+
+    if (opt_quickstart || !global_config.intro_screen) {
+        action_init_fn_create(&init_fns,
+                            (action_init_fn_callback)wid_intro_init,
+                            0, "wid_intro_init");
+    } else {
+        action_init_fn_create(&init_fns,
+                            (action_init_fn_callback)wid_intro_story1_create,
+                            0, "wid_intro_story1_create");
+    }
 
 #endif
 
