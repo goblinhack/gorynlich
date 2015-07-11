@@ -466,21 +466,6 @@ tpp random_trap (int depth)
             continue;
         }
 
-        /*
-         * Unique? like death?
-         */
-        if (!tp_get_d10000_chance_of_appearing(tp)) {
-            continue;
-        }
-
-        if (depth < tp_get_min_appear_depth(tp)) {
-            continue;
-        }
-
-        if (depth > tp_get_max_appear_depth(tp)) {
-            continue;
-        }
-
         int r = myrand() % 10000;
         if (r < (tp_get_d10000_chance_of_appearing(tp) + depth)) {
             return (tp);
