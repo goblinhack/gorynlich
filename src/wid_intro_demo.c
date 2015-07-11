@@ -451,6 +451,8 @@ static uint8_t wid_intro_story_key_down (widp w, const SDL_KEYSYM *key)
         case SDLK_ESCAPE:
             wid_intro_story_destroy();
             return (true);
+        default:
+            break;
     }
 
     return (false);
