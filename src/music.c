@@ -250,8 +250,5 @@ void music_play_game_over (void)
 
 void music_halt (void)
 {
-    while (!Mix_FadeOutMusic(3000) && Mix_PlayingMusic()) {
-        // wait for any fades to complete
-        SDL_Delay(100);
-    }
+    Mix_FadeOutMusic(1500);
 }
