@@ -1234,49 +1234,6 @@ void sdl_loop (void)
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
      */
 
-    for (;;) {
-        /*
-         * Clear the screen
-         */
-        if (!HEADLESS) {
-            glClear(GL_COLOR_BUFFER_BIT);
-        }
-
-        time_update_time_milli();
-
-        if (!sdl_intro_demo_update()) {
-            break;
-        }
-
-        /*
-         * Let widgets move.
-         */
-        wid_tick_all();
-
-        /*
-         * Let widgets move.
-         */
-        wid_move_all();
-
-        /*
-         * Display windows.
-         */
-        wid_display_all();
-
-        /*
-         * Flip
-         */
-        if (!HEADLESS) {
-#ifdef ENABLE_SDL_WINDOW /* { */
-            SDL_GL_SwapWindow(window);
-#else /* } { */
-            SDL_GL_SwapBuffers();
-#endif /* } */
-        } else {
-            usleep(MAIN_LOOP_DELAY);
-        }
-    }
-
     wid_console_hello();
 
     if (!HEADLESS) {

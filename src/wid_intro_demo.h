@@ -6,4 +6,4 @@
 
 #pragma once
 
-int sdl_intro_demo_update(void);
+int wid_intro_story1_create(void);

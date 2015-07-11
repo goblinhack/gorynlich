@@ -949,7 +949,7 @@ TREE_PREV_INLINE(tree_wid_compare_func)
 extern widp wid_mouse_template;
 
 extern const int32_t wid_fade_delay;
-extern const int32_t wid_destroy_delay_ms;
+extern int32_t wid_destroy_delay_ms;
 extern const int32_t wid_visible_delay;
 extern const int32_t wid_hide_delay;
 extern const int32_t wid_swipe_delay;
