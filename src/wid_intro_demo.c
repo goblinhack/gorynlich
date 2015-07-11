@@ -37,6 +37,7 @@ static widp wid_text1;
 static widp wid_text2;
 static widp wid_text3;
 static void sdl_intro_demo_tick(widp w);
+static void wid_intro_story_destroy(void);
 
 /*************************************************************************************
  * Story part 6
@@ -46,6 +47,7 @@ static widp wid_intro_story6;
 static void wid_intro_story6_destroy_done (widp w)
 {
     if (!done) {
+        wid_intro_story_destroy();
         sdl_intro_demo_tick(0);
     } else {
         wid_intro_visible();
