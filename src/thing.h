@@ -320,6 +320,7 @@ enum {
     THING_SHOP_FLOOR1,
     THING_CORRIDOR1,
     THING_CORRIDOR2,
+    THING_DIRT1,
     THING_FLOOR1,
     THING_FLOOR2,
     THING_FLOOR3,
@@ -1238,11 +1239,11 @@ static inline uint8_t thing_is_rrr10 (thingp t)
     return (tp_is_rrr10(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr11 (thingp t)
+static inline uint8_t thing_is_dirt (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr11(thing_tp(t)));
+    return (tp_is_dirt(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_dragon (thingp t)
@@ -2065,9 +2066,9 @@ static inline uint8_t thing_is_rrr10_noverify (thingp t)
     return (t->tp->is_rrr10);
 }
 
-static inline uint8_t thing_is_rrr11_noverify (thingp t)
+static inline uint8_t thing_is_dirt_noverify (thingp t)
 {
-    return (t->tp->is_rrr11);
+    return (t->tp->is_dirt);
 }
 
 static inline uint8_t thing_is_dragon_noverify (thingp t)
