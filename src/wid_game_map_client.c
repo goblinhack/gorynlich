@@ -1200,8 +1200,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         wid_set_color(wid_scoreline_container_top, WID_COLOR_BR, BLACK);
     }
 
-    double score_x = 0.82;
-    double cash_x = 0.92;
+    double score_x = 0.78;
+    double cash_x = 0.88;
     double player_y_offset = 0.14; // player start y
     double next_player_y_delta = 0.1;
     double score_and_cash_title_offset = 0.025;
