@@ -685,13 +685,13 @@ static void level_finished (levelp level)
     level->end_level_second_phase_destroy_timer = 0;
     level->end_level_first_phase_fade_out_timer = 0;
 
+    LEVEL_LOG(level, "level finished");
+
     if (level->is_test_level) {
         LEVEL_LOG(level, "test level finished");
         level_destroy(&server_level, false /* keep players */);
         return;
     }
-
-    LEVEL_LOG(level, "level finished");
 
     thingp t;
 
@@ -718,7 +718,7 @@ static void level_finished (levelp level)
     socket_server_tx_map_update(0, server_active_things,
                                 "level destroy active things");
 
-    wid_game_map_server_wid_destroy(false /* keep players */);
+    wid_game_map_server_wid_destroy(true /* keep players */);
 
     { TREE_WALK(server_active_things, t) {
         if (!thing_is_player_or_owned_by_player(t)) {
