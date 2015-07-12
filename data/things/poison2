@@ -9,7 +9,6 @@
  is_animated_no_dir
  scale=0.4
  explosion_radius=4.0
- is_collision_map_large
  damage=10
  hit_delay_tenths=1
  tiles={

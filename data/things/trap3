@@ -16,7 +16,6 @@
  hit_priority=10
  scale=1.0
  is_effect_fade_in_out
- is_collision_map_medium
  is_animated
  fires="data/things/energy1"
  weapon_fire_delay_hundredths=10

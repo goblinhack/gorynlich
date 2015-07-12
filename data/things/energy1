@@ -7,6 +7,7 @@
  speed=60
  damage=3
  hit_delay_tenths=1
+ collision_radius=0.1
  is_fragile
  is_projectile
  is_animated
@@ -16,7 +17,6 @@
  is_variable_size
  scale=0.3
  sound_on_creation="energy1"
- is_collision_map_medium
  tiles={
   tile={
    tile="energy1-1"
