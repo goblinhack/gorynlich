@@ -34,7 +34,7 @@ void thing_torch_update_count (thingp t, int force)
             thing_used(t, tp);
             tp = thing_is_carrying_thing(t, tp_is_torch);
             if (!tp) {
-                MSG_SERVER_SHOUT_AT_PLAYER(INFO, t,
+                MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 0, 0,
                                            "Your light fizzles out");
             }
         }

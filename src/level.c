@@ -637,7 +637,8 @@ void level_pause (levelp level)
         };
 
         socket_tx_server_shout_at_all_players(POPUP,
-                               messages[myrand() % ARRAY_SIZE(messages)]);
+                                              0, 0, // x, y
+                                              messages[myrand() % ARRAY_SIZE(messages)]);
 
         level->pause_timer = 
                     action_timer_create(&server_timers,
@@ -790,9 +791,13 @@ void level_server_tick (levelp level)
     if (level_exit_has_been_reached(level)) {
         if (!level->end_level_first_phase_fade_out_timer) {
             if (level->game_over) {
-                socket_tx_server_shout_at_all_players(POPUP, "Quest completed!");
+                socket_tx_server_shout_at_all_players(POPUP,
+                                                      0, 0, // x, y
+                                                      "Quest completed!");
             } else {
-                socket_tx_server_shout_at_all_players(POPUP, "Level completed");
+                socket_tx_server_shout_at_all_players(POPUP,
+                                                      0, 0, // x, y
+                                                      "Level completed");
             }
 
             level->end_level_first_phase_fade_out_timer = 
@@ -1758,7 +1763,7 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
     socket_server_tx_map_update(0 /* all clients */, server_active_things,
                                 "open door");
 
-    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(SOUND, "door");
+    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(SOUND, ix, iy, "door");
 }
 
 void marshal_level (marshal_p ctx, levelp level)

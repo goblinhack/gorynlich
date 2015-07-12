@@ -100,6 +100,8 @@ typedef struct {
 typedef struct {
     uint8_t type;
     uint8_t level;
+    uint8_t x;
+    uint8_t y;
     /*
      * Used to place a message above a thing
      */
@@ -411,18 +413,26 @@ extern void socket_server_rx_player_action(gsocketp s,
                                            uint8_t *data);
 
 extern void socket_tx_server_shout_at_all_players(uint32_t level,
+                                                  double x,
+                                                  double y,
                                                   const char *shout);
 
 extern void socket_tx_server_shout_at_all_players_except(gsocketp,
                                                          uint32_t level,
+                                                         double x,
+                                                         double y,
                                                          const char *shout);
 
 extern void socket_tx_server_shout_only_to(gsocketp,
                                            uint32_t level,
+                                           double x,
+                                           double y,
                                            const char *shout);
 
 extern void socket_tx_server_shout_over(uint32_t level,
                                         uint32_t thing_id,
+                                        double x,
+                                        double y,
                                         const char *txt);
 
 extern void socket_rx_server_shout(gsocketp s, UDPpacket *packet, 
