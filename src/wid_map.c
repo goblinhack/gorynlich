@@ -1405,7 +1405,7 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
         int x, y;
 
         if (sscanf(name, "%d.%d", &y, &x) != 2) {
-            LOG("bad format in level name [%s], expecting a,b format", name);
+            ERR("bad format in level name [%s], expecting a,b format", name);
             continue;
         }
 
@@ -1420,7 +1420,6 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
         int x, y;
 
         if (sscanf(ramfile->filename, "data/levels/%d.%d", &y, &x) != 2) {
-            LOG("bad format in level name [%s], expecting a,b format", ramfile->filename);
             ramfile++;
             continue;
         }

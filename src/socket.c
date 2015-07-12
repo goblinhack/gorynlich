@@ -2179,6 +2179,11 @@ socket_tx_server_shout_at_all_players_except (gsocketp except,
         msg.level = level;
         msg.x = (int)x;
         msg.y = (int)y;
+
+        if (sp->player->thing) {
+            msg.thing_id = sp->player->thing->thing_id;
+        }
+
         strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
         memcpy(packet->data, &msg, sizeof(msg));
@@ -2227,15 +2232,20 @@ void socket_tx_server_shout_only_to (gsocketp target,
         msg.level = level;
         msg.x = level;
         msg.y = level;
+
+        if (sp->player->thing) {
+            msg.thing_id = sp->player->thing->thing_id;
+        }
+
         strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
         memcpy(packet->data, &msg, sizeof(msg));
 
         packet->len = sizeof(msg);
 
+        if (!single_player_mode) {
             LOG("Server: Tx Shout \"%s\" to (one player) %s", txt,
                 socket_get_remote_logname(sp));
-        if (!single_player_mode) {
         }
 
         write_address(packet, socket_get_remote_ip(sp));
