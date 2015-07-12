@@ -692,8 +692,7 @@ static void client_rx_server_status (gsocketp s,
      */
     if (latest_status.level_hide) {
         if (client_level) {
-            things_level_destroyed(client_level,
-                                    true /* keep players */);
+            things_level_destroyed(client_level, true /* keep players */);
         }
 
         /*

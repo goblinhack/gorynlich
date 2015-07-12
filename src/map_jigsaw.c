@@ -2696,7 +2696,7 @@ static int32_t generate_level (const char *jigsaw_map,
 
     mysrand(maze_seed);
 
-    LOG("Maze: Seed %d", maze_seed);
+    LOG("Maze: Seed %u", maze_seed);
 
     /*
      * Read in the jigsaw pieces.
