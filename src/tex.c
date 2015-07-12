@@ -635,7 +635,7 @@ static texp tex_black_and_white (SDL_Surface *in,
 
             c = getPixel(in, ix, iy);
             
-            uint8_t avg = (c.r + c.g + c.b) / 3;
+            uint8_t avg = ((int)c.r + (int)c.g + (int)c.b) / 3;
             c.r = avg;
             c.g = avg;
             c.b = avg;
