@@ -428,6 +428,7 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
          thing_is_player(B)         ||
          thing_is_shield(B)         ||
          thing_is_generator(B))) {
+
         Bpx1 = collision_map_large_x1;
         Bpx2 = collision_map_large_x2;
         Bpy1 = collision_map_large_y1;
@@ -447,18 +448,6 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
     double Btly = By + Bpy1;
     double Bbry = By + Bpy2;
 
-#if 0
-    if ((thing_is_weapon_swing_effect(A) &&
-         thing_is_player(B))) {
-CON("    A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
-CON("      %f %f",Ax,Ay);
-CON("      %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
-CON("    B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
-CON("      %f %f",Bx,By);
-CON("      %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
-    }
-#endif
-
     /*
      * The rectangles don't overlap if one rectangle's minimum in some 
      * dimension is greater than the other's maximum in that dimension.
@@ -467,6 +456,21 @@ CON("      %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
         (Abrx > Btlx) &&
         (Atly < Bbry) && 
         (Abry > Btly)) {
+
+#if 0
+    if ((thing_is_projectile(A) &&
+         thing_is_wall(B))) {
+CON("    A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
+CON("      %f %f",Ax,Ay);
+CON("      %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
+CON("    B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
+CON("      %f %f",Bx,By);
+CON("      %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
+    }
+CON("%s  thing_collision_radius %f",thing_logname(A),thing_collision_radius(A));
+CON("%s  thing_collision_radius %f",thing_logname(B),thing_collision_radius(B));
+#endif
+
         return (true);
     }
 
