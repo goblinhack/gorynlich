@@ -70,7 +70,9 @@ void thing_death_tick (void)
     if (!level_death_is_coming_soon(server_level)) {
         if (time_have_x_tenths_passed_since(10 * 300,
                                             level_get_timestamp_started(server_level))) {
-            MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP, "Death is coming soon...");
+            MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP, 
+                                            0, 0, 
+                                            "Death is coming soon...");
 
             level_set_death_is_coming_soon(server_level, true);
         }
@@ -79,7 +81,9 @@ void thing_death_tick (void)
     if (!level_death_is_coming(server_level)) {
         if (time_have_x_tenths_passed_since((10 * 300) + 30,
                                             level_get_timestamp_started(server_level))) {
-            MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP, "Death is coming...");
+            MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP, 
+                                            0, 0,
+                                            "Death is coming...");
 
             thing_death_spawn();
 

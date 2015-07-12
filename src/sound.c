@@ -15,12 +15,14 @@
 #include "music.h"
 #include "math_util.h"
 #include "thing.h"
+#include "vision.h"
 
 typedef struct sound_ {
     tree_key_string tree;
     Mix_Chunk *sound;
     unsigned char *data;
     int32_t len;
+    double volume;
 } sound;
 
 tree_root *all_sound;
@@ -53,7 +55,7 @@ void sound_fini (void)
     }
 }
 
-soundp sound_load (const char *filename, const char *name_alias)
+static soundp sound_load (double volume, const char *filename, const char *name_alias)
 {
     if (!music_init_done) {
         DIE("need music init")
@@ -93,6 +95,8 @@ soundp sound_load (const char *filename, const char *name_alias)
         ERR("cannot load sound %s from ramdisk", filename);
         return (0);
     }
+
+    m->volume = volume;
 
     SDL_RWops *rw = SDL_RWFromMem(m->data, m->len);
     if (!rw) {
@@ -145,11 +149,41 @@ void sound_play_at (const char *name_alias, double x, double y)
         return;
     }
 
-    soundp sound = sound_load(0, name_alias);
+    soundp sound = sound_load(0.5, 0, name_alias);
     if (!sound) {
         LOG("cannot load sound %s: %s", name_alias, Mix_GetError());
 
         return;
+    }
+
+    double volume = (float) global_config.sound_volume * sound->volume *
+              ((float) MIX_MAX_VOLUME / (float) SOUND_MAX);
+
+    if (player) {
+        double distance = DISTANCE(player->x, player->y, x, y) / 8.0;
+
+        if (distance > 1.0) {
+            volume /= distance;
+
+            int visible = true;
+
+            if (!can_see(client_level, player->x, player->y, x, y)) {
+                visible = false;
+                volume /= 4.0;
+            }
+
+            LOG("play: %s vol %f dist %f can_see %d",name_alias, volume, distance, visible);
+        }
+
+        if (volume < 1.0) {
+            return;
+        }
+
+        if (distance > 10.0) {
+            return;
+        }
+
+        LOG("play: %s vol %f dist %f",name_alias, volume, distance);
     }
 
     if (Mix_PlayChannel(-1, sound->sound, 0) == -1) {
@@ -158,7 +192,31 @@ void sound_play_at (const char *name_alias, double x, double y)
         return;
     }
 
-    double volume = (float) global_config.sound_volume *
+    Mix_VolumeChunk(sound->sound, volume);
+}
+
+/*
+ * Like the above but no checks for line of sight and always make some sound 
+ * even if quiet
+ */
+void sound_play_global_at (const char *name_alias, double x, double y)
+{
+    if (HEADLESS) {
+        return;
+    }
+
+    if (!music_init_done) {
+        return;
+    }
+
+    soundp sound = sound_load(0.5, 0, name_alias);
+    if (!sound) {
+        LOG("cannot load sound %s: %s", name_alias, Mix_GetError());
+
+        return;
+    }
+
+    double volume = (float) global_config.sound_volume * sound->volume *
               ((float) MIX_MAX_VOLUME / (float) SOUND_MAX);
 
     if (player) {
@@ -167,6 +225,20 @@ void sound_play_at (const char *name_alias, double x, double y)
         if (distance > 1.0) {
             volume /= distance;
         }
+
+        int visible = true;
+
+        if (volume < 1.0) {
+            volume = 1.0;
+        }
+
+        LOG("play: global %s vol %f dist %f can_see %d",name_alias, volume, distance, visible);
+    }
+
+    if (Mix_PlayChannel(-1, sound->sound, 0) == -1) {
+        LOG("cannot play sound %s: %s", sound->tree.key, Mix_GetError());
+
+        return;
     }
 
     Mix_VolumeChunk(sound->sound, volume);
@@ -184,7 +256,7 @@ void sound_play (const char *name_alias)
 
     LOG("play: %s", name_alias);
 
-    soundp sound = sound_load(0, name_alias);
+    soundp sound = sound_load(0.5, 0, name_alias);
     if (!sound) {
         LOG("cannot load sound %s: %s", name_alias, Mix_GetError());
 
@@ -197,8 +269,11 @@ void sound_play (const char *name_alias)
         return;
     }
 
-    double volume = (float) global_config.sound_volume *
+    double volume = (float) global_config.sound_volume * sound->volume *
               ((float) MIX_MAX_VOLUME / (float) SOUND_MAX);
+
+
+    LOG("play: %s vol %f",name_alias,volume);
 
     Mix_VolumeChunk(sound->sound, volume);
 }
@@ -213,7 +288,7 @@ void sound_play_n (const char *name_alias, int32_t n)
         return;
     }
 
-    soundp sound = sound_load(0, name_alias);
+    soundp sound = sound_load(0.5, 0, name_alias);
 
     if (Mix_PlayChannel(-1, sound->sound, n) == -1) {
         LOG("cannot play %s: %s", sound->tree.key, Mix_GetError());
@@ -222,7 +297,7 @@ void sound_play_n (const char *name_alias, int32_t n)
     }
 
     Mix_VolumeChunk(sound->sound,
-                    (float) global_config.sound_volume *
+                    (float) global_config.sound_volume * sound->volume *
                     ((float) MIX_MAX_VOLUME / (float) SOUND_MAX));
 }
 
@@ -248,35 +323,35 @@ void sound_play_slime (void)
 
 void sound_load_all (void)
 {
-    sound_load("data/sound/click.wav", "click");
-    sound_load("data/sound/powerup.wav", "powerup");
-    sound_load("data/sound/level_end.wav", "level_end");
-    sound_load("data/sound/explosion.wav", "explosion");
-    sound_load("data/sound/slime.wav", "slime");
-    sound_load("data/sound/swords_collide_sound_explorer_2015600826.wav", "sword");
-    sound_load("data/sound/cash_register2.wav", "cash_register");
-    sound_load("data/sound/shotgun_reload_by_ra_the_sun_god.wav", "shotgun_reload");
-    sound_load("data/sound/shotgun_by_ra_the_sun_god.wav", "shotgun");
-    sound_load("data/sound/swoosh_3_SoundBible.com_1573211927.wav", "swoosh");
-    sound_load("data/sound/flame_Arrow_SoundBible.com_618067908.wav", "fireball1");
-    sound_load("data/sound/105016__julien_matthey__jm_fx_fireball_01.wav", "fireball2");
-    sound_load("data/sound/39016__wildweasel__dsfirxpl.wav", "fireball3");
-    sound_load("data/sound/coin_roll.wav", "payment");
-    sound_load("data/sound/treasure.wav", "treasure");
-    sound_load("data/sound/Object_Drop_001.wav", "drop");
-    sound_load("data/sound/Door_Latch_002.wav", "door");
-    sound_load("data/sound/Electric_Zap.wav", "shield");
-    sound_load("data/sound/Red_Alert_FX_001.wav", "thief");
-    sound_load("data/sound/boom.wav", "boom");
-    sound_load("data/sound/effect.wav", "effect");
-    sound_load("data/sound/zombie_SoundBible.com_1966938763.wav", "zombie");
-    sound_load("data/sound/Bite_SoundBible.com_2056759375.wav", "bite");
-    sound_load("data/sound/bite_SoundBible.com_1625781385.wav", "urgh");
-    sound_load("data/sound/zombie_in_painSoundBible.com_134322253.wav", "urgh2");
-    sound_load("data/sound/demon_die.wav", "urgh3");
-    sound_load("data/sound/82388__robinhood76__01308_man_hit_9.wav", "player_hit");
-    sound_load("data/sound/45137__dj_chronos__dark_church_bell.wav", "player_death");
-    sound_load("data/sound/205563__everheat__arrow.wav", "arrow");
-    sound_load("data/sound/49676__ejfortin__energy_short_sword_5.wav", "energy1");
-    sound_load("data/sound/148975__adam_n__squelch_1.wav", "squelch");
+    sound_load(0.5, "data/sound/click.wav", "click");
+    sound_load(0.5, "data/sound/powerup.wav", "powerup");
+    sound_load(0.7, "data/sound/level_end.wav", "level_end");
+    sound_load(1.0, "data/sound/explosion.wav", "explosion");
+    sound_load(0.2, "data/sound/slime.wav", "slime");
+    sound_load(0.5, "data/sound/swords_collide_sound_explorer_2015600826.wav", "sword");
+    sound_load(0.5, "data/sound/cash_register2.wav", "cash_register");
+    sound_load(0.5, "data/sound/shotgun_reload_by_ra_the_sun_god.wav", "shotgun_reload");
+    sound_load(0.5, "data/sound/shotgun_by_ra_the_sun_god.wav", "shotgun");
+    sound_load(0.2, "data/sound/60009__qubodup__swosh_22.ogg", "swoosh");
+    sound_load(0.2, "data/sound/flame_Arrow_SoundBible.com_618067908.wav", "fireball1");
+    sound_load(0.2, "data/sound/105016__julien_matthey__jm_fx_fireball_01.wav", "fireball2");
+    sound_load(0.2, "data/sound/39016__wildweasel__dsfirxpl.wav", "fireball3");
+    sound_load(0.5, "data/sound/coin_roll.wav", "payment");
+    sound_load(0.5, "data/sound/treasure.wav", "treasure");
+    sound_load(0.5, "data/sound/Object_Drop_001.wav", "drop");
+    sound_load(0.5, "data/sound/Door_Latch_002.wav", "door");
+    sound_load(0.5, "data/sound/Electric_Zap.wav", "shield");
+    sound_load(1.0, "data/sound/Red_Alert_FX_001.wav", "thief");
+    sound_load(1.0, "data/sound/boom.wav", "boom");
+    sound_load(0.5, "data/sound/effect.wav", "effect");
+    sound_load(0.3, "data/sound/zombie_SoundBible.com_1966938763.wav", "zombie");
+    sound_load(0.3, "data/sound/Bite_SoundBible.com_2056759375.wav", "bite");
+    sound_load(0.1, "data/sound/bite_SoundBible.com_1625781385.wav", "urgh");
+    sound_load(0.4, "data/sound/zombie_in_painSoundBible.com_134322253.wav", "urgh2");
+    sound_load(0.7, "data/sound/demon_die.wav", "urgh3");
+    sound_load(0.5, "data/sound/82388__robinhood76__01308_man_hit_9.wav", "player_hit");
+    sound_load(1.0, "data/sound/45137__dj_chronos__dark_church_bell.wav", "player_death");
+    sound_load(0.5, "data/sound/205563__everheat__arrow.wav", "arrow");
+    sound_load(0.5, "data/sound/49676__ejfortin__energy_short_sword_5.wav", "energy1");
+    sound_load(0.3, "data/sound/148975__adam_n__squelch_1.wav", "squelch");
 }

@@ -31,7 +31,7 @@ void shop_enter (thingp t, thingp floor)
 
     thingp shopkeeper = thing_owner(floor);
     if (!shopkeeper) {
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "No shopkeeper to be seen");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "No shopkeeper to be seen");
         return;
     }
 
@@ -39,14 +39,14 @@ void shop_enter (thingp t, thingp floor)
         /*
          * You killed the keeper earlier?
          */
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "A bad thing happened here...");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "A bad thing happened here...");
         return;
         
     } else if (thing_is_angry(shopkeeper)) {
         /*
          * Reentering the crime scene?
          */
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%%%%fg=red$%s", "Get out of my shop!");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=red$%s", "Get out of my shop!");
 
     } else {
         /*
@@ -63,8 +63,8 @@ void shop_enter (thingp t, thingp floor)
             "Sale on today. All items must be sold!",
         };
 
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "shotgun_reload");
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%%%%fg=green$%s", messages[myrand() % ARRAY_SIZE(messages)]);
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "shotgun_reload");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=green$%s", messages[myrand() % ARRAY_SIZE(messages)]);
     }
 
     THING_LOG(t, "entered shop");
@@ -99,7 +99,7 @@ void shop_leave (thingp t, thingp floor)
     if (!shopkeeper) {
         t->money_owed = 0;
         t->in_shop_owned_by_thing_id = 0;
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "Odd... No one around to pay");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "Odd... No one around to pay");
         return;
     }
 
@@ -108,11 +108,11 @@ void shop_leave (thingp t, thingp floor)
          * Shopkeeper owes us.
          */
         if (thing_is_dead(shopkeeper)) {
-            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "No one lives to pay you");
+            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "No one lives to pay you");
         } else if (thing_is_angry(shopkeeper)) {
-            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%%%%fg=red$%s", "I refuse to pay a thief!");
+            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=red$%s", "I refuse to pay a thief!");
         } else {
-            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%%%%fg=green$%s", "Good doing business with you");
+            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=green$%s", "Good doing business with you");
 
             thing_stats_modify_cash(t, -t->money_owed);
         }
@@ -174,7 +174,7 @@ void shop_collect_message (thingp t, thingp item)
 
     thingp shopkeeper = thing_owner(item);
     if (!shopkeeper) {
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "Odd... no one owns this. Free item...");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "Odd... no one owns this. Free item...");
         return;
     }
 
@@ -184,18 +184,18 @@ void shop_collect_message (thingp t, thingp item)
         time_have_x_secs_passed_since(10, t->timestamp_last_shop_enter)) {
 
         if (thing_is_dead(shopkeeper)) {
-            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "No one to pay");
+            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "No one to pay");
 
             return;
         } else if (thing_is_angry(shopkeeper)) {
             /*
              * Already a thief and stealing again?!
              */
-            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%%%%fg=red$More thievery!");
+            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=red$More thievery!");
         } else {
-            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+            MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%s", messages[myrand() % ARRAY_SIZE(messages)]);
 
-            MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "%%%%fg=red$Press P to pay");
+            MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, 0, 0, "%%%%fg=red$Press P to pay");
         }
     }
 
@@ -226,20 +226,20 @@ void shop_deposit_message (thingp t, thingp item)
 
     thingp shopkeeper = thing_server_find(t->in_shop_owned_by_thing_id);
     if (!shopkeeper) {
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "No one seems to be running the shop");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "No one seems to be running the shop");
         return;
     }
 
     if (thing_is_dead(shopkeeper)) {
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "No one to accept these goods");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "No one to accept these goods");
         return;
     } else if (thing_is_angry(shopkeeper)) {
-        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "%%%%fg=red$I'm not taking your stolen goods!");
+        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, 0, 0, "%%%%fg=red$I'm not taking your stolen goods!");
         return;
     }
 
     if (!tp_get_cost(item->tp)) {
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "I'm not taking that junk");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "I'm not taking that junk");
         return;
     }
 
@@ -247,8 +247,7 @@ void shop_deposit_message (thingp t, thingp item)
 
     thing_set_owner(item, shopkeeper);
 
-    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                               "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
 void shop_pay_for_items (thingp t)
@@ -285,18 +284,17 @@ void shop_pay_for_items (thingp t)
 
     thingp shopkeeper = thing_server_find(t->in_shop_owned_by_thing_id);
     if (!shopkeeper) {
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "There is no one to pay");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "There is no one to pay");
         return;
     }
 
     if (thing_is_dead(shopkeeper)) {
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "He cannot take payment now...");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "He cannot take payment now...");
         return;
     }
 
     if (thing_is_angry(shopkeeper)) {
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                                   "%%%%fg=red$I'll never take your money!");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=red$I'll never take your money!");
         return;
     }
 
@@ -304,7 +302,7 @@ void shop_pay_for_items (thingp t)
         /*
          * Urk!
          */
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, 
                                    "%%%%fg=red$Not enough money. You owe %d$", 
                                    t->money_owed);
         return;
@@ -313,15 +311,14 @@ void shop_pay_for_items (thingp t)
     if (t->timestamp_last_shop_enter &&
         time_have_x_secs_passed_since(10, t->timestamp_last_shop_enter)) {
 
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                                   "%s", messages[myrand() % ARRAY_SIZE(messages)]);
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%s", messages[myrand() % ARRAY_SIZE(messages)]);
     }
 
     thing_stats_modify_cash(t, -t->money_owed);
 
     t->money_owed = 0;
 
-    MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "payment");
+    MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "payment");
 }
 
 void shop_steal_message (thingp t)
@@ -371,19 +368,18 @@ void shop_steal_message (thingp t)
 
     thingp shopkeeper = thing_server_find(t->in_shop_owned_by_thing_id);
     if (!shopkeeper) {
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%%%%fg=red$%s", "You steal from children?");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=red$%s", "You steal from children?");
         return;
     }
 
     if (thing_is_dead(shopkeeper)) {
-        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, "%%%%fg=red$%s", "You steal from the dead...");
+        MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=red$%s", "You steal from the dead...");
         return;
     }
 
-    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                               "%%%%fg=red$%s", messages[myrand() % ARRAY_SIZE(messages)]);
+    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=red$%s", messages[myrand() % ARRAY_SIZE(messages)]);
 
-    MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "thief");
+    MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "thief");
 }
 
 void shop_break_message (thingp t, thingp shopkeeper)
@@ -411,8 +407,7 @@ void shop_break_message (thingp t, thingp shopkeeper)
 
     thing_set_is_angry(shopkeeper, true);
 
-    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                               "%%%%fg=red$%s", messages[myrand() % ARRAY_SIZE(messages)]);
+    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=red$%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
 void shop_whodunnit_break_message (thingp t, thingp shopkeeper)
@@ -430,8 +425,7 @@ void shop_whodunnit_break_message (thingp t, thingp shopkeeper)
         "Who broke my stuff! Was it you?",
     };
 
-    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t,
-                               "%%%%fg=orange$%s", messages[myrand() % ARRAY_SIZE(messages)]);
+    MSG_SERVER_SHOUT_AT_PLAYER(POPUP, t, 0, 0, "%%%%fg=orange$%s", messages[myrand() % ARRAY_SIZE(messages)]);
 }
 
 static thingp all_shop_floor_tiles[MAP_WIDTH][MAP_HEIGHT];
@@ -566,7 +560,7 @@ void thing_shop_item_tick (thingp t)
      * Treasure that has an owner is in a shop.
      */
     if (thing_owner(t)) {
-        MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, 0, 0,
                                     "%%%%font=%s$%%%%fg=%s$%d$", 
                                     "medium", "gold", tp_get_cost(t->tp));
     }
@@ -608,8 +602,8 @@ int shop_inside (thingp t)
     return (false);
 }
 
-void shop_on_level (void)
+void shop_on_level (double x, double y)
 {
-    socket_tx_server_shout_at_all_players(SOUND, "cash_register");
-    socket_tx_server_shout_at_all_players(INFO, "You hear the chime of a cash register");
+    socket_tx_server_shout_at_all_players(SOUND_GLOBAL, x, y, "cash_register");
+    socket_tx_server_shout_at_all_players(INFO, 0, 0, "You hear the chime of a cash register");
 }

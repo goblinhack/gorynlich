@@ -2039,7 +2039,10 @@ void socket_rx_client_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
     }
 }
 
-void socket_tx_server_shout_at_all_players (uint32_t level, const char *txt)
+void socket_tx_server_shout_at_all_players (uint32_t level, 
+                                            double x,
+                                            double y,
+                                            const char *txt)
 {
     gsocketp sp;
 
@@ -2070,6 +2073,13 @@ void socket_tx_server_shout_at_all_players (uint32_t level, const char *txt)
         msg.type = MSG_SERVER_SHOUT;
         msg.level = level;
 
+        if (sp->player->thing) {
+            msg.thing_id = sp->player->thing->thing_id;
+        }
+
+        msg.x = (int)x;
+        msg.y = (int)y;
+
         strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
         memcpy(packet->data, &msg, sizeof(msg));
@@ -2085,6 +2095,8 @@ void socket_tx_server_shout_at_all_players (uint32_t level, const char *txt)
 void 
 socket_tx_server_shout_over (uint32_t level,
                              uint32_t thing_id,
+                             double x,
+                             double y,
                              const char *txt)
 {
     gsocketp sp;
@@ -2111,6 +2123,8 @@ socket_tx_server_shout_over (uint32_t level,
         msg.type = MSG_SERVER_SHOUT;
         msg.thing_id = thing_id;
         msg.level = level;
+        msg.x = x;
+        msg.y = y;
 
         strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
@@ -2132,6 +2146,8 @@ socket_tx_server_shout_over (uint32_t level,
 void 
 socket_tx_server_shout_at_all_players_except (gsocketp except,
                                               uint32_t level, 
+                                              double x,
+                                              double y,
                                               const char *txt)
 {
     gsocketp sp;
@@ -2161,6 +2177,8 @@ socket_tx_server_shout_at_all_players_except (gsocketp except,
         msg_server_shout msg = {0};
         msg.type = MSG_SERVER_SHOUT;
         msg.level = level;
+        msg.x = (int)x;
+        msg.y = (int)y;
         strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
         memcpy(packet->data, &msg, sizeof(msg));
@@ -2180,6 +2198,8 @@ socket_tx_server_shout_at_all_players_except (gsocketp except,
 
 void socket_tx_server_shout_only_to (gsocketp target,
                                      uint32_t level,
+                                     double x,
+                                     double y,
                                      const char *txt)
 {
     gsocketp sp;
@@ -2205,6 +2225,8 @@ void socket_tx_server_shout_only_to (gsocketp target,
         msg_server_shout msg = {0};
         msg.type = MSG_SERVER_SHOUT;
         msg.level = level;
+        msg.x = level;
+        msg.y = level;
         strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
         memcpy(packet->data, &msg, sizeof(msg));
@@ -2245,7 +2267,9 @@ void socket_rx_server_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
     }
 
     if (msg.thing_id) {
-        MSG_CLIENT_SHOUT_OVER_PLAYER(msg.level, msg.thing_id, "%s", txt);
+        MSG_CLIENT_SHOUT_OVER_PLAYER(msg.level, 
+                                     msg.thing_id, 
+                                     msg.x, msg.y, "%s", txt);
     } else {
         MSG(msg.level, "%s", txt);
     }
