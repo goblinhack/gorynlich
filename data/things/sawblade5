@@ -7,7 +7,6 @@
  speed=20
  scale=0.3
  is_shadow_caster
- is_collision_map_large
  collision_radius=1.5
  hit_priority=9
  max_hp=100

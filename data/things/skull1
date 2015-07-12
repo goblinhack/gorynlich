@@ -22,7 +22,6 @@
  scale=0.5
  is_ethereal
  is_cats_eyes
- is_collision_map_medium
  is_animated
  fires="data/things/energy1"
  weapon_fire_delay_hundredths=50

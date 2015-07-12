@@ -1109,7 +1109,7 @@ static inline uint8_t thing_is_fire (thingp t)
     return (tp_is_fire(thing_tp(t)));
 }
 
-static inline uint8_t thing_collision_radius (thingp t)
+static inline double thing_collision_radius (thingp t)
 {
     verify(t);
 

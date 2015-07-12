@@ -19,7 +19,6 @@
  hit_priority=10
  is_ethereal
  is_levitating
- is_collision_map_medium
  is_animated
  fires="data/things/explosion1"
  weapon_fire_delay_hundredths=200

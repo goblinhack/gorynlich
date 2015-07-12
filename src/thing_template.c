@@ -745,6 +745,10 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
 
     } while (demarshal_gotone(ctx));
 
+    if (t->scale != 0.0) {
+        t->collision_radius = t->scale;
+    }
+
     if (t->light_tint) {
         t->light_color = color_find(t->light_tint);
     } else {
@@ -1262,12 +1266,12 @@ uint32_t tp_get_id_per_level (tpp t)
     return (t->id_per_level);
 }
 
-float tp_get_light_radius (tpp t)
+double tp_get_light_radius (tpp t)
 {
     return (t->light_radius);
 }
 
-float tp_get_scale (tpp t)
+double tp_get_scale (tpp t)
 {
     if (!t->scale) {
         return (1.0);
@@ -1276,7 +1280,7 @@ float tp_get_scale (tpp t)
     return (t->scale);
 }
 
-float tp_get_explosion_radius (tpp t)
+double tp_get_explosion_radius (tpp t)
 {
     if (!t->explosion_radius) {
         return (1.0);
@@ -1285,7 +1289,7 @@ float tp_get_explosion_radius (tpp t)
     return (t->explosion_radius);
 }
 
-float tp_get_collision_radius (tpp t)
+double tp_get_collision_radius (tpp t)
 {
     return (t->collision_radius);
 }
