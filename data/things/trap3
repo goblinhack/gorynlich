@@ -14,7 +14,7 @@
  is_shadow_caster
  is_shadow_caster_soft
  hit_priority=10
- scale=1.5
+ scale=0.7
  is_effect_fade_in_out
  is_collision_map_medium
  is_animated

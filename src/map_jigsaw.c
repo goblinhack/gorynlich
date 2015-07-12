@@ -30,7 +30,7 @@
 #undef MAZE_DEBUG_PRINT_EXITS
 #undef MAZE_DEBUG_SHOW_AS_GENERATING
 #undef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
-#undef MAZE_DEBUG_SHOW_CONSOLE
+#define MAZE_DEBUG_SHOW_CONSOLE
 
 #include "main.h"
 #include "wid.h"
@@ -2793,19 +2793,19 @@ static void init (void)
     map_fg[MAP_SPACE]          = TERM_COLOR_WHITE;
     map_fg[MAP_WATER]          = TERM_COLOR_BLACK;
     map_fg[MAP_FLOOR]          = TERM_COLOR_WHITE;
-    map_fg[MAP_SHOPKEEPER]     = TERM_COLOR_RED;
+    map_fg[MAP_SHOPKEEPER]     = TERM_COLOR_YELLOW;
     map_fg[MAP_SHOP_FLOOR]     = TERM_COLOR_GREEN;
     map_fg[MAP_ROCK]           = TERM_COLOR_BLUE;
     map_fg[MAP_WALL]           = TERM_COLOR_WHITE;
     map_fg[MAP_CORRIDOR]       = TERM_COLOR_YELLOW;
     map_fg[MAP_CORRIDOR_WALL]  = TERM_COLOR_BLUE;
     map_fg[MAP_MONST]          = TERM_COLOR_BLUE;
-    map_fg[MAP_MONST_OR_MOB]      = TERM_COLOR_BLACK;
-    map_fg[MAP_TRAP]           = TERM_COLOR_BLUE;
+    map_fg[MAP_MONST_OR_MOB]   = TERM_COLOR_BLACK;
+    map_fg[MAP_TRAP]           = TERM_COLOR_RED;
     map_fg[MAP_TELEPORT]       = TERM_COLOR_BLUE;
     map_fg[MAP_TREASURE]       = TERM_COLOR_WHITE;
     map_fg[MAP_FOOD]           = TERM_COLOR_GREEN;
-    map_fg[MAP_LAVA]           = TERM_COLOR_RED;
+    map_fg[MAP_LAVA]           = TERM_COLOR_YELLOW;
     map_fg[MAP_ACID]           = TERM_COLOR_GREEN;
     map_fg[MAP_EXIT_WEST]      = TERM_COLOR_BLUE;
     map_fg[MAP_EXIT_EAST]      = TERM_COLOR_BLUE;
@@ -2815,10 +2815,10 @@ static void init (void)
     map_fg[MAP_START]          = TERM_COLOR_BLUE;
     map_fg[MAP_PADDING]        = TERM_COLOR_WHITE;
     map_fg[MAP_DOOR]           = TERM_COLOR_CYAN;
-    map_fg[MAP_WEAPON]         = TERM_COLOR_RED;
-    map_fg[MAP_GENERATOR]      = TERM_COLOR_RED;
+    map_fg[MAP_WEAPON]         = TERM_COLOR_GREEN;
+    map_fg[MAP_GENERATOR]      = TERM_COLOR_CYAN;
     map_fg[MAP_BRAZIER]        = TERM_COLOR_YELLOW;
-    map_fg[MAP_POTION]         = TERM_COLOR_RED;
+    map_fg[MAP_POTION]         = TERM_COLOR_CYAN;
 
     map_bg[MAP_EMPTY]          = TERM_COLOR_BLACK;
     map_bg[MAP_SPACE]          = TERM_COLOR_BLACK;
@@ -3010,6 +3010,15 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 corridor_floor |= (map_jigsaw_buffer[x][y+1] == ',') ? 1 : 0;
             }
 
+            int dirt_floor = false;
+            if ((x > 0) && (x < MAP_WIDTH - 1) && (y > 0) && (y < MAP_HEIGHT - 1)) {
+                dirt_floor  = (map_jigsaw_buffer[x][y] == ',') ? 1 : 0;
+                dirt_floor |= (map_jigsaw_buffer[x-1][y] == ',') ? 1 : 0;
+                dirt_floor |= (map_jigsaw_buffer[x+1][y] == ',') ? 1 : 0;
+                dirt_floor |= (map_jigsaw_buffer[x][y-1] == ',') ? 1 : 0;
+                dirt_floor |= (map_jigsaw_buffer[x][y+1] == ',') ? 1 : 0;
+            }
+
             /*
              * For things outside the normal rooms
              */
@@ -3022,29 +3031,33 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 null_floor |= (map_jigsaw_buffer[x][y+1] == ' ') ? 1 : 0;
             }
 
-            if (c != ' ') {
-                if (!floor) {
-                    floor = random_floor();
-                }
-
-                tp = floor;
-
-                if (shop_floor) {
-                    tp = tp_find("data/things/shop_floor1");
-                }
-
-                if ((c == ',') || corridor_floor) {
-                    if (!floor2) {
-                        floor2 = random_corridor();
-                    }
-
-                    tp = floor2;
-                }
-
-                if (!null_floor) {
-                    map_tp[x][y][tp_get_z_depth(tp)] = tp;
-                }
+            if (!floor) {
+                floor = random_floor();
             }
+
+            tp = floor;
+
+            if (shop_floor) {
+                tp = tp_find("data/things/shop_floor1");
+            }
+
+            if ((c == ',') || corridor_floor) {
+                if (!floor2) {
+                    floor2 = random_corridor();
+                }
+
+                tp = floor2;
+            }
+
+            if ((c == ' ') || dirt_floor) {
+                if (!floor2) {
+                    floor2 = random_dirt();
+                }
+
+                tp = floor2;
+            }
+
+            map_tp[x][y][tp_get_z_depth(tp)] = tp;
 
             tp = 0;
 
