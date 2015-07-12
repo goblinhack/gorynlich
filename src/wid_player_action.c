@@ -27,6 +27,8 @@ static uint8_t wid_player_action_init_done;
 static void wid_player_action_create(thing_statsp , int fast);
 static void wid_player_action_destroy(void);
 static thing_statsp player_stats;
+static int last_hp;
+static int last_magic;
 
 uint8_t wid_player_action_init (void)
 {
@@ -49,9 +51,14 @@ void wid_player_action_fini (void)
     }
 }
 
-void wid_player_action_hide (int fast)
+void wid_player_action_hide (int fast, int player_quit)
 {
     wid_player_action_destroy();
+
+    if (player_quit) {
+        last_hp = 0;
+        last_magic = 0;
+    }
 }
 
 void wid_player_action_visible (thing_statsp s, int fast)
@@ -517,7 +524,6 @@ static void wid_player_action_create (thing_statsp s, int fast)
         snprintf(tmp, sizeof(tmp) - 1, "%d", s->magic);
         wid_set_text(w, tmp);
 
-        static int last_magic;
         if (last_magic != s->magic) {
             if (last_magic > s->magic) {
                 if (stats_get_magic(s) >= stats_get_max_magic(s)) {
@@ -537,9 +543,9 @@ static void wid_player_action_create (thing_statsp s, int fast)
                     wid_set_color(w, WID_COLOR_TEXT, LIGHT_GREEN);
                 }
             }
-
-            last_magic = s->magic;
         }
+
+        last_magic = s->magic;
 
         if (s->magic < s->max_magic / 10) {
             wid_set_mode(w, WID_MODE_NORMAL);
@@ -609,8 +615,6 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_hide(left_ball_squiggles, 0);
         }
 
-        static int last_hp;
-
         if (last_hp != stats_get_hp(s)) {
             int delta = stats_get_hp(s) - last_hp;
 
@@ -633,7 +637,11 @@ static void wid_player_action_create (thing_statsp s, int fast)
                 }
 
                 if (delta < -1) {
-                    sound_play("player_hit");
+                    if (!strcmp("valkyrie", global_config.stats.pclass)) {
+                        sound_play("female_player_hit");
+                    } else {
+                        sound_play("player_hit");
+                    }
                 }
 
             } else if (player && last_hp) {
@@ -698,14 +706,14 @@ static void wid_player_action_create (thing_statsp s, int fast)
                 }
             }
 
-            last_hp = stats_get_hp(s);
-
             if ((stats_get_hp(s) < s->max_hp / 10) && (stats_get_hp(s) > THING_MIN_HEALTH)) {
                 wid_scaling_to_pct_in(w, 1.0, 3.15, wid_scaling_forever_delay, 1);
                 wid_set_mode(w, WID_MODE_NORMAL);
                 wid_set_color(w, WID_COLOR_TEXT, RED);
             }
         }
+
+        last_hp = stats_get_hp(s);
     }
 
     widp wid_item_bar;

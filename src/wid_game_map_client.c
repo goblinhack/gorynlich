@@ -100,7 +100,7 @@ void wid_game_map_client_hide (void)
 
         wid_player_info_hide(true /* fast */);
         wid_player_inventory_hide(true /* fast */);
-        wid_player_action_hide(true /* fast */);
+        wid_player_action_hide(true /* fast */, true /* player quit */);
 
         wid_hide(wid_game_map_client_window, 0);
 
@@ -694,7 +694,7 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
         thing_stats_set_action_bar_index(player, action_bar_index);
 
-        wid_player_action_hide(true /* fast */);
+        wid_player_action_hide(true /* fast */, false /* player quit */);
         wid_player_action_visible(&player->stats, true /* fast */);
 
         wid_player_stats_redraw(true /* fast */);
@@ -957,7 +957,7 @@ void wid_game_map_client_wid_destroy (void)
 
         wid_player_info_hide(true /* fast */);
         wid_player_inventory_hide(true /* fast */);
-        wid_player_action_hide(true /* fast */);
+        wid_player_action_hide(true /* fast */, true /* player quit */);
 
         wid_destroy(&wid_game_map_client_window);
     }
@@ -1159,7 +1159,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     }
 
     if (player->stats.pclass[0]) {
-        wid_player_action_hide(true /* fast */);
+        wid_player_action_hide(true /* fast */, false /* player quit */);
         wid_player_action_visible(&player->stats, true /* fast */);
     }
 

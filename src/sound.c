@@ -326,7 +326,7 @@ void sound_load_all (void)
     sound_load(0.5, "data/sound/click.wav", "click");
     sound_load(0.5, "data/sound/powerup.wav", "powerup");
     sound_load(0.7, "data/sound/level_end.wav", "level_end");
-    sound_load(1.0, "data/sound/explosion.wav", "explosion");
+    sound_load(0.7, "data/sound/explosion.wav", "explosion");
     sound_load(0.2, "data/sound/slime.wav", "slime");
     sound_load(0.5, "data/sound/swords_collide_sound_explorer_2015600826.wav", "sword");
     sound_load(0.5, "data/sound/cash_register2.wav", "cash_register");
@@ -350,7 +350,8 @@ void sound_load_all (void)
     sound_load(0.4, "data/sound/zombie_in_painSoundBible.com_134322253.wav", "urgh2");
     sound_load(0.7, "data/sound/demon_die.wav", "urgh3");
     sound_load(0.5, "data/sound/82388__robinhood76__01308_man_hit_9.wav", "player_hit");
-    sound_load(1.0, "data/sound/45137__dj_chronos__dark_church_bell.wav", "player_death");
+    sound_load(0.5, "data/sound/188363__darkalicenite__grunt.wav", "female_player_hit");
+    sound_load(0.8, "data/sound/45137__dj_chronos__dark_church_bell.wav", "player_death");
     sound_load(0.5, "data/sound/205563__everheat__arrow.wav", "arrow");
     sound_load(0.5, "data/sound/49676__ejfortin__energy_short_sword_5.wav", "energy1");
     sound_load(0.3, "data/sound/148975__adam_n__squelch_1.wav", "squelch");
