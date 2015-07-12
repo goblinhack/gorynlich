@@ -148,12 +148,6 @@ static void msg_ (uint32_t level,
     char buf[MAXSTR];
     uint32_t len;
 
-    if (level == SOUND) {
-        vsnprintf(buf, sizeof(buf), fmt, args);
-        sound_play(buf);
-        return;
-    }
-
     buf[0] = '\0';
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
@@ -461,7 +455,10 @@ void CROAK (const char *fmt, ...)
 }
 
 static void msg_server_shout_at_all_players_ (uint32_t level,
-                                              const char *fmt, va_list args)
+                                              double x, 
+                                              double y,
+                                              const char *fmt, 
+                                              va_list args)
 {
     char buf[MAXSTR];
     uint32_t len;
@@ -474,22 +471,27 @@ static void msg_server_shout_at_all_players_ (uint32_t level,
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
 
-    socket_tx_server_shout_at_all_players(level, buf + len);
+    socket_tx_server_shout_at_all_players(level, x, y, buf + len);
 }
 
 void MSG_SERVER_SHOUT_AT_ALL_PLAYERS (uint32_t level,
+                                      double x, 
+                                      double y, 
                                       const char *fmt, ...)
 {
     va_list args;
 
     va_start(args, fmt);
-    msg_server_shout_at_all_players_(level, fmt, args);
+    msg_server_shout_at_all_players_(level, x, y, fmt, args);
     va_end(args);
 }
 
 static void msg_server_shout_at_player_ (uint32_t level,
                                          thingp t,
-                                         const char *fmt, va_list args)
+                                         double x, 
+                                         double y,
+                                         const char *fmt, 
+                                         va_list args)
 {
     char buf[MAXSTR];
     uint32_t len;
@@ -520,11 +522,13 @@ static void msg_server_shout_at_player_ (uint32_t level,
         return;
     }
 
-    socket_tx_server_shout_only_to(s, level, buf + len);
+    socket_tx_server_shout_only_to(s, level, x, y, buf + len);
 }
 
 void MSG_SERVER_SHOUT_AT_PLAYER (uint32_t level,
                                  thingp t,
+                                 double x, 
+                                 double y,
                                  const char *fmt, ...)
 {
     va_list args;
@@ -532,12 +536,14 @@ void MSG_SERVER_SHOUT_AT_PLAYER (uint32_t level,
     verify(t);
 
     va_start(args, fmt);
-    msg_server_shout_at_player_(level, t, fmt, args);
+    msg_server_shout_at_player_(level, t, x, y, fmt, args);
     va_end(args);
 }
 
 static void msg_over_thing_ (uint32_t level,
                              uint32_t thing_id,
+                             double x,
+                             double y,
                              const char *fmt, va_list args)
 {
     char buf[MAXSTR];
@@ -547,9 +553,13 @@ static void msg_over_thing_ (uint32_t level,
         return;
     }
 
-    if (level == SOUND) {
+    if (level == SOUND_GLOBAL) {
         vsnprintf(buf, sizeof(buf), fmt, args);
-        sound_play(buf);
+        sound_play_global_at(buf, x, y);
+        return;
+    } else if (level == SOUND) {
+        vsnprintf(buf, sizeof(buf), fmt, args);
+        sound_play_at(buf, x, y);
         return;
     }
 
@@ -601,28 +611,34 @@ static void msg_over_thing_ (uint32_t level,
 
 void MSG_CLIENT_SHOUT_OVER_PLAYER (uint32_t level, 
                                    uint32_t thing_id,
+                                   double x,
+                                   double y,
                                    const char *fmt, ...)
 {
     va_list args;
 
     va_start(args, fmt);
-    msg_over_thing_(level, thing_id, fmt, args);
+    msg_over_thing_(level, thing_id, x, y, fmt, args);
     va_end(args);
 }
 
 static void msg_server_shout_over_thing_ (uint32_t level,
                                           thingp t,
+                                          double x,
+                                          double y,
                                           const char *fmt, va_list args)
 {
     char buf[MAXSTR];
 
     vsnprintf(buf, sizeof(buf), fmt, args);
 
-    socket_tx_server_shout_over(level, t->thing_id, buf);
+    socket_tx_server_shout_over(level, t->thing_id, x, y, buf);
 }
 
 void MSG_SERVER_SHOUT_OVER_THING (uint32_t level,
                                   thingp t,
+                                  double x,
+                                  double y,
                                   const char *fmt, ...)
 {
     va_list args;
@@ -630,7 +646,7 @@ void MSG_SERVER_SHOUT_OVER_THING (uint32_t level,
     verify(t);
 
     va_start(args, fmt);
-    msg_server_shout_over_thing_(level, t, fmt, args);
+    msg_server_shout_over_thing_(level, t, x, y, fmt, args);
     va_end(args);
 }
 

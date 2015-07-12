@@ -148,5 +148,5 @@ void thing_reached_teleport (thingp t, thingp teleport)
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
 
-    sound_play_level_end();
+    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(SOUND, t->x, t->y, "level_end");
 }
