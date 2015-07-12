@@ -10,7 +10,6 @@
  is_animated_no_dir
  is_powerup_anim
  hit_priority=100
- is_collision_map_large
  damage=3
  hit_delay_tenths=1
  tiles={

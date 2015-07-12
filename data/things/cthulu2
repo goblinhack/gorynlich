@@ -28,7 +28,6 @@
  is_cats_eyes
  is_levitating
  scale=3.0
- is_collision_map_medium
  is_animated
  fires="data/things/plasmaball2"
  weapon_fire_delay_hundredths=50

@@ -14,7 +14,6 @@
  light_radius=2.0
  is_effect_pulse
  is_variable_size
- is_collision_map_medium
  scale=3.0
  tiles={
   tile={
