@@ -127,6 +127,10 @@ tpp random_floor (void)
             continue;
         }
 
+        if (tp_is_dirt(tp)) {
+            continue;
+        }
+
         if (tp_is_floor(tp)) {
             return (tp);
         }
@@ -161,6 +165,39 @@ tpp random_corridor (void)
         }
 
         if (tp_is_corridor(tp)) {
+            return (tp);
+        }
+    }
+}
+
+tpp random_dirt (void)
+{
+    int loop = 0;
+
+    for (;;) {
+
+        if (loop++ > 100000) {
+            ERR("couldn't find random floor");
+            return (0);
+        }
+
+        uint16_t id = myrand() % THING_MAX_ID;
+
+        tpp tp = id_to_tp(id);
+
+        if (tp_is_internal(tp)) {
+            continue;
+        }
+
+        if (tp_is_shop_floor(tp)) {
+            continue;
+        }
+
+        if (tp_is_light_source(tp)) {
+            continue;
+        }
+
+        if (tp_is_dirt(tp)) {
             return (tp);
         }
     }

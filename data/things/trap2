@@ -14,7 +14,7 @@
  is_shadow_caster
  is_shadow_caster_soft
  hit_priority=10
- scale=1.5
+ scale=0.6
  is_collision_map_medium
  is_animated
  fires="data/things/fireball2"
