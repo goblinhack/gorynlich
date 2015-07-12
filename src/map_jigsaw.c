@@ -2980,6 +2980,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
     tpp door = 0;
     tpp floor = 0;
     tpp floor2 = 0;
+    tpp floor3 = 0;
     tpp rock = 0;
     tpp gen = 0;
 
@@ -3012,23 +3013,11 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 
             int dirt_floor = false;
             if ((x > 0) && (x < MAP_WIDTH - 1) && (y > 0) && (y < MAP_HEIGHT - 1)) {
-                dirt_floor  = (map_jigsaw_buffer[x][y] == ',') ? 1 : 0;
-                dirt_floor |= (map_jigsaw_buffer[x-1][y] == ',') ? 1 : 0;
-                dirt_floor |= (map_jigsaw_buffer[x+1][y] == ',') ? 1 : 0;
-                dirt_floor |= (map_jigsaw_buffer[x][y-1] == ',') ? 1 : 0;
-                dirt_floor |= (map_jigsaw_buffer[x][y+1] == ',') ? 1 : 0;
-            }
-
-            /*
-             * For things outside the normal rooms
-             */
-            int null_floor = false;
-            if ((x > 0) && (x < MAP_WIDTH - 1) && (y > 0) && (y < MAP_HEIGHT - 1)) {
-                null_floor  = (map_jigsaw_buffer[x][y] == ' ') ? 1 : 0;
-                null_floor |= (map_jigsaw_buffer[x-1][y] == ' ') ? 1 : 0;
-                null_floor |= (map_jigsaw_buffer[x+1][y] == ' ') ? 1 : 0;
-                null_floor |= (map_jigsaw_buffer[x][y-1] == ' ') ? 1 : 0;
-                null_floor |= (map_jigsaw_buffer[x][y+1] == ' ') ? 1 : 0;
+                dirt_floor  = (map_jigsaw_buffer[x][y] == ' ') ? 1 : 0;
+                dirt_floor |= (map_jigsaw_buffer[x-1][y] == ' ') ? 1 : 0;
+                dirt_floor |= (map_jigsaw_buffer[x+1][y] == ' ') ? 1 : 0;
+                dirt_floor |= (map_jigsaw_buffer[x][y-1] == ' ') ? 1 : 0;
+                dirt_floor |= (map_jigsaw_buffer[x][y+1] == ' ') ? 1 : 0;
             }
 
             if (!floor) {
@@ -3050,11 +3039,11 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
             }
 
             if ((c == ' ') || dirt_floor) {
-                if (!floor2) {
-                    floor2 = random_dirt();
+                if (!floor3) {
+                    floor3 = random_dirt();
                 }
 
-                tp = floor2;
+                tp = floor3;
             }
 
             map_tp[x][y][tp_get_z_depth(tp)] = tp;
