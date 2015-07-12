@@ -746,7 +746,9 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
     } while (demarshal_gotone(ctx));
 
     if (t->scale != 0.0) {
-        t->collision_radius = t->scale;
+        if (t->collision_radius == 0) {
+            t->collision_radius = t->scale;
+        }
     }
 
     if (t->light_tint) {
