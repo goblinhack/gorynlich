@@ -418,6 +418,7 @@ const char *name_random (const char *pclass)
             "Xerytana",
             "Yezarim",
             "Ykabeli",
+            "Elvis",
         };
 
         return (names[myrand() % ARRAY_SIZE(names)]);
@@ -553,6 +554,7 @@ const char *name_random (const char *pclass)
             "Balin",
             "Balinor",
             "Agrinor",
+            "Bob Fossil",
         };
 
         return (names[myrand() % ARRAY_SIZE(names)]);

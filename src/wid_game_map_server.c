@@ -185,7 +185,7 @@ void wid_game_map_server_wid_destroy (uint8_t keep_players)
         if (keep_players) {
             LOG("Server: Destroy level but keep players");
         } else {
-            LOG("Server: Destroy level");
+            LOG("Server: Destroy level and kill players");
         }
 
         level_destroy(&server_level, keep_players);
