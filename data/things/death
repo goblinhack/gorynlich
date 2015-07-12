@@ -21,6 +21,7 @@
  is_death
  is_levitating
  scale=2.5
+ collision_radius=0.5
  is_ethereal
  d10000_chance_of_appearing=0
  explodes_as="data/things/explosion3"
