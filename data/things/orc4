@@ -10,6 +10,7 @@
  max_hp=150
  damage=20
  scale=1.2
+ collision_radius=0.5
  bonus_xp_on_death=55
  vision_distance=10
  hit_delay_tenths=5
