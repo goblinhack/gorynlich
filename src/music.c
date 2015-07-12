@@ -147,7 +147,7 @@ void music_play (const char *file,
 {
     int audio_format = MIX_DEFAULT_FORMAT;
     int audio_channels = 2;
-    int audio_buffers = 1024 * 8;
+    int audio_buffers = 4096;
 
     if (!music_init_done) {
         if (Mix_OpenAudio(rate,

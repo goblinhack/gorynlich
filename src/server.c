@@ -59,7 +59,7 @@ void server_stop (void)
         return;
     }
 
-    socket_tx_server_shout_at_all_players(CRITICAL, "SERVER GOING DOWN");
+    socket_tx_server_shout_at_all_players(CRITICAL, 0, 0, "SERVER GOING DOWN");
 
     socket_tx_server_close();
 
@@ -143,7 +143,8 @@ static void server_rx_client_join (gsocketp s)
 
     char *tmp = dynprintf("%s joined", 
                           p->stats_from_client.pname);
-    socket_tx_server_shout_at_all_players_except(s, WARNING, tmp);
+    socket_tx_server_shout_at_all_players_except(s, WARNING, 
+                                                 0, 0, tmp);
     myfree(tmp);
 
     LOG("Server: Total players now %u", global_config.server_current_players);
@@ -161,7 +162,9 @@ static void server_rx_client_join (gsocketp s)
 
     wid_game_map_server_visible();
 
-    socket_tx_server_shout_only_to(s, INFO, "Press m or X button to use magic");
+    socket_tx_server_shout_only_to(s, INFO, 
+                                   0, 0,
+                                   "Press m or X button to use magic");
 }
 
 static void server_rx_client_leave_implicit (gsocketp s)
@@ -204,7 +207,7 @@ static void server_rx_client_leave (gsocketp s)
 
     char *tmp = dynprintf("%s left the game", 
                           p->stats_from_client.pname);
-    socket_tx_server_shout_at_all_players(INFO, tmp);
+    socket_tx_server_shout_at_all_players(INFO, 0, 0, tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);
@@ -226,7 +229,7 @@ static void server_rx_client_close (gsocketp s)
 
     char *tmp = dynprintf("%s suddenly left the game", 
                           p->stats_from_client.pname);
-    socket_tx_server_shout_at_all_players(WARNING, tmp);
+    socket_tx_server_shout_at_all_players(WARNING, 0, 0, tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);
@@ -383,7 +386,9 @@ static void server_alive_check (void)
 
             if (s->server_side_client) {
                 MSG_SERVER_SHOUT_AT_ALL_PLAYERS(
-                    POPUP, "Connection lost to %s",
+                    POPUP, 
+                    0, 0,
+                    "Connection lost to %s",
                     socket_get_remote_logname(s));
 
                 if (p) {
@@ -570,7 +575,7 @@ uint8_t server_shout (tokens_t *tokens, void *context)
 
     strncpy(shout, tmp, sizeof(shout) - 1);
 
-    socket_tx_server_shout_at_all_players(CHAT, shout);
+    socket_tx_server_shout_at_all_players(CHAT, 0, 0, shout);
 
     myfree(tmp);
 

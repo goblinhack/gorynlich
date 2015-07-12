@@ -632,7 +632,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
                     wid_set_color(w, WID_COLOR_TEXT, RED);
                 }
 
-                if (delta < -3) {
+                if (delta < -1) {
                     sound_play("player_hit");
                 }
 

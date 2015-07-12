@@ -3091,7 +3091,7 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
                 tp = tp_find("data/things/shop_floor1"); 
                 if (!shop_notify) {
                     shop_notify = true;
-                    shop_on_level();
+                    shop_on_level(x, y);
                 }
                 break;
 

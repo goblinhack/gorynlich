@@ -1030,7 +1030,7 @@ int thing_stats_item_add (thingp t,
     }
 
     if (t) {
-        MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "Carrying too many items");
+        MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 0, 0, "Carrying too many items");
     }
 
     return (false);
@@ -1045,7 +1045,7 @@ int thing_stats_item_remove (thingp t,
     itemp item = thing_stats_has_item(player_stats, id, 0);
     if (!item) {
         if (t) {
-            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "Not carrying the %s",
+            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 0, 0, "Not carrying the %s",
                                        tp_short_name(it));
         }
         return (false);
@@ -1703,7 +1703,7 @@ void thing_stats_modify_cash (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "treasure");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "treasure");
     }
 
     stats_modify_cash(&t->stats, val);
@@ -1735,7 +1735,7 @@ void thing_stats_modify_max_hp (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "effect");
     }
 
     stats_modify_max_hp(&t->stats, val);
@@ -1753,7 +1753,7 @@ void thing_stats_modify_max_magic (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "effect");
     }
 
     stats_modify_max_magic(&t->stats, val);
@@ -1771,7 +1771,7 @@ void thing_stats_modify_attack_melee (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "effect");
     }
 
     stats_modify_attack_melee(&t->stats, val);
@@ -1782,7 +1782,7 @@ void thing_stats_modify_attack_ranged (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "effect");
     }
 
     stats_modify_attack_ranged(&t->stats, val);
@@ -1793,7 +1793,7 @@ void thing_stats_modify_attack_magical (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "effect");
     }
 
     stats_modify_attack_magical(&t->stats, val);
@@ -1804,7 +1804,7 @@ void thing_stats_modify_speed (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "effect");
     }
 
     stats_modify_speed(&t->stats, val);
@@ -1815,7 +1815,7 @@ void thing_stats_modify_spending_points (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "effect");
     }
 
     stats_modify_spending_points(&t->stats, val);
@@ -1826,7 +1826,7 @@ void thing_stats_modify_vision (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "effect");
     }
 
     stats_modify_vision(&t->stats, val);
@@ -1837,7 +1837,7 @@ void thing_stats_modify_healing (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "effect");
     }
 
     stats_modify_healing(&t->stats, val);
@@ -1848,7 +1848,7 @@ void thing_stats_modify_defense (thingp t, int32_t val)
     thing_stats_verify(t);
 
     if (val > 0) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, "effect");
+        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "effect");
     }
 
     stats_modify_defense(&t->stats, val);

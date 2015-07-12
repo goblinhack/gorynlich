@@ -227,6 +227,7 @@ enum {
     CRITICAL,
     POPUP,
     SOUND,
+    SOUND_GLOBAL,
 };
 
 void MSG(uint32_t level, const char *fmt, ...) 
@@ -241,22 +242,30 @@ void HOST_LOG(hostp, const char *fmt, ...)
 
 void MSG_CLIENT_SHOUT_OVER_PLAYER(uint32_t level, 
                                   uint32_t thing_id,
+                                  double x,
+                                  double y,
                                   const char *fmt, ...)
-                                  __attribute__ ((format (printf, 3, 4)));
+                                  __attribute__ ((format (printf, 5, 6)));
 
 void MSG_SERVER_SHOUT_AT_PLAYER(uint32_t level,
                                 thingp,
+                                double x,
+                                double y,
                                 const char *fmt, ...)
-                                __attribute__ ((format (printf, 3, 4)));
+                                __attribute__ ((format (printf, 5, 6)));
 
 void MSG_SERVER_SHOUT_AT_ALL_PLAYERS(uint32_t level,
+                                     double x,
+                                     double y,
                                      const char *fmt, ...)
-                                     __attribute__ ((format (printf, 2, 3)));
+                                     __attribute__ ((format (printf, 4, 5)));
 
 void MSG_SERVER_SHOUT_OVER_THING(uint32_t level,
                                  thingp,
+                                 double x,
+                                 double y,
                                  const char *fmt, ...)
-                                 __attribute__ ((format (printf, 3, 4)));
+                                 __attribute__ ((format (printf, 5, 6)));
 
 void THING_LOG(thingp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
