@@ -2847,7 +2847,7 @@ void socket_tx_player_move (gsocketp s,
     if (magic) {
         t->stats.magic--;
 
-        wid_player_action_hide(true /* fast */);
+        wid_player_action_hide(true /* fast */, false /* player quit */);
         wid_player_action_visible(&t->stats, true /* fast */);
     }
 }
