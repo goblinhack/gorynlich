@@ -212,46 +212,59 @@ static uint8_t things_overlap (const thingp A,
     static double collision_map_tiny_y1;
     static double collision_map_tiny_y2;
 
+    /*
+     * Find out the position of the thing on the client. On the server we move 
+     * in jumps, but on the server we want the collision to be more accurate
+     * so we use the amount of time passed to interpolate the thing position.
+     */
+    double Ax, Ay;
+    double Bx, By;
+
+    /*
+     * If -1, -1 then we are looking at the current position.
+     *
+     * If not then we are just checking out a future position.
+     */
+    if ((nx == -1.0) && (ny == -1.0)) {
+        thingp_get_interpolated_position(A, &Ax, &Ay);
+        thingp_get_interpolated_position(B, &Bx, &By);
+    } else {
+        Ax = nx;
+        Ay = ny;
+        Bx = B->x;
+        By = B->y;
+    }
+
     widp Aw = thing_wid(A);
     widp Bw = thing_wid(B);
 
     if ((thing_collision_radius(A) > 0.0) || (thing_collision_radius(B) > 0.0)) {
 
-        double Ax;
-        double Ay;
-        double Bx;
-        double By;
-
         if (Aw->first_tile) {
-            Ax = A->x + ((Aw->first_tile->px1 + Aw->first_tile->px2) / 2.0);
-            Ay = A->y + ((Aw->first_tile->py1 + Aw->first_tile->py2) / 2.0);
-        } else {
-            Ax = A->x;
-            Ay = A->y;
+            Ax += ((Aw->first_tile->px1 + Aw->first_tile->px2) / 2.0);
+            Ay += ((Aw->first_tile->py1 + Aw->first_tile->py2) / 2.0);
         }
 
         if (Bw->first_tile) {
-            Bx = B->x + ((Bw->first_tile->px1 + Bw->first_tile->px2) / 2.0);
-            By = B->y + ((Bw->first_tile->py1 + Bw->first_tile->py2) / 2.0);
-        } else {
-            Bx = B->x;
-            By = B->y;
+            Bx += ((Bw->first_tile->px1 + Bw->first_tile->px2) / 2.0);
+            By += ((Bw->first_tile->py1 + Bw->first_tile->py2) / 2.0);
         }
 
         double dist = DISTANCE(Ax, Ay, Bx, By);
         if (dist < max(thing_collision_radius(A), 
                        thing_collision_radius(B))) {
 #if 0
-LOG(" ");
-LOG("%s", thing_logname(A));
-LOG("%s", thing_logname(B));
-LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
+CON(" ");
+CON("%s", thing_logname(A));
+CON("%s", thing_logname(B));
+CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dist);
 #endif
             return (true);
         } else {
             return (false);
         }
     }
+
     /*
      * The tiles are considered to be 1 unit wide. However the actual pixels
      * of each tile include shadows. px1/px2 are the bounds and exclude the
@@ -306,29 +319,6 @@ LOG("%f,%f -> %f,%f %f",Ax,Ay,Bx,By,dist);
         collision_map_tiny_x2 = tile->px2 * xscale;
         collision_map_tiny_y1 = tile->py1 * yscale;
         collision_map_tiny_y2 = tile->py2 * yscale;
-    }
-
-    /*
-     * Find out the position of the thing on the client. On the server we move 
-     * in jumps, but on the server we want the collision to be more accurate
-     * so we use the amount of time passed to interpolate the thing position.
-     */
-    double Ax, Ay;
-    double Bx, By;
-
-    /*
-     * If -1, -1 then we are looking at the current position.
-     *
-     * If not then we are just checking out a future position.
-     */
-    if ((nx == -1.0) && (ny == -1.0)) {
-        thingp_get_interpolated_position(A, &Ax, &Ay);
-        thingp_get_interpolated_position(B, &Bx, &By);
-    } else {
-        Ax = nx;
-        Ay = ny;
-        Bx = B->x;
-        By = B->y;
     }
 
     double Apx1;
