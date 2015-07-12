@@ -39,7 +39,7 @@ void wid_player_stats_redraw (int fast)
     wid_player_inventory_hide(fast);
     wid_player_inventory_visible(player_stats, fast);
 
-    wid_player_action_hide(fast);
+    wid_player_action_hide(fast, false /* player quit */);
     wid_player_action_visible(player_stats, fast);
 
     wid_raise(wid_mouse_template);
