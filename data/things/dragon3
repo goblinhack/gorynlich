@@ -16,6 +16,7 @@
  is_shadow_caster
  is_shadow_caster_soft
  scale=2.5
+ collision_radius=0.5
  hit_priority=10
  is_ethereal
  is_levitating
