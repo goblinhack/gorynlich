@@ -683,7 +683,6 @@ int32_t main (int32_t argc, char *argv[])
     exit(0);
 #endif
 
-#define MAP_TEST
 #ifdef MAP_TEST
     extern int32_t map_jigsaw_test(int32_t argc, char **argv);
     map_jigsaw_test(argc, argv);
