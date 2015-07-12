@@ -2189,10 +2189,6 @@ void socket_tx_server_shout_only_to (gsocketp target,
             continue;
         }
 
-        if (!sp->connected) {
-            continue;
-        }
-
         if (!sp->server_side_client) {
             continue;
         }
@@ -2215,9 +2211,9 @@ void socket_tx_server_shout_only_to (gsocketp target,
 
         packet->len = sizeof(msg);
 
-        if (!single_player_mode) {
             LOG("Server: Tx Shout \"%s\" to (one player) %s", txt,
                 socket_get_remote_logname(sp));
+        if (!single_player_mode) {
         }
 
         write_address(packet, socket_get_remote_ip(sp));
