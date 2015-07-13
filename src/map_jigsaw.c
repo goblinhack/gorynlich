@@ -2191,6 +2191,32 @@ static void maze_convert_to_map (dungeon_t *dg)
 
     jigpiece_create_mirrored_frag_alt(dg);
 
+    /*
+     * Add this before fragments
+     */
+    LOG("Maze: Added corridor walls:");
+    map_jigsaw_buffer_print_file(MY_STDOUT);
+
+    int x, y, dx, dy;
+
+    for (x = 1; x < MAP_WIDTH - 1; x++) {
+        for (y = 1; y < MAP_HEIGHT - 1; y++) {
+
+            if ((map_jigsaw_buffer_getchar(x, y) != MAP_CORRIDOR)) {
+                continue;
+            }
+
+            for (dx = -1; dx <=1; dx++) {
+                for (dy = -1; dy <=1; dy++) {
+                    if (map_jigsaw_buffer_getchar(x+dx, y+dy) == MAP_EMPTY) {
+                        map_jigsaw_buffer_goto(x+dx, y+dy);
+                        map_jigsaw_buffer_putchar(MAP_CORRIDOR_WALL);
+                    }
+                }
+            }
+        }
+    }
+
     jigpiece_add_frag(dg);
     LOG("Maze: Replaced maze fragments:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
