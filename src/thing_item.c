@@ -144,6 +144,8 @@ static void thing_collect (thingp t,
             return;
         }
 
+        player_inventory_sort(&t->stats);
+
         /*
          * Bonus for collecting?
          */
@@ -299,6 +301,7 @@ void thing_used (thingp t, tpp tp)
      * Remove from the inventory and other places.
      */
     thing_stats_item_remove(t, &t->stats, tp);
+    player_inventory_sort(&t->stats);
 
     /*
      * Did the item push us into death's icy grip?
@@ -340,6 +343,7 @@ int thing_wear_out (thingp t, tpp tp)
      * Remove from the inventory and other places.
      */
     thing_stats_item_remove(t, &t->stats, tp);
+    player_inventory_sort(&t->stats);
 
     if (tp_is_weapon(tp)) {
         thing_weapon_worn_out(t, tp);
@@ -381,6 +385,7 @@ void thing_drop (thingp t, tpp tp)
      * Remove from the inventory and other places.
      */
     thing_stats_item_remove(t, &t->stats, tp);
+    player_inventory_sort(&t->stats);
 
     /*
      * Wield the next weapon we have.

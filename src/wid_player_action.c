@@ -170,6 +170,39 @@ wid_player_action_button_mouse_down (widp w,
          */
         int dropped = false;
 
+        tpp weapon = id_to_tp(wid_item.id);
+
+        /*
+         * Weapons have quality and we can't stack them. If placing a weapon 
+         * on a weapon then move the current weapon back into the inventory.
+         */
+        if (!dropped) {
+            if (tp_is_weapon(weapon)) {
+                int i;
+                for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+                    itemp same_item = &player_stats->action_bar[i];
+
+                    if (same_item->id == wid_item.id) {
+                        /*
+                         * Move the conflicting item into the inventory to 
+                         * make space.
+                         */
+                        int j;
+                        for (j = 0; j < THING_INVENTORY_MAX; j++) {
+                            itemp free_slot = &player_stats->inventory[j];
+                            if (!free_slot->id) {
+                                memcpy(free_slot, same_item, sizeof(item_t));
+                                memset(same_item, 0, sizeof(item_t));
+                                break;
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+
         if (!dropped) {
             /*
              * Is this item in the bar already and can it be merged with?
@@ -187,6 +220,7 @@ wid_player_action_button_mouse_down (widp w,
                          * Success
                          */
                         dropped = true;
+                        player_inventory_sort(player_stats);
                     }
                     break;
                 }
@@ -196,9 +230,10 @@ wid_player_action_button_mouse_down (widp w,
         if (!dropped) {
             if (item_push(over_item, wid_item)) {
                 /*
-                * Success
-                */
+                 * Success
+                 */
                 dropped = true;
+                player_inventory_sort(player_stats);
             }
         }
 
@@ -223,6 +258,7 @@ wid_player_action_button_mouse_down (widp w,
                          * Success
                          */
                         dropped = true;
+                        player_inventory_sort(player_stats);
                     }
                     break;
                 }
@@ -250,6 +286,7 @@ wid_player_action_button_mouse_down (widp w,
                          * Success
                          */
                         dropped = true;
+                        player_inventory_sort(player_stats);
                     }
                     break;
                 }
@@ -262,6 +299,7 @@ wid_player_action_button_mouse_down (widp w,
              */
             if (thing_stats_item_add(0, player_stats, wid_item)) {
                 dropped = true;
+                player_inventory_sort(player_stats);
             }
         }
 
@@ -274,6 +312,7 @@ wid_player_action_button_mouse_down (widp w,
         }
     }
 
+    LOG("Client: stats manually");
     stats_bump_version(player_stats);
 
     /*
