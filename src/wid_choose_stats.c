@@ -254,6 +254,8 @@ static void wid_choose_stats_callback (widp w)
     }
 
     if (player) {
+        LOG("Client: stats changed");
+
         stats_bump_version(s);
 
         /*
