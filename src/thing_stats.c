@@ -316,14 +316,15 @@ int thing_stats_diff (const thing_statsp old_stats,
                 char *ib = item2str(b);
 
                 if (ia && ib) {
-                    LOG("%sItem changed, %s to %s", indent, ia, ib);
+                    LOG("%sInv Item %d changed, %s to %s", indent,
+                        i, ia, ib);
                     myfree(ia);
                     myfree(ib);
                 } else if (ia) {
-                    LOG("%sItem removed, %s", indent, ia);
+                    LOG("%sInv Item %d removed, %s", indent, i, ia);
                     myfree(ia);
                 } else if (ib) {
-                    LOG("%sItem added, %s", indent, ib);
+                    LOG("%sInv Item %d added, %s", indent, i, ib);
                     myfree(ib);
                 }
             }
@@ -719,22 +720,25 @@ int thing_stats_val_to_modifier (int value)
     return (modifiers[value]);
 }
 
-void player_inventory_sort (thing_statsp player_stats)
+void player_inventory_sort (thing_statsp stats)
 {
-    if (!player_stats) {
+    if (!stats) {
         ERR("no player stats");
     }
 
-    static const int32_t NCLASSES = 
-                    THING_INVENTORY_CLASSES;
-    static const int32_t N_PER_CLASS = 
-                    THING_INVENTORY_MAX / THING_INVENTORY_CLASSES;
+#if 0
+    LOG("Stats, pre sort");
+    thing_stats_dump(stats);
+#endif
+
+    static const int32_t NCLASSES = THING_INVENTORY_CLASSES;
+    static const int32_t N_PER_CLASS = THING_INVENTORY_MAX / THING_INVENTORY_CLASSES;
 
     item_t inv_new[THING_INVENTORY_MAX];
     item_t inv_old[THING_INVENTORY_MAX];
     int32_t count_per_class[THING_INVENTORY_CLASSES];
 
-    memcpy(inv_old, &player_stats->inventory, sizeof(inv_old));
+    memcpy(inv_old, &stats->inventory, sizeof(inv_old));
     memset(inv_new, 0, sizeof(inv_new));
     memset(count_per_class, 0, sizeof(count_per_class));
 
@@ -817,7 +821,9 @@ void player_inventory_sort (thing_statsp player_stats)
          * If that destination sort slot is full, try any slot to fit the item 
          * in.
          */
-        if (count_per_class[base] >= N_PER_CLASS) {
+        int which = base / N_PER_CLASS;
+
+        if (count_per_class[which] >= N_PER_CLASS) {
             base = THING_INVENTORY_MISC_BASE;
 
             int which;
@@ -830,7 +836,7 @@ void player_inventory_sort (thing_statsp player_stats)
             }
         }
 
-        int which = base / N_PER_CLASS;
+        which = base / N_PER_CLASS;
 
         if (count_per_class[which] >= N_PER_CLASS) {
             /*
@@ -853,26 +859,33 @@ void player_inventory_sort (thing_statsp player_stats)
         count_per_class[which]++;
     }
 
-    memcpy(&player_stats->inventory, inv_new, sizeof(inv_new));
+    memcpy(&stats->inventory, inv_new, sizeof(inv_new));
+
+    stats_bump_version(stats);
+
+#if 0
+    LOG("Stats, post sort");
+    thing_stats_dump(stats);
+#endif
 }
 
-itemp thing_stats_has_item (thing_statsp player_stats,
-                             int32_t id,
-                             int32_t *index)
+itemp thing_stats_has_item (thing_statsp stats,
+                            int32_t id,
+                            int32_t *index)
 {
     itemp i;
     
-    i = thing_stats_has_action_bar_item(player_stats, id, index);
+    i = thing_stats_has_action_bar_item(stats, id, index);
     if (i) {
         return (i);
     }
 
-    i = thing_stats_has_worn_item(player_stats, id, index);
+    i = thing_stats_has_worn_item(stats, id, index);
     if (i) {
         return (i);
     }
 
-    i = thing_stats_has_inventory_item(player_stats, id, index);
+    i = thing_stats_has_inventory_item(stats, id, index);
     if (i) {
         return (i);
     }
@@ -880,57 +893,57 @@ itemp thing_stats_has_item (thing_statsp player_stats,
     return (0);
 }
 
-itemp thing_stats_has_inventory_item (thing_statsp player_stats,
+itemp thing_stats_has_inventory_item (thing_statsp stats,
                                        int32_t id,
                                        int32_t *index)
 {
     int32_t i;
 
     for (i = 0; i < THING_INVENTORY_MAX; i++) {
-        if (player_stats->inventory[i].id == id) {
+        if (stats->inventory[i].id == id) {
             if (index) {
                 *index = i;
             }
 
-            return (&player_stats->inventory[i]);
+            return (&stats->inventory[i]);
         }
     }
 
     return (0);
 }
 
-itemp thing_stats_has_action_bar_item (thing_statsp player_stats,
+itemp thing_stats_has_action_bar_item (thing_statsp stats,
                                       int32_t id,
                                       int32_t *index)
 {
     int32_t i;
 
     for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-        if (player_stats->action_bar[i].id == id) {
+        if (stats->action_bar[i].id == id) {
             if (index) {
                 *index = i;
             }
 
-            return (&player_stats->action_bar[i]);
+            return (&stats->action_bar[i]);
         }
     }
 
     return (0);
 }
 
-itemp thing_stats_has_worn_item (thing_statsp player_stats,
+itemp thing_stats_has_worn_item (thing_statsp stats,
                                   int32_t id,
                                   int32_t *index)
 {
     int32_t i;
 
     for (i = 0; i < THING_WORN_MAX; i++) {
-        if (player_stats->worn[i].id == id) {
+        if (stats->worn[i].id == id) {
             if (index) {
                 *index = i;
             }
 
-            return (&player_stats->worn[i]);
+            return (&stats->worn[i]);
         }
     }
 
@@ -938,7 +951,7 @@ itemp thing_stats_has_worn_item (thing_statsp player_stats,
 }
 
 int thing_stats_item_add (thingp t,
-                          thing_statsp player_stats,
+                          thing_statsp stats,
                           item_t item)
 {
     tpp it = id_to_tp(item.id);
@@ -956,7 +969,7 @@ int thing_stats_item_add (thingp t,
     /*
      * If the item is already on the action bar, try and push onto it.
      */
-    oitem = thing_stats_has_action_bar_item(player_stats, item.id, 0);
+    oitem = thing_stats_has_action_bar_item(stats, item.id, 0);
     if (oitem) {
         if (item_push(oitem, item)) {
             return (true);
@@ -967,52 +980,57 @@ int thing_stats_item_add (thingp t,
      * Can it be worn?
      */
     if (tp_is_armour(it)) {
-        oitem = &player_stats->worn[THING_WORN_ARMOR];
+        oitem = &stats->worn[THING_WORN_ARMOR];
         if (item_push(oitem, item)) {
             return (true);
         }
     }
 
     if (tp_is_helmet(it)) {
-        oitem = &player_stats->worn[THING_WORN_HELMET];
+        oitem = &stats->worn[THING_WORN_HELMET];
         if (item_push(oitem, item)) {
             return (true);
         }
     }
 
     if (tp_is_boots(it)) {
-        oitem = &player_stats->worn[THING_WORN_BOOTS];
+        oitem = &stats->worn[THING_WORN_BOOTS];
         if (item_push(oitem, item)) {
             return (true);
         }
     }
 
     if (tp_is_hand_item(it)) {
-        oitem = &player_stats->worn[THING_WORN_ARM_LEFT];
+        oitem = &stats->worn[THING_WORN_ARM_LEFT];
         if (item_push(oitem, item)) {
             return (true);
         }
 
-        oitem = &player_stats->worn[THING_WORN_ARM_RIGHT];
+        oitem = &stats->worn[THING_WORN_ARM_RIGHT];
         if (item_push(oitem, item)) {
             return (true);
         }
     }
 
     /*
-     * All items go on the ation bar first if there is space.
+     * All items go on the action bar first if there is space.
+     *
+     * Except weapons that are on the action bar already. They go into the 
+     * inventory as we can't stack them - as we tried above.
      */
-    for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-        oitem = &player_stats->action_bar[i];
-        if (item_push(oitem, item)) {
-            return (true);
+    if (!thing_stats_has_action_bar_item(stats, item.id, 0)) {
+        for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+            oitem = &stats->action_bar[i];
+            if (item_push(oitem, item)) {
+                return (true);
+            }
         }
     }
 
     /*
      * If the item is already on the inventory, try and push onto it.
      */
-    oitem = thing_stats_has_inventory_item(player_stats, item.id, 0);
+    oitem = thing_stats_has_inventory_item(stats, item.id, 0);
     if (oitem) {
         if (item_push(oitem, item)) {
             return (true);
@@ -1023,7 +1041,7 @@ int thing_stats_item_add (thingp t,
      * Else just find a free slot in the inventory.
      */
     for (i = 0; i < THING_INVENTORY_MAX; i++) {
-        oitem = &player_stats->inventory[i];
+        oitem = &stats->inventory[i];
         if (item_push(oitem, item)) {
             return (true);
         }
@@ -1037,12 +1055,12 @@ int thing_stats_item_add (thingp t,
 }
 
 int thing_stats_item_remove (thingp t,
-                             thing_statsp player_stats,
+                             thing_statsp stats,
                              const tpp it)
 {
     const int id = tp_to_id(it);
 
-    itemp item = thing_stats_has_item(player_stats, id, 0);
+    itemp item = thing_stats_has_item(stats, id, 0);
     if (!item) {
         if (t) {
             MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 0, 0, "Not carrying the %s",
@@ -1062,11 +1080,11 @@ int thing_stats_item_remove (thingp t,
  * Change all items the player is carrying of "from" into "to". e.g. change
  * all water to poisoned water.
  */
-int thing_stats_item_polymorph (thing_statsp player_stats,
+int thing_stats_item_polymorph (thing_statsp stats,
                                  const int32_t from,
                                  const int32_t to)
 {
-    itemp from_item = thing_stats_has_item(player_stats, from, 0);
+    itemp from_item = thing_stats_has_item(stats, from, 0);
 
     /*
      * If not carrying, nothing to change.
@@ -1080,7 +1098,7 @@ int thing_stats_item_polymorph (thing_statsp player_stats,
     return (true);
 }
 
-static void thing_stats_get_random_items (thing_statsp player_stats) 
+static void thing_stats_get_random_items (thing_statsp stats) 
 {
     int count = gaussrand(2, 1) + 1;
 
@@ -1130,13 +1148,14 @@ static void thing_stats_get_random_items (thing_statsp player_stats)
             LOG("  Auto provision %s, quality %u", tp_short_name(t), quality);
         }
 
-        thing_stats_item_add(0 /* thing */, player_stats, i);
+        thing_stats_item_add(0 /* thing */, stats, i);
+        player_inventory_sort(stats);
     }
 }
 
-static void player_stats_generate_fixed_items (thing_statsp player_stats) 
+static void player_stats_generate_fixed_items (thing_statsp stats) 
 {
-    const tpp tp = thing_stats_to_tp(player_stats);
+    const tpp tp = thing_stats_to_tp(stats);
 
     /*
      * Start with items defined for this base class.
@@ -1174,23 +1193,24 @@ static void player_stats_generate_fixed_items (thing_statsp player_stats)
             item.id = tp_to_id(what);
         }
 
-        thing_stats_item_add(0 /* thing */, player_stats, item);
+        thing_stats_item_add(0 /* thing */, stats, item);
+        player_inventory_sort(stats);
     }
 }
 
-void thing_stats_get_random (thing_statsp player_stats,
+void thing_stats_get_random (thing_statsp stats,
                              int new_random_name_and_class) 
 {
     LOG("Generate random character");
 
-    if (!player_stats->pclass[0] || new_random_name_and_class) {
-        strncpy(player_stats->pclass, pclass_random(),
-                sizeof(player_stats->pclass) - 1);
+    if (!stats->pclass[0] || new_random_name_and_class) {
+        strncpy(stats->pclass, pclass_random(),
+                sizeof(stats->pclass) - 1);
     }
 
-    const tpp tp = thing_stats_to_tp(player_stats);
+    const tpp tp = thing_stats_to_tp(stats);
 
-    thing_stats_init(player_stats);
+    thing_stats_init(stats);
 
     /*
      * If the player ever set a name manually then never override it on 
@@ -1200,164 +1220,166 @@ void thing_stats_get_random (thing_statsp player_stats,
         /*
          * If no name of a force of a new name, make one up
          */
-        if (!player_stats->pname[0] || new_random_name_and_class) {
-            strncpy(player_stats->pname, name_random(player_stats->pclass),
-                    sizeof(player_stats->pname) - 1);
+        if (!stats->pname[0] || new_random_name_and_class) {
+            strncpy(stats->pname, name_random(stats->pclass),
+                    sizeof(stats->pname) - 1);
         }
     }
 
-    player_stats->spending_points = player_stats_generate_spending_points();
+    stats->spending_points = player_stats_generate_spending_points();
 
     /*
      * attack_melee
      */
-    player_stats->attack_melee = tp_get_stats_attack_melee(tp);
-    player_stats->attack_melee = gaussrand(player_stats->attack_melee, 2);
+    stats->attack_melee = tp_get_stats_attack_melee(tp);
+    stats->attack_melee = gaussrand(stats->attack_melee, 2);
 
     /*
      * attack_ranged
      */
-    player_stats->attack_ranged = tp_get_stats_attack_ranged(tp);
-    player_stats->attack_ranged = gaussrand(player_stats->attack_ranged, 2);
+    stats->attack_ranged = tp_get_stats_attack_ranged(tp);
+    stats->attack_ranged = gaussrand(stats->attack_ranged, 2);
 
     /*
      * attack_magical
      */
-    player_stats->attack_magical = tp_get_stats_attack_magical(tp);
-    player_stats->attack_magical = gaussrand(player_stats->attack_magical, 2);
+    stats->attack_magical = tp_get_stats_attack_magical(tp);
+    stats->attack_magical = gaussrand(stats->attack_magical, 2);
 
 
     /*
      * defense
      */
-    player_stats->defense = tp_get_stats_defense(tp);
-    player_stats->defense = gaussrand(player_stats->defense, 2);
+    stats->defense = tp_get_stats_defense(tp);
+    stats->defense = gaussrand(stats->defense, 2);
 
     /*
      * speed
      */
-    player_stats->speed = tp_get_stats_speed(tp);
-    player_stats->speed = gaussrand(player_stats->speed, 2);
+    stats->speed = tp_get_stats_speed(tp);
+    stats->speed = gaussrand(stats->speed, 2);
 
     /*
      * vision
      */
-    player_stats->vision = tp_get_stats_vision(tp);
-    player_stats->vision = gaussrand(player_stats->vision, 2);
+    stats->vision = tp_get_stats_vision(tp);
+    stats->vision = gaussrand(stats->vision, 2);
 
     /*
      * healing
      */
-    player_stats->healing = tp_get_stats_healing(tp);
-    player_stats->healing = gaussrand(player_stats->healing, 2);
+    stats->healing = tp_get_stats_healing(tp);
+    stats->healing = gaussrand(stats->healing, 2);
 
     /*
      * cash
      */
-    player_stats->cash = tp_get_stats_cash(tp);
+    stats->cash = tp_get_stats_cash(tp);
 
     /*
      * We usually call this on the client
      */
-    player_stats->on_server = 0;
+    stats->on_server = 0;
 
     /*
      * hp
      */
-    player_stats->hp = tp_get_stats_max_hp(tp);
-    player_stats->max_hp = 
-        player_stats->hp = gaussrand(player_stats->hp,
-                                     player_stats->hp / 10);
+    stats->hp = tp_get_stats_max_hp(tp);
+    stats->max_hp = 
+        stats->hp = gaussrand(stats->hp,
+                                     stats->hp / 10);
 
     /*
      * id
      */
-    player_stats->magic = tp_get_stats_max_magic(tp);
-    player_stats->max_magic = 
-        player_stats->magic = gaussrand(player_stats->magic,
-                                        player_stats->magic / 10);
-    LOG(" %20s %s", "Name", player_stats->pname);
-    LOG(" %20s %s", "Class", player_stats->pclass);
-    LOG(" %20s %d", "Points", player_stats->spending_points);
-    LOG(" %20s %d", "Hp", player_stats->hp);
-    LOG(" %20s %d", "Cash", player_stats->cash);
-    LOG(" %20s %d", "Max Hp", player_stats->max_hp);
-    LOG(" %20s %d", "Magic", player_stats->magic);
-    LOG(" %20s %d", "Max Magic", player_stats->max_magic);
-    LOG(" %20s %d", "Experience", player_stats->xp);
-    LOG(" %20s %d", "Spending Points", player_stats->spending_points);
-    LOG(" %20s %d", "Attack Melee", player_stats->attack_melee);
-    LOG(" %20s %d", "Attack Ranged", player_stats->attack_ranged);
-    LOG(" %20s %d", "Attack Magical", player_stats->attack_magical);
-    LOG(" %20s %d", "Defense", player_stats->defense);
-    LOG(" %20s %d", "Speed", player_stats->speed);
-    LOG(" %20s %d", "Vision", player_stats->vision);
-    LOG(" %20s %d", "Healing", player_stats->healing);
+    stats->magic = tp_get_stats_max_magic(tp);
+    stats->max_magic = 
+        stats->magic = gaussrand(stats->magic,
+                                        stats->magic / 10);
+    LOG(" %20s %s", "Name", stats->pname);
+    LOG(" %20s %s", "Class", stats->pclass);
+    LOG(" %20s %d", "Points", stats->spending_points);
+    LOG(" %20s %d", "Hp", stats->hp);
+    LOG(" %20s %d", "Cash", stats->cash);
+    LOG(" %20s %d", "Max Hp", stats->max_hp);
+    LOG(" %20s %d", "Magic", stats->magic);
+    LOG(" %20s %d", "Max Magic", stats->max_magic);
+    LOG(" %20s %d", "Experience", stats->xp);
+    LOG(" %20s %d", "Spending Points", stats->spending_points);
+    LOG(" %20s %d", "Attack Melee", stats->attack_melee);
+    LOG(" %20s %d", "Attack Ranged", stats->attack_ranged);
+    LOG(" %20s %d", "Attack Magical", stats->attack_magical);
+    LOG(" %20s %d", "Defense", stats->defense);
+    LOG(" %20s %d", "Speed", stats->speed);
+    LOG(" %20s %d", "Vision", stats->vision);
+    LOG(" %20s %d", "Healing", stats->healing);
 
     /*
      * Be generous and give some items at startup.
      */
-    player_stats_generate_fixed_items(player_stats);
+    player_stats_generate_fixed_items(stats);
 
     /*
      * Be generous and give some items at startup.
      */
-    thing_stats_get_random_items(player_stats);
+    thing_stats_get_random_items(stats);
 
-    player_inventory_sort(player_stats);
+    player_inventory_sort(stats);
 
     LOG("Done generating random character");
 }
 
-void thing_stats_init (thing_statsp player_stats) 
+void thing_stats_init (thing_statsp stats) 
 {
-    memset(player_stats->inventory, 0, sizeof(player_stats->inventory));
-    memset(player_stats->action_bar, 0, sizeof(player_stats->action_bar));
-    memset(player_stats->worn, 0, sizeof(player_stats->worn));
+    memset(stats->inventory, 0, sizeof(stats->inventory));
+    memset(stats->action_bar, 0, sizeof(stats->action_bar));
+    memset(stats->worn, 0, sizeof(stats->worn));
 
     /*
      * Do not memset carrying as that removes base class items.
      */
 
-    if (!player_stats->attack_melee) {
-        player_stats->attack_melee = 10;
+    if (!stats->attack_melee) {
+        stats->attack_melee = 10;
     }
-    if (!player_stats->attack_ranged) {
-        player_stats->attack_ranged = 10;
+    if (!stats->attack_ranged) {
+        stats->attack_ranged = 10;
     }
-    if (!player_stats->attack_magical) {
-        player_stats->attack_magical = 10;
+    if (!stats->attack_magical) {
+        stats->attack_magical = 10;
     }
-    if (!player_stats->defense) {
-        player_stats->defense = 10;
+    if (!stats->defense) {
+        stats->defense = 10;
     }
-    if (!player_stats->speed) {
-        player_stats->speed = 10;
+    if (!stats->speed) {
+        stats->speed = 10;
     }
-    if (!player_stats->vision) {
-        player_stats->vision = 10;
+    if (!stats->vision) {
+        stats->vision = 10;
     }
-    if (!player_stats->healing) {
-        player_stats->healing = 10;
+    if (!stats->healing) {
+        stats->healing = 10;
     }
 }
 
 tpp
-thing_stats_to_tp (thing_statsp player_stats)
+thing_stats_to_tp (thing_statsp stats)
 {
-    return (tp_find_short_name(player_stats->pclass));
+    return (tp_find_short_name(stats->pclass));
 }
 
 /*
  * If the stats have changed with those on the socket, update the server.
  */
-void thing_stats_client_modified (thing_statsp player_stats) 
+void thing_stats_client_modified (thing_statsp stats) 
 {
     if (!client_joined_server) {
         return;
     }
 
-    if (socket_set_player_stats(client_joined_server, player_stats)) {
+    LOG("Client: stats modified locally");
+
+    if (socket_set_player_stats(client_joined_server, stats)) {
         /*
          * Something changed.
          */
