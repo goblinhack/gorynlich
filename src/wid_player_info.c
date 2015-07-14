@@ -267,6 +267,7 @@ wid_player_info_button_style_mouse_down (widp w,
              */
             if (thing_stats_item_add(0, player_stats, wid_item)) {
                 dropped = true;
+                player_inventory_sort(player_stats);
             }
         }
 

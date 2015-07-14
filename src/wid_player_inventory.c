@@ -144,21 +144,23 @@ void wid_player_inventory_button_style (widp w,
 
     tpp tp = id_to_tp(item.id);
 
-    if (player && action_bar_item && 
-        (index == stats_get_action_bar_index(s))) {
-        color c = YELLOW;
-        wid_set_color(w, WID_COLOR_TL, c);
-        wid_set_color(w, WID_COLOR_BR, c);
-        wid_set_rounded_small(w);
-        wid_set_bevel(w, 4);
-    }
+    if (action_bar_item) {
+        if (player && 
+            (index == stats_get_action_bar_index(s))) {
+            color c = YELLOW;
+            wid_set_color(w, WID_COLOR_TL, c);
+            wid_set_color(w, WID_COLOR_BR, c);
+            wid_set_rounded_small(w);
+            wid_set_bevel(w, 4);
+        }
 
-    if (tp == player->weapon) {
-        color c = RED;
-        wid_set_color(w, WID_COLOR_TL, c);
-        wid_set_color(w, WID_COLOR_BR, c);
-        wid_set_rounded_small(w);
-        wid_set_bevel(w, 4);
+        if (tp == player->weapon) {
+            color c = RED;
+            wid_set_color(w, WID_COLOR_TL, c);
+            wid_set_color(w, WID_COLOR_BR, c);
+            wid_set_rounded_small(w);
+            wid_set_bevel(w, 4);
+        }
     }
 
     wid_set_thing_template(w, tp);
@@ -511,6 +513,7 @@ wid_player_inventory_button_style_mouse_down (widp w,
              */
             if (thing_stats_item_add(0, player_stats, wid_item)) {
                 dropped = true;
+                player_inventory_sort(player_stats);
             }
         }
 
