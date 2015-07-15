@@ -498,7 +498,7 @@ static uint8_t wid_menu_quick_start_selected (widp w,
     wid_intro_menu_destroy();
 
     level_pos_t level_pos;
-    level_pos.x = (myrand() % 10) + 1;
+    level_pos.x = (myrand() % LEVEL_INITIAL_RANDOM) + 1;
     level_pos.y = 1;
 
     wid_intro_single_play_selected(level_pos);
