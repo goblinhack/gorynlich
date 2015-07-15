@@ -94,12 +94,16 @@ void wid_player_inventory_button_style (widp w,
 
     if (action_bar_item) {
         c = WHITE;
-        c.a = 150;
+        c.a = 0;
         wid_set_color(w, WID_COLOR_TL, c);
 
         c = GRAY10;
-        c.a = 100;
+        c.a = 0;
         wid_set_color(w, WID_COLOR_BR, c);
+
+        c = WHITE;
+        c.a = 20;
+        wid_set_color(w, WID_COLOR_BG, c);
 
         wid_set_rounded_small(w);
     } else {
@@ -110,11 +114,11 @@ void wid_player_inventory_button_style (widp w,
         c = GRAY;
         c.a = 30;
         wid_set_color(w, WID_COLOR_BR, c);
-    }
 
-    c = WHITE;
-    c.a = 100;
-    wid_set_color(w, WID_COLOR_BG, c);
+        c = WHITE;
+        c.a = 100;
+        wid_set_color(w, WID_COLOR_BG, c);
+    }
 
     wid_set_blit_center(w, true);
 
@@ -130,6 +134,7 @@ void wid_player_inventory_button_style (widp w,
 
     c = GRAY;
     c.a = 30;
+
     wid_set_color(w, WID_COLOR_BR, c);
 
     wid_set_mode(w, WID_MODE_NORMAL);

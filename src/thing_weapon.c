@@ -161,6 +161,10 @@ void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
         return;
     }
 
+    /*
+     * Careful here - change dy too much and you hit through walls
+     */
+
     if (thing_is_dir_tr(t)) {
         *dx = dist_from_player;
         *dy = -dist_from_player;
@@ -169,18 +173,18 @@ void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
 
     if (thing_is_dir_bl(t)) {
         *dx = -dist_from_player;
-        *dy = dist_from_player + 0.3;
+        *dy = dist_from_player;
         return;
     }
 
     if (thing_is_dir_br(t)) {
         *dx = dist_from_player;
-        *dy = dist_from_player + 0.3;
+        *dy = dist_from_player;
         return;
     }
 
     if (thing_is_dir_down(t)) {
-        *dy = dist_from_player + 0.3;
+        *dy = dist_from_player;
         return;
     }
 
