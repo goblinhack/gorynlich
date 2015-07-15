@@ -98,8 +98,12 @@
  * Torchlight flickering parameters.
  */
 #define MAP_LIGHT_CANDLELIGHT_FLICKER_RATE      20
-#define MAP_LIGHT_CANDLELIGHT_FLICKER_RADIUS    10
-#define MAP_LIGHT_CANDLELIGHT_RADIUS            50
+
+/*
+ * Any more than this and you can peek over walls.
+ */
+#define MAP_LIGHT_CANDLELIGHT_FLICKER_RADIUS    20
+#define MAP_LIGHT_CANDLELIGHT_RADIUS            30
 
 #define MAP_THINGS_PER_CELL         32
 
@@ -127,6 +131,16 @@
  */
 #define TILES_SCREEN_WIDTH_PAD      TILES_SCREEN_WIDTH
 #define TILES_SCREEN_HEIGHT_PAD     TILES_SCREEN_HEIGHT
+
+/*
+ * What level 1.x do we start on?
+ */
+#define LEVEL_INITIAL_RANDOM        5
+
+/*
+ * How many levels per exit can we jump?
+ */
+#define LEVEL_RANDOM_JUMP           3
 
 /*
  * Console
