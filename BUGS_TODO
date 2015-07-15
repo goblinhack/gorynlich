@@ -1,4 +1,6 @@
 --------------------------------------- plan for jul --------------------------------------
+- use dmap for sounds
+- light sources only if on dmap
 - the all-cheese
 - dragons need to roar randomly
 - zombies need to groan randomly
@@ -28,6 +30,13 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Tue Jul 14 13:19:39 EDT 2015
+- can hit ghosts down through walls with valkyrie
+- dragon on level 1!?
+- action bar nicer alpha
+- player stands next to door and ghosts do not attack
+- can see through walls slightly
 
 Mon Jul 13 21:57:16 EDT 2015
 - move a weapon onto inventory, should swap

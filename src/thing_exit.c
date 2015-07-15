@@ -54,7 +54,7 @@ void thing_reached_exit (thingp t, thingp exit)
         /*
          * Jump a few levels at at time.
          */
-        global_config.server_level_pos.x += myrand() % 3;
+        global_config.server_level_pos.x += (myrand() % LEVEL_RANDOM_JUMP) + 1;
 
         if (global_config.server_level_pos.x >= LEVELS_ACROSS) {
             if (global_config.server_level_pos.y == LEVELS_DOWN) {
