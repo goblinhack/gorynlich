@@ -20,6 +20,8 @@
 
 TREE_GET_NEXT_INLINE(tree_key_int32_compare_func)
 
+static int someone_is_inside_a_shop = false;
+
 static void thing_tick_server_all (void)
 {
 //    int count = 0;
@@ -115,7 +117,10 @@ static void thing_tick_server_all (void)
 
         if (slow_tick) {
             if (thing_is_treasure(t)) {
-                thing_shop_item_tick(t);
+
+                if (someone_is_inside_a_shop) {
+                    thing_shop_item_tick(t);
+                }
 
             } else if (thing_is_mob_spawner(t)) {
                 /*
@@ -309,6 +314,8 @@ void thing_tick_server_player_slow_all (int force)
 {
     thingp t;
 
+    someone_is_inside_a_shop = false;
+
     TREE_OFFSET_WALK_UNSAFE(server_player_things, t) {
 
         /*
@@ -333,6 +340,11 @@ void thing_tick_server_player_slow_all (int force)
              * units.
              */
             thing_torch_tick(t);
+
+            /*
+             * If any player is in the shop, show the prices.
+             */
+            someone_is_inside_a_shop += shop_inside(t);
         }
     }
 
