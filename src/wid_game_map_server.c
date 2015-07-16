@@ -294,7 +294,7 @@ wid_game_map_server_replace_tile (widp w,
     widp child;
     int ix = x;
     int iy = y;
-    int depth = (level->level_pos.y * LEVELS_ACROSS) + level->level_pos.x;
+    int depth = ((level->level_pos.y - 1) * LEVELS_ACROSS) + level->level_pos.x;
 
     if (server_level_is_being_loaded == 1) {
         /*

@@ -1,7 +1,5 @@
 --------------------------------------- plan for jul --------------------------------------
-- alpha lights with dmap distance
 - cash register message is gone!
-- shop money should only bounce when in shop
 - use dmap for sounds
 - the all-cheese
 - does death is coming work? never seen it
@@ -33,6 +31,11 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Thu Jul 16 18:29:48 EDT 2015
+- fucking dragon appeared on level 2 again!
+- alpha lights with dmap distance
+- shop money should only bounce when in shop
 
 Wed Jul 15 22:43:13 EDT 2015
 - light sources outside level should not be visible; use dmaps

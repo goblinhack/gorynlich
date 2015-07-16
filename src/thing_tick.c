@@ -353,7 +353,6 @@ void thing_tick_server_player_slow_all (int force)
              * If any player is in the shop, show the prices.
              */
             someone_is_inside_a_shop += shop_inside(t);
-CON("someone is in a shop");
         }
     }
 
