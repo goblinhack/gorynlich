@@ -278,10 +278,11 @@ void level_trigger_activate (levelp level, const char *name)
 
     if (spawned) {
         sound_play_slime();
+        level_set_needs_updating(level, true);
     }
 
     if (zapped) {
-        level_update_now(level);
+        level_set_needs_updating(level, true);
     }
 }
 
