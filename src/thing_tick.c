@@ -312,6 +312,14 @@ static void thing_tick_server_all (void)
 
 void thing_tick_server_player_slow_all (int force)
 {
+    static uint32_t last_slow_tick;
+
+    if (!time_have_x_secs_passed_since(1, last_slow_tick)) {
+        return;
+    }
+
+    last_slow_tick = time_get_time_ms();
+
     thingp t;
 
     someone_is_inside_a_shop = false;
@@ -345,6 +353,7 @@ void thing_tick_server_player_slow_all (int force)
              * If any player is in the shop, show the prices.
              */
             someone_is_inside_a_shop += shop_inside(t);
+CON("someone is in a shop");
         }
     }
 
