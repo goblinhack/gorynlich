@@ -32,6 +32,8 @@
 static uint8_t level_init_done;
 static uint8_t level_server_init_done;
 static void level_reset_players(levelp level);
+static void level_set_walls(levelp level);
+static void level_update_incremental(levelp level, int force);
 
 uint8_t level_init (void)
 {
@@ -180,7 +182,7 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
     myfree(level);
 }
 
-void level_update_now (levelp level)
+static void level_update_slow (levelp level)
 {
     map_fixup(level);
 
@@ -193,10 +195,22 @@ void level_update_now (levelp level)
      */
     dmap_generate_map_wander(level);
 
+    level_update_incremental(level, true /* force */);
+
     /*
      * Ensure things are updated at the start of the new level.
      */
     thing_tick_server_player_slow_all(true /* force */);
+}
+
+static void level_update_incremental (levelp level, int force)
+{
+    level_set_walls(level);
+
+    /*
+     * Regenerate player dmaps as things like doors may have been opened.
+     */
+    dmap_generate(level, force);
 }
 
 void level_load_new (void)
@@ -287,7 +301,7 @@ void level_load_new (void)
             global_config.server_level_pos.x);
     }
 
-    level_update_now(server_level);
+    level_update_slow(server_level);
 
     level_pause(server_level);
 }
@@ -395,7 +409,7 @@ levelp level_load (level_pos_t level_pos,
 
     if (!level_is_map_editor(level) &&
         !level_is_editor(level)) {
-        level_update_now(level);
+        level_update_slow(level);
     }
 
     level_set_is_paused(level, false);
@@ -435,7 +449,7 @@ levelp level_load_random (level_pos_t level_pos,
                         (level_pos.y * LEVELS_ACROSS) + level_pos.x, 
                         wid_game_map_server_replace_tile);
 
-    level_update_now(level);
+    level_update_slow(level);
 
     level_set_is_paused(level, false);
     level_reset_players(level);
@@ -497,7 +511,7 @@ void level_set_map (levelp level, widp wid)
     wid_set_client_context(wid, level);
 }
 
-void level_set_walls (levelp level)
+static void level_set_walls (levelp level)
 {
     int32_t x;
     int32_t y;
@@ -767,7 +781,7 @@ static void level_finished (levelp level)
     socket_server_tx_map_update(0, server_active_things,
                                 "new level active things");
 
-    level_update_now(server_level);
+    level_update_slow(server_level);
 }
 
 void level_server_tick (levelp level)
@@ -835,14 +849,18 @@ void level_server_tick (levelp level)
      * Every now and again cause the ghosts to look at the level afresh so 
      * that if walls move then they now look through the gaps.
      */
-    {
-        static uint32_t ts;
+    if (level_needs_updating(level)) {
+        level_set_needs_updating(server_level, false);
 
-        if (time_have_x_tenths_passed_since(10, ts)) {
-            ts = time_get_time_ms();
-
-            level_set_walls(level);
-        }
+        /*
+         * For things like walls removed
+         */
+        level_update_incremental(level, true);
+    } else {
+        /*
+         * Can avoid doing player dmap calc if player not moved
+         */
+        level_update_incremental(level, false);
     }
 }
 
@@ -896,6 +914,20 @@ void level_set_timestamp_started (levelp level, uint32_t val)
     verify(level);
 
     level->timestamp_started = val;
+}
+
+uint8_t level_needs_updating (levelp level)
+{
+    verify(level);
+
+    return (level->needs_updating);
+}
+
+void level_set_needs_updating (levelp level, uint8_t val)
+{
+    verify(level);
+
+    level->needs_updating = val;
 }
 
 uint8_t level_death_is_coming (levelp level)
@@ -1753,7 +1785,12 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
         }
     }
 
-    level_set_walls(level);
+    level_update_incremental(level, true /* force */);
+
+    /*
+     * Removal of doors would have set this flag.
+     */
+    level_set_needs_updating(server_level, false);
 
     /*
      * Send the update quickly to the client. Don't wait for the things to

@@ -273,7 +273,6 @@
  * Timers
  */
 #define DELAY_TENTHS_THING_COLLISION_TEST                   1
-#define DELAY_TENTHS_THING_DMAP                             5
 
 /*
  * Client <-> server keepalives. We want the ping to be short as we use that 

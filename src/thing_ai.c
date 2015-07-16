@@ -65,6 +65,62 @@ static int update_player_dmap;
 static level_walls dmap_map_wander[MAP_WIDTH][MAP_HEIGHT];
 
 /*
+ * Non straight line distance, avoiding walls.
+ *
+ * TAKE CARE: takes some seconds for all points to be updated at level start.
+ */
+int dmap_distance_between_points (int target_x, int target_y, int source_x, int source_y)
+{
+    if ((target_x >= MAP_WIDTH) || (target_x < 0)) {
+        return (-1);
+    }
+
+    if ((target_y >= MAP_HEIGHT) || (target_y < 0)) {
+        return (-1);
+    }
+
+    if ((source_x >= MAP_WIDTH) || (source_x < 0)) {
+        return (-1);
+    }
+
+    if ((source_y >= MAP_HEIGHT) || (source_y < 0)) {
+        return (-1);
+    }
+
+    int distance = dmap_map_wander[target_x][target_y].walls[source_x][source_y];
+
+    if (distance >= not_preferred) {
+        return (-1);
+    }
+
+    return (distance);
+}
+
+/*
+ * Non straight line distance to player, avoiding walls.
+ *
+ * Is updated each player move to a new cell
+ */
+int dmap_distance_to_player (int source_x, int source_y)
+{
+    if ((source_x >= MAP_WIDTH) || (source_x < 0)) {
+        return (-1);
+    }
+
+    if ((source_y >= MAP_HEIGHT) || (source_y < 0)) {
+        return (-1);
+    }
+
+    int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x][source_y]);
+
+    if (distance >= not_preferred) {
+        return (-1);
+    }
+
+    return (distance);
+}
+
+/*
  * Print the Dijkstra map scores shared by all things of the same type.
  */
 static void dmap_print (levelp level, level_walls *dmap)
@@ -126,8 +182,8 @@ static void dmap_thing_print (thingp t,
     int8_t tx;
     int8_t ty;
 
-    tx = (int)(t->x + 0.5);
-    ty = (int)(t->y + 0.5);
+    tx = rintf(t->x);
+    ty = rintf(t->y);
 
     for (y = 0; y < MAP_HEIGHT; y++) {
         for (x = 0; x < MAP_WIDTH; x++) {
@@ -285,8 +341,8 @@ static uint32_t dmap_generate_for_player_target_set_goals (uint8_t test, level_w
         /*
          * Aim for center of tile.
          */
-        x = (int)(thing_it->x + 0.5);
-        y = (int)(thing_it->y + 0.5);
+        x = rintf(thing_it->x);
+        y = rintf(thing_it->y);
 
         if (!test) {
             dmap->walls[x][y] = 0;
@@ -320,8 +376,8 @@ static uint32_t dmap_generate_for_treasure_target_set_goals (uint8_t test, level
         /*
          * Aim for center of tile.
          */
-        x = (int)(thing_it->x + 0.5);
-        y = (int)(thing_it->y + 0.5);
+        x = rintf(thing_it->x);
+        y = rintf(thing_it->y);
 
         if (!test) {
             dmap->walls[x][y] = 0;
@@ -389,22 +445,24 @@ static void *dmap_thread1_func (void *context)
     return (0);
 }
 
-static void dmap_generate_for_player_target (levelp level)
+static int dmap_generate_for_player_target (levelp level, int force)
 {
-    static uint32_t dmap_checksum;
+    if (!force) {
+        static uint32_t dmap_checksum;
 
-    /*
-     * Only reprocess the djkstra map if something has changed on the map
-     * We use a checksum of the goals to indicate this with reasonable 
-     * certainty.
-     */
-    uint32_t checksum = dmap_generate_for_player_target_set_goals(true /* test */, 0);
+        /*
+        * Only reprocess the djkstra map if something has changed on the map
+        * We use a checksum of the goals to indicate this with reasonable 
+        * certainty.
+        */
+        uint32_t checksum = dmap_generate_for_player_target_set_goals(true /* test */, 0);
 
-    if (dmap_checksum == checksum) {
-        return;
+        if (dmap_checksum == checksum) {
+            return (0);
+        }
+
+        dmap_checksum = checksum;
     }
-
-    dmap_checksum = checksum;
 
     update_player_dmap = true;
 
@@ -417,9 +475,11 @@ static void dmap_generate_for_player_target (levelp level)
               &level->map_player_target_treat_doors_as_walls);
     dmap_generate_for_player_target_set_goals(false /* test */,
                    &dmap_map_player_target_treat_doors_as_walls_scratchpad);
+
+    return (1);
 }
 
-static void dmap_generate_for_treasure_target (levelp level)
+static int dmap_generate_for_treasure_target (levelp level)
 {
     static uint32_t dmap_checksum;
 
@@ -431,7 +491,7 @@ static void dmap_generate_for_treasure_target (levelp level)
     uint32_t checksum = dmap_generate_for_treasure_target_set_goals(true /* test */, 0);
 
     if (dmap_checksum == checksum) {
-        return;
+        return (0);
     }
 
     dmap_checksum = checksum;
@@ -447,24 +507,30 @@ static void dmap_generate_for_treasure_target (levelp level)
               &level->map_treasure_target_treat_doors_as_walls);
     dmap_generate_for_treasure_target_set_goals(false /* test */,
                    &dmap_map_treasure_target_treat_doors_as_walls_scratchpad);
+
+    return (1);
 }
 
 /*
  * Wake up the thread that creates the djkstra map.
  */
-static void dmap_thread1_wake (levelp level)
+static void dmap_thread1_wake (levelp level, int force)
 {
     if (!pthread_mutex_trylock(&dmap_thread1_mutex)) {
         return;
     }
 
-    dmap_generate_for_player_target(level);
-    dmap_generate_for_treasure_target(level);
+    int modified;
+    
+    modified = dmap_generate_for_player_target(level, force);
+    modified += dmap_generate_for_treasure_target(level);
 
     /*
      * Now wake the dmap processor.
      */
-    pthread_cond_signal(&dmap_thread1_cond);
+    if (modified) {
+        pthread_cond_signal(&dmap_thread1_cond);
+    }
 
     pthread_mutex_unlock(&dmap_thread1_mutex);
 }
@@ -474,56 +540,59 @@ static void dmap_thread1_wake (levelp level)
  */
 static void *dmap_thread2_func (void *context)
 {
-    pthread_mutex_lock(&dmap_thread2_mutex);
-
-    pthread_cond_wait(&dmap_thread2_cond, &dmap_thread2_mutex);
-
     for (;;) {
-        if (!server_level) {
-            /*
-             * Happens whilst we load the level and before we set the 
-	     * level pointer.
-             */
-            SDL_Delay(1000);
-            continue;
-        }
 
-        server_level->locked++;
+        pthread_mutex_lock(&dmap_thread2_mutex);
 
-        level_walls tmp;
-        uint32_t x, y;
+        pthread_cond_wait(&dmap_thread2_cond, &dmap_thread2_mutex);
 
-        for (x = 0; x < MAP_WIDTH; x++) {
-            for (y = 0; y < MAP_HEIGHT; y++) {
-                dmap_init(&tmp, &server_level->map_player_target_treat_doors_as_walls);
-
+        for (;;) {
+            if (!server_level) {
                 /*
-                 * If a wall then we can't get to it, period.
-                 */
-                if (server_level->
-                        map_player_target_treat_doors_as_walls.walls[x][y] != ' ') {
-                    continue;
+                * Happens whilst we load the level and before we set the 
+                * level pointer.
+                */
+                SDL_Delay(1000);
+                continue;
+            }
+
+            server_level->locked++;
+
+            level_walls tmp;
+            uint32_t x, y;
+
+            for (x = 0; x < MAP_WIDTH; x++) {
+                for (y = 0; y < MAP_HEIGHT; y++) {
+                    dmap_init(&tmp, &server_level->map_player_target_treat_doors_as_walls);
+
+                    /*
+                    * If a wall then we can't get to it, period.
+                    */
+                    if (server_level->
+                            map_player_target_treat_doors_as_walls.walls[x][y] != ' ') {
+                        continue;
+                    }
+
+                    /*
+                    * Set the goal.
+                    */
+                    tmp.walls[x][y] = 0;
+
+                    dmap_process(&tmp, &dmap_map_wander[x][y]);
                 }
 
-                /*
-                 * Set the goal.
-                 */
-                tmp.walls[x][y] = 0;
-
-                dmap_process(&tmp, &dmap_map_wander[x][y]);
+                if (server_level->exit_request) {
+                    break;
+                }
             }
 
-            if (server_level->exit_request) {
-                break;
-            }
+            server_level->locked--;
+
+            break;
         }
 
-        server_level->locked--;
-
-        break;
+        pthread_mutex_unlock(&dmap_thread2_mutex);
     }
-
-    pthread_mutex_unlock(&dmap_thread2_mutex);
 
     return (0);
 }
@@ -591,9 +660,9 @@ void dmap_generate_map_wander (levelp level)
 /*
  * Generate a djkstra map for the thing.
  */
-static void dmap_generate (levelp level)
+void dmap_generate (levelp level, int force)
 {
-    dmap_thread1_wake(level);
+    dmap_thread1_wake(level, force);
 
 #ifdef ENABLE_MAP_DEBUG
     if (1)
@@ -601,14 +670,6 @@ static void dmap_generate (levelp level)
     if (/* DISABLES CODE */ (0))
 #endif
     dmap_print(level, &dmap_map_player_target_treat_doors_as_passable);
-}
-
-/*
- * Generate a djkstra map for the thing.
- */
-void thing_generate_dmaps (void)
-{
-    dmap_generate(server_level);
 }
 
 static uint8_t thing_find_nexthop_dmap (thingp t, 
@@ -619,8 +680,8 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
     int8_t x;
     int8_t y;
 
-    x = (int)(t->x + 0.5);
-    y = (int)(t->y + 0.5);
+    x = rintf(t->x);
+    y = rintf(t->y);
 
     int8_t a;
     int8_t b;
