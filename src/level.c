@@ -445,8 +445,9 @@ levelp level_load_random (level_pos_t level_pos,
 
     LEVEL_LOG(level, "Level generating");
 
-    map_jigsaw_generate(wid, 
-                        (level_pos.y * LEVELS_ACROSS) + level_pos.x, 
+    int depth = ((level_pos.y - 1) * LEVELS_ACROSS) + level_pos.x;
+
+    map_jigsaw_generate(wid, depth,
                         wid_game_map_server_replace_tile);
 
     level_update_slow(level);
@@ -617,6 +618,11 @@ void level_reset_players (levelp level)
                 thing_wield_shield(t, shield);
                 thing_update(t);
             }
+
+            /*
+             * Need this else we are in darkness at level start
+             */
+            thing_torch_update_count(t, true);
         }
     }
 }
