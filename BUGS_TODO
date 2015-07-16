@@ -1,8 +1,11 @@
 --------------------------------------- plan for jul --------------------------------------
 - cash register message is gone!
 - use dmap for sounds
-- the all-cheese
 - does death is coming work? never seen it
+- blue glow for death
+- door strap pixels make more alpha
+- the all-cheese
+- large trolls should be negative y off centered
 - dragons need to roar randomly
 - zombies need to groan randomly
 - dragon explosion too boomy
@@ -11,7 +14,8 @@
 - ring of triple damage
 - ring of quad damage
 - ring of resurrection
-- intro screens
+
+--------------------------------------- plan for aug --------------------------------------
 - jigsaw levels with actions
 - portion of teleport
 - money/xp doubler ring
@@ -21,11 +25,12 @@
 - more slime molds? chocolate / vampiric etc?
 - sword of life sucking, steals hp and gives to you
 - ring of power attack, divert defense to attack
+
+--------------------------------------- plan for sep --------------------------------------
 - possession ghost, cursed weapon, hit self
 - pop bouncing "help!" and arrow over player to give them a clue what to do
 - mirror traps that bounce back weapon fire?
 - teletrap monster
---------------------------------------- plan for aug --------------------------------------
 - minor: colision map tiny not used
 - backpack drop on death
 - thief, kill thief to recover items
