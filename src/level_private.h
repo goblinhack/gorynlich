@@ -133,6 +133,11 @@ typedef struct level_t_ {
     uint8_t is_map_editor:1;
 
     /*
+     * Walls or doors modified implies AI rethinking
+     */
+    uint8_t needs_updating:1;
+
+    /*
      * Death...
      */
     uint8_t death_is_coming_soon:1;

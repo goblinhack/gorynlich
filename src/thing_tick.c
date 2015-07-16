@@ -434,18 +434,7 @@ void thing_tick_all (void)
         level_client_tick(client_level);
     }
 
-    /*
-     * If the level is still around, check for AI?
-     */
     if (server_level) {
-        static uint32_t ts;
-
-        if (time_have_x_tenths_passed_since(DELAY_TENTHS_THING_DMAP, ts)) {
-            thing_generate_dmaps();
-
-            ts = time_get_time_ms();
-        }
-
         /*
          * No moving of monsters yet?
          */

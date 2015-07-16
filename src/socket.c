@@ -1936,7 +1936,7 @@ void socket_rx_client_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
     memcpy(txt, msg.txt, PLAYER_MSG_MAX);
     memcpy(from, msg.from, SMALL_STRING_LEN_MAX);
 
-    {
+    if (!single_player_mode) {
         char *tmp = iptodynstr(read_address(packet));
         LOG("Server: Rx Shout from %s \"%s\"", tmp, txt);
         myfree(tmp);
@@ -2270,7 +2270,7 @@ void socket_rx_server_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
     char txt[PLAYER_MSG_MAX + 1] = {0};
     memcpy(txt, msg.txt, PLAYER_MSG_MAX);
 
-    {
+    if (!single_player_mode) {
         char *tmp = iptodynstr(read_address(packet));
         LOG("Client: Rx Shout from %s \"%s\"", tmp, txt);
         myfree(tmp);
