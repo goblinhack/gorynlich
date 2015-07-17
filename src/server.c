@@ -161,10 +161,6 @@ static void server_rx_client_join (gsocketp s)
                                 "rx client join active things");
 
     wid_game_map_server_visible();
-
-    socket_tx_server_shout_only_to(s, INFO, 
-                                   0, 0,
-                                   "Press m or X button to use magic");
 }
 
 static void server_rx_client_leave_implicit (gsocketp s)

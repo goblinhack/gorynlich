@@ -91,7 +91,6 @@ uint8_t level_is_editor(levelp level);
 void level_set_is_editor(levelp level, uint8_t val);
 uint8_t level_is_map_editor(levelp level);
 void level_set_is_map_editor(levelp level, uint8_t val);
-uint8_t level_is_paused(levelp level);
 void level_set_exit_has_been_reached(levelp level, uint8_t val);
 uint8_t level_exit_has_been_reached(levelp level);
 void level_set_needs_fixup(levelp level, uint8_t val);
@@ -100,8 +99,12 @@ void level_set_is_ready_to_be_destroyed(levelp level, uint8_t val);
 uint8_t level_is_ready_to_be_destroyed(levelp level);
 void level_set_is_ready_to_fade_out(levelp level, uint8_t val);
 uint8_t level_is_ready_to_fade_out(levelp level);
+
+uint8_t level_is_paused(levelp level);
 void level_set_is_paused(levelp level, uint8_t val);
-void level_place_plant_pod(levelp);
+
+void level_set_has_shop(levelp level, uint8_t val);
+uint8_t level_has_shop(levelp level);
 
 /*
  * level_trigger.c

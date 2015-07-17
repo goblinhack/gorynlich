@@ -479,7 +479,7 @@ tpp random_monst (int depth)
 
         int r = myrand() % 10000;
         if (r < (tp_get_d10000_chance_of_appearing(tp) + depth)) {
-            CON("depth %d, adding %s", depth, tp_name(tp));
+            LOG("Server: level depth %d, adding monster, %s", depth, tp_name(tp));
             return (tp);
         }
     }

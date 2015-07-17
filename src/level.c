@@ -447,7 +447,7 @@ levelp level_load_random (level_pos_t level_pos,
 
     int depth = ((level_pos.y - 1) * LEVELS_ACROSS) + level_pos.x;
 
-    map_jigsaw_generate(wid, depth,
+    map_jigsaw_generate(level, wid, depth,
                         wid_game_map_server_replace_tile);
 
     level_update_slow(level);
@@ -659,6 +659,14 @@ void level_pause (levelp level)
         socket_tx_server_shout_at_all_players(POPUP,
                                               0, 0, // x, y
                                               messages[myrand() % ARRAY_SIZE(messages)]);
+
+        socket_tx_server_shout_at_all_players(INFO, 
+                                       0, 0,
+                                       "Press m or X button to use magic");
+
+        if (level_has_shop(level)) {
+            shop_on_level(0, 0);
+        }
 
         level->pause_timer = 
                     action_timer_create(&server_timers,
@@ -1288,6 +1296,26 @@ void level_set_is_paused (levelp level, uint8_t val)
     } else {
         if (level->is_paused) {
             level->is_paused--;
+        }
+    }
+}
+
+uint8_t level_has_shop (levelp level)
+{
+    verify(level);
+
+    return (level->has_shop > 0);
+}
+
+void level_set_has_shop (levelp level, uint8_t val)
+{
+    verify(level);
+
+    if (val) {
+        level->has_shop++;
+    } else {
+        if (level->has_shop) {
+            level->has_shop--;
         }
     }
 }
