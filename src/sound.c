@@ -160,30 +160,38 @@ void sound_play_at (const char *name_alias, double x, double y)
               ((float) MIX_MAX_VOLUME / (float) SOUND_MAX);
 
     if (player) {
-        double distance = DISTANCE(player->x, player->y, x, y) / 8.0;
+        int sx = rintf(x);
+        int sy = rintf(y);
 
-        if (distance > 1.0) {
-            volume /= distance;
+        int distance = dmap_distance_to_player(sx, sy);
+        if (distance == -1) {
+            return;
+        }
 
+        /*
+         * Cheap effect, make the light fade away with distance.
+         */
+        double scale = (256.0 - (((double)distance) * 8.0)) / 256.0;
+        if (scale <= 0.1) {
+            return;
+        }
+
+        volume *= scale;
+
+        if (distance > 1) {
             int visible = true;
 
-            if (!can_see(client_level, player->x, player->y, x, y)) {
+            if (!can_see(client_level, player->x, player->y, sx, sy)) {
                 visible = false;
                 volume /= 4.0;
             }
-
-            LOG("play: %s vol %f dist %f can_see %d",name_alias, volume, distance, visible);
         }
 
         if (volume < 1.0) {
             return;
         }
 
-        if (distance > 10.0) {
-            return;
-        }
-
-        LOG("play: %s vol %f dist %f",name_alias, volume, distance);
+        LOG("play: %s vol %f dist %d",name_alias, volume, distance);
     }
 
     if (Mix_PlayChannel(-1, sound->sound, 0) == -1) {
