@@ -1459,8 +1459,10 @@ void socket_tx_client_status (gsocketp s)
         return;
     }
 
-    if (!s->connected) {
-        return;
+    if (!single_player_mode) {
+        if (!s->connected) {
+            return;
+        }
     }
 
     UDPpacket *packet = packet_alloc();
@@ -1966,8 +1968,10 @@ void socket_rx_client_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
             continue;
         }
 
-        if (!sp->connected) {
-            continue;
+        if (!single_player_mode) {
+            if (!sp->connected) {
+                continue;
+            }
         }
 
         if (!sp->server_side_client) {
@@ -2047,8 +2051,10 @@ void socket_tx_server_shout_at_all_players (uint32_t level,
     gsocketp sp;
 
     TREE_WALK(sockets, sp) {
-        if (!sp->connected) {
-            continue;
+        if (!single_player_mode) {
+            if (!sp->connected) {
+                continue;
+            }
         }
 
         if (!sp->server_side_client) {
@@ -2102,8 +2108,10 @@ socket_tx_server_shout_over (uint32_t level,
     gsocketp sp;
 
     TREE_WALK(sockets, sp) {
-        if (!sp->connected) {
-            continue;
+        if (!single_player_mode) {
+            if (!sp->connected) {
+                continue;
+            }
         }
 
         if (!sp->server_side_client) {
@@ -2157,8 +2165,10 @@ socket_tx_server_shout_at_all_players_except (gsocketp except,
             continue;
         }
 
-        if (!sp->connected) {
-            continue;
+        if (!single_player_mode) {
+            if (!sp->connected) {
+                continue;
+            }
         }
 
         if (!sp->server_side_client) {
@@ -2230,8 +2240,8 @@ void socket_tx_server_shout_only_to (gsocketp target,
         msg_server_shout msg = {0};
         msg.type = MSG_SERVER_SHOUT;
         msg.level = level;
-        msg.x = level;
-        msg.y = level;
+        msg.x = x;
+        msg.y = y;
 
         if (sp->player->thing) {
             msg.thing_id = sp->player->thing->thing_id;
@@ -2292,8 +2302,10 @@ void socket_tx_tell (gsocketp s,
 {
     verify(s);
 
-    if (!s->connected) {
-        return;
+    if (!single_player_mode) {
+        if (!s->connected) {
+            return;
+        }
     }
 
     UDPpacket *packet = packet_alloc();
@@ -2353,8 +2365,10 @@ void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
             continue;
         }
 
-        if (!sp->connected) {
-            continue;
+        if (!single_player_mode) {
+            if (!sp->connected) {
+                continue;
+            }
         }
 
         if (!sp->server_side_client) {
@@ -2591,8 +2605,10 @@ void socket_tx_server_hiscore (gsocketp only,
                 }
             }
 
-            if (!s->connected) {
-                continue;
+            if (!single_player_mode) {
+                if (!s->connected) {
+                    continue;
+                }
             }
 
             if (!s->server_side_client) {
@@ -2664,8 +2680,10 @@ void socket_tx_server_close (void)
     gsocketp s;
 
     TREE_WALK(sockets, s) {
-        if (!s->connected) {
-            continue;
+        if (!single_player_mode) {
+            if (!s->connected) {
+                continue;
+            }
         }
 
         if (!s->server_side_client) {
