@@ -553,6 +553,7 @@ static void msg_over_thing_ (uint32_t level,
         return;
     }
 
+CON("level %d %s",level, fmt);
     if (level == SOUND_GLOBAL) {
         vsnprintf(buf, sizeof(buf), fmt, args);
         sound_play_global_at(buf, x, y);

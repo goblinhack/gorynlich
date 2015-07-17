@@ -1,5 +1,4 @@
 --------------------------------------- plan for jul --------------------------------------
-- cash register message is gone!
 - does death is coming work? never seen it
 - blue glow for death
 - door strap pixels make more alpha
@@ -37,6 +36,7 @@
 - magic gives health to other players
 
 Thu Jul 16 18:29:48 EDT 2015
+- cash register message is gone!
 - use dmap for sounds
 - fucking dragon appeared on level 2 again!
 - alpha lights with dmap distance

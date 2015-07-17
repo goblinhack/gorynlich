@@ -108,6 +108,11 @@ typedef struct level_t_ {
     uint8_t is_paused;
 
     /*
+     * Level has a shop on it
+     */
+    uint8_t has_shop;
+
+    /*
      * Exit has been reached.
      */
     uint8_t exit_has_been_reached:1;
