@@ -2978,10 +2978,9 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
 /*
  * map_jigsaw_generate
  */
-void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
+void map_jigsaw_generate (levelp level, widp wid, int depth, grid_wid_replace_t callback)
 {
     const char *jigsaw_map;
-    int shop_notify = false;
 
     tpp map_tp[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH_MAX];
 
@@ -3115,9 +3114,8 @@ void map_jigsaw_generate (widp wid, int depth, grid_wid_replace_t callback)
 
             case MAP_SHOP_FLOOR: 
                 tp = tp_find("data/things/shop_floor1"); 
-                if (!shop_notify) {
-                    shop_notify = true;
-                    shop_on_level(x, y);
+                if (level) {
+                    level_set_has_shop(level, true);
                 }
                 break;
 
