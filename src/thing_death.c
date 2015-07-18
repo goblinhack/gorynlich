@@ -13,6 +13,7 @@
 #include "map.h"
 #include "level.h"
 #include "time_util.h"
+#include "socket_util.h"
 
 uint8_t thing_death_spawn (void)
 {

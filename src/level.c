@@ -656,11 +656,11 @@ void level_pause (levelp level)
             "Get ready!",
         };
 
-        socket_tx_server_shout_at_all_players(POPUP,
-                                              0, 0, // x, y
-                                              messages[myrand() % ARRAY_SIZE(messages)]);
+        MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP,
+                                        0, 0, // x, y
+                                        "%s", messages[myrand() % ARRAY_SIZE(messages)]);
 
-        socket_tx_server_shout_at_all_players(INFO, 
+        MSG_SERVER_SHOUT_AT_ALL_PLAYERS(INFO, 
                                        0, 0,
                                        "Press m or X button to use magic");
 
@@ -819,13 +819,13 @@ void level_server_tick (levelp level)
     if (level_exit_has_been_reached(level)) {
         if (!level->end_level_first_phase_fade_out_timer) {
             if (level->game_over) {
-                socket_tx_server_shout_at_all_players(POPUP,
-                                                      0, 0, // x, y
-                                                      "Quest completed!");
+                MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP,
+                                                0, 0, // x, y
+                                                "Quest completed!");
             } else {
-                socket_tx_server_shout_at_all_players(POPUP,
-                                                      0, 0, // x, y
-                                                      "Level completed");
+                MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP,
+                                                0, 0, // x, y
+                                                "Level completed");
             }
 
             level->end_level_first_phase_fade_out_timer = 

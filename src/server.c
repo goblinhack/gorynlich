@@ -59,7 +59,7 @@ void server_stop (void)
         return;
     }
 
-    socket_tx_server_shout_at_all_players(CRITICAL, 0, 0, "SERVER GOING DOWN");
+    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(CRITICAL, 0, 0, "SERVER GOING DOWN");
 
     socket_tx_server_close();
 
@@ -143,8 +143,7 @@ static void server_rx_client_join (gsocketp s)
 
     char *tmp = dynprintf("%s joined", 
                           p->stats_from_client.pname);
-    socket_tx_server_shout_at_all_players_except(s, WARNING, 
-                                                 0, 0, tmp);
+    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(WARNING, 0, 0, "%s", tmp);
     myfree(tmp);
 
     LOG("Server: Total players now %u", global_config.server_current_players);
@@ -203,7 +202,7 @@ static void server_rx_client_leave (gsocketp s)
 
     char *tmp = dynprintf("%s left the game", 
                           p->stats_from_client.pname);
-    socket_tx_server_shout_at_all_players(INFO, 0, 0, tmp);
+    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(INFO, 0, 0, "%s", tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);
@@ -225,7 +224,7 @@ static void server_rx_client_close (gsocketp s)
 
     char *tmp = dynprintf("%s suddenly left the game", 
                           p->stats_from_client.pname);
-    socket_tx_server_shout_at_all_players(WARNING, 0, 0, tmp);
+    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(WARNING, 0, 0, "%s", tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);
@@ -570,9 +569,7 @@ uint8_t server_shout (tokens_t *tokens, void *context)
     }
 
     strncpy(shout, tmp, sizeof(shout) - 1);
-
-    socket_tx_server_shout_at_all_players(CHAT, 0, 0, shout);
-
+    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(CHAT, 0, 0, "%s", shout);
     myfree(tmp);
 
     return (true);

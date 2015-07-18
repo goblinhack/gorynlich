@@ -226,6 +226,7 @@ enum {
     WARNING,
     CRITICAL,
     POPUP,
+    OVER_THING,
     SOUND,
     SOUND_GLOBAL,
 };
@@ -240,32 +241,25 @@ void DBG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void HOST_LOG(hostp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
 
-void MSG_CLIENT_SHOUT_OVER_PLAYER(uint32_t level, 
-                                  uint32_t thing_id,
-                                  double x,
-                                  double y,
-                                  const char *fmt, ...)
-                                  __attribute__ ((format (printf, 5, 6)));
+void MSG_SERVER_SHOUT_AT(uint32_t level,
+                         thingp,
+                         double x,
+                         double y,
+                         const char *fmt, ...)
+                         __attribute__ ((format (printf, 5, 6)));
 
-void MSG_SERVER_SHOUT_AT_PLAYER(uint32_t level,
-                                thingp,
-                                double x,
-                                double y,
-                                const char *fmt, ...)
-                                __attribute__ ((format (printf, 5, 6)));
+void MSG_CLIENT_SHOUT_AT(uint32_t level,
+                         uint32_t thing_id,
+                         double x,
+                         double y,
+                         const char *fmt, ...)
+                         __attribute__ ((format (printf, 5, 6)));
 
 void MSG_SERVER_SHOUT_AT_ALL_PLAYERS(uint32_t level,
                                      double x,
                                      double y,
                                      const char *fmt, ...)
                                      __attribute__ ((format (printf, 4, 5)));
-
-void MSG_SERVER_SHOUT_OVER_THING(uint32_t level,
-                                 thingp,
-                                 double x,
-                                 double y,
-                                 const char *fmt, ...)
-                                 __attribute__ ((format (printf, 5, 6)));
 
 void THING_LOG(thingp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
