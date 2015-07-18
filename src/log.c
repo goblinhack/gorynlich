@@ -513,13 +513,14 @@ static void msg_ (uint32_t level,
     uint32_t len;
     char buf[MAXSTR];
 
+    buf[0] = '\0';
+
     thingp t = thing_client_find(thing_id);
 
     switch (level) {
     case WARNING:
     case CRITICAL:
 
-        buf[0] = '\0';
         timestamp(buf, sizeof(buf));
         len = (uint32_t)strlen(buf);
         vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
@@ -535,13 +536,21 @@ static void msg_ (uint32_t level,
         break;
 
     case CHAT:
-        buf[0] = '\0';
         vsnprintf(buf, sizeof(buf), fmt, args);
 
         putf(MY_STDOUT, buf);
         fflush(MY_STDOUT);
 
+        if (wid_notify(level, buf)) {
+            wid_console_log(buf);
+
+            term_log(buf);
+        }
+        break;
+
     case INFO:
+        vsnprintf(buf, sizeof(buf), fmt, args);
+
         if (wid_notify(level, buf)) {
             wid_console_log(buf);
 
@@ -556,7 +565,6 @@ static void msg_ (uint32_t level,
         {
             widp w;
 
-            buf[0] = '\0';
             vsnprintf(buf, sizeof(buf), fmt, args);
 
             w = wid_tooltip_transient(buf, 3 * ONESEC);
@@ -581,7 +589,6 @@ static void msg_ (uint32_t level,
             break;
         }
 
-        buf[0] = '\0';
         vsnprintf(buf, sizeof(buf), fmt, args);
 
         fpoint tl, br;
