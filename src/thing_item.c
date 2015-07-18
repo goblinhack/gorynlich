@@ -106,7 +106,7 @@ static void thing_collect (thingp t,
         }
 
         if (thing_is_player(t)) {
-            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 0, 0, "%s added", tp_short_name(tp));
+            MSG_SERVER_SHOUT_AT(INFO, t, 0, 0, "%s added", tp_short_name(tp));
         }
         return;
     }
@@ -129,18 +129,18 @@ static void thing_collect (thingp t,
             thing_stats_modify_cash(t, val);
 
             if (val) {
-                MSG_SERVER_SHOUT_OVER_THING(POPUP, t, 0, 0,
-                                            "%%%%font=%s$%%%%fg=%s$%d$", 
-                                            "large", "gold", val);
+                MSG_SERVER_SHOUT_AT(OVER_THING, t, 0, 0,
+                                    "%%%%font=%s$%%%%fg=%s$%d$", 
+                                    "large", "gold", val);
 
                 return;
             }
         }
 
         if (!thing_stats_item_add(t, &t->stats, i)) {
-            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 0, 0,
-                                       "You could not collect %s",
-                                       tp_short_name(tp));
+            MSG_SERVER_SHOUT_AT(INFO, t, 0, 0,
+                                "You could not collect %s",
+                                tp_short_name(tp));
             return;
         }
 
@@ -152,16 +152,16 @@ static void thing_collect (thingp t,
         thing_stats_modify_cash(t, val);
 
         if (val) {
-            MSG_SERVER_SHOUT_OVER_THING(POPUP, t, 0, 0,
-                                        "%%%%font=%s$%%%%fg=%s$%d$", 
-                                        "large", "gold", val);
+            MSG_SERVER_SHOUT_AT(OVER_THING, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$%d$", 
+                                "large", "gold", val);
         }
     }
 
     if (!auto_collect) {
         if (thing_is_player(t)) {
-            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 0, 0,
-                                       "%s added", tp_short_name(tp));
+            MSG_SERVER_SHOUT_AT(INFO, t, 0, 0,
+                                "%s added", tp_short_name(tp));
         }
     }
 
@@ -239,14 +239,14 @@ void thing_used (thingp t, tpp tp)
      */
     int bonus_hp = tp_get_bonus_hp_on_use(tp);
     if (item->cursed) {
-        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, 0, 0,
+        MSG_SERVER_SHOUT_AT(WARNING, t, 0, 0,
                                    "Cursed %s zaps %d health",
                                    tp_short_name(tp), bonus_hp);
         bonus_hp = -bonus_hp;
     }
 
     if (tp_is_food(tp)) {
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "bite");
+        MSG_SERVER_SHOUT_AT(SOUND, t, t->x, t->y, "bite");
     }
 
     thing_stats_modify_hp(t, bonus_hp);
@@ -269,7 +269,7 @@ void thing_used (thingp t, tpp tp)
      */
     int bonus_magic = tp_get_bonus_magic_on_use(tp);
     if (item->cursed) {
-        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, 0, 0,
+        MSG_SERVER_SHOUT_AT(WARNING, t, 0, 0,
                                    "Cursed %s zaps %d of ID",
                                    tp_short_name(tp), bonus_hp);
 

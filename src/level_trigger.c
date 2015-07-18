@@ -185,9 +185,9 @@ void level_trigger_activate (levelp level, const char *name)
                     }
 
                     if (t->data->text[0]) {
-                        socket_tx_server_shout_at_all_players(POPUP,
-                                                              0, 0, // x, y
-                                                              t->data->text);
+                        MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP,
+                                                        0, 0, // x, y
+                                                        "%s", t->data->text);
                     } else {
                         ERR("text trigger exists at %d %d and has no text", x, y);
                     }

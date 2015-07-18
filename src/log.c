@@ -141,43 +141,6 @@ static void putf (FILE *fp, const char *s)
     putc('\n', fp);
 }
 
-static void msg_ (uint32_t level, 
-                  uint32_t thing_id,
-                  const char *fmt, va_list args)
-{
-    char buf[MAXSTR];
-    uint32_t len;
-
-    buf[0] = '\0';
-    timestamp(buf, sizeof(buf));
-    len = (uint32_t)strlen(buf);
-    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
-
-    putf(MY_STDOUT, buf);
-    fflush(MY_STDOUT);
-
-    if (level == POPUP) {
-        widp w;
-
-        w = wid_tooltip_transient(buf + len, 3 * ONESEC);
-        wid_move_to_pct_centered(w, 0.5, -0.1);
-        wid_move_to_pct_centered_in(w, 0.5, 0.1, ONESEC / 2);
-
-        return;
-    } 
-    
-    if (wid_notify(level, buf + len)) {
-        wid_console_log(buf + len);
-
-#if 0
-        if (level == CHAT) {
-            wid_chat_log(buf + len);
-        }
-#endif
-        term_log(buf + len);
-    }
-}
-
 static void log_ (const char *fmt, va_list args)
 {
     char buf[MAXSTR];
@@ -468,9 +431,6 @@ static void msg_server_shout_at_all_players_ (uint32_t level,
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(MY_STDOUT, buf);
-    fflush(MY_STDOUT);
-
     socket_tx_server_shout_at_all_players(level, x, y, buf + len);
 }
 
@@ -486,6 +446,7 @@ void MSG_SERVER_SHOUT_AT_ALL_PLAYERS (uint32_t level,
     va_end(args);
 }
 
+#if 0
 static void msg_server_shout_at_player_ (uint32_t level,
                                          thingp t,
                                          double x, 
@@ -524,12 +485,14 @@ static void msg_server_shout_at_player_ (uint32_t level,
 
     socket_tx_server_shout_only_to(s, level, x, y, buf + len);
 }
+#endif
 
-void MSG_SERVER_SHOUT_AT_PLAYER (uint32_t level,
-                                 thingp t,
-                                 double x, 
-                                 double y,
-                                 const char *fmt, ...)
+#if 0
+void MSG_SERVER_SHOUT_AT (uint32_t level,
+                          thingp t,
+                          double x, 
+                          double y,
+                          const char *fmt, ...)
 {
     va_list args;
 
@@ -539,94 +502,139 @@ void MSG_SERVER_SHOUT_AT_PLAYER (uint32_t level,
     msg_server_shout_at_player_(level, t, x, y, fmt, args);
     va_end(args);
 }
+#endif
 
-static void msg_over_thing_ (uint32_t level,
-                             uint32_t thing_id,
-                             double x,
-                             double y,
-                             const char *fmt, va_list args)
+static void msg_ (uint32_t level,
+                  uint32_t thing_id,
+                  double x,
+                  double y,
+                  const char *fmt, va_list args)
 {
+    uint32_t len;
     char buf[MAXSTR];
 
     thingp t = thing_client_find(thing_id);
-    if (!t) {
-        return;
-    }
 
-    if (level == SOUND_GLOBAL) {
+    switch (level) {
+    case WARNING:
+    case CRITICAL:
+
+        buf[0] = '\0';
+        timestamp(buf, sizeof(buf));
+        len = (uint32_t)strlen(buf);
+        vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+        putf(MY_STDOUT, buf);
+        fflush(MY_STDOUT);
+
+        if (wid_notify(level, buf + len)) {
+            wid_console_log(buf);
+
+            term_log(buf);
+        }
+        break;
+
+    case CHAT:
+        buf[0] = '\0';
         vsnprintf(buf, sizeof(buf), fmt, args);
-        sound_play_global_at(buf, x, y);
-        return;
-    } else if (level == SOUND) {
+
+        putf(MY_STDOUT, buf);
+        fflush(MY_STDOUT);
+
+    case INFO:
+        if (wid_notify(level, buf)) {
+            wid_console_log(buf);
+
+            term_log(buf);
+        }
+        break;
+
+    case POPUP:
+        /*
+         * Big popup window
+         */
+        {
+            widp w;
+
+            buf[0] = '\0';
+            vsnprintf(buf, sizeof(buf), fmt, args);
+
+            w = wid_tooltip_transient(buf, 3 * ONESEC);
+            wid_move_to_pct_centered(w, 0.5, -0.1);
+            wid_move_to_pct_centered_in(w, 0.5, 0.1, ONESEC / 2);
+
+            wid_fade_out(w, 3000);
+            wid_destroy_in(w, 3000);
+        }
+        break;
+
+    case OVER_THING:
+        /*
+         * Center a widget over the thing.
+         */
+        if (!t) {
+            break;
+        }
+
+        widp wid_thing = thing_wid(t);
+        if (!wid_thing) {
+            break;
+        }
+
+        buf[0] = '\0';
         vsnprintf(buf, sizeof(buf), fmt, args);
-        sound_play_at(buf, x, y);
-        return;
-    }
 
-    widp wid_thing = thing_wid(t);
-    if (!wid_thing) {
-        return;
-    }
+        fpoint tl, br;
 
-    vsnprintf(buf, sizeof(buf), fmt, args);
+        wid_get_tl_br(wid_thing, &tl, &br);
+        widp w = wid_new_container(wid_game_map_client_grid_container, "wid_tooltip");
 
-    /*
-     * Center a widget over the thing.
-     */
-    fpoint tl, br;
+        wid_set_tl_br_no_relative_offset(w, tl, br);
+        wid_set_text(w, buf);
+        wid_set_text_outline(w, true);
+        wid_set_font(w, med_font);
+        wid_move_delta_pct_in(w, 0.0, -0.05, 0);
+        wid_move_end(w);
+        wid_move_delta_pct_in(w, 0.0, -0.1, 1500);
 
-    wid_get_tl_br(wid_thing, &tl, &br);
-    widp w = wid_new_container(wid_game_map_client_grid_container, "wid_tooltip");
-
-    wid_set_tl_br_no_relative_offset(w, tl, br);
-    wid_set_text(w, buf);
-    wid_set_text_outline(w, true);
-    wid_set_font(w, med_font);
-    wid_move_delta_pct_in(w, 0.0, -0.05, 0);
-    wid_move_end(w);
-    wid_move_delta_pct_in(w, 0.0, -0.1, 1500);
-
-    if (level == POPUP) {
         wid_fade_out(w, 1500);
         wid_destroy_in(w, 1500);
-    } else {
-        wid_fade_out(w, 3000);
-        wid_destroy_in(w, 3000);
-    }
 
-    wid_set_no_shape(w);
-    wid_set_z_depth(w, MAP_DEPTH_ACTIONS);
-    wid_raise(w);
+        wid_set_no_shape(w);
+        wid_set_z_depth(w, MAP_DEPTH_ACTIONS);
+        wid_raise(w);
+        break;
 
-    if (level == POPUP) {
-        return;
-    }
+    case SOUND:
+        vsnprintf(buf, sizeof(buf), fmt, args);
+        sound_play_at(buf, x, y);
+        break;
 
-    if (wid_notify(level, buf)) {
-        wid_console_log(buf);
-
-        term_log(buf);
+    case SOUND_GLOBAL:
+        vsnprintf(buf, sizeof(buf), fmt, args);
+        sound_play_global_at(buf, x, y);
+        break;
     }
 }
 
-void MSG_CLIENT_SHOUT_OVER_PLAYER (uint32_t level, 
-                                   uint32_t thing_id,
-                                   double x,
-                                   double y,
-                                   const char *fmt, ...)
+void MSG_CLIENT_SHOUT_AT (uint32_t level, 
+                          uint32_t thing_id,
+                          double x,
+                          double y,
+                          const char *fmt, ...)
 {
     va_list args;
 
     va_start(args, fmt);
-    msg_over_thing_(level, thing_id, x, y, fmt, args);
+    msg_(level, thing_id, x, y, fmt, args);
     va_end(args);
 }
 
-static void msg_server_shout_over_thing_ (uint32_t level,
-                                          thingp t,
-                                          double x,
-                                          double y,
-                                          const char *fmt, va_list args)
+static void msg_server_shout_at_ (uint32_t level,
+                                  thingp t,
+                                  double x,
+                                  double y,
+                                  const char *fmt, va_list args)
 {
     char buf[MAXSTR];
 
@@ -635,18 +643,18 @@ static void msg_server_shout_over_thing_ (uint32_t level,
     socket_tx_server_shout_over(level, t->thing_id, x, y, buf);
 }
 
-void MSG_SERVER_SHOUT_OVER_THING (uint32_t level,
-                                  thingp t,
-                                  double x,
-                                  double y,
-                                  const char *fmt, ...)
+void MSG_SERVER_SHOUT_AT (uint32_t level,
+                          thingp t,
+                          double x,
+                          double y,
+                          const char *fmt, ...)
 {
     va_list args;
 
     verify(t);
 
     va_start(args, fmt);
-    msg_server_shout_over_thing_(level, t, x, y, fmt, args);
+    msg_server_shout_at_(level, t, x, y, fmt, args);
     va_end(args);
 }
 
@@ -945,7 +953,13 @@ void MSG (uint32_t level, const char *fmt, ...)
     va_list args;
 
     va_start(args, fmt);
-    msg_(level, 0, fmt, args);
+
+    msg_(level,
+         0, // thing 
+         0, // x
+         0, // y
+         fmt, args);
+
     va_end(args);
 }
 
