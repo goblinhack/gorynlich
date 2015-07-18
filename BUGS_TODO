@@ -1,6 +1,5 @@
 --------------------------------------- plan for jul --------------------------------------
-- magic cloud gets hosed in corridors
-- magic cloud left behind sometimes
+- multiple bell toll
 - bell toll doesn't happen
 - spending points stuff overlaps
 - death message is too small- why?
@@ -37,6 +36,10 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Sat Jul 18 09:32:36 EDT 2015
+- magic cloud gets hosed in corridors
+- magic cloud left behind sometimes
 
 Fri Jul 17 22:17:05 EDT 2015
 - does death is coming work? never seen it

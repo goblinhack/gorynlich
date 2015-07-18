@@ -1,6 +1,6 @@
 {
  short_name="magic bolt"
- raw_name="magic1"
+ raw_name="magic bolt"
  tooltip="magic bolt"
  is_hidden_from_editor
  z_depth="explosion_top"
@@ -11,7 +11,7 @@
  is_animated
  is_light_source
  light_radius=0.5
- is_collision_map_medium
+ collision_radius=0.5
  sound_on_creation="shield"
  tiles={
   tile={
