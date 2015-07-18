@@ -1,15 +1,14 @@
 {
- short_name="magic cloud"
- raw_name="magic_cloud"
+ short_name="magic powerup"
+ raw_name="magic_powerup"
  z_depth="explosion_top"
  is_animated
  is_hidden_from_editor
- scale=0.20
  is_animated_no_dir
- hit_priority=100
- damage=3
- hit_delay_tenths=1
  sound_on_creation="shield"
+ is_light_source
+ light_radius=0.5
+ is_ethereal
  tiles={
   tile={
    tile="magic_cloud.1"

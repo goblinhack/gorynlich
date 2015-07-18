@@ -10,6 +10,7 @@
  hit_priority=100
  scale=1.0
  is_light_source
+ light_radius=1.0
  is_ethereal
  tiles={
   tile={
