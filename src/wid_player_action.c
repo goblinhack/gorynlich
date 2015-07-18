@@ -675,11 +675,13 @@ static void wid_player_action_create (thing_statsp s, int fast)
                     wid_set_color(w, WID_COLOR_TEXT, RED);
                 }
 
-                if (delta < -1) {
-                    if (!strcmp("valkyrie", global_config.stats.pclass)) {
-                        sound_play("female_player_hit");
-                    } else {
-                        sound_play("player_hit");
+                if (stats_get_hp(s) > 0) {
+                    if (delta < -1) {
+                        if (!strcmp("valkyrie", global_config.stats.pclass)) {
+                            sound_play("female_player_hit");
+                        } else {
+                            sound_play("player_hit");
+                        }
                     }
                 }
 
