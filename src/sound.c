@@ -244,9 +244,15 @@ void sound_play_global_at (const char *name_alias, double x, double y)
     }
 
     if (Mix_PlayChannel(-1, sound->sound, 0) == -1) {
-        LOG("cannot play sound %s: %s", sound->tree.key, Mix_GetError());
+        /*
+         * Try harder for global sounds as they are important.
+         */
+        Mix_HaltChannel(0);
 
-        return;
+        if (Mix_PlayChannel(-1, sound->sound, 0) == -1) {
+            ERR("cannot play sound %s: %s", sound->tree.key, Mix_GetError());
+            return;
+        }
     }
 
     Mix_VolumeChunk(sound->sound, volume);
