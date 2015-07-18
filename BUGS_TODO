@@ -1,8 +1,6 @@
 --------------------------------------- plan for jul --------------------------------------
 - multiple bell toll
 - bell toll doesn't happen
-- spending points stuff overlaps
-- death message is too small- why?
 - door strap pixels make more alpha
 - the all-cheese
 - large trolls should be negative y off centered
@@ -38,6 +36,8 @@
 - magic gives health to other players
 
 Sat Jul 18 09:32:36 EDT 2015
+- spending points stuff overlaps
+- death message is too small- why?
 - magic cloud gets hosed in corridors
 - magic cloud left behind sometimes
 
