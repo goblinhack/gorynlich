@@ -171,7 +171,7 @@ void sound_play_at (const char *name_alias, double x, double y)
         /*
          * Cheap effect, make the light fade away with distance.
          */
-        double scale = (256.0 - (((double)distance) * 8.0)) / 256.0;
+        double scale = (256.0 - (((double)distance) * 4.0)) / 256.0;
         if (scale <= 0.1) {
             return;
         }
@@ -183,7 +183,7 @@ void sound_play_at (const char *name_alias, double x, double y)
 
             if (!can_see(client_level, player->x, player->y, sx, sy)) {
                 visible = false;
-                volume /= 4.0;
+                volume /= 2.0;
             }
         }
 
