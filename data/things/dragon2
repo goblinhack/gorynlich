@@ -18,7 +18,6 @@
  scale=2.0
  collision_radius=0.5
  hit_priority=10
- is_ethereal
  is_levitating
  is_animated
  fires="data/things/cloudkill1"
