@@ -1039,6 +1039,13 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
         return (false);
     }
 
+    /*
+     * Allow things like death to walk unharmed through walls.
+     */
+    if (thing_is_ethereal(t)) {
+        return (false);
+    }
+
     for (dx = -collision_radius; dx <= collision_radius; dx++) 
     for (dy = -collision_radius; dy <= collision_radius; dy++) {
         int32_t x = (int32_t)nx + dx;
@@ -1072,6 +1079,13 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             if (thing_is_floor(it)          ||
                 thing_is_action(it)         ||
                 thing_is_animation(it)) {
+                continue;
+            }
+
+            /*
+             * Allow things like death to walk unharmed through walls.
+             */
+            if (thing_is_ethereal(it)) {
                 continue;
             }
 

@@ -19,7 +19,6 @@
  hit_priority=10
  is_combustable
  is_collision_map_medium
- is_ethereal
  is_levitating
  d10000_chance_of_appearing=10
  min_appear_depth=5

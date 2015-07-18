@@ -787,10 +787,34 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
 }
 
 static uint8_t thing_try_nexthop (thingp t,
-                                  level_walls *dmap,
                                   int32_t *nexthop_x, 
                                   int32_t *nexthop_y,
                                   uint8_t can_change_dir_without_moving)
+{
+    if (!can_change_dir_without_moving) {
+        if (thing_hit_solid_obstacle(wid_game_map_server_grid_container, 
+                                        t,
+                                        *nexthop_x, *nexthop_y)) {
+            return (false);
+        }
+    }
+
+    if (thing_server_move(t, *nexthop_x, *nexthop_y,
+                          *nexthop_y < t->y, *nexthop_y > t->y,
+                          *nexthop_x < t->x, *nexthop_x > t->x, 
+                          false, /* fire */
+                          false  /* magic */)) {
+        return (true);
+    }
+
+    return (false);
+}
+
+static uint8_t thing_dmap_try_nexthop (thingp t,
+                                       level_walls *dmap,
+                                       int32_t *nexthop_x, 
+                                       int32_t *nexthop_y,
+                                       uint8_t can_change_dir_without_moving)
 {
     if (thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y)) {
 
@@ -814,8 +838,75 @@ static uint8_t thing_try_nexthop (thingp t,
     return (false);
 }
 
+static int thing_chase_closest_player (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
+{
+    double distance = 9999;
+    thingp best = 0;
+    thingp thing_it;
+
+    { TREE_OFFSET_WALK_UNSAFE(server_player_things, thing_it) {
+        /*
+         * Only chase players.
+         */
+        if (!thing_is_player_noverify(thing_it)) {
+            continue;
+        }
+
+        /*
+         * Ignore dead players.
+         */
+        if (thing_is_dead_or_dying_noverify(thing_it)) {
+            continue;
+        }
+
+        if (DISTANCE(thing_it->x, thing_it->y, t->x, t->y) < distance) {
+            best = thing_it;
+        }
+    } }
+
+    if (!best) {
+        return (false);
+    }
+
+    *nexthop_x = t->x;
+    *nexthop_y = t->y;
+
+    if (best->x > t->x) {
+        *nexthop_x = t->x + 1.0;
+    }
+
+    if (best->x < t->x) {
+        *nexthop_x = t->x - 1.0;
+    }
+
+    if (best->y > t->y) {
+        *nexthop_y = t->y + 1.0;
+    }
+
+    if (best->y < t->y) {
+        *nexthop_y = t->y - 1.0;
+    }
+
+    return (true);
+}
+
 uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 {
+    /*
+     * Walk through walls to get to the player?
+     */
+    if (thing_is_ethereal(t)) {
+        if (thing_chase_closest_player(t, nexthop_x, nexthop_y)) {
+
+            if (thing_try_nexthop(t, nexthop_x, nexthop_y,
+                                  false /* can_change_dir_without_moving */)) {
+                return (true);
+            }
+
+            return (true);
+        }
+    }
+
     /*
      * Start out with treating doors as passable.
      */
@@ -837,8 +928,8 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
      * Try the current map.
      */
     if (t->dmap) {
-        if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
-                            true /* can_change_dir_without_moving */)) {
+        if (thing_dmap_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
+                                   true /* can_change_dir_without_moving */)) {
             return (true);
         }
     }
@@ -874,8 +965,8 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     }
 
     if (t->dmap) {
-        if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
-                            false /* can_change_dir_without_moving */)) {
+        if (thing_dmap_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
+                                   false /* can_change_dir_without_moving */)) {
             return (true);
         }
     }
@@ -892,8 +983,8 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         }
 
         if (t->dmap) {
-            if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
-                                false /* can_change_dir_without_moving */)) {
+            if (thing_dmap_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
+                                       false /* can_change_dir_without_moving */)) {
                 return (true);
             }
         }
@@ -998,8 +1089,8 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         t->dmap_wander = &dmap_map_wander[x][y];
     }
 
-    if (thing_try_nexthop(t, t->dmap_wander, nexthop_x, nexthop_y,
-                          false /* can_change_dir_without_moving */)) {
+    if (thing_dmap_try_nexthop(t, t->dmap_wander, nexthop_x, nexthop_y,
+                               false /* can_change_dir_without_moving */)) {
         return (true);
     }
 
