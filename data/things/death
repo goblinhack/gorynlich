@@ -6,8 +6,8 @@
     "data/things/scythe1"
  }
  z_depth="monst"
- speed=5
- max_hp=50000
+ speed=8
+ max_hp=20000
  damage=30
  bonus_xp_on_death=10000
  vision_distance=60
@@ -20,8 +20,10 @@
  is_combustable
  is_death
  is_levitating
- scale=2.5
- collision_radius=0.5
+ scale=2.0
+ collision_radius=2.0
+ is_light_source
+ light_radius=3.0
  is_ethereal
  d10000_chance_of_appearing=0
  explodes_as="data/things/explosion3"

@@ -20,7 +20,6 @@
  is_shadow_caster_soft
  hit_priority=10
  scale=0.5
- is_ethereal
  is_cats_eyes
  is_animated
  fires="data/things/energy1"
