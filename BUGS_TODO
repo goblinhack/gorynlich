@@ -1,6 +1,5 @@
 --------------------------------------- plan for jul --------------------------------------
-- does death is coming work? never seen it
-- blue glow for death
+- death message is too small- why?
 - door strap pixels make more alpha
 - the all-cheese
 - large trolls should be negative y off centered
@@ -34,6 +33,10 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Fri Jul 17 22:17:05 EDT 2015
+- does death is coming work? never seen it
+- blue glow for death
 
 Thu Jul 16 18:29:48 EDT 2015
 - cash register message is gone!
