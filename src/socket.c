@@ -2286,13 +2286,9 @@ void socket_rx_server_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    if (msg.thing_id) {
-        MSG_CLIENT_SHOUT_OVER_PLAYER(msg.level, 
-                                     msg.thing_id, 
-                                     msg.x, msg.y, "%s", txt);
-    } else {
-        MSG(msg.level, "%s", txt);
-    }
+    MSG_CLIENT_SHOUT_AT(msg.level, 
+                        msg.thing_id, 
+                        msg.x, msg.y, "%s", txt);
 }
 
 void socket_tx_tell (gsocketp s, 

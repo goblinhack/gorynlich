@@ -186,7 +186,7 @@ void thing_server_action (thingp t,
 
     itemp item = &t->stats.action_bar[action_bar_index];
     if (!item->id) {
-        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, 0, 0, "No item in that slot to use");
+        MSG_SERVER_SHOUT_AT(WARNING, t, 0, 0, "No item in that slot to use");
         return;
     }
 
@@ -255,14 +255,14 @@ void thing_server_action (thingp t,
 
         const char *message = tp_message_on_use(tp);
         if (message) {
-            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 0, 0, "%s", message);
+            MSG_SERVER_SHOUT_AT(INFO, t, 0, 0, "%s", message);
             break;
         }
 
         /*
          * Failed to use.
          */
-        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, 0, 0, "Failed to use the %s", 
+        MSG_SERVER_SHOUT_AT(WARNING, t, 0, 0, "Failed to use the %s", 
                                    tp_short_name(tp));
         return;
     }
@@ -285,7 +285,7 @@ void thing_server_action (thingp t,
             /*
              * Urk!
              */
-            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 0, 0, "Drop failed");
+            MSG_SERVER_SHOUT_AT(INFO, t, 0, 0, "Drop failed");
             return;
         }
 
@@ -298,7 +298,7 @@ void thing_server_action (thingp t,
             shop_deposit_message(t, newt);
         }
 
-        MSG_SERVER_SHOUT_AT_PLAYER(SOUND, t, t->x, t->y, "drop");
+        MSG_SERVER_SHOUT_AT(SOUND, t, t->x, t->y, "drop");
     } break;
 
     case PLAYER_ACTION_PAY:
@@ -306,7 +306,7 @@ void thing_server_action (thingp t,
         if (t->in_shop_owned_by_thing_id) {
             shop_pay_for_items(t);
         } else {
-            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, 0, 0, "I'm not in a shop");
+            MSG_SERVER_SHOUT_AT(INFO, t, 0, 0, "I'm not in a shop");
         }
         break;
 
