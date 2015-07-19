@@ -13,6 +13,7 @@
 #include "map.h"
 #include "level.h"
 #include "time_util.h"
+#include "music.h"
 #include "socket_util.h"
 
 uint8_t thing_death_spawn (void)
@@ -89,6 +90,8 @@ void thing_death_tick (void)
             thing_death_spawn();
 
             level_set_death_is_coming(server_level, true);
+
+            music_play_death();
         }
     }
 }
