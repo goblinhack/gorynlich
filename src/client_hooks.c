@@ -26,6 +26,7 @@
 #include "name.h"
 #include "music.h"
 #include "map.h"
+#include "music.h"
 
 void client_level_ending (void)
 {
@@ -51,6 +52,8 @@ void client_level_starting (void)
     wid_game_map_client_scroll_adjust(1);
 
     map_fixup(client_level);
+
+    music_play_game(client_level->level_pos);
 }
 
 void client_player_fully_dead (msg_server_hiscores *latest_hiscores)

@@ -985,8 +985,6 @@ static void client_check_still_in_game (level_pos_t level_pos)
                 break;
             }
 
-            music_play_game(level_pos);
-
             server_connection_confirmed = true;
 
             MSG(INFO, "%s joined", p->stats.pname);
