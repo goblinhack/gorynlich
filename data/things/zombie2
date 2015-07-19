@@ -23,6 +23,8 @@
  max_appear_depth=100
  spawn_on_death="data/things/zombie_corpse2"
  sound_on_hitting_something="zombie"
+ sound_random="urgh"
+ sound_random_delay_secs=20
  tiles={
   tile={
    delay=200
