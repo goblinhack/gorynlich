@@ -11,6 +11,7 @@
  explosion_radius=4.0
  damage=10
  hit_delay_tenths=1
+ sound_on_creation="acid"
  tiles={
   tile={
    tile="poison1.1"

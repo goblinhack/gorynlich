@@ -160,6 +160,17 @@ static void thing_tick_server_all (void)
                     continue;
                 }
             }
+
+            /*
+             * Random utterance?
+             */
+            uint32_t delay = tp_get_sound_random_delay_secs(tp);
+            if (delay) {
+                if (time_have_x_secs_passed_since(myrand() % delay, t->timestamp_sound_random)) {
+                    t->timestamp_sound_random = time_get_time_ms();
+                    MSG_SERVER_SHOUT_AT(SOUND, t, t->x, t->y, "%s", tp->sound_random);
+                }
+            }
         }
 
         /*

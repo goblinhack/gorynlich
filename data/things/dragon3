@@ -16,10 +16,12 @@
  is_shadow_caster
  is_shadow_caster_soft
  scale=1.3
- collision_radius=0.5
+ collision_radius=0.1
  hit_priority=10
  is_levitating
  is_animated
+ sound_random="dragon"
+ sound_random_delay_secs=10
  fires="data/things/poison1"
  weapon_fire_delay_hundredths=200
  d10000_chance_of_appearing=1
