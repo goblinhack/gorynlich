@@ -3,12 +3,12 @@
  raw_name="dragon1"
  tooltip="fire dragon"
  z_depth="explosion_top"
- speed=3
+ speed=10
  max_hp=350
  damage=50
  bonus_xp_on_death=2000
  is_effect_rotate_2way
- vision_distance=15
+ vision_distance=10
  hit_delay_tenths=10
  sound_on_death="urgh2"
  is_lava_proof
@@ -20,7 +20,7 @@
  hit_priority=10
  is_levitating
  is_animated
- fires="data/things/explosion1"
+ fires="data/things/fireburst1"
  weapon_fire_delay_hundredths=500
  d10000_chance_of_appearing=1
  min_appear_depth=10
