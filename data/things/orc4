@@ -21,6 +21,8 @@
  is_shadow_caster_soft
  hit_priority=10
  is_animated
+ sound_random="dragon"
+ sound_random_delay_secs=10
  d10000_chance_of_appearing=3
  weapon_fire_delay_hundredths=100
  min_appear_depth=10
