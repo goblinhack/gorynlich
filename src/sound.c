@@ -191,11 +191,11 @@ void sound_play_at (const char *name_alias, double x, double y)
             return;
         }
 
-        LOG("play: %s vol %f dist %d",name_alias, volume, distance);
+        LOG("Client: play: %s vol %f dist %d",name_alias, volume, distance);
     }
 
     if (Mix_PlayChannel(-1, sound->sound, 0) == -1) {
-        LOG("cannot play sound %s: %s", sound->tree.key, Mix_GetError());
+        LOG("Client: cannot play sound %s: %s", sound->tree.key, Mix_GetError());
 
         return;
     }
@@ -240,7 +240,7 @@ void sound_play_global_at (const char *name_alias, double x, double y)
             volume = 1.0;
         }
 
-        LOG("play: global %s vol %f dist %f can_see %d",name_alias, volume, distance, visible);
+        LOG("Client: play: global %s vol %f dist %f can_see %d",name_alias, volume, distance, visible);
     }
 
     if (Mix_PlayChannel(-1, sound->sound, 0) == -1) {
@@ -268,7 +268,7 @@ void sound_play (const char *name_alias)
         return;
     }
 
-    LOG("play: %s", name_alias);
+    LOG("Client: play: %s", name_alias);
 
     soundp sound = sound_load(0.5, 0, name_alias);
     if (!sound) {
@@ -287,7 +287,7 @@ void sound_play (const char *name_alias)
               ((float) MIX_MAX_VOLUME / (float) SOUND_MAX);
 
 
-    LOG("play: %s vol %f",name_alias,volume);
+    LOG("Client: play: %s vol %f",name_alias,volume);
 
     Mix_VolumeChunk(sound->sound, volume);
 }
@@ -305,7 +305,7 @@ void sound_play_n (const char *name_alias, int32_t n)
     soundp sound = sound_load(0.5, 0, name_alias);
 
     if (Mix_PlayChannel(-1, sound->sound, n) == -1) {
-        LOG("cannot play %s: %s", sound->tree.key, Mix_GetError());
+        LOG("Client: cannot play %s: %s", sound->tree.key, Mix_GetError());
 
         return;
     }
