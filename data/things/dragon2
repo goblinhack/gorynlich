@@ -3,19 +3,19 @@
  raw_name="dragon2"
  tooltip="blue dragon"
  z_depth="explosion_top"
- speed=10
+ speed=15
  max_hp=550
  damage=70
  bonus_xp_on_death=5000
  is_effect_rotate_2way
- vision_distance=15
+ vision_distance=12
  hit_delay_tenths=8
  sound_on_death="urgh2"
  is_lava_proof
  is_monst
  is_shadow_caster
  is_shadow_caster_soft
- scale=2.0
+ scale=1.5
  collision_radius=0.5
  hit_priority=10
  is_levitating
