@@ -530,7 +530,6 @@ static void msg_ (uint32_t level,
 
         if (wid_notify(level, buf + len)) {
             wid_console_log(buf);
-
             term_log(buf);
         }
         break;
@@ -543,8 +542,6 @@ static void msg_ (uint32_t level,
 
         if (wid_notify(level, buf)) {
             wid_console_log(buf);
-
-            term_log(buf);
         }
         break;
 
@@ -553,8 +550,6 @@ static void msg_ (uint32_t level,
 
         if (wid_notify(level, buf)) {
             wid_console_log(buf);
-
-            term_log(buf);
         }
         break;
 

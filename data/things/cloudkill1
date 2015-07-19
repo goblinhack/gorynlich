@@ -11,6 +11,7 @@
  explosion_radius=7.0
  damage=30
  hit_delay_tenths=1
+ sound_on_creation="poison"
  tiles={
   tile={
    tile="cloudkill1.1"

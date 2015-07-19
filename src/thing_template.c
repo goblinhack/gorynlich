@@ -282,6 +282,10 @@ static void tp_destroy_internal (tpp t)
         myfree(t->sound_on_death);
     }
 
+    if (t->sound_random) {
+        myfree(t->sound_random);
+    }
+
     if (t->weapon_carry_anim) {
         myfree(t->weapon_carry_anim);
     }
@@ -513,6 +517,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_STRING(ctx, "sound_on_creation", t->sound_on_creation);
         GET_OPT_NAMED_STRING(ctx, "sound_on_hitting_something", t->sound_on_hitting_something);
         GET_OPT_NAMED_STRING(ctx, "sound_on_death", t->sound_on_death);
+        GET_OPT_NAMED_STRING(ctx, "sound_random", t->sound_random);
         GET_OPT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
         GET_OPT_NAMED_STRING(ctx, "shield_carry_anim", t->shield_carry_anim);
         GET_OPT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
@@ -605,6 +610,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
 
         GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
         GET_OPT_NAMED_UINT32(ctx, "weapon_fire_delay_hundredths", t->weapon_fire_delay_hundredths);
+        GET_OPT_NAMED_UINT32(ctx, "sound_random_delay_secs", t->sound_random_delay_secs);
         GET_OPT_NAMED_UINT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
         GET_OPT_NAMED_UINT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
         GET_OPT_NAMED_UINT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
@@ -806,6 +812,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_STRING(ctx, "sound_on_creation", t->sound_on_creation);
     PUT_NAMED_STRING(ctx, "sound_on_hitting_something", t->sound_on_hitting_something);
     PUT_NAMED_STRING(ctx, "sound_on_death", t->sound_on_death);
+    PUT_NAMED_STRING(ctx, "sound_random", t->sound_random);
     PUT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
     PUT_NAMED_STRING(ctx, "shield_carry_anim", t->shield_carry_anim);
     PUT_NAMED_STRING(ctx, "magic_anim", t->magic_anim);
@@ -849,6 +856,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "quantity", t->item.quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_hundredths", t->weapon_fire_delay_hundredths);
+    PUT_NAMED_INT32(ctx, "sound_random_delay_secs", t->sound_random_delay_secs);
     PUT_NAMED_INT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
     PUT_NAMED_INT32(ctx, "bonus_hp_on_use", t->bonus_hp_on_use);
     PUT_NAMED_INT32(ctx, "bonus_magic_on_use", t->bonus_magic_on_use);
@@ -1309,6 +1317,11 @@ uint32_t tp_get_hit_priority (tpp t)
 uint32_t tp_get_weapon_fire_delay_hundredths (tpp t)
 {
     return (t->weapon_fire_delay_hundredths);
+}
+
+uint32_t tp_get_sound_random_delay_secs (tpp t)
+{
+    return (t->sound_random_delay_secs);
 }
 
 uint32_t tp_get_swing_distance_from_player (tpp t)

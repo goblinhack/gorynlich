@@ -771,6 +771,11 @@ typedef struct thing_ {
     uint32_t timestamp_fired;
 
     /*
+     * Last utterance
+     */
+    uint32_t timestamp_sound_random;
+
+    /*
      * Last time we added magic to our build up of power!
      */
     uint32_t timestamp_magic_powerup;

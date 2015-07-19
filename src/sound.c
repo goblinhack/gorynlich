@@ -350,11 +350,11 @@ void sound_load_all (void)
     sound_load(0.2, "data/sound/flame_Arrow_SoundBible.com_618067908.wav", "fireball1");
     sound_load(0.2, "data/sound/105016__julien_matthey__jm_fx_fireball_01.wav", "fireball2");
     sound_load(0.2, "data/sound/39016__wildweasel__dsfirxpl.wav", "fireball3");
+    sound_load(0.2, "data/sound/219566__qubodup__poison_spell_magic.ogg", "poison");
+    sound_load(0.2, "data/sound/207562__jwsoundfoley__open_24oz_soda_bottle_outdoors_long_fizz_explode.ogg", "acid");
     sound_load(0.5, "data/sound/coin_roll.wav", "payment");
     sound_load(0.5, "data/sound/treasure.wav", "treasure");
-    sound_load(0.5, "data/sound/Object_Drop_001.wav", "drop");
-    sound_load(0.5, "data/sound/Door_Latch_002.wav", "door");
-    sound_load(0.5, "data/sound/Electric_Zap.wav", "shield");
+    sound_load(1.0, "data/sound/85568__joelaudio__dragon_roar.wav", "dragon");
     sound_load(1.0, "data/sound/Red_Alert_FX_001.wav", "thief");
     sound_load(1.0, "data/sound/boom.wav", "boom");
     sound_load(0.5, "data/sound/effect.wav", "effect");
@@ -369,4 +369,7 @@ void sound_load_all (void)
     sound_load(0.5, "data/sound/205563__everheat__arrow.wav", "arrow");
     sound_load(0.5, "data/sound/49676__ejfortin__energy_short_sword_5.wav", "energy1");
     sound_load(0.3, "data/sound/148975__adam_n__squelch_1.wav", "squelch");
+    sound_load(0.5, "data/sound/Object_Drop_001.wav", "drop");
+    sound_load(0.5, "data/sound/Door_Latch_002.wav", "door");
+    sound_load(0.5, "data/sound/Electric_Zap.wav", "shield");
 }
