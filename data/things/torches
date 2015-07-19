@@ -13,7 +13,7 @@
  carried_as="data/things/torch"
  light_radius=3.0
  is_animated
- d10000_chance_of_appearing=20
+ d10000_chance_of_appearing=100
  tiles={
   tile={
    tile="torches3"
