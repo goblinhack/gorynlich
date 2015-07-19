@@ -1,6 +1,6 @@
 {
  short_name="cloudkill gas"
- raw_name="cloudkill1"
+ raw_name="cloudkill2"
  z_depth="explosion_top"
  is_animated
  is_hidden_from_editor
@@ -8,7 +8,7 @@
  is_cloud_effect
  is_animated_no_dir
  scale=0.4
- explosion_radius=1.0
+ explosion_radius=7.0
  damage=30
  hit_delay_tenths=1
  sound_on_creation="poison"

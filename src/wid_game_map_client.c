@@ -1122,7 +1122,8 @@ wid_game_map_client_replace_tile (widp w,
             (tp->id == THING_BOMB)              ||
             (tp->id == THING_POISON1)           ||
             (tp->id == THING_POISON2)           ||
-            (tp->id == THING_CLOUDKILL1)) {
+            (tp->id == THING_CLOUDKILL1)        ||
+            (tp->id == THING_CLOUDKILL2)) {
 
             level_place_explosion(client_level,
                                   0, /* owner */
