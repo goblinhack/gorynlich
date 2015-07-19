@@ -355,6 +355,7 @@ void sound_load_all (void)
     sound_load(0.5, "data/sound/coin_roll.wav", "payment");
     sound_load(0.5, "data/sound/treasure.wav", "treasure");
     sound_load(1.0, "data/sound/85568__joelaudio__dragon_roar.wav", "dragon");
+    sound_load(1.0, "data/sound/212764__qubodup__lion_roar.ogg", "orc");
     sound_load(1.0, "data/sound/Red_Alert_FX_001.wav", "thief");
     sound_load(1.0, "data/sound/boom.wav", "boom");
     sound_load(0.5, "data/sound/effect.wav", "effect");

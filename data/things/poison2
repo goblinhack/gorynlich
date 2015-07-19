@@ -8,7 +8,7 @@
  is_cloud_effect
  is_animated_no_dir
  scale=0.4
- explosion_radius=4.0
+ explosion_radius=5.0
  damage=10
  hit_delay_tenths=1
  sound_on_creation="acid"
