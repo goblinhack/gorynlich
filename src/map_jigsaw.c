@@ -1212,6 +1212,17 @@ static void jigpiece_add_frag (dungeon_t *dg)
                 }
             }
         }
+    }
+
+    int F;
+
+    for (F = 0; F < dg->frag_cnt; F++) {
+
+        int f = myrand() % dg->frag_cnt;
+
+        if ((myrand() % 100) < 30) {
+            continue;
+        }
 
         /*
          * For each orientation of a frag.

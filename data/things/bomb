@@ -13,7 +13,7 @@
  is_valid_for_action_bar
  is_given_randomly_at_start
  explodes_as="data/things/explosion3"
- d10000_chance_of_appearing=50
+ d10000_chance_of_appearing=70
  tiles={
   tile={
    delay=250

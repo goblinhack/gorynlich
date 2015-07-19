@@ -12,7 +12,7 @@
  is_given_randomly_at_start
  is_magical
  is_valid_for_action_bar
- d10000_chance_of_appearing=50
+ d10000_chance_of_appearing=100
  is_combustable
  explodes_as="data/things/explosion3"
  is_fragile
