@@ -215,7 +215,6 @@ void music_play_game (level_pos_t level_pos)
         "data/music/DST_SnowMode.ogg",
         "data/music/DST_StarryBook.ogg",
         "data/music/DST_SuperWin.ogg",
-        "data/music/DST_TheHauntedChapel.ogg",
         "data/music/DST_TwoHeaded.ogg",
     };
 
@@ -228,9 +227,14 @@ void music_play_game (level_pos_t level_pos)
     music_play(music[x], music[x], 22050);
 }
 
+void music_play_death (void)
+{
+    music_play("data/music/DST_TheHauntedChapel.ogg", "death", 22050 );
+}
+
 void music_play_demo (void)
 {
-    music_play("data/music/DST_BattleLands.ogg", "battl", 22050 );
+    music_play("data/music/DST_BattleLands.ogg", "battle", 22050 );
 }
 
 void music_play_intro (void)

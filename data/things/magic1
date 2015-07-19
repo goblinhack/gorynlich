@@ -15,131 +15,122 @@
  sound_on_creation="shield"
  tiles={
   tile={
-   tile="magic1-1"
+   tile="magic_cloud.1"
    delay=50
   }
   tile={
-   tile="magic1-2"
+   tile="magic_cloud.2"
    delay=50
   }
   tile={
-   tile="magic1-3"
+   tile="magic_cloud.3"
    delay=50
   }
   tile={
-   tile="magic1-4"
+   tile="magic_cloud.4"
    delay=50
   }
   tile={
-   tile="magic1-5"
+   tile="magic_cloud.5"
    delay=50
   }
   tile={
-   tile="magic1-6"
+   tile="magic_cloud.8"
    delay=50
   }
   tile={
-   tile="magic1-7"
+   tile="magic_cloud.9"
+  }
+  tile={
+   tile="magic_cloud.10"
    delay=50
   }
   tile={
-   tile="magic1-8"
+   tile="magic_cloud.11"
    delay=50
   }
   tile={
-   tile="magic1-9"
+   tile="magic_cloud.12"
    delay=50
   }
   tile={
-   tile="magic1-10"
+   tile="magic_cloud.13"
    delay=50
   }
   tile={
-   tile="magic1-11"
+   tile="magic_cloud.14"
    delay=50
   }
   tile={
-   tile="magic1-12"
+   tile="magic_cloud.15"
    delay=50
   }
   tile={
-   tile="magic1-13"
+   tile="magic_cloud.16"
    delay=50
   }
   tile={
-   tile="magic1-14"
+   tile="magic_cloud.17"
    delay=50
   }
   tile={
-   tile="magic1-15"
+   tile="magic_cloud.18"
    delay=50
   }
   tile={
-   tile="magic1-16"
+   tile="magic_cloud.19"
    delay=50
   }
   tile={
-   tile="magic1-17"
+   tile="magic_cloud.20"
    delay=50
   }
   tile={
-   tile="magic1-18"
+   tile="magic_cloud.21"
    delay=50
   }
   tile={
-   tile="magic1-19"
+   tile="magic_cloud.22"
    delay=50
   }
   tile={
-   tile="magic1-20"
+   tile="magic_cloud.23"
    delay=50
   }
   tile={
-   tile="magic1-21"
+   tile="magic_cloud.24"
    delay=50
   }
   tile={
-   tile="magic1-22"
+   tile="magic_cloud.25"
    delay=50
   }
   tile={
-   tile="magic1-23"
+   tile="magic_cloud.26"
    delay=50
   }
   tile={
-   tile="magic1-24"
+   tile="magic_cloud.27"
    delay=50
   }
   tile={
-   tile="magic1-25"
+   tile="magic_cloud.28"
    delay=50
   }
   tile={
-   tile="magic1-26"
+   tile="magic_cloud.29"
    delay=50
   }
   tile={
-   tile="magic1-27"
+   tile="magic_cloud.30"
    delay=50
   }
   tile={
-   tile="magic1-28"
+   tile="magic_cloud.31"
    delay=50
   }
   tile={
-   tile="magic1-29"
-   delay=50
-  }
-  tile={
-   tile="magic1-30"
-   delay=50
-  }
-  tile={
-   tile="magic1-31"
-   delay=50
-  }
-  tile={
-   tile="magic1-32"
+   tile="magic_cloud.32"
    delay=50
   }
  }

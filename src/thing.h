@@ -836,6 +836,7 @@ typedef struct thing_ {
     uint32_t opened_exit:1;
     uint32_t is_open:1;
     uint32_t is_dead:1;
+    uint32_t is_dying:1;
     uint32_t is_angry:1;
 
     /*
