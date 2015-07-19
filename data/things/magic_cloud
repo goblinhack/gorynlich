@@ -3,6 +3,7 @@
  raw_name="magic_powerup"
  z_depth="explosion_top"
  is_animated
+ speed=60
  is_hidden_from_editor
  is_animated_no_dir
  sound_on_creation="shield"

@@ -25,12 +25,12 @@
 #define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           50
 #define MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS   20
 #define MAZE_MIN_DISTANCE_START_AND_END             200
-#define MAX_MAP_NUMBER_OF_TIMES_TO_TRY_AND_PLACE_FRAG 200
+#define MAX_MAP_NUMBER_OF_TIMES_TO_TRY_AND_PLACE_FRAG 50
 
 #undef MAZE_DEBUG_PRINT_EXITS
 #undef MAZE_DEBUG_SHOW_AS_GENERATING
 #undef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
-#undef MAZE_DEBUG_SHOW_CONSOLE
+#define MAZE_DEBUG_SHOW_CONSOLE
 
 #include "main.h"
 #include "wid.h"
@@ -3155,7 +3155,15 @@ void map_jigsaw_generate (levelp level, widp wid, int depth, grid_wid_replace_t 
                 break;
 
             case MAP_TRAP:
-                tp = random_trap(depth); 
+                {
+                    int r = myrand() % 100;
+
+                    if (r < 95) {
+                        tp = random_trap(depth); 
+                    } else {
+                        tp = random_lava();
+                    }
+                }
                 break;
 
             case MAP_WIDTH: 
@@ -3171,7 +3179,15 @@ void map_jigsaw_generate (levelp level, widp wid, int depth, grid_wid_replace_t 
                 break;
 
             case MAP_BRAZIER: 
-                tp = tp_find("data/things/brazier"); 
+                {
+                    int r = myrand() % 100;
+
+                    if (r < 95) {
+                        tp = tp_find("data/things/brazier");
+                    } else {
+                        tp = random_treasure(shop_floor);
+                    }
+                }
                 break;
 
             case MAP_TREASURE: {
@@ -3182,8 +3198,6 @@ void map_jigsaw_generate (levelp level, widp wid, int depth, grid_wid_replace_t 
                 } else {
                     if (r < 20) {
                         tp = tp_find("data/things/brazier");
-                    } else if (r < 40) {
-                        tp = tp_find("data/things/key");
                     } else {
                         tp = random_treasure(shop_floor);
                     }

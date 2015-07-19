@@ -8,7 +8,7 @@
  is_carryable
  is_valid_for_action_bar
  is_given_randomly_at_start
- d10000_chance_of_appearing=1000
+ d10000_chance_of_appearing=300
  cost=10
  is_treasure
  tiles={
