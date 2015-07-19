@@ -3,12 +3,12 @@
  raw_name="dragon4"
  tooltip="gorynlich"
  z_depth="explosion_top"
- speed=20
+ speed=25
  max_hp=1250
  damage=100
  bonus_xp_on_death=30000
  is_effect_rotate_2way
- vision_distance=30
+ vision_distance=20
  hit_delay_tenths=2
  sound_on_death="urgh2"
  is_lava_proof
@@ -18,10 +18,9 @@
  scale=3.5
  collision_radius=2.0
  hit_priority=10
- is_ethereal
  is_levitating
  is_animated
- fires="data/things/explosion1"
+ fires="data/things/fireburst1"
  weapon_fire_delay_hundredths=200
  d10000_chance_of_appearing=0
  min_appear_depth=99

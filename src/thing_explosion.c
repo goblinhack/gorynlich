@@ -471,6 +471,26 @@ void level_place_explosion (levelp level,
         return;
     }
 
+    if ((id == THING_FIREBURST1) ||
+        (id == THING_FIREBURST2) ||
+        (id == THING_FIREBURST3) ||
+        (id == THING_FIREBURST4)) {
+
+        level_place_explosion_(level, 
+                               owner,
+                               ox, oy,
+                               x, y,
+                               explosion_radius,
+                               0.5, // density
+                               explodes_as,
+                               4, // nargs
+                               "data/things/fireburst1",
+                               "data/things/fireburst2",
+                               "data/things/fireburst3",
+                               "data/things/fireburst4");
+        return;
+    }
+
     if (!explodes_as) {
         ERR("combustable, but no explosion for name %s", tp_name(tp));
         return;
