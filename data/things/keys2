@@ -10,7 +10,7 @@
  is_stackable
  is_carryable
  cost=15
- d10000_chance_of_appearing=500
+ d10000_chance_of_appearing=100
  is_treasure
  tiles={
   tile={
