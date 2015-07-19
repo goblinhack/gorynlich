@@ -129,6 +129,11 @@ typedef struct tp_ {
     char *sound_on_death;
 
     /*
+     * Sound on thing death
+     */
+    char *sound_random;
+
+    /*
      * How this weapon appears on screen when it is used.
      */
     char *weapon_carry_anim;
@@ -250,6 +255,7 @@ typedef struct tp_ {
 
     uint32_t hit_priority;
     uint32_t weapon_fire_delay_hundredths;
+    uint32_t sound_random_delay_secs;
     uint32_t swing_distance_from_player;
     uint32_t tx_map_update_delay_thousandths;
     uint32_t can_be_hit_chance;
@@ -480,6 +486,7 @@ double tp_get_collision_radius(tpp);
 uint32_t tp_get_quantity(tpp);
 uint32_t tp_get_hit_priority(tpp);
 uint32_t tp_get_weapon_fire_delay_hundredths(tpp);
+uint32_t tp_get_sound_random_delay_secs(tpp);
 uint32_t tp_get_swing_distance_from_player(tpp);
 
 int16_t tp_get_stats_max_hp(tpp);
