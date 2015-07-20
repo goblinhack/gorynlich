@@ -179,10 +179,7 @@ void sound_play_at (const char *name_alias, double x, double y)
         volume *= scale;
 
         if (distance > 1) {
-            int visible = true;
-
             if (!can_see(client_level, player->x, player->y, sx, sy)) {
-                visible = false;
                 volume /= 2.0;
             }
         }
