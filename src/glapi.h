@@ -15,10 +15,8 @@
 #define CreateVertexBuffers(nobuf, bufptr) glGenBuffers(nobuf, bufptr)
 #define DeleteVertexBuffers(nobuf, bufptr) glDeleteBuffers(nobuf, bufptr)
 #else
-/*
- * Seems to be too old and is missing framebuffer support.
+
 #include "SDL_opengl.h"
- */
 
 #define glOrthof glOrtho
 #endif
@@ -425,3 +423,36 @@ static inline void glcolor (color s)
 extern GLuint render_buf_id1;
 extern GLuint fbo_id1;
 extern GLuint fbo_tex_id1;
+
+#ifdef _WIN32
+extern PFNGLCREATEPROGRAMPROC glCreateProgram_EXT;
+extern PFNGLDELETEPROGRAMPROC glDeleteProgram_EXT;
+extern PFNGLISPROGRAMPROC glIsProgram_EXT;
+extern PFNGLCREATESHADERPROC glCreateShader_EXT;
+extern PFNGLDELETESHADERPROC glDeleteShader_EXT;
+extern PFNGLSHADERSOURCEPROC glShaderSource_EXT;
+extern PFNGLCOMPILESHADERPROC glCompileShader_EXT;
+extern PFNGLATTACHSHADERPROC glAttachShader_EXT;
+extern PFNGLDETACHSHADERPROC glDetachShader_EXT;
+extern PFNGLGETATTACHEDSHADERSPROC glGetAttachedShaders_EXT;
+extern PFNGLLINKPROGRAMPROC glLinkProgram_EXT;
+extern PFNGLUSEPROGRAMPROC glUseProgram_EXT;
+extern PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog_EXT;
+extern PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog_EXT;
+extern PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation_EXT;
+extern PFNGLUNIFORM1FPROC glUniform1f_EXT;
+extern PFNGLUNIFORM1IPROC glUniform1i_EXT;
+extern PFNGLUNIFORM2FVPROC glUniform2fv_EXT;
+extern PFNGLUNIFORM3FVPROC glUniform3fv_EXT;
+extern PFNGLGENERATEMIPMAPPROC glGenerateMipmap_EXT;
+extern PFNGLGENFRAMEBUFFERSPROC glGenFramebuffers_EXT;
+extern PFNGLDELETEFRAMEBUFFERSPROC glDeleteFramebuffers_EXT;
+extern PFNGLBINDFRAMEBUFFERPROC glBindFramebuffer_EXT;
+extern PFNGLGENRENDERBUFFERSPROC glGenRenderbuffers_EXT;
+extern PFNGLDELETERENDERBUFFERSPROC glDeleteRenderbuffers_EXT;
+extern PFNGLBINDRENDERBUFFERPROC glBindRenderbuffer_EXT;
+extern PFNGLRENDERBUFFERSTORAGEPROC glRenderbufferStorage_EXT;
+extern PFNGLFRAMEBUFFERRENDERBUFFERPROC glFramebufferRenderbuffer_EXT;
+extern PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D_EXT;
+extern PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus_EXT;
+#endif
