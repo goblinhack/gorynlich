@@ -192,12 +192,13 @@ case `uname` in
 	EXE=".exe"
 	LDLIBS=`echo $LDLIBS | sed -e 's/-XCClinker//g'`
 	LDLIBS="$LDLIBS -funwind-tables"
-	LDLIBS="$LDLIBS -lglew32"
+	#LDLIBS="$LDLIBS -lglew32"
 	LDLIBS="$LDLIBS -lopengl32"
         #
         # For __imp warnings in pthread
         #
-        C_FLAGS="$C_FLAGS -DPTW32_STATIC_LIB -DGLEW_STATIC"
+        #C_FLAGS="$C_FLAGS -DPTW32_STATIC_LIB -DGLEW_STATIC"
+        C_FLAGS="$C_FLAGS -DPTW32_STATIC_LIB "
 
 	#
 	# As sdl2-config may be configured for /usr/local
