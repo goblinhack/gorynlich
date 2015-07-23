@@ -231,7 +231,10 @@ enum {
     SOUND_GLOBAL,
 };
 
-void MSG(uint32_t level, const char *fmt, ...) 
+/*
+ * Bloody windows uses MSG hence MESG
+ */
+void MESG(uint32_t level, const char *fmt, ...) 
     __attribute__ ((format (printf, 2, 3)));
 
 void SDL_MSG_BOX(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));

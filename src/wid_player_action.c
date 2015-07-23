@@ -84,12 +84,12 @@ wid_player_action_button_mouse_down (widp w,
          */
         uint32_t id = player->stats.action_bar[action_bar_index].id;
         if (!id) {
-            MSG(WARNING, "Nothing in that slot");
+            MESG(WARNING, "Nothing in that slot");
             return (true);
         }
 
         if (!client_joined_server) {
-            MSG(WARNING, "Not connected to server");
+            MESG(WARNING, "Not connected to server");
             return (true);
         }
 
