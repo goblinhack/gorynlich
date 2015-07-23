@@ -950,7 +950,7 @@ void WID_DBG (widp t, const char *fmt, ...)
 }
 #endif
 
-void MSG (uint32_t level, const char *fmt, ...)
+void MESG (uint32_t level, const char *fmt, ...)
 {
     va_list args;
 

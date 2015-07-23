@@ -186,7 +186,7 @@ wid_player_info_button_style_mouse_down (widp w,
         case THING_WORN_ARMOR:
             if (!tp_is_armour(item_tp)) {
                 valid = false;
-                MSG(WARNING, "This item wont work as armour");
+                MESG(WARNING, "This item wont work as armour");
                 break;
             }
             break;
@@ -194,7 +194,7 @@ wid_player_info_button_style_mouse_down (widp w,
         case THING_WORN_HELMET:
             if (!tp_is_helmet(item_tp)) {
                 valid = false;
-                MSG(WARNING, "This item wont work as a helmet");
+                MESG(WARNING, "This item wont work as a helmet");
                 break;
             }
             break;
@@ -202,7 +202,7 @@ wid_player_info_button_style_mouse_down (widp w,
         case THING_WORN_BOOTS:
             if (!tp_is_boots(item_tp)) {
                 valid = false;
-                MSG(WARNING, "This item wont work as a boots");
+                MESG(WARNING, "This item wont work as a boots");
                 break;
             }
             break;
@@ -211,7 +211,7 @@ wid_player_info_button_style_mouse_down (widp w,
         case THING_WORN_ARM_LEFT:
             if (!tp_is_hand_item(item_tp)) {
                 valid = false;
-                MSG(WARNING, "This item can't be worn on the hand. "
+                MESG(WARNING, "This item can't be worn on the hand. "
                     "This slot is for things like rings.");
                 break;
             }

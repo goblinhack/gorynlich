@@ -400,7 +400,7 @@ static void server_alive_check (void)
                     socket_get_tx(s),
                     (socket_get_quality(s) < SOCKET_PING_FAIL_THRESHOLD));
             } else {
-                MSG(POPUP, "Connection at %d%% quality", 
+                MESG(POPUP, "Connection at %d%% quality", 
                     socket_get_quality(s));
 
                 continue;

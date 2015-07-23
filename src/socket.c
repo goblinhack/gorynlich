@@ -1945,7 +1945,7 @@ void socket_rx_client_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
     }
 
     if (from[0]) {
-        MSG(msg.level, "%s says, %s", from, txt);
+        MESG(msg.level, "%s says, %s", from, txt);
     } else {
         /*
          * This is on the server receiving from the client.
@@ -2349,7 +2349,7 @@ void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
     LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
 
     if (!socket_get_server(s)) {
-        MSG(CHAT, "%s, says %s", from, txt);
+        MESG(CHAT, "%s, says %s", from, txt);
         return;
     }
 
