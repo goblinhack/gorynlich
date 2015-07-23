@@ -399,7 +399,7 @@ static void gl_init_fbo_ (
     }
 
     // switch back to window-system-provided framebuffer
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer_EXT(GL_FRAMEBUFFER, 0);
 }
 
 GLuint render_buf_id1;
