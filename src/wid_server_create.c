@@ -321,7 +321,7 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
         break;
     }
 
-    MSG(POPUP, "Server started! Woot!");
+    MESG(POPUP, "Server started! Woot!");
 
     wid_server_create_hide();
     wid_choose_game_type_visible();
@@ -545,7 +545,7 @@ static uint8_t wid_server_create_col2_mouse_event_ (widp w,
             }
         } else {
             if (global_config.server_max_players <= 1) {
-                MSG(POPUP, "Don't be silly");
+                MESG(POPUP, "Don't be silly");
                 delta = 0;
             }
         }
