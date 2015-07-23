@@ -328,22 +328,22 @@ static void gl_init_fbo_ (
     /*
      * Create a render buffer object.
      */
-    glGenRenderbuffersEXT(1, render_buf_id);
-    glBindRenderbuffer(GL_RENDERBUFFER, *render_buf_id);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+    glGenRenderbuffers_EXT(1, render_buf_id);
+    glBindRenderbuffer_EXT(GL_RENDERBUFFER, *render_buf_id);
+    glRenderbufferStorage_EXT(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
                           tex_width, tex_height);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glBindRenderbuffer_EXT(GL_RENDERBUFFER, 0);
 
     /*
      * Create a frame buffer object.
      */
-    glGenFramebuffers(1, fbo_id);
-    glBindFramebuffer(GL_FRAMEBUFFER, *fbo_id);
+    glGenFramebuffers_EXT(1, fbo_id);
+    glBindFramebuffer_EXT(GL_FRAMEBUFFER, *fbo_id);
 
     /*
      * Attach the texture to FBO color attachment point
      */
-    glFramebufferTexture2D(GL_FRAMEBUFFER,        // 1. fbo target: GL_FRAMEBUFFER 
+    glFramebufferTexture2D_EXT(GL_FRAMEBUFFER,        // 1. fbo target: GL_FRAMEBUFFER 
                            GL_COLOR_ATTACHMENT0,  // 2. attachment point
                            GL_TEXTURE_2D,         // 3. tex target: GL_TEXTURE_2D
                            *fbo_tex_id,           // 4. tex ID
@@ -352,7 +352,7 @@ static void gl_init_fbo_ (
     /*
      * Attach the renderbuffer to depth attachment point
      */
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,      // 1. fbo target: GL_FRAMEBUFFER
+    glFramebufferRenderbuffer_EXT(GL_FRAMEBUFFER,      // 1. fbo target: GL_FRAMEBUFFER
                               GL_DEPTH_ATTACHMENT, // 2. attachment point
                               GL_RENDERBUFFER,     // 3. rbo target: GL_RENDERBUFFER
                               *render_buf_id);     // 4. rbo ID
@@ -360,7 +360,7 @@ static void gl_init_fbo_ (
     /*
      * Check FBO status
      */
-    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    GLenum status = glCheckFramebufferStatus_EXT(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE) {
         ERR("Failed to create framebuffer");
     }

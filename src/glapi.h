@@ -455,4 +455,35 @@ extern PFNGLRENDERBUFFERSTORAGEPROC glRenderbufferStorage_EXT;
 extern PFNGLFRAMEBUFFERRENDERBUFFERPROC glFramebufferRenderbuffer_EXT;
 extern PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D_EXT;
 extern PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus_EXT;
+#else
+#define glCreateProgram_EXT glCreateProgramEXT
+#define glDeleteProgram_EXT glDeleteProgramEXT
+#define glIsProgram_EXT glIsProgramEXT
+#define glCreateShader_EXT glCreateShaderEXT
+#define glDeleteShader_EXT glDeleteShaderEXT
+#define glShaderSource_EXT glShaderSourceEXT
+#define glCompileShader_EXT glCompileShaderEXT
+#define glAttachShader_EXT glAttachShaderEXT
+#define glDetachShader_EXT glDetachShaderEXT
+#define glGetAttachedShaders_EXT glGetAttachedShadersEXT
+#define glLinkProgram_EXT glLinkProgramEXT
+#define glUseProgram_EXT glUseProgramEXT
+#define glGetShaderInfoLog_EXT glGetShaderInfoLogEXT
+#define glGetProgramInfoLog_EXT glGetProgramInfoLogEXT
+#define glGetUniformLocation_EXT glGetUniformLocationEXT
+#define glUniform1f_EXT glUniform1fEXT
+#define glUniform1i_EXT glUniform1iEXT
+#define glUniform2fv_EXT glUniform2fvEXT
+#define glUniform3fv_EXT glUniform3fvEXT
+#define glGenerateMipmap_EXT glGenerateMipmapEXT
+#define glGenFramebuffers_EXT glGenFramebuffersEXT
+#define glDeleteFramebuffers_EXT glDeleteFramebuffersEXT
+#define glBindFramebuffer_EXT glBindFramebufferEXT
+#define glGenRenderbuffers_EXT glGenRenderbuffersEXT
+#define glDeleteRenderbuffers_EXT glDeleteRenderbuffersEXT
+#define glBindRenderbuffer_EXT glBindRenderbufferEXT
+#define glRenderbufferStorage_EXT glRenderbufferStorageEXT
+#define glFramebufferRenderbuffer_EXT glFramebufferRenderbufferEXT
+#define glFramebufferTexture2D_EXT glFramebufferTexture2DEXT
+#define glCheckFramebufferStatus_EXT glCheckFramebufferStatusEXT
 #endif
