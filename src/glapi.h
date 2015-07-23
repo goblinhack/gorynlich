@@ -22,7 +22,7 @@
 #endif
 
 #ifdef _WIN32
-    #include "GL/glew.h"
+//    #include "GL/glew.h"
 #elif __APPLE__
     #include "OpenGL/gl.h"
     #include "OpenGL/glext.h"
