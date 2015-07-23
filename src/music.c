@@ -200,7 +200,6 @@ void music_play_game (level_pos_t level_pos)
         "data/music/DST_DarkDance.ogg",
         "data/music/DST_Darkening.ogg",
         "data/music/DST_DarkestKnight.ogg",
-        "data/music/DST_DoomCity.ogg",
         "data/music/DST_ExInfernus.ogg",
         "data/music/DST_GhostHouse.ogg",
         "data/music/DST_H2O.ogg",
@@ -216,12 +215,13 @@ void music_play_game (level_pos_t level_pos)
         "data/music/DST_StarryBook.ogg",
         "data/music/DST_SuperWin.ogg",
         "data/music/DST_TwoHeaded.ogg",
+        "data/music/DST_DoomCity.ogg",
     };
 
     /*
      * So we get the same music for each player on the same level.
      */
-    int r = level_pos.x + (level_pos.y * 10);
+    int r = (level_pos.x + (level_pos.y * 10)) * 100;
     int x = r % ARRAY_SIZE(music);
 
     music_play(music[x], music[x], 22050);
