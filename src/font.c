@@ -115,7 +115,7 @@ uint8_t font_init (void)
 
     int32_t i;
 
-    for (i = 2; i < MAX_FONT_SIZE; i++) {
+    for (i = 2; i < MAX_FONT_SIZE; i+=2) {
         tmp = strprepend(mybasename(FIXED_FONT, __FUNCTION__), TTF_PATH);
         ttf_write_tga((char*) tmp, i);
         myfree(tmp);
@@ -146,13 +146,13 @@ uint8_t font_init (void)
     }
 #endif
 
-    fixed_font = ttf_read_tga((char*)FIXED_FONT, fixed_font_size);
-    vsmall_font = ttf_read_tga((char*)VSMALL_FONT, vsmall_font_size);
-    small_font  = ttf_read_tga((char*)SMALL_FONT, small_font_size);
-    med_font    = ttf_read_tga((char*)MED_FONT, med_font_size);
-    large_font  = ttf_read_tga((char*)LARGE_FONT, large_font_size);
-    vlarge_font = ttf_read_tga((char*)VLARGE_FONT, vlarge_font_size);
-    vvlarge_font = ttf_read_tga((char*)VVLARGE_FONT, vvlarge_font_size);
+    fixed_font = ttf_read_tga((char*)FIXED_FONT, fixed_font_size & ~1);
+    vsmall_font = ttf_read_tga((char*)VSMALL_FONT, vsmall_font_size & ~1);
+    small_font  = ttf_read_tga((char*)SMALL_FONT, small_font_size & ~1);
+    med_font    = ttf_read_tga((char*)MED_FONT, med_font_size & ~1);
+    large_font  = ttf_read_tga((char*)LARGE_FONT, large_font_size & ~1);
+    vlarge_font = ttf_read_tga((char*)VLARGE_FONT, vlarge_font_size & ~1);
+    vvlarge_font = ttf_read_tga((char*)VVLARGE_FONT, vvlarge_font_size & ~1);
 
     return (true);
 }
