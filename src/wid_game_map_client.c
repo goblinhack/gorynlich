@@ -670,18 +670,18 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
     uint32_t id = player->stats.action_bar[action_bar_index].id;
     if (!id) {
-        MSG(WARNING, "Nothing in that slot");
+        MESG(WARNING, "Nothing in that slot");
         return (true);
     }
 
     tp = id_to_tp(id);
     if (!tp) {
-        MSG(WARNING, "No carried item is using that key");
+        MESG(WARNING, "No carried item is using that key");
         return (true);
     }
 
     if (!client_joined_server) {
-        MSG(WARNING, "Not connected to server");
+        MESG(WARNING, "Not connected to server");
         return (true);
     }
 

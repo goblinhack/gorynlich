@@ -378,7 +378,7 @@ uint8_t client_socket_join (const char *host,
 
     if (!socket_tx_client_join(s, &client_joined_server_key)) {
         if (!quiet) {
-            MSG(CRITICAL, "Join failed");
+            MESG(CRITICAL, "Join failed");
         } else {
             LOG("Client: Joining failed to %s", socket_get_remote_logname(s));
         }
@@ -987,7 +987,7 @@ static void client_check_still_in_game (level_pos_t level_pos)
 
             server_connection_confirmed = true;
 
-            MSG(INFO, "%s joined", p->stats.pname);
+            MESG(INFO, "%s joined", p->stats.pname);
 
             LOG("Client: %s joined, ID %d", p->stats.pname, p->stats.thing_id);
 
@@ -1023,7 +1023,7 @@ static void client_check_still_in_game (level_pos_t level_pos)
         return;
     }
 
-    MSG(CRITICAL, "Server does not report you in the game!");
+    MESG(CRITICAL, "Server does not report you in the game!");
 
     CON("Client: You are player: \"%s\", ID %u", 
         global_config.stats.pname, 
