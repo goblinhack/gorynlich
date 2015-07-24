@@ -1196,18 +1196,18 @@ void level_set_is_zzz16 (levelp level, uint8_t val)
     level->is_zzz16 = val;
 }
 
-uint8_t level_is_zzz17 (levelp level)
+uint8_t level_is_blit_y_offset (levelp level)
 {
     verify(level);
 
-    return (level->is_zzz17);
+    return (level->is_blit_y_offset);
 }
 
-void level_set_is_zzz17 (levelp level, uint8_t val)
+void level_set_is_blit_y_offset (levelp level, uint8_t val)
 {
     verify(level);
 
-    level->is_zzz17 = val;
+    level->is_blit_y_offset = val;
 }
 
 uint8_t level_exit_reached_when_open (levelp level)
@@ -1867,7 +1867,7 @@ void marshal_level (marshal_p ctx, levelp level)
     PUT_NAMED_BITFIELD(ctx, "is_zzz14", level->is_zzz14);
     PUT_NAMED_BITFIELD(ctx, "is_zzz15", level->is_zzz15);
     PUT_NAMED_BITFIELD(ctx, "is_zzz16", level->is_zzz16);
-    PUT_NAMED_BITFIELD(ctx, "is_zzz17", level->is_zzz17);
+    PUT_NAMED_BITFIELD(ctx, "is_blit_y_offset", level->is_blit_y_offset);
     PUT_NAMED_BITFIELD(ctx, "exit_reached_when_open", level->exit_reached_when_open);
     PUT_NAMED_BITFIELD(ctx, "warned_exit_not_open", level->warned_exit_not_open);
     PUT_NAMED_BITFIELD(ctx, "is_exit_open", level->exit_reached_when_open);
@@ -1915,7 +1915,7 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
         GET_OPT_NAMED_BITFIELD(ctx, "is_zzz14", level->is_zzz14);
         GET_OPT_NAMED_BITFIELD(ctx, "is_zzz15", level->is_zzz15);
         GET_OPT_NAMED_BITFIELD(ctx, "is_zzz16", level->is_zzz16);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_zzz17", level->is_zzz17);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_blit_y_offset", level->is_blit_y_offset);
         GET_OPT_NAMED_BITFIELD(ctx, "exit_reached_when_open", 
                                level->exit_reached_when_open);
         GET_OPT_NAMED_BITFIELD(ctx, "warned_exit_not_open", 
