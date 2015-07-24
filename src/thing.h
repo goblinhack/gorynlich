@@ -408,6 +408,7 @@ enum {
     THING_ANIM_TREASURE_CHEST,
     THING_ANIM_EYES,
     THING_WEAPON_HIT1,
+    THING_WEAPON_HIT2,
     THING_EXPLOSION1,
     THING_EXPLOSION2,
     THING_EXPLOSION3,
@@ -1247,11 +1248,11 @@ static inline uint8_t thing_is_rrr9 (thingp t)
     return (tp_is_rrr9(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr10 (thingp t)
+static inline uint8_t thing_is_blit_y_offset (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr10(thing_tp(t)));
+    return (tp_is_blit_y_offset(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_dirt (thingp t)
@@ -2076,9 +2077,9 @@ static inline uint8_t thing_is_rrr9_noverify (thingp t)
     return (t->tp->is_rrr9);
 }
 
-static inline uint8_t thing_is_rrr10_noverify (thingp t)
+static inline uint8_t thing_is_blit_y_offset_noverify (thingp t)
 {
-    return (t->tp->is_rrr10);
+    return (t->tp->is_blit_y_offset);
 }
 
 static inline uint8_t thing_is_dirt_noverify (thingp t)
