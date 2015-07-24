@@ -249,7 +249,10 @@ void thing_client_wid_update (thingp t,
                               uint8_t is_new)
 {
 //CON("%s %f %f",thing_logname(t),x,y);
+
     thing_client_wid_move(t, x, y, smooth);
+
+    widp w = t->wid;
 
     /*
      * Update the weapon being carried.
@@ -258,6 +261,7 @@ void thing_client_wid_update (thingp t,
     if (weapon_carry_anim) {
         weapon_carry_anim->dir = t->dir;
         thing_client_wid_move(weapon_carry_anim, x, y, smooth);
+        wid_set_blit_y_offset(weapon_carry_anim->wid, w->blit_y_offset);
     }
 
     /*
@@ -271,6 +275,7 @@ void thing_client_wid_update (thingp t,
         weapon_swing_anim->dir = t->dir;
         thing_weapon_swing_offset(t, &dx, &dy);
         thing_client_wid_move(weapon_swing_anim, x + dx, y + dy, smooth);
+        wid_set_blit_y_offset(weapon_swing_anim->wid, w->blit_y_offset);
     }
 
     /*
@@ -280,6 +285,7 @@ void thing_client_wid_update (thingp t,
     if (shield_carry_anim) {
         shield_carry_anim->dir = t->dir;
         thing_client_wid_move(shield_carry_anim, x, y, smooth);
+        wid_set_blit_y_offset(shield_carry_anim->wid, w->blit_y_offset);
     }
 
     /*
@@ -289,5 +295,6 @@ void thing_client_wid_update (thingp t,
     if (magic_anim) {
         magic_anim->dir = t->dir;
         thing_client_wid_move(magic_anim, x, y, smooth);
+        wid_set_blit_y_offset(magic_anim->wid, w->blit_y_offset);
     }
 }

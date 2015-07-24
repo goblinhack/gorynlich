@@ -169,7 +169,7 @@ typedef struct level_t_ {
     uint8_t is_zzz14:1;
     uint8_t is_zzz15:1;
     uint8_t is_zzz16:1;
-    uint8_t is_zzz17:1;
+    uint8_t is_blit_y_offset:1;
     uint8_t on_server:1;
     uint8_t exit_reached_when_open:1;
     uint8_t warned_exit_not_open:1;

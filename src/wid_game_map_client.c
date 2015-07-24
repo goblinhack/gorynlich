@@ -1088,6 +1088,16 @@ wid_game_map_client_replace_tile (widp w,
                             true /* is new */);
 
     /*
+     * Offset tall things
+     */
+    if (scale != 1.0) {
+        if (thing_is_blit_y_offset(t)) {
+            wid_set_blit_y_offset(child, 
+                                  wid_get_height(child) * scale * -((scale - 1.0) / 2.0));
+        }
+    }
+
+    /*
      * If this is a pre-existing thing perhaps being recreated ona new level
      * then it will have a direction already. Update it.
      */

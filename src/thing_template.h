@@ -301,7 +301,7 @@ typedef struct tp_ {
     uint8_t is_rrr7:1;
     uint8_t is_rrr8:1;
     uint8_t is_rrr9:1;
-    uint8_t is_rrr10:1;
+    uint8_t is_blit_y_offset:1;
     uint8_t is_dirt:1;
     uint8_t is_dragon:1;
     uint8_t is_generator:1;
@@ -720,9 +720,9 @@ static inline uint8_t tp_is_rrr9 (tpp t)
     return (t->is_rrr9);
 }
 
-static inline uint8_t tp_is_rrr10 (tpp t)
+static inline uint8_t tp_is_blit_y_offset (tpp t)
 {
-    return (t->is_rrr10);
+    return (t->is_blit_y_offset);
 }
 
 static inline uint8_t tp_is_dirt (tpp t)

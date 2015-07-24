@@ -321,6 +321,7 @@ void wid_flip_vert(widp, uint8_t);
 uint8_t wid_get_flip_horiz(widp);
 uint8_t wid_get_flip_vert(widp);
 void wid_set_bevel(widp, double val);
+void wid_set_blit_y_offset(widp, double val);
 void wid_set_bevelled(widp, uint8_t);
 void wid_set_color(widp, wid_color col, color val);
 void wid_set_cursor(widp, uint32_t val);
@@ -792,6 +793,11 @@ typedef struct wid_ {
     double blit_scaling_h_end;
     uint16_t blit_scaling_w_repeat_count;
     uint16_t blit_scaling_h_repeat_count;
+
+    /*
+     * For tall monsters
+     */
+    double blit_y_offset;
 
     double rotate_base;
     double rotate_start;
