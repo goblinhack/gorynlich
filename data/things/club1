@@ -22,7 +22,7 @@
  d10000_chance_of_appearing=150
  d10000_chance_of_breaking=1
  weapon_carry_anim="data/things/club1_anim"
- weapon_swing_anim="data/things/weapon_swing1"
+ weapon_swing_anim="data/things/weapon_swing2"
  tiles={
   tile={
    tile="club1"

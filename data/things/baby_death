@@ -15,6 +15,8 @@
  sound_on_death="urgh"
  is_undead
  is_monst
+ scale=1.2
+ is_blit_y_offset
  is_shadow_caster
  hit_priority=10
  is_combustable
