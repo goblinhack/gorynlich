@@ -420,6 +420,8 @@ static inline void glcolor (color s)
     glColor4ub(s.r, s.g, s.b, s.a);
 }
 
+extern void gl_ext_init(void);
+
 extern GLuint render_buf_id1;
 extern GLuint fbo_id1;
 extern GLuint fbo_tex_id1;
