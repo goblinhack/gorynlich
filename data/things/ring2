@@ -1,8 +1,8 @@
 {
- short_name="ring"
- raw_name="ring2"
- tooltip="generic magical ring tm"
- z_depth="monst"
+ short_name="ring of protection"
+ raw_name="ring1"
+ tooltip="ring of protection"
+ z_depth="player"
  cost=1000
  is_treasure
  is_stackable
@@ -13,7 +13,12 @@
  is_ring
  can_be_enchanted
  d10000_chance_of_appearing=10
+ stats_defense=21
  is_hand_item
+ is_light_source
+ light_radius=0.5
+ light_tint="cyan"
+ is_candle_light
  tiles={
   tile={
    tile="ring2"
