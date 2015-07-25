@@ -359,6 +359,11 @@ static void gl_init_fbo_ (
     /*
      * Create a render buffer object.
      */
+    if (!glFramebufferTexture2D_EXT) {
+        MSG_BOX("glGenRenderbuffers_EXT is not present; fatal");
+        DIE("glGenRenderbuffers_EXT is not present; fatal");
+    }
+
     glGenRenderbuffers_EXT(1, render_buf_id);
     glBindRenderbuffer_EXT(GL_RENDERBUFFER, *render_buf_id);
     glRenderbufferStorage_EXT(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
