@@ -489,7 +489,7 @@ uint8_t sdl_init (void)
         if (SDL_GL_MakeCurrent(window, context) < 0) {
             SDL_MSG_BOX("SDL_GL_MakeCurrent failed %s", SDL_GetError());
         }
-SDL_MSG_BOX("1.1");
+SDL_MSG_BOX("1.2");
 
 #endif /* } */
 
