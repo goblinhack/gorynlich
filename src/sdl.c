@@ -337,8 +337,13 @@ uint8_t sdl_init (void)
     int32_t value;
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
-        DIE("Couldn't initialize SDL: %s", SDL_GetError());
-        return (false);
+        SDL_MSG_BOX("SDL_Init failed %s", SDL_GetError());
+        DIE("SDL_Init failed %s", SDL_GetError());
+    }
+
+    if (SDL_VideoInit(NULL) != 0) {
+        SDL_MSG_BOX("SDL_VideoInit failed %s", SDL_GetError());
+        DIE("SDL_VideoInit failed %s", SDL_GetError());
     }
 
     sdl_init_joystick();
@@ -447,10 +452,12 @@ uint8_t sdl_init (void)
             video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
 #       endif /* } */
 
+#if 0
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+#endif
 
         window = SDL_CreateWindow("gorynlich",
                                 SDL_WINDOWPOS_CENTERED,
