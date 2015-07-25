@@ -398,16 +398,113 @@ void wid_player_inventory_button_style (widp w,
         }
 
         if (tp_get_stats_attack_melee(tp)) {
-            /*
-             * Failure rate
-             */
             int val = thing_stats_val_to_modifier(tp_get_stats_attack_melee(tp));
             char *tmp2;
 
             if (val > 0) {
-                tmp2 = dynprintf("%%%%fmt=left$This awesome item gives +%d melee modifier\n", val);
+                tmp2 = dynprintf("%%%%fmt=left$This awesome item gives +%d melee attack modifier\n", val);
             } else if (val < 0) {
-                tmp2 = dynprintf("%%%%fmt=left$This awful item gives %d melee modifier\n", val);
+                tmp2 = dynprintf("%%%%fmt=left$This awful item gives %d melee attack modifier\n", val);
+            } else {
+                tmp2 = 0;
+            }
+
+            if (tmp2) {
+                char *old = tmp;
+                tmp = strappend(old, tmp2);
+                myfree(old);
+                myfree(tmp2);
+            }
+        }
+
+        if (tp_get_stats_attack_ranged(tp)) {
+            int val = thing_stats_val_to_modifier(tp_get_stats_attack_ranged(tp));
+            char *tmp2;
+
+            if (val > 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This amazing item gives +%d ranged attack modifier\n", val);
+            } else if (val < 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This dark item gives %d ranged attack modifier\n", val);
+            } else {
+                tmp2 = 0;
+            }
+
+            if (tmp2) {
+                char *old = tmp;
+                tmp = strappend(old, tmp2);
+                myfree(old);
+                myfree(tmp2);
+            }
+        }
+
+        if (tp_get_stats_defense(tp)) {
+            int val = thing_stats_val_to_modifier(tp_get_stats_defense(tp));
+            char *tmp2;
+
+            if (val > 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This stunning item gives +%d defense modifier\n", val);
+            } else if (val < 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This evil item gives %d defense modifier\n", val);
+            } else {
+                tmp2 = 0;
+            }
+
+            if (tmp2) {
+                char *old = tmp;
+                tmp = strappend(old, tmp2);
+                myfree(old);
+                myfree(tmp2);
+            }
+        }
+
+        if (tp_get_stats_speed(tp)) {
+            int val = thing_stats_val_to_modifier(tp_get_stats_speed(tp));
+            char *tmp2;
+
+            if (val > 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This shiny item gives +%d speed modifier\n", val);
+            } else if (val < 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This nasty item gives %d speed modifier\n", val);
+            } else {
+                tmp2 = 0;
+            }
+
+            if (tmp2) {
+                char *old = tmp;
+                tmp = strappend(old, tmp2);
+                myfree(old);
+                myfree(tmp2);
+            }
+        }
+
+        if (tp_get_stats_healing(tp)) {
+            int val = thing_stats_val_to_modifier(tp_get_stats_healing(tp));
+            char *tmp2;
+
+            if (val > 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This beautiful item gives +%d healing modifier\n", val);
+            } else if (val < 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This diabolic item gives %d healing modifier\n", val);
+            } else {
+                tmp2 = 0;
+            }
+
+            if (tmp2) {
+                char *old = tmp;
+                tmp = strappend(old, tmp2);
+                myfree(old);
+                myfree(tmp2);
+            }
+        }
+
+        if (tp_get_stats_vision(tp)) {
+            int val = thing_stats_val_to_modifier(tp_get_stats_vision(tp));
+            char *tmp2;
+
+            if (val > 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This glistening item gives +%d vision modifier\n", val);
+            } else if (val < 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This blinding item gives %d vision modifier\n", val);
             } else {
                 tmp2 = 0;
             }
