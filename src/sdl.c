@@ -453,6 +453,8 @@ uint8_t sdl_init (void)
                                 VIDEO_WIDTH, VIDEO_HEIGHT,
                                 video_flags);
         if (!window) {
+            SDL_MSG_BOX("SDL_CreateWindow failed %s", SDL_GetError());
+
             global_config.video_pix_width = 0;
             global_config.video_pix_height = 0;
 
@@ -464,6 +466,13 @@ uint8_t sdl_init (void)
         }
 
         context = SDL_GL_CreateContext(window);
+        if (!context) {
+            SDL_MSG_BOX("SDL_GL_CreateContext failed %s", SDL_GetError());
+        }
+
+        if (SDL_GL_MakeCurrent(window, context) < 0) {
+            SDL_MSG_BOX("SDL_GL_MakeCurrent failed %s", SDL_GetError());
+        }
 
 #endif /* } */
 
