@@ -397,6 +397,29 @@ void wid_player_inventory_button_style (widp w,
             }
         }
 
+        if (tp_get_stats_attack_melee(tp)) {
+            /*
+             * Failure rate
+             */
+            int val = thing_stats_val_to_modifier(tp_get_stats_attack_melee(tp));
+            char *tmp2;
+
+            if (val > 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This awesome item gives +%d melee modifier\n", val);
+            } else if (val < 0) {
+                tmp2 = dynprintf("%%%%fmt=left$This awful item gives %d melee modifier\n", val);
+            } else {
+                tmp2 = 0;
+            }
+
+            if (tmp2) {
+                char *old = tmp;
+                tmp = strappend(old, tmp2);
+                myfree(old);
+                myfree(tmp2);
+            }
+        }
+
         full_tooltip = tmp;
         wid_set_tooltip(w, full_tooltip, med_font);
         myfree(full_tooltip);
