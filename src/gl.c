@@ -40,7 +40,7 @@ PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D_EXT;
 PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus_EXT;
 #endif
 
-static void gl_ext_init (void)
+void gl_ext_init (void)
 {
 #ifdef _WIN32
     glCreateProgram_EXT = 
@@ -262,7 +262,6 @@ void gl_enter_2d_mode (void)
         return;
     }
 
-    gl_ext_init();
 #if 0
 #ifdef _WIN32
     if (glewInit() != GLEW_OK) {
