@@ -2,7 +2,7 @@
  short_name="ring"
  raw_name="ring3"
  tooltip="generic magical ring tm"
- z_depth="monst"
+ z_depth="player"
  cost=1000
  is_treasure
  is_stackable
@@ -14,6 +14,10 @@
  can_be_enchanted
  d10000_chance_of_appearing=10
  is_hand_item
+ is_light_source
+ light_radius=0.5
+ light_tint="green"
+ is_candle_light
  tiles={
   tile={
    tile="ring3"
