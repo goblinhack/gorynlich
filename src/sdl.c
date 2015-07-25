@@ -472,6 +472,10 @@ uint8_t sdl_init (void)
 
             config_save();
 
+            SDL_MSG_BOX("Couldn't set windowed display %ux%u: %s",
+                        VIDEO_WIDTH, VIDEO_HEIGHT,
+                        SDL_GetError());
+
             ERR("Couldn't set windowed display %ux%u: %s",
                 VIDEO_WIDTH, VIDEO_HEIGHT,
                 SDL_GetError());
