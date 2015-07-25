@@ -447,6 +447,11 @@ uint8_t sdl_init (void)
             video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
 #       endif /* } */
 
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
         window = SDL_CreateWindow("gorynlich",
                                 SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED,
@@ -473,9 +478,11 @@ uint8_t sdl_init (void)
         if (SDL_GL_MakeCurrent(window, context) < 0) {
             SDL_MSG_BOX("SDL_GL_MakeCurrent failed %s", SDL_GetError());
         }
-SDL_MSG_BOX("SDL_GL_MakeCurrent context %p",context);
+SDL_MSG_BOX("1.1");
 
 #endif /* } */
+
+        SDL_ClearError();
 
         gl_ext_init();
 
