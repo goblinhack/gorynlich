@@ -1250,7 +1250,7 @@ void sdl_loop (void)
             SDL_GL_SwapBuffers();
 #endif /* } */
         } else {
-            usleep(MAIN_LOOP_DELAY);
+            uSleep(MAIN_LOOP_DELAY);
         }
     }
 
@@ -1479,7 +1479,7 @@ void sdl_loop (void)
             SDL_GL_SwapBuffers();
 #endif /* } */
         } else {
-            usleep(MAIN_LOOP_DELAY);
+            uSleep(MAIN_LOOP_DELAY);
         }
     }
 

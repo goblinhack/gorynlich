@@ -99,6 +99,8 @@ mycp()
 	popd >/dev/null
 )
 
+mkdir /c/MingW/include/SDL2
+
 mycp "third-party/SDL-2.0.4-9174/include/*" $MINGW_DIR/include/SDL2/
 mycp "third-party/SDL-2.0.4-9174/sdl2-config" $MINGW_DIR/bin
 mycp "third-party/SDL-2.0.4-9174/build/.libs/*.a" $MINGW_DIR/lib
