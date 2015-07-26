@@ -360,7 +360,7 @@ static void gl_init_fbo_ (
      * Create a render buffer object.
      */
     if (!glFramebufferTexture2D_EXT) {
-        MSG_BOX("glGenRenderbuffers_EXT is not present; fatal");
+        SDL_MSG_BOX("glGenRenderbuffers_EXT is not present; fatal");
         DIE("glGenRenderbuffers_EXT is not present; fatal");
     }
 
