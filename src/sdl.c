@@ -452,7 +452,7 @@ uint8_t sdl_init (void)
             video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
 #       endif /* } */
 
-#if 1
+#if 0
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -480,6 +480,8 @@ uint8_t sdl_init (void)
                 VIDEO_WIDTH, VIDEO_HEIGHT,
                 SDL_GetError());
         }
+
+        SDL_SetWindowTitle(window, "gory");
 
         context = SDL_GL_CreateContext(window);
         if (!context) {
