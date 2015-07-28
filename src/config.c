@@ -44,6 +44,7 @@ static uint8_t demarshal_config (demarshal_p ctx, struct config *p)
     rc = rc && GET_OPT_NAMED_INT32(ctx, "music_volume", p->music_volume);
     rc = rc && GET_OPT_NAMED_INT32(ctx, "intro_screen", p->intro_screen);
     rc = rc && GET_OPT_NAMED_INT32(ctx, "display_sync", p->display_sync);
+    rc = rc && GET_OPT_NAMED_INT32(ctx, "full_screen", p->full_screen);
     rc = rc && GET_OPT_NAMED_INT32(ctx, "fps_counter", p->fps_counter);
     rc = rc && GET_OPT_NAMED_INT32(ctx, "deathmatch", p->deathmatch);
     rc = rc && GET_OPT_NAMED_INT32(ctx, "deathmatch_monsters", p->deathmatch_monsters);
@@ -95,6 +96,7 @@ static void marshal_config (marshal_p ctx, struct config *p)
     PUT_NAMED_INT32(ctx, "music_volume", p->music_volume);
     PUT_NAMED_INT32(ctx, "intro_screen", p->intro_screen);
     PUT_NAMED_INT32(ctx, "display_sync", p->display_sync);
+    PUT_NAMED_INT32(ctx, "full_screen", p->full_screen);
     PUT_NAMED_INT32(ctx, "fps_counter", p->fps_counter);
     PUT_NAMED_INT32(ctx, "deathmatch", p->deathmatch);
     PUT_NAMED_INT32(ctx, "deathmatch_monsters", p->deathmatch_monsters);
@@ -156,6 +158,7 @@ uint8_t config_load (void)
     global_config.sound_volume = SOUND_MAX;
     global_config.music_volume = SOUND_MED;
     global_config.display_sync = 0;
+    global_config.full_screen = 0;
     global_config.intro_screen = 1;
     global_config.fps_counter = 0;
     global_config.deathmatch = 0;
