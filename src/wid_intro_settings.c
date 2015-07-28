@@ -35,7 +35,7 @@ static uint8_t wid_intro_settings_toggle_mouse_event(widp w,
                                                    int32_t x, int32_t y);
 static int saved_focus;
 
-#define WID_INTRO_MAX_SETTINGS  6
+#define WID_INTRO_MAX_SETTINGS  7
 #define WID_INTRO_MAX_VAL      30 
 
 enum {
@@ -44,6 +44,7 @@ enum {
     WID_INTRO_SETTINGS_ROW_MUSIC,
     WID_INTRO_SETTINGS_ROW_INTRO_SCREEN,
     WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC,
+    WID_INTRO_SETTINGS_ROW_FULL_SCREEN,
     WID_INTRO_SETTINGS_ROW_FPS_COUNTER,
 };
 
@@ -53,6 +54,7 @@ static const char *wid_intro_button_name[WID_INTRO_MAX_SETTINGS] = {
     "Music",
     "Intro screen",
     "Display sync",
+    "Full screen",
     "FPS counter",
 };
 
@@ -75,12 +77,14 @@ static const char *wid_intro_button_value_string
     { "Off", "On", 0 },
     { "Off", "On", 0 },
     { "Off", "On", 0 },
+    { "Off", "On", 0 },
 };
 
 static int wid_intro_button_value_toggle[WID_INTRO_MAX_SETTINGS] = {
     0,
     0,
     0,
+    1,
     1,
     1,
     1,
@@ -323,13 +327,11 @@ static void wid_intro_settings_read (void)
     val = wid_intro_button_val[WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC] =
         global_config.display_sync;
 
-    if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC][val]) {
-
-        wid_intro_button_val[WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC] = 0;
-
-        MSG_BOX("Display sync value %d was not found in known list", val);
-    }
+    /*
+     * full_screen.
+     */
+    val = wid_intro_button_val[WID_INTRO_SETTINGS_ROW_FULL_SCREEN] =
+        global_config.full_screen;
 
     /*
      * fps_counter.
@@ -337,27 +339,11 @@ static void wid_intro_settings_read (void)
     val = wid_intro_button_val[WID_INTRO_SETTINGS_ROW_FPS_COUNTER] =
         global_config.fps_counter;
 
-    if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_FPS_COUNTER][val]) {
-
-        wid_intro_button_val[WID_INTRO_SETTINGS_ROW_FPS_COUNTER] = 0;
-
-        MSG_BOX("FPS counter value %d was not found in known list", val);
-    }
-
     /*
      * intro_screen.
      */
     val = wid_intro_button_val[WID_INTRO_SETTINGS_ROW_INTRO_SCREEN] =
         global_config.intro_screen;
-
-    if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_INTRO_SCREEN][val]) {
-
-        wid_intro_button_val[WID_INTRO_SETTINGS_ROW_INTRO_SCREEN] = 0;
-
-        MSG_BOX("Intro screen value %d was not found in known list", val);
-    }
 }
 
 static widp wid_intro_restart_popup;
@@ -431,6 +417,9 @@ static void wid_intro_settings_save (void)
     global_config.display_sync =
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC];
 
+    global_config.full_screen =
+        wid_intro_button_val[WID_INTRO_SETTINGS_ROW_FULL_SCREEN];
+
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
 
     if (global_config.display_sync) {
@@ -475,6 +464,10 @@ static void wid_intro_settings_save (void)
 
         wid_intro_settings_restart_needed = true;
     }
+
+    if (old_global_config.full_screen != global_config.full_screen) {
+        wid_intro_settings_restart_needed = true;
+    }
 }
 
 static void wid_intro_settings_create (void)
@@ -513,7 +506,7 @@ static void wid_intro_settings_create (void)
                 0.6, /* y */
                 2, /* columns */
                 saved_focus, /* focus */
-                7, /* items */
+                8, /* items */
 
                 /*
                  * Column widths
@@ -548,6 +541,11 @@ static void wid_intro_settings_create (void)
                 (int) '6', 
                 keys[i + 5], 
                 values[i + 5], 
+                wid_intro_settings_mouse_event,
+
+                (int) '7', 
+                keys[i + 6], 
+                values[i + 6], 
                 wid_intro_settings_mouse_event,
 
                 (int) 'b', 
