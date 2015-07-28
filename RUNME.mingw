@@ -91,7 +91,13 @@ mycp()
 (
 	pushd $TP_DIR >/dev/null
 
-	for i in *.tar.gz
+	for i in \
+            SDL-2.0.4-9799.tar.gz \
+            SDL2_mixer-2.0.0.tar.gz \
+            SDL2_mixer-devel-2.0.0-mingw.tar.gz \
+            SDL2_net-2.0.0.tar.gz \
+            SDL2_net-devel-2.0.0-mingw.tar.gz \
+            makedepend-1.0.5.tar.gz
 	do
 		run tar xf $i
 	done
