@@ -73,7 +73,7 @@
 /*
  * Screen sizes.
  */
-#define DEFAULT_VIDEO_WIDTH         1008 // See gl.h for more
+#define DEFAULT_VIDEO_WIDTH         1008
 #define DEFAULT_VIDEO_HEIGHT        672
 
 /*
