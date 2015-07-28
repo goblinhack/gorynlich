@@ -1,5 +1,9 @@
 --------------------------------------- plan for jul --------------------------------------
-- ring of resistance
+- single teleport didn't work again 
+- show the random level id ?
+- fix SDL for createwindow
+- turn off vsync by default
+- need laptop size or check screen size for too large at startup
 - ring of double damage
 - ring of triple damage
 - ring of quad damage
@@ -27,6 +31,9 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Mon Jul 27 12:51:08 EDT 2015
+- ring of resistance
 
 Fri Jul 24 22:16:20 EDT 2015
 - the all-cheese
