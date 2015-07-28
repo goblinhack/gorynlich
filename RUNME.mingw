@@ -101,11 +101,17 @@ mycp()
 
 mkdir /c/MingW/include/SDL2
 
-mycp "third-party/SDL-2.0.4-9174/include/*" $MINGW_DIR/include/SDL2/
-mycp "third-party/SDL-2.0.4-9174/sdl2-config" $MINGW_DIR/bin
-mycp "third-party/SDL-2.0.4-9174/build/.libs/*.a" $MINGW_DIR/lib
-mycp "third-party/SDL-2.0.4-9174/build/.libs/*.dll" $MINGW_DIR/bin
-mycp "third-party/SDL-2.0.4-9174/build/.libs/*.dll" $TOP_DIR
+#mycp "third-party/SDL-2.0.4-9174/include/*" $MINGW_DIR/include/SDL2/
+#mycp "third-party/SDL-2.0.4-9174/sdl2-config" $MINGW_DIR/bin
+#mycp "third-party/SDL-2.0.4-9174/build/.libs/*.a" $MINGW_DIR/lib
+#mycp "third-party/SDL-2.0.4-9174/build/.libs/*.dll" $MINGW_DIR/bin
+#mycp "third-party/SDL-2.0.4-9174/build/.libs/*.dll" $TOP_DIR
+
+mycp "third-party/SDL-2.0.4-9799/include/*" $MINGW_DIR/include/SDL2/
+mycp "third-party/SDL-2.0.4-9799/sdl2-config" $MINGW_DIR/bin
+mycp "third-party/SDL-2.0.4-9799/build/.libs/*.a" $MINGW_DIR/lib
+mycp "third-party/SDL-2.0.4-9799/build/.libs/*.dll" $MINGW_DIR/bin
+mycp "third-party/SDL-2.0.4-9799/build/.libs/*.dll" $TOP_DIR
 
 mycp "third-party/SDL2_net-2.0.0/*.h" $MINGW_DIR/include/SDL2/
 mycp "third-party/SDL2_net-2.0.0/.libs/*.a" $MINGW_DIR/lib/
