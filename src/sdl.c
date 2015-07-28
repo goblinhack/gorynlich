@@ -452,21 +452,12 @@ uint8_t sdl_init (void)
             video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
 #       endif /* } */
 
-#if 0
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-#endif
-
         window = SDL_CreateWindow("gorynlich",
                                 SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED,
                                 VIDEO_WIDTH, VIDEO_HEIGHT,
                                 video_flags);
         if (!window) {
-            SDL_MSG_BOX("SDL_CreateWindow failed %s", SDL_GetError());
-
             global_config.video_pix_width = 0;
             global_config.video_pix_height = 0;
 
@@ -476,12 +467,10 @@ uint8_t sdl_init (void)
                         VIDEO_WIDTH, VIDEO_HEIGHT,
                         SDL_GetError());
 
-            ERR("Couldn't set windowed display %ux%u: %s",
+            DIE("Couldn't set windowed display %ux%u: %s",
                 VIDEO_WIDTH, VIDEO_HEIGHT,
                 SDL_GetError());
         }
-
-        SDL_SetWindowTitle(window, "gory");
 
         context = SDL_GL_CreateContext(window);
         if (!context) {
