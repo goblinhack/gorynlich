@@ -427,6 +427,7 @@ struct config {
     int32_t sound_volume;
     int32_t music_volume;
     int32_t display_sync;
+    int32_t full_screen;
     int32_t intro_screen;
     int32_t fps_counter;
     int32_t deathmatch;

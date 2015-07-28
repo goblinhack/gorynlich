@@ -426,6 +426,10 @@ uint8_t sdl_init (void)
 
         video_flags = SDL_OPENGL;
 
+        if (global_config.full_screen) {
+            video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
+        }
+
 #       ifdef __IPHONE_OS_VERSION_MIN_REQUIRED /* { */
             video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
 #       endif /* } */
@@ -447,6 +451,10 @@ uint8_t sdl_init (void)
         INIT_LOG("SDL mode    : window");
 
         video_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
+
+        if (global_config.full_screen) {
+            video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
+        }
 
 #       ifdef __IPHONE_OS_VERSION_MIN_REQUIRED /* { */
             video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
