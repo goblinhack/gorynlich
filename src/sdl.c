@@ -416,8 +416,8 @@ uint8_t sdl_init (void)
     /*
      * Don't use this. It seemed to mess up graphics on FireGL.
      *
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
      */
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
     uint32_t video_flags;
 
