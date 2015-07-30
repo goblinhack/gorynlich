@@ -2,7 +2,7 @@
 - single teleport didn't work again 
 - show the random level id ?
 - fix SDL for createwindow
-- turn off vsync by default
+- bug Jesus
 - need laptop size or check screen size for too large at startup
 - ring of double damage
 - ring of triple damage
@@ -31,6 +31,9 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Tue Jul 28 19:07:20 EDT 2015
+- turn off vsync by default
 
 Mon Jul 27 12:51:08 EDT 2015
 - SDL diff
