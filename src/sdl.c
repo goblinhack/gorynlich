@@ -332,6 +332,8 @@ uint8_t sdl_init (void)
         return (true);
     }
 
+    gl_ext_init();
+
     int32_t VIDEO_WIDTH;
     int32_t VIDEO_HEIGHT;
     int32_t value;
@@ -492,8 +494,6 @@ uint8_t sdl_init (void)
 #endif /* } */
 
         SDL_ClearError();
-
-        gl_ext_init();
 
 #if SDL_MAJOR_VERSION == 1 /* { */
     SDL_WM_SetCaption("gorynlich", "gorynlich");
