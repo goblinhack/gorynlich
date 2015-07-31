@@ -916,6 +916,20 @@ void level_set_level_pos (levelp level, level_pos_t val)
     level->level_pos = val;
 }
 
+uint32_t level_get_seed (levelp level)
+{
+    verify(level);
+
+    return (level->seed);
+}
+
+void level_set_seed (levelp level, uint32_t val)
+{
+    verify(level);
+
+    level->seed = val;
+}
+
 uint32_t level_get_timestamp_started (levelp level)
 {
     verify(level);

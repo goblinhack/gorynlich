@@ -34,6 +34,7 @@ typedef struct level_trigger_ {
 
 typedef struct level_t_ {
     level_pos_t level_pos;
+    uint32_t seed;
 
     /*
      * This is for monsters. One map where they try to go through doors and 

@@ -662,6 +662,7 @@ static void client_rx_server_status (gsocketp s,
 
     if (client_level) {
         level_set_level_pos(client_level, latest_status.level_pos);
+        level_set_seed(client_level, latest_status.seed);
     }
 
     if (memcmp(&server_status.level_pos, &latest_status.level_pos,
@@ -669,6 +670,12 @@ static void client_rx_server_status (gsocketp s,
         LOG("Client: Level no changed to %d.%d", 
             latest_status.level_pos.y,
             latest_status.level_pos.x);
+        redo = true;
+    }
+
+    if (server_status.seed != latest_status.seed) {
+        LOG("Client: Level seed changed to %u", 
+            latest_status.seed);
         redo = true;
     }
 

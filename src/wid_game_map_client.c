@@ -1217,7 +1217,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
     double score_x = 0.78;
     double cash_x = 0.88;
-    double player_y_offset = 0.14; // player start y
+    double player_y_offset = 0.17; // player start y
     double next_player_y_delta = 0.1;
     double score_and_cash_title_offset = 0.025;
     double score_and_cash_value_offset = 0.055;
@@ -1373,7 +1373,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         level_pos_t level_pos = level_get_level_pos(client_level);
 
         char *tmp = 
-            dynprintf("%%%%fg=green$Level %d.%d", level_pos.y, level_pos.x);
+            dynprintf("%%%%fg=green$Depth %d.%d", level_pos.y, level_pos.x);
 
         widp wid_level_container;
 
@@ -1386,6 +1386,27 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
         wid_set_no_shape(wid_level_container);
         wid_set_color(wid_level, WID_COLOR_TEXT, WHITE);
+    }
+
+    if (client_level) {
+        uint32_t seed = level_get_seed(client_level);
+
+        if (seed) {
+            char *tmp = 
+                dynprintf("%%%%fg=green$Level %u", seed);
+
+            widp wid_level_container;
+
+            wid_level_container = wid_textbox(wid_scoreline_container_top,
+                                            &wid_level,
+                                            tmp, 
+                                            (score_x + cash_x) / 2.0, 0.08, 
+                                            med_font);
+            myfree(tmp);
+
+            wid_set_no_shape(wid_level_container);
+            wid_set_color(wid_level, WID_COLOR_TEXT, WHITE);
+        }
     }
 
     wid_raise(wid_scoreline_container_top);
