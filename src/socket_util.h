@@ -132,6 +132,7 @@ typedef struct {
     uint8_t level_hide;
     uint8_t server_current_players;
     level_pos_t level_pos;
+    uint32_t seed;
 } __attribute__ ((packed)) msg_server_status;
 
 typedef struct {
