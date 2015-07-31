@@ -2116,7 +2116,6 @@ static void maze_check_teleports (void)
 
             if ((map_jigsaw_buffer_getchar(x, y) == MAP_TELEPORT)) {
                 teleport++;
-                break;
             }
         }
     }
@@ -2125,11 +2124,12 @@ static void maze_check_teleports (void)
         return;
     }
 
-    int tries = 100000;
-
-    while (tries--) {
-        if (maze_replace_room_char(MAP_TELEPORT)) {
-            return;
+    for (x = 1; x < MAP_WIDTH - 1; x++) {
+        for (y = 1; y < MAP_HEIGHT - 1; y++) {
+            if ((map_jigsaw_buffer_getchar(x, y) == MAP_TELEPORT)) {
+                map_jigsaw_buffer_goto(x, y);
+                map_jigsaw_buffer_putchar(MAP_ROCK);
+            }
         }
     }
 }
@@ -2715,7 +2715,8 @@ static uint8_t maze_generate_and_solve (dungeon_t *dg)
 /*
  * generate_level
  */
-static int32_t generate_level (const char *jigsaw_map,
+static int32_t generate_level (levelp level,
+                               const char *jigsaw_map,
                                int32_t opt_seed)
 {
     dungeon_t *dg;
@@ -2728,10 +2729,14 @@ static int32_t generate_level (const char *jigsaw_map,
     if (opt_seed) {
         maze_seed = opt_seed;
     } else {
-        maze_seed = myrand();
+        maze_seed = myrand() % 1000;
     }
 
     mysrand(maze_seed);
+
+    if (level) {
+        level->seed = maze_seed;
+    }
 
     LOG("Maze: Seed %u", maze_seed);
 
@@ -2974,7 +2979,7 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
         }
     }
 
-    rc = generate_level(jigsaw_map, opt_seed);
+    rc = generate_level(0, jigsaw_map, opt_seed);
     if (!rc) {
         ERR("failed to generate a maze!");
     }
@@ -3001,7 +3006,7 @@ void map_jigsaw_generate (levelp level, widp wid, int depth, grid_wid_replace_t 
 
     jigsaw_map = "data/map/jigsaw.map";
     int rc;
-    rc = generate_level(jigsaw_map, opt_seed);
+    rc = generate_level(level, jigsaw_map, opt_seed);
 
     if (!rc) {
         ERR("failed to generate a maze!");

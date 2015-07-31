@@ -1,6 +1,4 @@
 --------------------------------------- plan for jul --------------------------------------
-- single teleport didn't work again 
-- show the random level id ?
 - fix SDL for createwindow
 - bug Jesus
 - need laptop size or check screen size for too large at startup
@@ -31,6 +29,10 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Thu Jul 30 23:37:34 EDT 2015
+- single teleport didn't work again 
+- show the random level id ?
 
 Tue Jul 28 19:07:20 EDT 2015
 - turn off vsync by default
