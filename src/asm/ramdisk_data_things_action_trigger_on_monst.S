@@ -1,0 +1,6 @@
+.globl data_things_action_trigger_on_monst_start_
+data_things_action_trigger_on_monst_start_:
+.incbin "/Users/nmcgill/gorynlich/data/things/action_trigger_on_monst"
+.globl data_things_action_trigger_on_monst_end_
+data_things_action_trigger_on_monst_end_:
+

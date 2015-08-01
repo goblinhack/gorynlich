@@ -1,0 +1,6 @@
+.globl data_sound_zombie_in_painSoundBible_com_134322253_wav_start_
+data_sound_zombie_in_painSoundBible_com_134322253_wav_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/zombie_in_painSoundBible.com_134322253.wav"
+.globl data_sound_zombie_in_painSoundBible_com_134322253_wav_end_
+data_sound_zombie_in_painSoundBible_com_134322253_wav_end_:
+

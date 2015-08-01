@@ -1,0 +1,6 @@
+.globl data_sound_219566__qubodup__poison_spell_magic_ogg_start_
+data_sound_219566__qubodup__poison_spell_magic_ogg_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/219566__qubodup__poison_spell_magic.ogg"
+.globl data_sound_219566__qubodup__poison_spell_magic_ogg_end_
+data_sound_219566__qubodup__poison_spell_magic_ogg_end_:
+
