@@ -14,15 +14,6 @@ void gl_enter_2d_mode (void)
         return;
     }
 
-#if 0
-#ifdef _WIN32
-    if (glewInit() != GLEW_OK) {
-	SDL_MSG_BOX("GLEW init fail: %s", SDL_GetError());
-	return;
-    }
-#endif
-#endif
-
     /*
      * Enable Texture Mapping
      */
@@ -578,210 +569,210 @@ static void gl_ext_load (void)
         (typeof(glCreateProgram_EXT)) 
         wglGetProcAddress("glCreateProgram");
     if (!glCreateProgram_EXT) {
-        SDL_MSG_BOX("glCreateProgram failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glCreateProgram failed to find OpenGL extension");
     }
 
 
     glDeleteProgram_EXT = 
         (typeof(glDeleteProgram_EXT)) wglGetProcAddress("glDeleteProgram");
     if (!glDeleteProgram_EXT) {
-        SDL_MSG_BOX("glDeleteProgram failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glDeleteProgram failed to find OpenGL extension");
     }
 
 
     glIsProgram_EXT = 
         (typeof(glIsProgram_EXT)) wglGetProcAddress("glIsProgram");
     if (!glIsProgram_EXT) {
-        SDL_MSG_BOX("glIsProgram failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glIsProgram failed to find OpenGL extension");
     }
 
 
     glCreateShader_EXT = 
         (typeof(glCreateShader_EXT)) wglGetProcAddress("glCreateShader");
     if (!glCreateShader_EXT) {
-        SDL_MSG_BOX("glCreateShader failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glCreateShader failed to find OpenGL extension");
     }
 
 
     glDeleteShader_EXT = 
         (typeof(glDeleteShader_EXT)) wglGetProcAddress("glDeleteShader");
     if (!glDeleteShader_EXT) {
-        SDL_MSG_BOX("glDeleteShader failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glDeleteShader failed to find OpenGL extension");
     }
 
 
     glShaderSource_EXT = 
         (typeof(glShaderSource_EXT)) wglGetProcAddress("glShaderSource");
     if (!glShaderSource_EXT) {
-        SDL_MSG_BOX("glShaderSource failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glShaderSource failed to find OpenGL extension");
     }
 
 
     glCompileShader_EXT = 
         (typeof(glCompileShader_EXT)) wglGetProcAddress("glCompileShader");
     if (!glCompileShader_EXT) {
-        SDL_MSG_BOX("glCompileShader failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glCompileShader failed to find OpenGL extension");
     }
 
 
     glAttachShader_EXT = 
         (typeof(glAttachShader_EXT)) wglGetProcAddress("glAttachShader");
     if (!glAttachShader_EXT) {
-        SDL_MSG_BOX("glAttachShader failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glAttachShader failed to find OpenGL extension");
     }
 
 
     glDetachShader_EXT = 
         (typeof(glDetachShader_EXT)) wglGetProcAddress("glDetachShader");
     if (!glDetachShader_EXT) {
-        SDL_MSG_BOX("glDetachShader failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glDetachShader failed to find OpenGL extension");
     }
 
 
     glGetAttachedShaders_EXT = 
         (typeof(glGetAttachedShaders_EXT)) wglGetProcAddress("glGetAttachedShaders");
     if (!glGetAttachedShaders_EXT) {
-        SDL_MSG_BOX("glGetAttachedShaders failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glGetAttachedShaders failed to find OpenGL extension");
     }
 
 
     glLinkProgram_EXT = 
         (typeof(glLinkProgram_EXT)) wglGetProcAddress("glLinkProgram");
     if (!glLinkProgram_EXT) {
-        SDL_MSG_BOX("glLinkProgram failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glLinkProgram failed to find OpenGL extension");
     }
 
 
     glUseProgram_EXT = 
         (typeof(glUseProgram_EXT)) wglGetProcAddress("glUseProgram");
     if (!glUseProgram_EXT) {
-        SDL_MSG_BOX("glUseProgram failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glUseProgram failed to find OpenGL extension");
     }
 
 
     glGetShaderInfoLog_EXT = 
         (typeof(glGetShaderInfoLog_EXT)) wglGetProcAddress("glGetShaderInfoLog");
     if (!glGetShaderInfoLog_EXT) {
-        SDL_MSG_BOX("glGetShaderInfoLog failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glGetShaderInfoLog failed to find OpenGL extension");
     }
 
 
     glGetProgramInfoLog_EXT = 
         (typeof(glGetProgramInfoLog_EXT)) wglGetProcAddress("glGetProgramInfoLog");
     if (!glGetProgramInfoLog_EXT) {
-        SDL_MSG_BOX("glGetProgramInfoLog failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glGetProgramInfoLog failed to find OpenGL extension");
     }
 
 
     glGetUniformLocation_EXT = 
         (typeof(glGetUniformLocation_EXT)) wglGetProcAddress("glGetUniformLocation");
     if (!glGetUniformLocation_EXT) {
-        SDL_MSG_BOX("glGetUniformLocation failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glGetUniformLocation failed to find OpenGL extension");
     }
 
 
     glUniform1f_EXT = 
         (typeof(glUniform1f_EXT)) wglGetProcAddress("glUniform1f");
     if (!glUniform1f_EXT) {
-        SDL_MSG_BOX("glUniform1f failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glUniform1f failed to find OpenGL extension");
     }
 
 
     glUniform1i_EXT = 
         (typeof(glUniform1i_EXT)) wglGetProcAddress("glUniform1i");
     if (!glUniform1i_EXT) {
-        SDL_MSG_BOX("glUniform1i failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glUniform1i failed to find OpenGL extension");
     }
 
 
     glUniform2fv_EXT = 
         (typeof(glUniform2fv_EXT)) wglGetProcAddress("glUniform2fv");
     if (!glUniform2fv_EXT) {
-        SDL_MSG_BOX("glUniform2fv failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glUniform2fv failed to find OpenGL extension");
     }
 
 
     glUniform3fv_EXT = 
         (typeof(glUniform3fv_EXT)) wglGetProcAddress("glUniform3fv");
     if (!glUniform3fv_EXT) {
-        SDL_MSG_BOX("glUniform3fv failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glUniform3fv failed to find OpenGL extension");
     }
 
 
     glGenerateMipmap_EXT = 
         (typeof(glGenerateMipmap_EXT)) wglGetProcAddress("glGenerateMipmap");
     if (!glGenerateMipmap_EXT) {
-        SDL_MSG_BOX("glGenerateMipmap failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glGenerateMipmap failed to find OpenGL extension");
     }
 
 
     glGenFramebuffers_EXT = 
         (typeof(glGenFramebuffers_EXT)) wglGetProcAddress("glGenFramebuffers");
     if (!glGenFramebuffers_EXT) {
-        SDL_MSG_BOX("glGenFramebuffers failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glGenFramebuffers failed to find OpenGL extension");
     }
 
 
     glDeleteFramebuffers_EXT = 
         (typeof(glDeleteFramebuffers_EXT)) wglGetProcAddress("glDeleteFramebuffers");
     if (!glDeleteFramebuffers_EXT) {
-        SDL_MSG_BOX("glDeleteFramebuffers failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glDeleteFramebuffers failed to find OpenGL extension");
     }
 
 
     glBindFramebuffer_EXT = 
         (typeof(glBindFramebuffer_EXT)) wglGetProcAddress("glBindFramebuffer");
     if (!glBindFramebuffer_EXT) {
-        SDL_MSG_BOX("glBindFramebuffer failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glBindFramebuffer failed to find OpenGL extension");
     }
 
 
     glGenRenderbuffers_EXT = 
         (typeof(glGenRenderbuffers_EXT)) wglGetProcAddress("glGenRenderbuffers");
     if (!glGenRenderbuffers_EXT) {
-        SDL_MSG_BOX("glGenRenderbuffers failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glGenRenderbuffers failed to find OpenGL extension");
     }
 
 
     glDeleteRenderbuffers_EXT = 
         (typeof(glDeleteRenderbuffers_EXT)) wglGetProcAddress("glDeleteRenderbuffers");
     if (!glDeleteRenderbuffers_EXT) {
-        SDL_MSG_BOX("glDeleteRenderbuffers failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glDeleteRenderbuffers failed to find OpenGL extension");
     }
 
 
     glBindRenderbuffer_EXT = 
         (typeof(glBindRenderbuffer_EXT)) wglGetProcAddress("glBindRenderbuffer");
     if (!glBindRenderbuffer_EXT) {
-        SDL_MSG_BOX("glBindRenderbuffer failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glBindRenderbuffer failed to find OpenGL extension");
     }
 
 
     glRenderbufferStorage_EXT = 
         (typeof(glRenderbufferStorage_EXT)) wglGetProcAddress("glRenderbufferStorage");
     if (!glRenderbufferStorage_EXT) {
-        SDL_MSG_BOX("glRenderbufferStorage failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glRenderbufferStorage failed to find OpenGL extension");
     }
 
 
     glFramebufferRenderbuffer_EXT = 
         (typeof(glFramebufferRenderbuffer_EXT)) wglGetProcAddress("glFramebufferRenderbuffer");
     if (!glFramebufferRenderbuffer_EXT) {
-        SDL_MSG_BOX("glFramebufferRenderbuffer failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glFramebufferRenderbuffer failed to find OpenGL extension");
     }
 
 
     glFramebufferTexture2D_EXT = 
         (typeof(glFramebufferTexture2D_EXT)) wglGetProcAddress("glFramebufferTexture2D");
     if (!glFramebufferTexture2D_EXT) {
-        SDL_MSG_BOX("glFramebufferTexture2D failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glFramebufferTexture2D failed to find OpenGL extension");
     }
 
 
     glCheckFramebufferStatus_EXT = 
         (typeof(glCheckFramebufferStatus_EXT)) wglGetProcAddress("glCheckFramebufferStatus");
     if (!glCheckFramebufferStatus_EXT) {
-        SDL_MSG_BOX("glCheckFramebufferStatus failed to find OpenGL extension: %s", SDL_GetError());
+        SDL_MSG_BOX("glCheckFramebufferStatus failed to find OpenGL extension");
     }
 }
 

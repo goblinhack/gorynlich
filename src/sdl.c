@@ -237,6 +237,42 @@ static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
     return (false);
 }
 
+static inline void sdl_list_video_size (void)
+{
+    int32_t i;
+
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+    SDL_Rect **modes;
+
+    /* Get available fullscreen/hardware modes */
+    modes = SDL_ListModes(0, 0);
+
+    /* Check if there are any modes available */
+    if (modes == (SDL_Rect**)0) {
+        DIE("No modes available!");
+    }
+
+    /* Check if our resolution is restricted */
+    if (modes == (SDL_Rect**)-1) {
+        return (true);
+    }
+
+    for (i=0; modes[i]; ++i) {
+        LOG("SDL video   : %dx%d available",
+            modes[i]->w, modes[i]->h);
+    }
+#else /* } { */
+    for (i = 0; i < SDL_GetNumDisplayModes(0); ++i) {
+
+        SDL_DisplayMode mode;
+
+        SDL_GetDisplayMode(0, i, &mode);
+
+        LOG("SDL video   : %dx%d available", mode.w, mode.h);
+    }
+#endif /* } */
+}
+
 void sdl_joy_rumble (float strength, uint32_t ms)
 {
 #if (SDL_MAJOR_VERSION == 2) /* { */
@@ -255,17 +291,20 @@ static void sdl_init_rumble (void)
         haptic = SDL_HapticOpenFromJoystick(joy);
         if (!haptic) {
             LOG("Couldn't initialize SDL rumble: %s", SDL_GetError());
+            SDL_ClearError();
             return;
         }
     }
 
     if (!SDL_HapticRumbleSupported(haptic)) {
         LOG("No SDL rumble support: %s", SDL_GetError());
+        SDL_ClearError();
         return;
     }
 
     if (SDL_HapticRumbleInit(haptic) != 0) {
         LOG("SDL rumble nit failed: %s", SDL_GetError());
+        SDL_ClearError();
         return;
     }
 #endif /* } */
@@ -298,6 +337,7 @@ static void sdl_init_joystick (void)
             } else {
                 WARN("Could not open gamecontroller %i: %s",
                     joy_index, SDL_GetError());
+                SDL_ClearError();
             }
         }
     }
@@ -357,6 +397,8 @@ uint8_t sdl_init (void)
 
     INIT_LOG("SDL version : %u.%u", SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
 
+    sdl_list_video_size();
+
     uint8_t iphone_size = sdl_find_video_size(
                             IPHONE_VIDEO_WIDTH,
                             IPHONE_VIDEO_HEIGHT);
@@ -372,6 +414,7 @@ uint8_t sdl_init (void)
     uint8_t default_size = sdl_find_video_size(
                             DEFAULT_VIDEO_WIDTH,
                             DEFAULT_VIDEO_HEIGHT);
+
     /*
      * If we have a saved setting, use that.
      */
@@ -449,6 +492,7 @@ uint8_t sdl_init (void)
             ERR("Couldn't set display %ux%u: %s",
                 VIDEO_WIDTH, VIDEO_HEIGHT,
                 SDL_GetError());
+            SDL_ClearError();
         }
 
 #   else /* } { */
@@ -487,10 +531,12 @@ uint8_t sdl_init (void)
         context = SDL_GL_CreateContext(window);
         if (!context) {
             SDL_MSG_BOX("SDL_GL_CreateContext failed %s", SDL_GetError());
+            SDL_ClearError();
         }
 
         if (SDL_GL_MakeCurrent(window, context) < 0) {
             SDL_MSG_BOX("SDL_GL_MakeCurrent failed %s", SDL_GetError());
+            SDL_ClearError();
         }
 
 #endif /* } */
