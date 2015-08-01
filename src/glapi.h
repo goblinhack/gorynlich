@@ -16,10 +16,9 @@
 #define DeleteVertexBuffers(nobuf, bufptr) glDeleteBuffers(nobuf, bufptr)
 #else
 
-/*
- * Seems to be too old and is missing framebuffer support.
+#ifdef _WIN32
 #include "SDL_opengl.h"
- */
+#endif
 
 #define glOrthof glOrtho
 #endif
