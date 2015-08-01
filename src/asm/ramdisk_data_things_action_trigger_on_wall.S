@@ -1,6 +1,0 @@
-.globl data_things_action_trigger_on_wall_start_
-data_things_action_trigger_on_wall_start_:
-.incbin "/Users/nmcgill/gorynlich/data/things/action_trigger_on_wall"
-.globl data_things_action_trigger_on_wall_end_
-data_things_action_trigger_on_wall_end_:
-

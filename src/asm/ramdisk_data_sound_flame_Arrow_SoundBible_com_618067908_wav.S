@@ -1,6 +1,0 @@
-.globl data_sound_flame_Arrow_SoundBible_com_618067908_wav_start_
-data_sound_flame_Arrow_SoundBible_com_618067908_wav_start_:
-.incbin "/Users/nmcgill/gorynlich/data/sound/flame_Arrow_SoundBible.com_618067908.wav"
-.globl data_sound_flame_Arrow_SoundBible_com_618067908_wav_end_
-data_sound_flame_Arrow_SoundBible_com_618067908_wav_end_:
-

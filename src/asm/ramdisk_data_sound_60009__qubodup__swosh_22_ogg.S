@@ -1,6 +1,0 @@
-.globl data_sound_60009__qubodup__swosh_22_ogg_start_
-data_sound_60009__qubodup__swosh_22_ogg_start_:
-.incbin "/Users/nmcgill/gorynlich/data/sound/60009__qubodup__swosh_22.ogg"
-.globl data_sound_60009__qubodup__swosh_22_ogg_end_
-data_sound_60009__qubodup__swosh_22_ogg_end_:
-
