@@ -249,12 +249,12 @@ static inline void sdl_list_video_size (void)
 
     /* Check if there are any modes available */
     if (modes == (SDL_Rect**)0) {
-        DIE("No modes available!");
+        return;
     }
 
     /* Check if our resolution is restricted */
     if (modes == (SDL_Rect**)-1) {
-        return (true);
+        return;
     }
 
     for (i=0; modes[i]; ++i) {
