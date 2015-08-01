@@ -880,42 +880,6 @@ WndProc(
     WPARAM wParam,
     LPARAM lParam)
 {
-#if 0
-    switch (message) {
-    case WM_CREATE:
-        /* initialize OpenGL rendering */
-CON("%s %d",__FUNCTION__,__LINE__);
-CON("func %p", wglGetProcAddress("glGenRenderbuffers"));
-        hDC = GetDC(hWnd);
-        setupPixelFormat(hDC);
-        setupPalette(hDC);
-        hGLRC = wglCreateContext(hDC);
-CON("%s %d",__FUNCTION__,__LINE__);
-CON("func %p", wglGetProcAddress("glGenRenderbuffers"));
-        wglMakeCurrent(hDC, hGLRC);
-CON("%s %d",__FUNCTION__,__LINE__);
-CON("func %p", wglGetProcAddress("glGenRenderbuffers"));
-
-CON("%s %d",__FUNCTION__,__LINE__);
-        return 0;
-    case WM_DESTROY:
-CON("%s %d",__FUNCTION__,__LINE__);
-        /* finish OpenGL rendering */
-        if (hGLRC) {
-            wglMakeCurrent(NULL, NULL);
-            wglDeleteContext(hGLRC);
-        }
-        if (hPalette) {
-            DeleteObject(hPalette);
-        }
-        ReleaseDC(hWnd, hDC);
-        PostQuitMessage(0);
-        return 0;
-    default:
-        break;
-    }
-#endif
-CON("%s %d",__FUNCTION__,__LINE__);
     return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
@@ -923,13 +887,9 @@ void gl_ext_init (void)
 {
     WNDCLASSEX wc;
     HWND hwnd;
-#if 0
-    MSG Msg;
-#endif
 
     HINSTANCE hInstance = GetModuleHandle(0);
 
-    //Step 1: Registering the Window Class
     wc.cbSize        = sizeof(WNDCLASSEX);
     wc.style         = 0;
     wc.lpfnWndProc   = WndProc;
@@ -943,24 +903,21 @@ void gl_ext_init (void)
     wc.lpszClassName = g_szClassName;
     wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
 
-    if(!RegisterClassEx(&wc))
-    {
+    if (!RegisterClassEx(&wc)) {
         MessageBox(NULL, "Window Registration Failed!", "Error!",
             MB_ICONEXCLAMATION | MB_OK);
         return;
     }
 
-    // Step 2: Creating the Window
     hwnd = CreateWindowEx(
-        WS_EX_CLIENTEDGE,
-        g_szClassName,
-        "The title of my window",
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, 240, 120,
-        NULL, NULL, hInstance, NULL);
+                        WS_EX_CLIENTEDGE,
+                        g_szClassName,
+                        "Gorynlich startup",
+                        WS_OVERLAPPEDWINDOW,
+                        CW_USEDEFAULT, CW_USEDEFAULT, 240, 120,
+                        NULL, NULL, hInstance, NULL);
 
-    if(hwnd == NULL)
-    {
+    if (hwnd == NULL) {
         MessageBox(NULL, "Window Creation Failed!", "Error!",
             MB_ICONEXCLAMATION | MB_OK);
         return;
@@ -969,54 +926,27 @@ void gl_ext_init (void)
     ShowWindow(hwnd, 0);
     UpdateWindow(hwnd);
 
-    // Step 3: The Message Loop
-CON("%s %d",__FUNCTION__,__LINE__);
-#if 0
-    while(GetMessage(&Msg, NULL, 0, 0) > 0)
-    {
-        TranslateMessage(&Msg);
-        DispatchMessage(&Msg);
+    /* initialize OpenGL rendering */
+
+    hDC = GetDC(hwnd);
+    setupPixelFormat(hDC);
+    setupPalette(hDC);
+    hGLRC = wglCreateContext(hDC);
+    wglMakeCurrent(hDC, hGLRC);
+
+    gl_ext_load();
+
+    /* finish OpenGL rendering */
+    if (hGLRC) {
+        wglMakeCurrent(NULL, NULL);
+        wglDeleteContext(hGLRC);
     }
-#endif
-CON("%s %d",__FUNCTION__,__LINE__);
-    SDL_Delay(1000);
-CON("%s %d",__FUNCTION__,__LINE__);
-CON("func %p", wglGetProcAddress("glGenRenderbuffers"));
 
-        /* initialize OpenGL rendering */
-CON("%s %d",__FUNCTION__,__LINE__);
-CON("func %p", wglGetProcAddress("glGenRenderbuffers"));
+    if (hPalette) {
+        DeleteObject(hPalette);
+    }
 
-        hDC = GetDC(hwnd);
-        setupPixelFormat(hDC);
-        setupPalette(hDC);
-        hGLRC = wglCreateContext(hDC);
-CON("%s %d",__FUNCTION__,__LINE__);
-CON("func %p", wglGetProcAddress("glGenRenderbuffers"));
-        wglMakeCurrent(hDC, hGLRC);
-
-        gl_ext_load();
-CON("%s %d",__FUNCTION__,__LINE__);
-CON("func %p", wglGetProcAddress("glGenRenderbuffers"));
-
-        /* finish OpenGL rendering */
-CON("%s %d",__FUNCTION__,__LINE__);
-CON("func %p", wglGetProcAddress("glGenRenderbuffers"));
-        if (hGLRC) {
-            wglMakeCurrent(NULL, NULL);
-            wglDeleteContext(hGLRC);
-        }
-CON("%s %d",__FUNCTION__,__LINE__);
-CON("func %p", wglGetProcAddress("glGenRenderbuffers"));
-        if (hPalette) {
-            DeleteObject(hPalette);
-        }
-        ReleaseDC(hwnd, hDC);
-CON("%s %d",__FUNCTION__,__LINE__);
-CON("func %p", wglGetProcAddress("glGenRenderbuffers"));
-#if 0
-        PostQuitMessage(0);
-#endif
+    ReleaseDC(hwnd, hDC);
 }
 #else
 void gl_ext_init (void)

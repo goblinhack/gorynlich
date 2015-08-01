@@ -1,6 +1,0 @@
-.globl data_sound_85568__joelaudio__dragon_roar_wav_start_
-data_sound_85568__joelaudio__dragon_roar_wav_start_:
-.incbin "/Users/nmcgill/gorynlich/data/sound/85568__joelaudio__dragon_roar.wav"
-.globl data_sound_85568__joelaudio__dragon_roar_wav_end_
-data_sound_85568__joelaudio__dragon_roar_wav_end_:
-

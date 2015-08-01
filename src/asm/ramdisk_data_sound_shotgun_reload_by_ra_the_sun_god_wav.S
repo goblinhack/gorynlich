@@ -1,6 +1,0 @@
-.globl data_sound_shotgun_reload_by_ra_the_sun_god_wav_start_
-data_sound_shotgun_reload_by_ra_the_sun_god_wav_start_:
-.incbin "/Users/nmcgill/gorynlich/data/sound/shotgun_reload_by_ra_the_sun_god.wav"
-.globl data_sound_shotgun_reload_by_ra_the_sun_god_wav_end_
-data_sound_shotgun_reload_by_ra_the_sun_god_wav_end_:
-
