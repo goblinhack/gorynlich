@@ -1,6 +1,0 @@
-.globl data_sound_105016__julien_matthey__jm_fx_fireball_01_wav_start_
-data_sound_105016__julien_matthey__jm_fx_fireball_01_wav_start_:
-.incbin "/Users/nmcgill/gorynlich/data/sound/105016__julien_matthey__jm_fx_fireball_01.wav"
-.globl data_sound_105016__julien_matthey__jm_fx_fireball_01_wav_end_
-data_sound_105016__julien_matthey__jm_fx_fireball_01_wav_end_:
-
