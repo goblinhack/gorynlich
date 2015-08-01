@@ -1,10 +1,13 @@
 
 http://gorynlich.weebly.com/
 
+
 Gorynlich (aka Goblinhack v2) is a top-down dungeon romp with single and 
 multiplayer options.
 
 To build:
+
+    git clone https://github.com/goblinhack/gorynlich.git
 
     Linux:
         ./RUNME
@@ -15,7 +18,7 @@ To build:
     MacOS+Xcode:
         ./RUNME.Xcode-OSX
 
-    Windows+MingW:
+    Windows+MingW: (also install msys + mingw + cygwin + pthreads32)
         ./RUNME.mingw
 
 
