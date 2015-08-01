@@ -475,6 +475,8 @@ static void wid_intro_settings_add_screen_modes (void)
     int i;
 
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+    SDL_Rect **modes;
+
     /* Get available fullscreen/hardware modes */
     modes = SDL_ListModes(0, 0);
 
@@ -485,7 +487,7 @@ static void wid_intro_settings_add_screen_modes (void)
 
     /* Check if our resolution is restricted */
     if (modes == (SDL_Rect**)-1) {
-        return (true);
+        return;
     }
 
     for (i=0; modes[i]; ++i) {
