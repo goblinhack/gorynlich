@@ -1,0 +1,6 @@
+.globl data_things_death_cloud_anim_start_
+data_things_death_cloud_anim_start_:
+.incbin "/Users/nmcgill/gorynlich/data/things/death_cloud_anim"
+.globl data_things_death_cloud_anim_end_
+data_things_death_cloud_anim_end_:
+

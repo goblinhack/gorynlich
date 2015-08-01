@@ -1,0 +1,6 @@
+.globl data_sound_188363__darkalicenite__grunt_wav_start_
+data_sound_188363__darkalicenite__grunt_wav_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/188363__darkalicenite__grunt.wav"
+.globl data_sound_188363__darkalicenite__grunt_wav_end_
+data_sound_188363__darkalicenite__grunt_wav_end_:
+
