@@ -33,6 +33,7 @@
 #include "wid_editor.h"
 #include "wid_map.h"
 #include "wid_cmap.h"
+#include "wid_tooltip.h"
 
 static widp wid_intro;
 static widp wid_intro_menu;
@@ -596,6 +597,13 @@ static void wid_intro_menu_create (void)
                  (int) 'h', "Hiscores", wid_menu_past_legends_selected,
 
                  (int) 'q', "Quit", wid_intro_quit_selected);
+
+    {
+        widp w = wid_tooltip("Version 0.0.1 alpha dive dive",
+                             0.9, 0.98, vsmall_font);
+        wid_set_no_shape(w);
+        wid_destroy_in(w, 60000);
+    }
 }
 
 static void wid_intro_menu_destroy (void)
