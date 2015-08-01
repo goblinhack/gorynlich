@@ -1,5 +1,4 @@
 --------------------------------------- plan for jul --------------------------------------
-- fix SDL for createwindow
 - bug Jesus
 - need laptop size or check screen size for too large at startup
 - ring of double damage
@@ -29,6 +28,11 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Sat Aug  1 08:12:03 EDT 2015
+- added more SDL screen sizes
+- SDL clear last error
+- fix SDL for createwindow
 
 Thu Jul 30 23:37:34 EDT 2015
 - single teleport didn't work again 

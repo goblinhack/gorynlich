@@ -100,6 +100,7 @@ musicp music_load (const char *file, const char *name_alias)
     if (!m->music) {
         MSG_BOX("Mix_LoadMUS_RW fail %s: %s %s", file, Mix_GetError(),
             SDL_GetError());
+        SDL_ClearError();
     }
 
     DBG("Load %s", file);
@@ -157,6 +158,7 @@ void music_play (const char *file,
 
             MSG_BOX("Mix_OpenAudio fail: %s %s",
                     Mix_GetError(), SDL_GetError());
+            SDL_ClearError();
         }
 
         music_init_done = true;

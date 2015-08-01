@@ -108,6 +108,7 @@ static soundp sound_load (double volume, const char *filename, const char *name_
     if (!m->sound) {
         ERR("cannot make sound %s: %s %s", filename, Mix_GetError(),
             SDL_GetError());
+        SDL_ClearError();
         return (0);
     }
 
