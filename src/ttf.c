@@ -559,6 +559,7 @@ ttf_set_color_key (SDL_Surface *glyph_surface,
     if (!tmp) {
         ERR("Failed to make RGB surface size %f %f: %s",
             *width, *height, SDL_GetError());
+        SDL_ClearError();
         return;
     }
 
