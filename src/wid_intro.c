@@ -600,7 +600,7 @@ static void wid_intro_menu_create (void)
 
     {
         widp w = wid_tooltip("Version 0.0.1 alpha dive dive",
-                             0.9, 0.98, vsmall_font);
+                             0.9, 0.95, vsmall_font);
         wid_set_no_shape(w);
         wid_destroy_in(w, 60000);
     }
