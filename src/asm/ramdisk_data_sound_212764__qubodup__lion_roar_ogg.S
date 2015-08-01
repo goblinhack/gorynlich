@@ -1,0 +1,6 @@
+.globl data_sound_212764__qubodup__lion_roar_ogg_start_
+data_sound_212764__qubodup__lion_roar_ogg_start_:
+.incbin "/Users/nmcgill/gorynlich/data/sound/212764__qubodup__lion_roar.ogg"
+.globl data_sound_212764__qubodup__lion_roar_ogg_end_
+data_sound_212764__qubodup__lion_roar_ogg_end_:
+
