@@ -599,8 +599,14 @@ static void wid_intro_menu_create (void)
                  (int) 'q', "Quit", wid_intro_quit_selected);
 
     {
-        widp w = wid_tooltip("Version 0.0.1 alpha dive dive",
-                             0.9, 0.95, vsmall_font);
+        widp w = wid_popup(
+                  "Version 0.0.1 alpha dive dive",
+                  "",               /* title */
+                  0.9f, 0.95f,      /* x,y postition in percent */
+                  0,                /* title font */
+                  vsmall_font,      /* body font */
+                  0,                /* button font */
+                  0);               /* number args */
         wid_set_no_shape(w);
         wid_destroy_in(w, 60000);
     }
