@@ -132,6 +132,11 @@ void thing_wield_shield (thingp t, tpp shield)
                   thing_logname(existing_shield));
     }
 
+    if (!shield) {
+        THING_ERR(t, "could not wield null pointer!");
+        return;
+    }
+
     const char *carry_as = tp_shield_carry_anim(shield);
 
     if (!carry_as) {
@@ -182,6 +187,11 @@ void thing_wield_shield (thingp t, tpp shield)
         shield_carry_anim_wid = wid_game_map_client_replace_tile(
                                 wid_game_map_client_grid_container,
                                 t->x, t->y, 0, what);
+    }
+
+    if (!shield_carry_anim_wid) {
+        THING_ERR(t, "failed wield shield %s", tp_short_name(shield));
+        return;
     }
 
     /*

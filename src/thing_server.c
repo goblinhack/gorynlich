@@ -210,6 +210,7 @@ void thing_server_action (thingp t,
 
         if (item->id == THING_POTION_JESUS) {
             thing_jesus_spawn();
+            break;
         } else if 
             ((item->id == THING_POTION_FIRE) ||
              (item->id == THING_POTION_MONSTICIDE) ||
