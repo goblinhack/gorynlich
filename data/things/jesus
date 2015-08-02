@@ -1,0 +1,31 @@
+{
+ short_name="jesus"
+ raw_name="jesus"
+ tooltip="jesus"
+ z_depth="monst"
+ speed=30
+ max_hp=30000
+ damage=30
+ bonus_xp_on_death=10000
+ vision_distance=10
+ hit_delay_tenths=1
+ sound_on_death="urgh"
+ is_monst
+ hit_priority=10
+ is_jesus
+ is_levitating
+ scale=2.0
+ collision_radius=2.0
+ is_light_source
+ light_radius=2.0
+ is_ethereal
+ d10000_chance_of_appearing=0
+ explodes_as="data/things/explosion3"
+ fires="data/things/energy2"
+ weapon_fire_delay_hundredths=100
+ tiles={
+  tile={
+   tile="jesus"
+  }
+ }
+}

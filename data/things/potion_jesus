@@ -1,0 +1,24 @@
+{
+ short_name="summon big jesus"
+ raw_name="potion_jesus"
+ tooltip="summon big jesus"
+ z_depth="monst"
+ cost=100
+ is_treasure
+ is_potion
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ is_magical
+ is_valid_for_action_bar
+ d10000_chance_of_appearing=100
+ is_combustable
+ explodes_as="data/things/explosion3"
+ is_fragile
+ tiles={
+  tile={
+   tile="potion_jesus"
+  }
+ }
+}
