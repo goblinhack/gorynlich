@@ -3,7 +3,6 @@
  raw_name="ring cloud"
  z_depth="monst"
  is_animated
- is_animated_no_dir
  shield_carry_anim="data/things/ring_cloud_anim"
  tiles={
   tile={
@@ -32,6 +31,7 @@
   }
   tile={
    tile="ring_cloud.9"
+   delay=100
   }
   tile={
    tile="ring_cloud.10"
