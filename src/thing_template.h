@@ -129,7 +129,12 @@ typedef struct tp_ {
     char *sound_on_death;
 
     /*
-     * Sound on thing death
+     * Sound on thing collect
+     */
+    char *sound_on_collect;
+
+    /*
+     * Occasional grunts
      */
     char *sound_random;
 
@@ -442,6 +447,7 @@ const char *tp_explodes_as(tpp);
 const char *tp_sound_on_creation(tpp);
 const char *tp_sound_on_hitting_something(tpp);
 const char *tp_sound_on_death(tpp);
+const char *tp_sound_on_collect(tpp);
 const char *tp_weapon_carry_anim(tpp);
 const char *tp_shield_carry_anim(tpp);
 const char *tp_magic_anim(tpp);

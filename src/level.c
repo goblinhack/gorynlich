@@ -1182,32 +1182,32 @@ void level_set_is_zzz14 (levelp level, uint8_t val)
     level->is_zzz14 = val;
 }
 
-uint8_t level_is_zzz15 (levelp level)
+uint8_t level_is_death_summoned (levelp level)
 {
     verify(level);
 
-    return (level->is_zzz15);
+    return (level->is_death_summoned);
 }
 
-void level_set_is_zzz15 (levelp level, uint8_t val)
+void level_set_is_death_summoned (levelp level, uint8_t val)
 {
     verify(level);
 
-    level->is_zzz15 = val;
+    level->is_death_summoned = val;
 }
 
-uint8_t level_is_zzz16 (levelp level)
+uint8_t level_is_jesus_summoned (levelp level)
 {
     verify(level);
 
-    return (level->is_zzz16);
+    return (level->is_jesus_summoned);
 }
 
-void level_set_is_zzz16 (levelp level, uint8_t val)
+void level_set_is_jesus_summoned (levelp level, uint8_t val)
 {
     verify(level);
 
-    level->is_zzz16 = val;
+    level->is_jesus_summoned = val;
 }
 
 uint8_t level_is_blit_y_offset (levelp level)
@@ -1879,8 +1879,8 @@ void marshal_level (marshal_p ctx, levelp level)
     PUT_NAMED_BITFIELD(ctx, "is_zzz12", level->is_zzz12);
     PUT_NAMED_BITFIELD(ctx, "is_zzz13", level->is_zzz13);
     PUT_NAMED_BITFIELD(ctx, "is_zzz14", level->is_zzz14);
-    PUT_NAMED_BITFIELD(ctx, "is_zzz15", level->is_zzz15);
-    PUT_NAMED_BITFIELD(ctx, "is_zzz16", level->is_zzz16);
+    PUT_NAMED_BITFIELD(ctx, "is_death_summoned", level->is_death_summoned);
+    PUT_NAMED_BITFIELD(ctx, "is_jesus_summoned", level->is_jesus_summoned);
     PUT_NAMED_BITFIELD(ctx, "is_blit_y_offset", level->is_blit_y_offset);
     PUT_NAMED_BITFIELD(ctx, "exit_reached_when_open", level->exit_reached_when_open);
     PUT_NAMED_BITFIELD(ctx, "warned_exit_not_open", level->warned_exit_not_open);
@@ -1927,8 +1927,8 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
         GET_OPT_NAMED_BITFIELD(ctx, "is_zzz12", level->is_zzz12);
         GET_OPT_NAMED_BITFIELD(ctx, "is_zzz13", level->is_zzz13);
         GET_OPT_NAMED_BITFIELD(ctx, "is_zzz14", level->is_zzz14);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_zzz15", level->is_zzz15);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_zzz16", level->is_zzz16);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_death_summoned", level->is_death_summoned);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_jesus_summoned", level->is_jesus_summoned);
         GET_OPT_NAMED_BITFIELD(ctx, "is_blit_y_offset", level->is_blit_y_offset);
         GET_OPT_NAMED_BITFIELD(ctx, "exit_reached_when_open", 
                                level->exit_reached_when_open);

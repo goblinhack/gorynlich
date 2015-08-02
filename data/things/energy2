@@ -15,104 +15,255 @@
  light_radius=1.0
  is_effect_pulse
  is_variable_size
- scale=1.0
- sound_on_creation="energy1"
+ scale=0.2
+ sound_on_creation="energy2"
  tiles={
   tile={
-   tile="energy1-1"
+   tile="ring_cloud.1"
+   delay=100
   }
   tile={
-   tile="energy1-2"
+   tile="ring_cloud.2"
+   delay=100
   }
   tile={
-   tile="energy1-3"
+   tile="ring_cloud.3"
+   delay=100
   }
   tile={
-   tile="energy1-4"
+   tile="ring_cloud.4"
+   delay=100
   }
   tile={
-   tile="energy1-5"
+   tile="ring_cloud.5"
+   delay=100
   }
   tile={
-   tile="energy1-6"
+   tile="ring_cloud.8"
+   delay=100
   }
   tile={
-   tile="energy1-7"
+   tile="ring_cloud.9"
   }
   tile={
-   tile="energy1-8"
+   tile="ring_cloud.10"
+   delay=100
   }
   tile={
-   tile="energy1-9"
+   tile="ring_cloud.11"
+   delay=100
   }
   tile={
-   tile="energy1-10"
+   tile="ring_cloud.12"
+   delay=100
   }
   tile={
-   tile="energy1-11"
+   tile="ring_cloud.13"
+   delay=100
   }
   tile={
-   tile="energy1-12"
+   tile="ring_cloud.14"
+   delay=100
   }
   tile={
-   tile="energy1-13"
+   tile="ring_cloud.15"
+   delay=100
   }
   tile={
-   tile="energy1-14"
+   tile="ring_cloud.16"
+   delay=100
   }
   tile={
-   tile="energy1-15"
+   tile="ring_cloud.17"
+   delay=100
   }
   tile={
-   tile="energy1-16"
+   tile="ring_cloud.18"
+   delay=100
   }
   tile={
-   tile="energy1-17"
+   tile="ring_cloud.19"
+   delay=100
   }
   tile={
-   tile="energy1-18"
+   tile="ring_cloud.20"
+   delay=100
   }
   tile={
-   tile="energy1-19"
+   tile="ring_cloud.21"
+   delay=100
   }
   tile={
-   tile="energy1-20"
+   tile="ring_cloud.22"
+   delay=100
   }
   tile={
-   tile="energy1-21"
+   tile="ring_cloud.23"
+   delay=100
   }
   tile={
-   tile="energy1-22"
+   tile="ring_cloud.24"
+   delay=100
   }
   tile={
-   tile="energy1-23"
+   tile="ring_cloud.25"
+   delay=100
   }
   tile={
-   tile="energy1-24"
+   tile="ring_cloud.26"
+   delay=100
   }
   tile={
-   tile="energy1-25"
+   tile="ring_cloud.27"
+   delay=100
   }
   tile={
-   tile="energy1-26"
+   tile="ring_cloud.28"
+   delay=100
   }
   tile={
-   tile="energy1-27"
+   tile="ring_cloud.29"
+   delay=100
   }
   tile={
-   tile="energy1-28"
+   tile="ring_cloud.30"
+   delay=100
   }
   tile={
-   tile="energy1-29"
+   tile="ring_cloud.31"
+   delay=100
   }
   tile={
-   tile="energy1-30"
+   tile="ring_cloud.32"
+   delay=100
   }
   tile={
-   tile="energy1-31"
+   tile="ring_cloud.33"
+   delay=100
   }
   tile={
-   tile="energy1-32"
+   tile="ring_cloud.34"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.35"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.36"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.37"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.38"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.39"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.40"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.41"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.42"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.43"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.44"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.45"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.46"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.47"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.48"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.49"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.50"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.51"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.52"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.53"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.54"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.55"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.56"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.57"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.58"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.59"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.60"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.61"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.62"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.63"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.64"
+   delay=100
   }
  }
 }
