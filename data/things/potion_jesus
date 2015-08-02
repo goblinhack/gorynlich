@@ -2,8 +2,8 @@
  short_name="summon big jesus"
  raw_name="potion_jesus"
  tooltip="summon big jesus"
- z_depth="monst"
- cost=100
+ z_depth="explosion_top"
+ cost=1000
  is_treasure
  is_potion
  is_stackable
@@ -12,9 +12,14 @@
  is_given_randomly_at_start
  is_magical
  is_valid_for_action_bar
+ is_effect_pulse
  d10000_chance_of_appearing=100
  is_combustable
  explodes_as="data/things/explosion3"
+ is_light_source
+ light_radius=3.5
+ light_tint="white"
+ is_candle_light
  is_fragile
  tiles={
   tile={
