@@ -1,11 +1,8 @@
 --------------------------------------- plan for jul --------------------------------------
-- monsticide should not destory items
-- collect weapon noise
 - triple sword needs to do stuff
 - holy sword needs to do stuff
 - blood sucking sword needs to do stuff
 - wand 2 sword needs to do stuff
-- need laptop size or check screen size for too large at startup
 - ring of double damage
 - ring of triple damage
 - ring of quad damage
@@ -35,7 +32,12 @@
 - magic gives health to other players
 
 Sun Aug  2 11:26:44 EDT 2015
-- bug Jesus
+- need laptop size or check screen size for too large at startup
+- default full screen
+- collect weapon noises
+- let jesus fight death, not scare death away!
+- monsticide should not destory items
+- big Jesus
 
 Sat Aug  1 08:12:03 EDT 2015
 - added more SDL screen sizes

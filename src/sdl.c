@@ -32,6 +32,12 @@
 #include "timer.h"
 #include "socket_util.h"
 
+#if defined WIN32 || defined __CYGWIN__
+#include <windows.h>
+#endif
+#include <SDL_syswm.h>
+#include <SDL_video.h>
+
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
 #endif
@@ -135,6 +141,7 @@ void sdl_fini (void)
     SDL_Quit();
 }
 
+#if 0
 static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
 {
     static uint8_t first = true;
@@ -236,6 +243,7 @@ static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
 
     return (false);
 }
+#endif
 
 static inline void sdl_list_video_size (void)
 {
@@ -366,6 +374,70 @@ static void sdl_init_joystick (void)
     }
 }
 
+#if 0
+static int 
+get_screensize (int *w, int *h)
+{
+    SDL_SysWMinfo info;
+
+    SDL_VERSION(&info.version);
+
+#if SDL_MAJOR_VERSION == 2 /* { */
+    if (SDL_GetWMInfo(&info) > 0) {
+#else
+#endif
+#if defined WIN32 || defined __CYGWIN__
+        HWND top;
+        RECT top_rect;
+
+        HWND current;
+
+        current = info.window;
+        top = GetDesktopWindow();
+
+        GetWindowRect(top, &top_rect);
+
+        *w = top_rect.right - top_rect.left;
+        *h = top_rect.bottom - top_rect.top;
+
+        LOG("Win32 window size " + tostring(*w) + "x" + tostring(*h));
+
+        return (true);
+#else
+        if (info.subsystem == SDL_SYSWM_X11) {
+            info.info.x11.lock_func();
+            *w = DisplayWidth(info.info.x11.display,
+                DefaultScreen(info.info.x11.display));
+            *h = DisplayHeight(info.info.x11.display,
+                DefaultScreen(info.info.x11.display));
+            info.info.x11.unlock_func();
+
+            if (gh_global::trace_mode) {
+                *w = 800;
+                *h = 600;
+            }
+
+            LOG("Unix window size " + tostring(*w) + "x" + tostring(*h));
+            return (true);
+        } else {
+            *w = 1024;
+            *h = 800;
+            LOG("Default screensize for unix");
+            return (true);
+        }
+#endif // unix
+    } else {
+        //
+        // MacOS hits here - no idea why. Need help from nice MacOS folks.
+        //
+        *w = 1024;
+        *h = 800;
+        LOG("Default screensize as SDL_GetWMInfo failed");
+        return (false);
+    }
+}
+#endif
+
 uint8_t sdl_init (void)
 {
     if (HEADLESS) {
@@ -399,22 +471,16 @@ uint8_t sdl_init (void)
 
     sdl_list_video_size();
 
-    uint8_t iphone_size = sdl_find_video_size(
-                            IPHONE_VIDEO_WIDTH,
-                            IPHONE_VIDEO_HEIGHT);
-
+#if 0
     uint8_t medium_size = sdl_find_video_size(
                             MEDIUM_VIDEO_WIDTH,
                             MEDIUM_VIDEO_HEIGHT);
-
-    uint8_t ipad_size = sdl_find_video_size(
-                            IPAD_VIDEO_WIDTH,
-                            IPAD_VIDEO_HEIGHT);
 
     uint8_t default_size = sdl_find_video_size(
                             DEFAULT_VIDEO_WIDTH,
                             DEFAULT_VIDEO_HEIGHT);
 
+#endif
     /*
      * If we have a saved setting, use that.
      */
@@ -424,30 +490,37 @@ uint8_t sdl_init (void)
     /*
      * Else guess.
      */
-    } else if (default_size) {
-        VIDEO_WIDTH = DEFAULT_VIDEO_WIDTH;
-        VIDEO_HEIGHT = DEFAULT_VIDEO_HEIGHT;
+    } else {
+#if SDL_MAJOR_VERSION == 2 /* { */
+        SDL_DisplayMode mode;
+        SDL_GetCurrentDisplayMode(0, &mode);
+        global_config.video_pix_width = mode.w;
+        global_config.video_pix_height = mode.h; 
+#else
+        SDL_VideoInfo *info = SDL_GetVideoInfo();
+        global_config.video_pix_width = info->current_w;
+        global_config.video_pix_height = info->current_h; 
+#endif
+        VIDEO_WIDTH = global_config.video_pix_width;
+        VIDEO_HEIGHT = global_config.video_pix_height;
+#if 0
+    } else if (get_screensize(&global_config.video_pix_width,
+                              &global_config.video_pix_height)) {
+        VIDEO_WIDTH = global_config.video_pix_width;
+        VIDEO_HEIGHT = global_config.video_pix_height;
     } else if (medium_size) {
         VIDEO_WIDTH = MEDIUM_VIDEO_WIDTH;
         VIDEO_HEIGHT = MEDIUM_VIDEO_HEIGHT;
-    } else if (iphone_size) {
-        VIDEO_WIDTH = IPHONE_VIDEO_WIDTH;
-        VIDEO_HEIGHT = IPHONE_VIDEO_HEIGHT;
-    } else if (ipad_size) {
-        VIDEO_WIDTH = IPAD_VIDEO_WIDTH;
-        VIDEO_HEIGHT = IPAD_VIDEO_HEIGHT;
     } else {
         VIDEO_WIDTH = DEFAULT_VIDEO_WIDTH;
         VIDEO_HEIGHT = DEFAULT_VIDEO_HEIGHT;
+#endif
     }
 
     /*
      * Ortho fixup.
      */
     gl_ortho_set(VIDEO_WIDTH, VIDEO_HEIGHT);
-
-    global_config.video_pix_width = VIDEO_WIDTH;
-    global_config.video_pix_height = VIDEO_HEIGHT;
 
     INIT_LOG("SDL video   : %dx%d",
              global_config.video_pix_width, global_config.video_pix_height);
@@ -541,7 +614,7 @@ uint8_t sdl_init (void)
 
 #endif /* } */
 
-        SDL_ClearError();
+    SDL_ClearError();
 
 #if SDL_MAJOR_VERSION == 1 /* { */
     SDL_WM_SetCaption("gorynlich", "gorynlich");
