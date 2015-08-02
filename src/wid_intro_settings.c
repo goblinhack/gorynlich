@@ -132,7 +132,7 @@ static void wid_intro_settings_add_default_screen_modes (void)
     w = mode.w;
     h = mode.h; 
 #else
-    SDL_VideoInfo *info = SDL_GetVideoInfo();
+    const SDL_VideoInfo *info = SDL_GetVideoInfo();
     w = info->current_w;
     h = info->current_h; 
 #endif
