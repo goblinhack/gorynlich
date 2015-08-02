@@ -382,6 +382,7 @@ enum {
     THING_EYEBAWL,
     THING_SPIDER1,
     THING_SPIDER2,
+    THING_JESUS,
     THING_DEATH,
     THING_BABY_DEATH,
     THING_CLUB1_ANIM,
@@ -424,6 +425,8 @@ enum {
     THING_DEATH_CLOUD_ANIM,
     THING_RING_CLOUD,
     THING_RING_CLOUD_ANIM,
+    THING_JESUS_CLOUD,
+    THING_JESUS_CLOUD_ANIM,
     THING_MAGIC1,
     THING_MAGIC_CLOUD,
     THING_POWERUP1,
@@ -446,6 +449,7 @@ enum {
     THING_POISON2,
     THING_CLOUDKILL1,
     THING_CLOUDKILL2,
+    THING_POTION_JESUS,
     THING_POTION_MONSTICIDE,
     THING_POTION_FIRE,
     THING_POTION_CLOUDKILL,
@@ -533,6 +537,7 @@ enum {
     THING_FIREBALL3,
     THING_FIREBALL4,
     THING_ENERGY1,
+    THING_ENERGY2,
     THING_PLASMABALL1,
     THING_PLASMABALL2,
     THING_SILKBALL,
@@ -1244,11 +1249,11 @@ static inline uint8_t thing_is_rrr8 (thingp t)
     return (tp_is_rrr8(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr9 (thingp t)
+static inline uint8_t thing_is_jesus (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr9(thing_tp(t)));
+    return (tp_is_jesus(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_blit_y_offset (thingp t)
@@ -2075,9 +2080,9 @@ static inline uint8_t thing_is_rrr8_noverify (thingp t)
     return (t->tp->is_rrr8);
 }
 
-static inline uint8_t thing_is_rrr9_noverify (thingp t)
+static inline uint8_t thing_is_jesus_noverify (thingp t)
 {
-    return (t->tp->is_rrr9);
+    return (t->tp->is_jesus);
 }
 
 static inline uint8_t thing_is_blit_y_offset_noverify (thingp t)
@@ -2804,6 +2809,11 @@ void thing_torch_tick(thingp t);
  */
 void thing_death_tick(void);
 uint8_t thing_death_spawn(void);
+
+/*
+ * thing_jesus.c
+ */
+uint8_t thing_jesus_spawn(void);
 
 /*
  * thing_shield.c
