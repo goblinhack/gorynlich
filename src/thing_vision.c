@@ -4,7 +4,6 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
 
 #include "main.h"
 #include "wid.h"

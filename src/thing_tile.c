@@ -4,7 +4,6 @@
  * See the LICENSE file for license.
  */
 
-#include <string.h>
 
 #include "main.h"
 #include "tree.h"

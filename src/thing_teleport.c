@@ -6,23 +6,8 @@
 
 #include "main.h"
 #include "thing.h"
-#include "thing_timer.h"
-#include "wid_game_map_client.h"
 #include "wid_game_map_server.h"
-#include "map.h"
-#include "level.h"
 #include "time_util.h"
-#include "string_util.h"
-#include "sound.h"
-#include "socket_util.h"
-#include "client.h"
-#include "timer.h"
-#include "tile.h"
-#include "wid_hiscore.h"
-#include "wid_player_info.h"
-#include "wid_player_inventory.h"
-#include "wid_player_action.h"
-#include "wid_choose_stats.h"
 #include "math_util.h"
 
 void thing_reached_teleport (thingp t, thingp teleport)
