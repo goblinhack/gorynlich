@@ -375,6 +375,6 @@ void sound_load_all (void)
     sound_load(0.5, "data/sound/Electric_Zap.wav", "shield");
     sound_load(1.0, "data/sound/207809__exsomniel__dark_choir_01.wav", "jesus");
     sound_load(1.0, "data/sound/65195__uair01__chamber_choir_chord_o.wav", "choir");
-    sound_load(0.5, "data/sound/238855__limetoe__collected_item.mp3", "collect");
+    sound_load(0.5, "data/sound/238855__limetoe__collected_item.wav", "collect");
     sound_load(0.5, "data/sound/317827__blockfighter298__weapon_pickup.wav", "pickup");
 }
