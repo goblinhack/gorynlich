@@ -528,6 +528,15 @@ LOG("  owner");
         return;
     }
 
+    if (thing_is_jesus(me)) {
+        if (thing_is_monst(it)) {
+            thing_possible_hit_add(me, it);
+            return;
+        }
+
+        return;
+    }
+
     if (thing_is_monst(me) || thing_is_trap(me)) {
         if (thing_is_player(it)) {
             thing_possible_hit_add(me, it);
