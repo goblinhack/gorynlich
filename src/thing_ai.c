@@ -896,7 +896,7 @@ static int thing_run_from (thingp t, int32_t *nexthop_x, int32_t *nexthop_y, tpp
     thingp best = 0;
     thingp thing_it;
 
-    { TREE_OFFSET_WALK_UNSAFE(server_player_things, thing_it) {
+    { TREE_OFFSET_WALK_UNSAFE(server_active_things, thing_it) {
         /*
          * Avoid the chosen thing
          */
@@ -951,7 +951,7 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         /*
          * Make death run from jesus
          */
-        if (thing_is_death(t)) {
+        if (0 && thing_is_death(t)) {
             if (level_is_jesus_summoned(server_level)) {
                 if (thing_run_from(t, nexthop_x, nexthop_y, id_to_tp(THING_JESUS))) {
                     return (true);
