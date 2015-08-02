@@ -497,7 +497,7 @@ uint8_t sdl_init (void)
         global_config.video_pix_width = mode.w;
         global_config.video_pix_height = mode.h; 
 #else
-        SDL_VideoInfo *info = SDL_GetVideoInfo();
+        const SDL_VideoInfo *info = SDL_GetVideoInfo();
         global_config.video_pix_width = info->current_w;
         global_config.video_pix_height = info->current_h; 
 #endif
