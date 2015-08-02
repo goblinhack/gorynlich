@@ -6,6 +6,7 @@
  cost=10
  is_treasure
  is_weapon
+ sound_on_collect="collect"
  is_melee_weapon
  can_be_enchanted
  is_degradable

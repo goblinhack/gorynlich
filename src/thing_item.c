@@ -105,6 +105,11 @@ static void thing_collect (thingp t,
         }
 
         if (thing_is_player(t)) {
+            const char *sound = tp_sound_on_collect(tp);
+            if (sound) {
+                MSG_SERVER_SHOUT_AT(SOUND, t, t->x, t->y, "%s", sound);
+            }
+
             MSG_SERVER_SHOUT_AT(INFO, t, 0, 0, "%s added", tp_short_name(tp));
         }
         return;
@@ -175,6 +180,13 @@ static void thing_collect (thingp t,
 
     if (it) {
         it->is_collected = true;
+    }
+
+    if (thing_is_player(t)) {
+        const char *sound = tp_sound_on_collect(tp);
+        if (sound) {
+            MSG_SERVER_SHOUT_AT(SOUND_GLOBAL, t, t->x, t->y, "%s", sound);
+        }
     }
 }
 

@@ -168,8 +168,8 @@ typedef struct level_t_ {
     uint8_t is_zzz12:1;
     uint8_t is_zzz13:1;
     uint8_t is_zzz14:1;
-    uint8_t is_zzz15:1;
-    uint8_t is_zzz16:1;
+    uint8_t is_death_summoned:1;
+    uint8_t is_jesus_summoned:1;
     uint8_t is_blit_y_offset:1;
     uint8_t on_server:1;
     uint8_t exit_reached_when_open:1;

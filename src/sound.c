@@ -337,7 +337,8 @@ void sound_load_all (void)
 {
     sound_load(0.5, "data/sound/click.wav", "click");
     sound_load(0.5, "data/sound/powerup.wav", "powerup");
-    sound_load(0.7, "data/sound/level_end.wav", "level_end");
+    sound_load(0.7, "data/sound/teleport.wav", "teleport");
+    sound_load(0.7, "data/sound/188712__oceanictrancer__happy_effect.wav", "level_end");
     sound_load(0.7, "data/sound/explosion.wav", "explosion");
     sound_load(0.2, "data/sound/slime.wav", "slime");
     sound_load(0.5, "data/sound/swords_collide_sound_explorer_2015600826.wav", "sword");
@@ -367,8 +368,13 @@ void sound_load_all (void)
     sound_load(0.8, "data/sound/45137__dj_chronos__dark_church_bell.wav", "player_death");
     sound_load(0.5, "data/sound/205563__everheat__arrow.wav", "arrow");
     sound_load(0.5, "data/sound/49676__ejfortin__energy_short_sword_5.wav", "energy1");
+    sound_load(0.5, "data/sound/146733__fins__energy.wav", "energy2");
     sound_load(0.3, "data/sound/148975__adam_n__squelch_1.wav", "squelch");
     sound_load(0.5, "data/sound/Object_Drop_001.wav", "drop");
     sound_load(0.5, "data/sound/Door_Latch_002.wav", "door");
     sound_load(0.5, "data/sound/Electric_Zap.wav", "shield");
+    sound_load(1.0, "data/sound/207809__exsomniel__dark_choir_01.wav", "jesus");
+    sound_load(1.0, "data/sound/65195__uair01__chamber_choir_chord_o.wav", "choir");
+    sound_load(0.5, "data/sound/238855__limetoe__collected_item.mp3", "collect");
+    sound_load(0.5, "data/sound/317827__blockfighter298__weapon_pickup.wav", "pickup");
 }

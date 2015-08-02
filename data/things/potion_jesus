@@ -3,6 +3,7 @@
  raw_name="potion_jesus"
  tooltip="summon big jesus"
  z_depth="explosion_top"
+ sound_on_collect="choir"
  cost=1000
  is_treasure
  is_potion
@@ -12,7 +13,6 @@
  is_given_randomly_at_start
  is_magical
  is_valid_for_action_bar
- is_effect_pulse
  d10000_chance_of_appearing=100
  is_combustable
  explodes_as="data/things/explosion3"

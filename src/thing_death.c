@@ -53,6 +53,9 @@ uint8_t thing_death_spawn (void)
                                          0, /* tpp data */
                                          0 /* item */,
                                          0 /* stats */);
+
+        level_set_is_death_summoned(server_level, true);
+
         return (true);
     }
 
@@ -79,13 +82,21 @@ void thing_death_tick (void)
     if (!level_death_is_coming(server_level)) {
         if (time_have_x_secs_passed_since(150,
                                           level_get_timestamp_started(server_level))) {
+
+            level_set_death_is_coming(server_level, true);
+
+            if (level_is_jesus_summoned(server_level)) {
+                MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP, 
+                                                0, 0, 
+                                                "Death has changed its mind...");
+                return;
+            }
+
             MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP, 
                                             0, 0,
                                             "Death is coming...");
 
             thing_death_spawn();
-
-            level_set_death_is_coming(server_level, true);
 
             music_play_death();
         }
