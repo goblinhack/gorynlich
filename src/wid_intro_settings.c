@@ -72,8 +72,8 @@ const char *wid_intro_button_value_string
         "2880x1800",
         0 
     },
-    { "Off", "Min", "Normal", "Max", 0 },
-    { "Off", "Min", "Normal", "Max", 0 },
+    { "Off", "VQuiet", "Quiet", "Normal", "Max", 0 },
+    { "Off", "VQuiet", "Quiet", "Normal", "Max", 0 },
     { "Off", "On", 0 },
     { "Off", "On", 0 },
     { "Off", "On", 0 },
