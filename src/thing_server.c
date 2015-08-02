@@ -228,9 +228,12 @@ void thing_server_action (thingp t,
             return;
         }
 
-        if ((item->id == THING_POTION_FIRE) ||
-            (item->id == THING_POTION_MONSTICIDE) ||
-            (item->id == THING_POTION_CLOUDKILL)) {
+        if (item->id == THING_POTION_JESUS) {
+            thing_jesus_spawn();
+        } else if 
+            ((item->id == THING_POTION_FIRE) ||
+             (item->id == THING_POTION_MONSTICIDE) ||
+             (item->id == THING_POTION_CLOUDKILL)) {
             level_place_explosion(server_level,
                                   t,
                                   tp,

@@ -660,7 +660,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr7", t->is_rrr7);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr8", t->is_rrr8);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_jesus", t->is_jesus);
         GET_OPT_NAMED_BITFIELD(ctx, "is_blit_y_offset", t->is_blit_y_offset);
         GET_OPT_NAMED_BITFIELD(ctx, "is_dirt", t->is_dirt);
         GET_OPT_NAMED_BITFIELD(ctx, "is_dragon", t->is_dragon);
@@ -908,7 +908,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
     PUT_NAMED_BITFIELD(ctx, "is_rrr7", t->is_rrr7);
     PUT_NAMED_BITFIELD(ctx, "is_rrr8", t->is_rrr8);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
+    PUT_NAMED_BITFIELD(ctx, "is_jesus", t->is_jesus);
     PUT_NAMED_BITFIELD(ctx, "is_blit_y_offset", t->is_blit_y_offset);
     PUT_NAMED_BITFIELD(ctx, "is_dirt", t->is_dirt);
     PUT_NAMED_BITFIELD(ctx, "is_dragon", t->is_dragon);
