@@ -60,6 +60,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/thing_collision.o 	\
     $(OBJDIR)/thing_damage.o 		\
     $(OBJDIR)/thing_death.o 		\
+    $(OBJDIR)/thing_jesus.o 		\
     $(OBJDIR)/thing_shop.o 		\
     $(OBJDIR)/thing_defense.o 		\
     $(OBJDIR)/thing_dir.o 		\
