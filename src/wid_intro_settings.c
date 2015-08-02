@@ -122,8 +122,92 @@ void wid_intro_settings_hide (void)
     }
 }
 
+static void wid_intro_settings_add_default_screen_modes (void)
+{
+    int w;
+    int h;
+#if SDL_MAJOR_VERSION == 2 /* { */
+    SDL_DisplayMode mode;
+    SDL_GetCurrentDisplayMode(0, &mode);
+    w = mode.w;
+    h = mode.h; 
+#else
+    SDL_VideoInfo *info = SDL_GetVideoInfo();
+    w = info->current_w;
+    h = info->current_h; 
+#endif
+    char *tmp = dynprintf("%dx%d", w, h);
+    int j;
+
+    for (j = 0; j < WID_INTRO_MAX_VAL - 1; j++) {
+        if (!wid_intro_button_value_string
+            [WID_INTRO_SETTINGS_ROW_WINDOW][j]) {
+
+            wid_intro_button_value_string
+                [WID_INTRO_SETTINGS_ROW_WINDOW][j] = tmp;
+
+            break;
+        }
+    } /* } */
+}
+
+static void wid_intro_settings_add_screen_modes (void)
+{
+    int i;
+
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+    SDL_Rect **modes;
+
+    /* Get available fullscreen/hardware modes */
+    modes = SDL_ListModes(0, 0);
+
+    /* Check if there are any modes available */
+    if (modes == (SDL_Rect**)0) {
+        return;
+    }
+
+    /* Check if our resolution is restricted */
+    if (modes == (SDL_Rect**)-1) {
+        return;
+    }
+
+    for (i=0; modes[i]; ++i) {
+
+        char *tmp = dynprintf("%dx%d", modes[i]->w, modes[i]->h);
+#else /* } { */
+    for (i = 0; i < SDL_GetNumDisplayModes(0); ++i) {
+
+        SDL_DisplayMode mode;
+
+        SDL_GetDisplayMode(0, i, &mode);
+
+        char *tmp = dynprintf("%dx%d", mode.w, mode.h);
+#endif /* } */
+
+        int j;
+
+        for (j = 0; j < WID_INTRO_MAX_VAL - 1; j++) {
+            if (!wid_intro_button_value_string
+                [WID_INTRO_SETTINGS_ROW_WINDOW][j]) {
+
+                wid_intro_button_value_string
+                    [WID_INTRO_SETTINGS_ROW_WINDOW][j] = tmp;
+
+                break;
+            }
+        }
+    } /* } */
+}
+
 void wid_intro_settings_visible (void)
 {
+    static int first = true;
+    if (first) {
+        first = false;
+        wid_intro_settings_add_default_screen_modes();
+        wid_intro_settings_add_screen_modes();
+    }
+
     wid_intro_settings_read();
 
     wid_intro_settings_create();
@@ -470,62 +554,8 @@ static void wid_intro_settings_save (void)
     }
 }
 
-static void wid_intro_settings_add_screen_modes (void)
-{
-    int i;
-
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
-    SDL_Rect **modes;
-
-    /* Get available fullscreen/hardware modes */
-    modes = SDL_ListModes(0, 0);
-
-    /* Check if there are any modes available */
-    if (modes == (SDL_Rect**)0) {
-        return;
-    }
-
-    /* Check if our resolution is restricted */
-    if (modes == (SDL_Rect**)-1) {
-        return;
-    }
-
-    for (i=0; modes[i]; ++i) {
-        char *tmp = dynprintf("%dx%d", modes[i]->w, modes[i]->h);
-
-#else /* } { */
-    for (i = 0; i < SDL_GetNumDisplayModes(0); ++i) {
-
-        SDL_DisplayMode mode;
-
-        SDL_GetDisplayMode(0, i, &mode);
-
-        char *tmp = dynprintf("%dx%d", mode.w, mode.h);
-#endif /* } */
-
-        int j;
-
-        for (j = 0; j < WID_INTRO_MAX_VAL - 1; j++) {
-            if (!wid_intro_button_value_string
-                [WID_INTRO_SETTINGS_ROW_WINDOW][j]) {
-
-            wid_intro_button_value_string
-                [WID_INTRO_SETTINGS_ROW_WINDOW][j] = tmp;
-
-                break;
-            }
-        }
-    }
-}
-
 static void wid_intro_settings_create (void)
 {
-    static int first = true;
-    if (first) {
-        first = false;
-        wid_intro_settings_add_screen_modes();
-    }
-
     wid_intro_settings_restart_needed = false;
 
     if (wid_intro_settings) {

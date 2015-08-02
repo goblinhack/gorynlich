@@ -7,7 +7,7 @@
  cost=200
  is_treasure
  is_weapon
- sound_on_collect="collect"
+ sound_on_collect="pickup"
  is_ranged_weapon
  can_be_enchanted
  is_degradable
