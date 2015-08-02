@@ -4,17 +4,13 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
-#include <math.h>
 
 #include "main.h"
 #include "thing.h"
 #include "wid_game_map_server.h"
-#include "map.h"
 #include "level.h"
 #include "time_util.h"
 #include "music.h"
-#include "socket_util.h"
 
 uint8_t thing_death_spawn (void)
 {

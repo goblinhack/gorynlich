@@ -10,7 +10,6 @@
 #include "main.h"
 #include "thing.h"
 #include "wid_game_map_server.h"
-#include "map.h"
 #include "math_util.h"
 
 static FILE *fp;

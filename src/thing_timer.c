@@ -4,15 +4,11 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "main.h"
 #include "thing.h"
 #include "thing_timer.h"
 #include "timer.h"
-#include "wid.h"
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
 

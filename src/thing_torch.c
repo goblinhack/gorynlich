@@ -4,18 +4,10 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
 
 #include "main.h"
 #include "thing.h"
-#include "thing_timer.h"
-#include "timer.h"
-#include "wid.h"
-#include "wid_game_map_client.h"
-#include "wid_game_map_server.h"
-#include "level.h"
 #include "time_util.h"
-#include "socket_util.h"
 
 /*
  * If something changed in the player that we need to update the server, do so 
