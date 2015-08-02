@@ -13,7 +13,6 @@
 #include "tile.h"
 #include "thing.h"
 #include "marshal.h"
-#include "thing_stats.h"
 
 /*
  * Using static memory as these things never change once made.

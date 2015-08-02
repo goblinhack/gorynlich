@@ -4,14 +4,11 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
 
 #include "main.h"
 #include "thing.h"
-#include "wid.h"
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
-#include "math_util.h"
 
 thingp thing_shield_carry_anim (thingp t)
 {

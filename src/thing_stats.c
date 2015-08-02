@@ -4,16 +4,9 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
 
-#include "main.h"
-#include "wid.h"
-#include "color.h"
-#include "wid_popup.h"
-#include "wid_player_stats.h"
 #include "string_util.h"
 #include "name.h"
-#include "thing_template.h"
 #include "wid_player_info.h"
 #include "math_util.h"
 #include "thing.h"

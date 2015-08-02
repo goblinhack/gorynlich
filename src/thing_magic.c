@@ -4,15 +4,9 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
 
 #include "main.h"
 #include "thing.h"
-#include "tile.h"
-#include "wid.h"
-#include "map.h"
-#include "math_util.h"
-#include "level.h"
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
 #include "time_util.h"
