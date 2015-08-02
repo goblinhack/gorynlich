@@ -1,5 +1,5 @@
 --------------------------------------- plan for jul --------------------------------------
-- bug Jesus
+- only one jeses
 - need laptop size or check screen size for too large at startup
 - ring of double damage
 - ring of triple damage
@@ -28,6 +28,9 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Sun Aug  2 11:26:44 EDT 2015
+- bug Jesus
 
 Sat Aug  1 08:12:03 EDT 2015
 - added more SDL screen sizes

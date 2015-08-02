@@ -501,10 +501,14 @@ static void thing_handle_collision (thingp me, thingp it,
      * Monster friendly fire?
      */
     if (thing_is_monst(me) && thing_is_monst(it)) {
-        /*
-         * Allow shopkeepers to shoot monsters.
-         */
-        if (!thing_is_shop_floor(me)) {
+        if (thing_is_jesus(me)) {
+            /*
+             * Let jesus get rid of monsters
+             */
+        } else if (!thing_is_shop_floor(me)) {
+            /*
+             * Allow shopkeepers to shoot monsters.
+             */
             return;
         }
     }
@@ -517,10 +521,14 @@ static void thing_handle_collision (thingp me, thingp it,
 
     if (owner_me) {
         if (thing_is_monst(owner_me) && thing_is_monst(it)) {
-            /*
-             * Allow shopkeepers to shoot monsters.
-             */
-            if (!thing_is_shop_floor(owner_me)) {
+            if (thing_is_jesus(owner_me)) {
+                /*
+                * Let jesus get rid of monsters
+                */
+            } else if (!thing_is_shop_floor(owner_me)) {
+                /*
+                 * Allow shopkeepers to shoot monsters.
+                 */
                 return;
             }
         }
@@ -690,6 +698,15 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         }
     }
 
+    if (thing_is_jesus(me)) {
+        if (thing_is_monst(it)) {
+            thing_possible_hit_add(it, "monst hit thing");
+            return;
+        }
+
+        return;
+    }
+
     if (thing_is_monst(me)) {
         /*
          * Monster bumped into something.
@@ -824,6 +841,15 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         thingp owner_proj = thing_owner(me);
         if (owner_it && (owner_it == owner_proj)) {
             return;
+        }
+
+        /*
+         * Don't ket jesus hit players
+         */
+        if (owner_it && thing_is_jesus(owner_it)) {
+            if (thing_is_player(me)) {
+                return;
+            }
         }
 
         if (thing_is_lava(it) ||
