@@ -714,7 +714,13 @@ static void level_finished (levelp level)
     level->end_level_second_phase_destroy_timer = 0;
     level->end_level_first_phase_fade_out_timer = 0;
 
+#if 0
+    /*
+     * Is this needed ? Kind of obvious and overlaps with spending points 
+     * update often.
+     */
     LEVEL_LOG(level, "level finished");
+#endif
 
     if (level->is_test_level) {
         LEVEL_LOG(level, "test level finished");
