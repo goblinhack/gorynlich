@@ -39,6 +39,7 @@
   }
   tile={
    tile="ring_cloud.9"
+   delay=100
   }
   tile={
    tile="ring_cloud.10"
