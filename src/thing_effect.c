@@ -138,6 +138,12 @@ static void thing_client_effect_hit_crit (thingp t)
                                 0.01, 0.9, 100, 5);
 
             sdl_joy_rumble(1.0, 1000);
+        } else if (thing_is_ethereal(t)) {
+            /*
+             * No shaking jesus
+             */
+        } else if (thing_is_monst(t)) {
+            wid_shake_to_pct_in(w, 0.1, 0.9, 100, 5);
         } else {
             wid_shake_to_pct_in(w, 0.2, 0.9, 100, 5);
         }

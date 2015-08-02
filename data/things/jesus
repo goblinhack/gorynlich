@@ -4,7 +4,7 @@
  tooltip="jesus"
  z_depth="explosion_top"
  speed=30
- max_hp=30000
+ max_hp=3000
  damage=100
  is_jesus
  bonus_xp_on_death=10000
@@ -24,7 +24,7 @@
  explodes_as="data/things/explosion3"
  fires="data/things/energy2"
  weapon_fire_delay_hundredths=10
- can_be_hit_chance=0
+ can_be_hit_chance=10
  is_blit_y_offset
  tiles={
   tile={

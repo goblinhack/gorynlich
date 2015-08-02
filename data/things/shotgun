@@ -8,7 +8,7 @@
  cost=1000
  is_treasure
  is_weapon
- sound_on_collect="collect"
+ sound_on_collect="pickup"
  can_be_enchanted
  is_degradable
  hit_priority=0
