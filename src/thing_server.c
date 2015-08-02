@@ -4,30 +4,10 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
 
 #include "main.h"
-#include "thing.h"
-#include "thing_timer.h"
-#include "wid.h"
-#include "wid_game_map_client.h"
-#include "wid_game_map_server.h"
-#include "map.h"
-#include "level.h"
-#include "time_util.h"
-#include "wid_textbox.h"
-#include "sound.h"
 #include "socket_util.h"
-#include "client.h"
-#include "timer.h"
 #include "tile.h"
-#include "math_util.h"
-#include "wid_hiscore.h"
-#include "wid_player_stats.h"
-#include "wid_player_info.h"
-#include "wid_player_inventory.h"
-#include "wid_player_action.h"
-#include "string_ext.h"
 #include "thing_shop.h"
 
 uint8_t thing_server_move (thingp t,

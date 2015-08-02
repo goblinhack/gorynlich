@@ -6,10 +6,7 @@
 
 #include "main.h"
 #include "thing.h"
-#include "thing_stats.h"
-#include "string_ext.h"
 #include "wid_game_map_server.h"
-#include "map.h"
 
 static widp thing_place_ (thingp t, 
                           tpp tp, 

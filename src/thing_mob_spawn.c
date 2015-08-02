@@ -4,13 +4,10 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
-#include <math.h>
 
 #include "main.h"
 #include "thing.h"
 #include "wid_game_map_server.h"
-#include "map.h"
 
 uint8_t thing_mob_spawn (thingp t)
 {

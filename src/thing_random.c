@@ -5,10 +5,7 @@
  */
 
 #include "main.h"
-#include "tree.h"
 #include "thing.h"
-#include "thing_template.h"
-#include "wid_game_map_server.h"
 
 tpp random_wall (void)
 {

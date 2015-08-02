@@ -6,8 +6,6 @@
 
 #include "main.h"
 #include "thing.h"
-#include "thing_stats.h"
-#include "string_ext.h"
 #include "math_util.h"
 
 void thing_dir (thingp t, double *dx, double *dy)

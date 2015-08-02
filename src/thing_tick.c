@@ -4,18 +4,11 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
 
 #include "main.h"
-#include "thing.h"
 #include "thing_timer.h"
 #include "timer.h"
-#include "wid.h"
 #include "wid_game_map_client.h"
-#include "wid_game_map_server.h"
-#include "level.h"
-#include "time_util.h"
-#include "socket_util.h"
 #include "thing_shop.h"
 
 TREE_GET_NEXT_INLINE(tree_key_int32_compare_func)

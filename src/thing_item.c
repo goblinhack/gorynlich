@@ -6,7 +6,6 @@
 
 #include "main.h"
 #include "thing.h"
-#include "thing_stats.h"
 #include "string_ext.h"
 
 char *item2str (const item_t i)
