@@ -446,7 +446,7 @@ static ptrcheck *ptrcheck_verify_pointer (const void *ptr,
         }
     }
 
-    ERR("Fatal error");
+    DIE("Fatal error");
 
     return (0);
 }

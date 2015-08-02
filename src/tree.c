@@ -847,8 +847,6 @@ static uint8_t tree_insert_internal (tree_root *root,
     tree_node *top;
     int32_t compare;
 
-    verify(root_node);
-
     top = *root_node;
     if (!top) {
         *root_node = node;
