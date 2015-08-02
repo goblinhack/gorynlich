@@ -8,6 +8,7 @@
  cost=300
  is_treasure
  is_weapon
+ sound_on_collect="potion"
  is_magical_weapon
  can_be_enchanted
  is_degradable

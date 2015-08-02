@@ -8,7 +8,7 @@
  is_shield_carry_anim
  max_hp=2000
  hit_priority=100
- scale=1.0
+ scale=0.4
  is_light_source
  light_radius=1.0
  is_ethereal
@@ -130,6 +130,134 @@
   }
   tile={
    tile="ring_cloud.32"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.33"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.34"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.35"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.36"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.37"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.38"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.39"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.40"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.41"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.42"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.43"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.44"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.45"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.46"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.47"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.48"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.49"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.50"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.51"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.52"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.53"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.54"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.55"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.56"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.57"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.58"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.59"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.60"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.61"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.62"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.63"
+   delay=100
+  }
+  tile={
+   tile="ring_cloud.64"
    delay=100
   }
  }

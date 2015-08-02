@@ -11,6 +11,7 @@
 #include "thing.h"
 #include "wid_game_map_server.h"
 #include "math_util.h"
+#include "level.h"
 
 static FILE *fp;
 static const int8_t is_a_wall = 63;
@@ -889,12 +890,75 @@ static int thing_chase_closest_player (thingp t, int32_t *nexthop_x, int32_t *ne
     return (true);
 }
 
+static int thing_run_from (thingp t, int32_t *nexthop_x, int32_t *nexthop_y, tpp tp)
+{
+    double distance = 9999;
+    thingp best = 0;
+    thingp thing_it;
+
+    { TREE_OFFSET_WALK_UNSAFE(server_player_things, thing_it) {
+        /*
+         * Avoid the chosen thing
+         */
+        if (thing_it->tp != tp) {
+            continue;
+        }
+
+        /*
+         * Ignore dead instances.
+         */
+        if (thing_is_dead_or_dying_noverify(thing_it)) {
+            continue;
+        }
+
+        if (DISTANCE(thing_it->x, thing_it->y, t->x, t->y) < distance) {
+            best = thing_it;
+        }
+    } }
+
+    if (!best) {
+        return (false);
+    }
+
+    *nexthop_x = t->x;
+    *nexthop_y = t->y;
+
+    if (best->x > t->x) {
+        *nexthop_x = t->x - 1.0;
+    }
+
+    if (best->x < t->x) {
+        *nexthop_x = t->x + 1.0;
+    }
+
+    if (best->y > t->y) {
+        *nexthop_y = t->y - 1.0;
+    }
+
+    if (best->y < t->y) {
+        *nexthop_y = t->y + 1.0;
+    }
+
+    return (true);
+}
+
 uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 {
     /*
      * Walk through walls to get to the player?
      */
     if (thing_is_ethereal(t)) {
+        /*
+         * Make death run from jesus
+         */
+        if (thing_is_death(t)) {
+            if (level_is_jesus_summoned(server_level)) {
+                if (thing_run_from(t, nexthop_x, nexthop_y, id_to_tp(THING_JESUS))) {
+                    return (true);
+                }
+            }
+        } 
+
         if (thing_chase_closest_player(t, nexthop_x, nexthop_y)) {
 
             if (thing_try_nexthop(t, nexthop_x, nexthop_y,
