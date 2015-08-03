@@ -3,7 +3,7 @@
  raw_name="zombie_corpse2"
  tooltip="zombie corpse"
  z_depth="monst"
- max_hp=100
+ max_hp=1
  is_undead
  is_monst
  hit_priority=10
