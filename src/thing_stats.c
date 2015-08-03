@@ -1370,8 +1370,6 @@ void thing_stats_client_modified (thing_statsp stats)
         return;
     }
 
-    LOG("Client: stats modified locally");
-
     if (socket_set_player_stats(client_joined_server, stats)) {
         /*
          * Something changed.

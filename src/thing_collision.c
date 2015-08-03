@@ -4,7 +4,6 @@
  * See the LICENSE file for license.
  */
 
-
 #include "main.h"
 #include "thing.h"
 #include "tile.h"
@@ -595,6 +594,13 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
 //CON("%s vs %s",thing_logname(me), thing_logname(it));
 
     if (thing_is_player(me)) {
+        /*
+         * Players don't sin
+         */
+        if (thing_is_jesus(it)) {
+            return;
+        }
+
         /*
          * Player collects keys and other items
          */
