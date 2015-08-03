@@ -107,7 +107,23 @@ static void thing_client_effect_hit_success (thingp t)
             sdl_joy_rumble(1.0, 2000);
         }
 
-        wid_shake_to_pct_in(w, 0.1, 0.9, 100, 5);
+        /*
+         * Shake the screen.
+         */
+        if (thing_is_player(t)) {
+            wid_shake_to_pct_in(wid_game_map_client_grid_container, 
+                                0.01, 0.9, 100, 5);
+
+            sdl_joy_rumble(1.0, 1000);
+        } else if (thing_is_ethereal(t)) {
+            /*
+             * No shaking jesus
+             */
+        } else if (thing_is_monst(t)) {
+            wid_shake_to_pct_in(w, 0.1, 0.9, 100, 5);
+        } else {
+            wid_shake_to_pct_in(w, 0.2, 0.9, 100, 5);
+        }
 
         if (thing_is_warm_blooded(t)) {
             level_place_blood(client_level,
