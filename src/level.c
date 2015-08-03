@@ -714,13 +714,11 @@ static void level_finished (levelp level)
     level->end_level_second_phase_destroy_timer = 0;
     level->end_level_first_phase_fade_out_timer = 0;
 
-#if 0
     /*
      * Is this needed ? Kind of obvious and overlaps with spending points 
      * update often.
      */
     LEVEL_LOG(level, "level finished");
-#endif
 
     if (level->is_test_level) {
         LEVEL_LOG(level, "test level finished");
@@ -829,9 +827,15 @@ void level_server_tick (levelp level)
                                                 0, 0, // x, y
                                                 "Quest completed!");
             } else {
+#if 0
+                /*
+                 * We play a sound and this overlaps the spending point 
+                 * awards, so ignore it.
+                 */
                 MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP,
                                                 0, 0, // x, y
                                                 "Level completed");
+#endif
             }
 
             level->end_level_first_phase_fade_out_timer = 
