@@ -994,8 +994,6 @@ static void client_check_still_in_game (level_pos_t level_pos)
 
             server_connection_confirmed = true;
 
-            MESG(INFO, "%s joined", p->stats.pname);
-
             LOG("Client: %s joined, ID %d", p->stats.pname, p->stats.thing_id);
 
             music_play_game(level_pos);

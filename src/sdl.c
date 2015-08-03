@@ -544,15 +544,11 @@ uint8_t sdl_init (void)
 #ifndef ENABLE_SDL_WINDOW /* { */
         INIT_LOG("SDL mode    : video");
 
-        video_flags = SDL_OPENGL;
+        video_flags = SDL_OPENGL | SDL_NOFRAME;
 
         if (global_config.full_screen) {
-            video_flags |= SDL_FULLSCREEN | SDL_NOFRAME;
+            video_flags |= SDL_FULLSCREEN;
         }
-
-#       ifdef __IPHONE_OS_VERSION_MIN_REQUIRED /* { */
-            video_flags |= SDL_FULLSCREEN | SDL_NOFRAME;
-#       endif /* } */
 
         if (SDL_SetVideoMode(VIDEO_WIDTH, VIDEO_HEIGHT,
                             0 /* bpp */, video_flags) == 0) {
@@ -571,15 +567,11 @@ uint8_t sdl_init (void)
 #   else /* } { */
         INIT_LOG("SDL mode    : window");
 
-        video_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
+        video_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS ;
 
         if (global_config.full_screen) {
-            video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
+            video_flags |= SDL_WINDOW_FULLSCREEN;
         }
-
-#       ifdef __IPHONE_OS_VERSION_MIN_REQUIRED /* { */
-            video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
-#       endif /* } */
 
         window = SDL_CreateWindow("gorynlich",
                                 SDL_WINDOWPOS_CENTERED,
@@ -1570,7 +1562,7 @@ void sdl_loop (void)
                     /*
                      * Update FPS counter.
                      */
-                    snprintf(fps_text, sizeof(fps_text), "%u", frames);
+                    snprintf(fps_text, sizeof(fps_text), "%u FPS", frames);
 
                     frames = 0;
                 }
@@ -1582,7 +1574,10 @@ void sdl_loop (void)
             if (global_config.fps_counter) {
                 glcolor(RED);
 
-                ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
+                ttf_puts(vsmall_font, fps_text, 
+                         0.02 * (double) global_config.video_pix_width,
+                         0.03 * (double) global_config.video_pix_height,
+                         1.0, 1.0, true);
             }
         }
 
