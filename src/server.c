@@ -143,7 +143,7 @@ static void server_rx_client_join (gsocketp s)
 
     char *tmp = dynprintf("%s joined", 
                           p->stats_from_client.pname);
-    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(WARNING, 0, 0, "%s", tmp);
+    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(INFO, 0, 0, "%s", tmp);
     myfree(tmp);
 
     LOG("Server: Total players now %u", global_config.server_current_players);
