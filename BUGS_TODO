@@ -1,5 +1,4 @@
 --------------------------------------- plan for jul --------------------------------------
-- check explosion kills zombie corpses
 - triple sword needs to do stuff
 - holy sword needs to do stuff
 - blood sucking sword needs to do stuff
@@ -33,6 +32,8 @@
 - magic gives health to other players
 
 Sun Aug  2 11:26:44 EDT 2015
+- full screen without frame
+- check explosion kills zombie corpses
 - need laptop size or check screen size for too large at startup
 - default full screen
 - collect weapon noises
