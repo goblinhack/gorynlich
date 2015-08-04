@@ -2,7 +2,7 @@
  short_name="wand of plasma stuff"
  raw_name="wand2"
  tooltip="wand of plasma stuff"
- fires="data/things/fireball3"
+ fires="data/things/fireball2"
  weapon_fire_delay_hundredths=30
  z_depth="monst"
  cost=500
