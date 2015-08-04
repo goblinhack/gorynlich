@@ -1,8 +1,8 @@
 {
- short_name="wand of noname"
+ short_name="wand of supreme damage"
  raw_name="wand4"
- tooltip="wand of noname"
- fires="data/things/fireball3"
+ tooltip="wand of supreme damage"
+ fires="data/things/fireball4"
  weapon_fire_delay_hundredths=30
  z_depth="monst"
  cost=1000

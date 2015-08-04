@@ -4,8 +4,8 @@
  tooltip="fireball IV"
  is_hidden_from_editor
  z_depth="explosion_top"
- speed=90
- damage=20
+ speed=120
+ damage=40
  hit_delay_tenths=1
  is_fragile
  is_projectile
@@ -13,107 +13,204 @@
  is_light_source
  is_fire
  light_radius=5.0
- scale=3.0
- collision_radius=0.5
+ scale=0.5
+ collision_radius=1.0
  is_effect_pulse
  is_variable_size
  sound_on_creation="fireball3"
+ explodes_as="data/things/explosion1"
  tiles={
   tile={
-   tile="fireball3-1"
+   tile="teleport1.1"
   }
   tile={
-   tile="fireball3-2"
+   tile="teleport1.2"
   }
   tile={
-   tile="fireball3-3"
+   tile="teleport1.3"
   }
   tile={
-   tile="fireball3-4"
+   tile="teleport1.4"
   }
   tile={
-   tile="fireball3-5"
+   tile="teleport1.5"
   }
   tile={
-   tile="fireball3-6"
+   tile="teleport1.6"
   }
   tile={
-   tile="fireball3-7"
+   tile="teleport1.7"
   }
   tile={
-   tile="fireball3-8"
+   tile="teleport1.8"
   }
   tile={
-   tile="fireball3-9"
+   tile="teleport1.9"
   }
   tile={
-   tile="fireball3-10"
+   tile="teleport1.10"
   }
   tile={
-   tile="fireball3-11"
+   tile="teleport1.11"
   }
   tile={
-   tile="fireball3-12"
+   tile="teleport1.12"
   }
   tile={
-   tile="fireball3-13"
+   tile="teleport1.13"
   }
   tile={
-   tile="fireball3-14"
+   tile="teleport1.14"
   }
   tile={
-   tile="fireball3-15"
+   tile="teleport1.15"
   }
   tile={
-   tile="fireball3-16"
+   tile="teleport1.16"
   }
   tile={
-   tile="fireball3-17"
+   tile="teleport1.17"
   }
   tile={
-   tile="fireball3-18"
+   tile="teleport1.18"
   }
   tile={
-   tile="fireball3-19"
+   tile="teleport1.19"
   }
   tile={
-   tile="fireball3-20"
+   tile="teleport1.20"
   }
   tile={
-   tile="fireball3-21"
+   tile="teleport1.21"
   }
   tile={
-   tile="fireball3-22"
+   tile="teleport1.22"
   }
   tile={
-   tile="fireball3-23"
+   tile="teleport1.23"
   }
   tile={
-   tile="fireball3-24"
+   tile="teleport1.24"
   }
   tile={
-   tile="fireball3-25"
+   tile="teleport1.25"
   }
   tile={
-   tile="fireball3-26"
+   tile="teleport1.26"
   }
   tile={
-   tile="fireball3-27"
+   tile="teleport1.27"
   }
   tile={
-   tile="fireball3-28"
+   tile="teleport1.28"
   }
   tile={
-   tile="fireball3-29"
+   tile="teleport1.29"
   }
   tile={
-   tile="fireball3-30"
+   tile="teleport1.30"
   }
   tile={
-   tile="fireball3-31"
+   tile="teleport1.31"
   }
   tile={
-   tile="fireball3-32"
+   tile="teleport1.32"
+  }
+  tile={
+   tile="teleport1.33"
+  }
+  tile={
+   tile="teleport1.34"
+  }
+  tile={
+   tile="teleport1.35"
+  }
+  tile={
+   tile="teleport1.36"
+  }
+  tile={
+   tile="teleport1.37"
+  }
+  tile={
+   tile="teleport1.38"
+  }
+  tile={
+   tile="teleport1.39"
+  }
+  tile={
+   tile="teleport1.40"
+  }
+  tile={
+   tile="teleport1.41"
+  }
+  tile={
+   tile="teleport1.42"
+  }
+  tile={
+   tile="teleport1.43"
+  }
+  tile={
+   tile="teleport1.44"
+  }
+  tile={
+   tile="teleport1.45"
+  }
+  tile={
+   tile="teleport1.46"
+  }
+  tile={
+   tile="teleport1.47"
+  }
+  tile={
+   tile="teleport1.48"
+  }
+  tile={
+   tile="teleport1.49"
+  }
+  tile={
+   tile="teleport1.50"
+  }
+  tile={
+   tile="teleport1.51"
+  }
+  tile={
+   tile="teleport1.52"
+  }
+  tile={
+   tile="teleport1.53"
+  }
+  tile={
+   tile="teleport1.54"
+  }
+  tile={
+   tile="teleport1.55"
+  }
+  tile={
+   tile="teleport1.56"
+  }
+  tile={
+   tile="teleport1.57"
+  }
+  tile={
+   tile="teleport1.58"
+  }
+  tile={
+   tile="teleport1.59"
+  }
+  tile={
+   tile="teleport1.60"
+  }
+  tile={
+   tile="teleport1.61"
+  }
+  tile={
+   tile="teleport1.62"
+  }
+  tile={
+   tile="teleport1.63"
+  }
+  tile={
+   tile="teleport1.64"
   }
  }
 }
