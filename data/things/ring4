@@ -1,9 +1,9 @@
 {
- short_name="ring of healing"
- raw_name="ring3"
- tooltip="ring of healing"
+ short_name="ring of war"
+ raw_name="ring4"
+ tooltip="ring of war"
  z_depth="player"
- cost=1000
+ cost=4000
  is_treasure
  is_stackable
  sound_on_collect="potion"
@@ -14,7 +14,9 @@
  is_ring
  can_be_enchanted
  d10000_chance_of_appearing=10
- stats_healing=21
+ stats_attack_melee=21
+ stats_attack_ranged=21
+ stats_defense=21
  is_hand_item
  is_light_source
  light_radius=0.5
@@ -22,7 +24,7 @@
  is_candle_light
  tiles={
   tile={
-   tile="ring3"
+   tile="ring4"
   }
  }
 }

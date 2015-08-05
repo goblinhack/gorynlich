@@ -23,6 +23,131 @@ static thing_possible_hit thing_possible_hits[MAX_THING_POSSIBLE_HIT];
 static uint32_t thing_possible_hit_size;
 
 /*
+ * Used for monsters firing intrinsic weapons
+ */
+static void thing_fire_at_xy (thingp t, double target_x, double target_y)
+{
+    /*
+     * Cannot fire until we're on a level.
+     */
+    if (!t->wid) {
+        THING_LOG(t, "cannot fire yet, not on the level");
+        return;
+    }
+
+    double dx, dy;
+
+    /*
+     * Any smaller than this and diagonal shots collide with adjoining walls.
+     */
+    double dist_from_player = 0.7;
+
+    double distance = DISTANCE(t->x, t->y, target_x, target_y);
+    double sx = (target_x - t->x) / distance;
+    double sy = (target_y - t->y) / distance;
+
+    dx = sx * dist_from_player;
+    dy = sy * dist_from_player;
+
+    /*
+     * Fire from the player position plus the initial delta so it looks like 
+     * it comes from outside of the body.
+     */
+    double x = t->x;
+    double y = t->y;
+
+    tpp projectile = 0;
+
+    tpp weapon = thing_weapon(t);
+    if (weapon) {
+        projectile = tp_fires(weapon);
+    }
+
+    if (!projectile) {
+        projectile = tp_fires(t->tp);
+    }
+
+    if (!projectile) {
+        /*
+         * Might be a sword.
+         */
+        if (distance > 2.0) {
+            return;
+        }
+
+        t->dir = thing_angle_to_dir(dx, dy);
+        thing_update(t);
+
+        thing_swing(t);
+        return;
+    }
+
+    widp w = wid_game_map_server_replace_tile(
+                                    wid_game_map_server_grid_container,
+                                    x,
+                                    y,
+                                    0, /* thing */
+                                    projectile,
+                                    0, /* tpp data */
+                                    0, /* item */
+                                    0 /* stats */);
+    if (!w) {
+        return;
+    }
+
+    thingp p = wid_get_thing(w);
+
+    /*
+     * Make sure we keep track of who fired so we can award scores.
+     */
+    thing_set_owner(p, t);
+
+    /*
+     * Set up the modifier damage if this is say a fireball or bow for ex.
+     */
+    p->damage = thing_stats_get_total_damage(t);
+
+    /*
+     * Round up say -0.7 to -1.0
+     */
+    dx *= 10.0;
+    dy *= 10.0;
+    dx /= (dist_from_player * 10.0);
+    dy /= (dist_from_player * 10.0);
+
+    p->dx = sx;
+    p->dy = sy;
+    p->dir = t->dir;
+
+    /*
+     * Check for immediate collision with a wall
+     */
+    thing_handle_collisions(wid_game_map_server_grid_container, p);
+    if (thing_is_dead_or_dying(p)) {
+        return;
+    }
+
+    double fnexthop_x = p->x + p->dx;
+    double fnexthop_y = p->y + p->dy;
+
+    thing_server_move(p,
+                      fnexthop_x,
+                      fnexthop_y,
+                      fnexthop_y < p->y,
+                      fnexthop_y > p->y,
+                      fnexthop_x < p->x,
+                      fnexthop_x > p->x,
+                      false, /* fire */
+                      false  /* magic */);
+
+    /*
+     * Point the shooter at the target.
+     */
+    t->dir = thing_angle_to_dir(p->dx, p->dy);
+    thing_update(t);
+}
+
+/*
  * Used for players firing.
  */
 void thing_server_fire (thingp t,
@@ -145,6 +270,28 @@ void thing_server_fire (thingp t,
     x += dx;
     y += dy;
 
+    double target_x = x + dx * 10;
+    double target_y = y + dy * 10;
+
+    fpoint p1;
+
+    p1.x = target_x - t->x;
+    p1.y = target_y - t->y;
+
+    double angle = anglerot(p1);
+    double spread = RAD_360 / 20.0;
+    double density = 3.0;
+
+    double d = 10.0;
+
+    double a;
+    for (a = -spread; a <= spread; a += spread / density) {
+        double x = t->x + fcos(a + angle) * d;
+        double y = t->y + fsin(a + angle) * d;
+
+        thing_fire_at_xy(t, x, y);
+    }
+
     tpp projectile = tp_fires(weapon);
     if (!projectile) {
         /*
@@ -158,6 +305,7 @@ void thing_server_fire (thingp t,
          */
     }
 
+#if 0
     widp w = wid_game_map_server_replace_tile(
                                     wid_game_map_server_grid_container,
                                     x,
@@ -212,6 +360,7 @@ void thing_server_fire (thingp t,
                       fnexthop_x > p->x,
                       false, /* fire */
                       false  /* magic */);
+#endif
 }
 
 static void thing_fire_conical_at (thingp t, thingp target)
@@ -261,116 +410,7 @@ static void thing_fire_at (thingp t, thingp target)
         return;
     }
 
-    double dx, dy;
-
-    /*
-     * Any smaller than this and diagonal shots collide with adjoining walls.
-     */
-    double dist_from_player = 0.7;
-
-    double distance = DISTANCE(t->x, t->y, target->x, target->y);
-    double sx = (target->x - t->x) / distance;
-    double sy = (target->y - t->y) / distance;
-
-    dx = sx * dist_from_player;
-    dy = sy * dist_from_player;
-
-    /*
-     * Fire from the player position plus the initial delta so it looks like 
-     * it comes from outside of the body.
-     */
-    double x = t->x;
-    double y = t->y;
-
-    tpp projectile = 0;
-
-    tpp weapon = thing_weapon(t);
-    if (weapon) {
-        projectile = tp_fires(weapon);
-    }
-
-    if (!projectile) {
-        projectile = tp_fires(t->tp);
-    }
-
-    if (!projectile) {
-        /*
-         * Might be a sword.
-         */
-        if (distance > 2.0) {
-            return;
-        }
-
-        t->dir = thing_angle_to_dir(dx, dy);
-        thing_update(t);
-
-        thing_swing(t);
-        return;
-    }
-
-    widp w = wid_game_map_server_replace_tile(
-                                    wid_game_map_server_grid_container,
-                                    x,
-                                    y,
-                                    0, /* thing */
-                                    projectile,
-                                    0, /* tpp data */
-                                    0, /* item */
-                                    0 /* stats */);
-    if (!w) {
-        return;
-    }
-
-    thingp p = wid_get_thing(w);
-
-    /*
-     * Make sure we keep track of who fired so we can award scores.
-     */
-    thing_set_owner(p, t);
-
-    /*
-     * Set up the modifier damage if this is say a fireball or bow for ex.
-     */
-    p->damage = thing_stats_get_total_damage(t);
-
-    /*
-     * Round up say -0.7 to -1.0
-     */
-    dx *= 10.0;
-    dy *= 10.0;
-    dx /= (dist_from_player * 10.0);
-    dy /= (dist_from_player * 10.0);
-
-    p->dx = sx;
-    p->dy = sy;
-    p->dir = t->dir;
-
-    /*
-     * Check for immediate collision with a wall
-     */
-    thing_handle_collisions(wid_game_map_server_grid_container, p);
-    if (thing_is_dead_or_dying(p)) {
-        return;
-    }
-
-    double fnexthop_x = p->x + p->dx;
-    double fnexthop_y = p->y + p->dy;
-
-    thing_server_move(p,
-                      fnexthop_x,
-                      fnexthop_y,
-                      fnexthop_y < p->y,
-                      fnexthop_y > p->y,
-                      fnexthop_x < p->x,
-                      fnexthop_x > p->x,
-                      false, /* fire */
-                      false  /* magic */);
-
-    /*
-     * Point the shooter at the target.
-     */
-    t->dir = thing_angle_to_dir(p->dx, p->dy);
-    thing_update(t);
+    thing_fire_at_xy(t, target->x, target->y);
 }
 
 /*
