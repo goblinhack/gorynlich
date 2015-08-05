@@ -244,6 +244,12 @@ typedef struct tp_ {
     float light_radius;
 
     /*
+     * For multi fire weapons
+     */
+    float weapon_density;
+    float weapon_spread;
+
+    /*
      * How large or small the thing is blitted as.
      */
     float scale;
@@ -486,6 +492,8 @@ uint32_t tp_get_min_appear_depth(tpp);
 uint32_t tp_get_max_appear_depth(tpp);
 uint32_t tp_get_jump_speed(tpp);
 double tp_get_light_radius(tpp);
+double tp_get_weapon_density(tpp);
+double tp_get_weapon_spread(tpp);
 double tp_get_scale(tpp);
 double tp_get_explosion_radius(tpp);
 double tp_get_collision_radius(tpp);
