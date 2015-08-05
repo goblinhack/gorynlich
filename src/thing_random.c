@@ -515,7 +515,7 @@ tpp random_mob (int depth)
     for (;;) {
 
         if (loop++ > 100000) {
-            ERR("couldn't find random monst");
+            ERR("couldn't find random mob");
             return (0);
         }
 

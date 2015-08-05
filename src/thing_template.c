@@ -602,6 +602,8 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_UINT32(ctx, "id_per_level", t->id_per_level);
 
         GET_OPT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
+        GET_OPT_NAMED_FLOAT(ctx, "weapon_spread", t->weapon_spread);
+        GET_OPT_NAMED_FLOAT(ctx, "weapon_density", t->weapon_density);
         GET_OPT_NAMED_FLOAT(ctx, "scale", t->scale);
         GET_OPT_NAMED_FLOAT(ctx, "explosion_radius", t->explosion_radius);
         GET_OPT_NAMED_FLOAT(ctx, "collision_radius", t->collision_radius);
@@ -855,6 +857,8 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "hp_per_level", t->hp_per_level);
     PUT_NAMED_INT32(ctx, "id_per_level", t->id_per_level);
     PUT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
+    PUT_NAMED_FLOAT(ctx, "weapon_spread", t->weapon_spread);
+    PUT_NAMED_FLOAT(ctx, "weapon_density", t->weapon_density);
     PUT_NAMED_FLOAT(ctx, "scale", t->scale);
     PUT_NAMED_FLOAT(ctx, "explosion_radius", t->explosion_radius);
     PUT_NAMED_FLOAT(ctx, "collision_radius", t->collision_radius);
@@ -1289,6 +1293,16 @@ uint32_t tp_get_id_per_level (tpp t)
 double tp_get_light_radius (tpp t)
 {
     return (t->light_radius);
+}
+
+double tp_get_weapon_density (tpp t)
+{
+    return (t->weapon_density);
+}
+
+double tp_get_weapon_spread (tpp t)
+{
+    return (t->weapon_spread);
 }
 
 double tp_get_scale (tpp t)
