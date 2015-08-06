@@ -597,7 +597,8 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
         /*
          * Players don't sin
          */
-        if (thing_is_jesus(it)) {
+        if (thing_is_jesus(it) || 
+            (owner_it && thing_is_jesus(owner_it))) {
             return;
         }
 
@@ -852,8 +853,8 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         /*
          * Don't ket jesus hit players
          */
-        if (owner_it && thing_is_jesus(owner_it)) {
-            if (thing_is_player(me)) {
+        if (owner_proj && thing_is_jesus(owner_proj)) {
+            if (thing_is_player(it)) {
                 return;
             }
         }
@@ -897,7 +898,6 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_player(it)                 ||
             thing_is_wall(it)                   ||
             thing_is_sawblade(it)) {
-//CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             if (owner_me == it) {
                 /*
                  * Don't hit your owner.

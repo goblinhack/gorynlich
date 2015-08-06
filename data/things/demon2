@@ -28,6 +28,7 @@
  is_light_source
  light_radius=1.5
  light_tint="red"
+ has_ability_burst_shot
  explodes_as="data/things/explosion3"
  tiles={
   tile={ delay=50 tile="demon1-1" }

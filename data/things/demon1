@@ -27,6 +27,7 @@
  min_appear_depth=5
  max_appear_depth=100
  is_light_source
+ has_ability_double_shot
  light_radius=3.5
  tiles={
   tile={ delay=50 tile="demon1-1" }
