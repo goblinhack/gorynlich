@@ -37,6 +37,7 @@
  is_light_source
  light_radius=1.5
  light_tint="green"
+ has_ability_burst_shot
  tiles={
   tile={ delay=150 tile="baby-cthulu1" }
   tile={ delay=150 tile="baby-cthulu2" }

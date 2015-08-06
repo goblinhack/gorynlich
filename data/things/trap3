@@ -19,7 +19,8 @@
  is_animated
  fires="data/things/energy1"
  weapon_fire_delay_hundredths=10
- d10000_chance_of_appearing=800
+ d10000_chance_of_appearing=20
+ has_ability_triple_shot
  tiles={
   tile={ delay=50 tile="trap3-1" }
   tile={ delay=50 tile="trap3-2" }
