@@ -902,6 +902,14 @@ typedef struct thing_ {
      */
     uint32_t is_jumping:1;
     uint32_t want_to_jump:1;
+
+    /*
+     * Local abilities that override that of the template
+     */
+    uint8_t is_ability_reverse_shot:1;
+    uint8_t is_ability_burst_shot:1;
+    uint8_t is_ability_triple_shot:1;
+    uint8_t is_ability_double_shot:1;
 } thing;
 
 #include "thing_template.h"
@@ -1223,11 +1231,11 @@ static inline uint8_t thing_is_rrr4 (thingp t)
     return (tp_is_rrr4(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr5 (thingp t)
+static inline uint8_t thing_is_ability_burst_shot (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr5(thing_tp(t)));
+    return (tp_is_ability_burst_shot(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_rrr6 (thingp t)
@@ -1237,18 +1245,25 @@ static inline uint8_t thing_is_rrr6 (thingp t)
     return (tp_is_rrr6(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr7 (thingp t)
+static inline uint8_t thing_is_ability_triple_shot (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr7(thing_tp(t)));
+    return (tp_is_ability_triple_shot(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr8 (thingp t)
+static inline uint8_t thing_is_ability_double_shot (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr8(thing_tp(t)));
+    return (tp_is_ability_double_shot(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_ability_reverse_shot (thingp t)
+{
+    verify(t);
+
+    return (tp_is_ability_reverse_shot(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_jesus (thingp t)
@@ -2062,9 +2077,9 @@ static inline uint8_t thing_is_rrr4_noverify (thingp t)
     return (t->tp->is_rrr4);
 }
 
-static inline uint8_t thing_is_rrr5_noverify (thingp t)
+static inline uint8_t thing_is_ability_burst_shot_noverify (thingp t)
 {
-    return (t->tp->is_rrr5);
+    return (t->tp->is_ability_burst_shot);
 }
 
 static inline uint8_t thing_is_rrr6_noverify (thingp t)
@@ -2072,14 +2087,19 @@ static inline uint8_t thing_is_rrr6_noverify (thingp t)
     return (t->tp->is_rrr6);
 }
 
-static inline uint8_t thing_is_rrr7_noverify (thingp t)
+static inline uint8_t thing_is_ability_triple_shot_noverify (thingp t)
 {
-    return (t->tp->is_rrr7);
+    return (t->tp->is_ability_triple_shot);
 }
 
-static inline uint8_t thing_is_rrr8_noverify (thingp t)
+static inline uint8_t thing_is_ability_double_shot_noverify (thingp t)
 {
-    return (t->tp->is_rrr8);
+    return (t->tp->is_ability_double_shot);
+}
+
+static inline uint8_t thing_is_ability_reverse_shot_noverify (thingp t)
+{
+    return (t->tp->is_ability_reverse_shot);
 }
 
 static inline uint8_t thing_is_jesus_noverify (thingp t)
@@ -2718,6 +2738,42 @@ static inline tpp thing_magic (const thingp t)
     return (t->magic_anim);
 }
 
+static inline int thing_has_ability_double_shot (const thingp t)
+{
+    if (t->is_ability_double_shot) {
+        return (true);
+    }
+
+    return (tp_is_ability_double_shot(t->tp));
+}
+
+static inline int thing_has_ability_reverse_shot (const thingp t)
+{
+    if (t->is_ability_reverse_shot) {
+        return (true);
+    }
+
+    return (tp_is_ability_reverse_shot(t->tp));
+}
+
+static inline int thing_has_ability_triple_shot (const thingp t)
+{
+    if (t->is_ability_triple_shot) {
+        return (true);
+    }
+
+    return (tp_is_ability_triple_shot(t->tp));
+}
+
+static inline int thing_has_ability_burst_shot (const thingp t)
+{
+    if (t->is_ability_burst_shot) {
+        return (true);
+    }
+
+    return (tp_is_ability_burst_shot(t->tp));
+}
+
 /*
  * Only a certain resolution of thing can be represented on the client.
  * Convert a floating point value to client rounded value.
@@ -2949,7 +3005,7 @@ void thing_modify_xp(thingp t, int val);
  * thing_spending_points.c
  */
 void thing_modify_spending_points(thingp t, int val);
-
+void thing_stats_check_for_changes(thingp t);
 
 /*
  * thing_magic.c

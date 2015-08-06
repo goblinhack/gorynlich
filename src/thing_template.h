@@ -307,10 +307,11 @@ typedef struct tp_ {
     uint8_t is_rrr2:1;
     uint8_t is_rrr3:1;
     uint8_t is_rrr4:1;
-    uint8_t is_rrr5:1;
     uint8_t is_rrr6:1;
-    uint8_t is_rrr7:1;
-    uint8_t is_rrr8:1;
+    uint8_t is_ability_burst_shot:1;
+    uint8_t is_ability_triple_shot:1;
+    uint8_t is_ability_double_shot:1;
+    uint8_t is_ability_reverse_shot:1;
     uint8_t is_jesus:1;
     uint8_t is_blit_y_offset:1;
     uint8_t is_dirt:1;
@@ -709,9 +710,9 @@ static inline uint8_t tp_is_rrr4 (tpp t)
     return (t->is_rrr4);
 }
 
-static inline uint8_t tp_is_rrr5 (tpp t)
+static inline uint8_t tp_is_ability_burst_shot (tpp t)
 {
-    return (t->is_rrr5);
+    return (t->is_ability_burst_shot);
 }
 
 static inline uint8_t tp_is_rrr6 (tpp t)
@@ -719,14 +720,19 @@ static inline uint8_t tp_is_rrr6 (tpp t)
     return (t->is_rrr6);
 }
 
-static inline uint8_t tp_is_rrr7 (tpp t)
+static inline uint8_t tp_is_ability_triple_shot (tpp t)
 {
-    return (t->is_rrr7);
+    return (t->is_ability_triple_shot);
 }
 
-static inline uint8_t tp_is_rrr8 (tpp t)
+static inline uint8_t tp_is_ability_double_shot (tpp t)
 {
-    return (t->is_rrr8);
+    return (t->is_ability_double_shot);
+}
+
+static inline uint8_t tp_is_ability_reverse_shot (tpp t)
+{
+    return (t->is_ability_reverse_shot);
 }
 
 static inline uint8_t tp_is_jesus (tpp t)

@@ -10,6 +10,10 @@
 
 void thing_modify_spending_points (thingp t, int val)
 {
+    if (!thing_is_player(t)) {
+        return;
+    }
+
     thing_stats_modify_spending_points(t, val);
 
     if (val > 0) {
@@ -18,5 +22,51 @@ void thing_modify_spending_points (thingp t, int val)
                             "vlarge", "green", val);
 
         MSG_SERVER_SHOUT_AT(INFO, t,  0, 0, "%%%%fg=green$Press s to spend points");
+    }
+}
+
+void thing_stats_check_for_changes (thingp t)
+{
+    if (!thing_is_player(t)) {
+        return;
+    }
+
+    int ranged_modifier = 
+        thing_stats_val_to_modifier(thing_stats_get_attack_ranged(t));
+
+    ranged_modifier = 2;
+    switch (ranged_modifier) {
+    case 2:
+        if (!thing_has_ability_reverse_shot(t)) {
+            t->is_ability_reverse_shot = true;
+            MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$reverse shot ability unlocked",
+                                "vlarge", "green");
+        }
+        break;
+    case 3:
+        if (!thing_has_ability_double_shot(t)) {
+            t->is_ability_double_shot = true;
+            MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$double shot ability unlocked",
+                                "vlarge", "green");
+        }
+        break;
+    case 4:
+        if (!thing_has_ability_triple_shot(t)) {
+            t->is_ability_triple_shot = true;
+            MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$triple shot ability unlocked",
+                                "vlarge", "green");
+        }
+        break;
+    case 5:
+        if (!thing_has_ability_burst_shot(t)) {
+            t->is_ability_burst_shot = true;
+            MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$burst shot ability unlocked",
+                                "vlarge", "green");
+        }
+        break;
     }
 }

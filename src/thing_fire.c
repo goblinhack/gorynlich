@@ -278,16 +278,58 @@ void thing_server_fire (thingp t,
     p1.x = target_x - t->x;
     p1.y = target_y - t->y;
 
-    double angle = anglerot(p1);
-    double spread = RAD_360 / 20.0;
-    double density = 3.0;
-
     double d = 10.0;
+    double angle = anglerot(p1);
 
-    double a;
-    for (a = -spread; a <= spread; a += spread / density) {
-        double x = t->x + fcos(a + angle) * d;
-        double y = t->y + fsin(a + angle) * d;
+    if (thing_has_ability_burst_shot(t)) {
+        double spread = RAD_360 / 20.0;
+        double density = 3.0;
+
+        double a;
+        for (a = -spread; a <= spread; a += spread / density) {
+            double x = t->x + fcos(a + angle) * d;
+            double y = t->y + fsin(a + angle) * d;
+
+            thing_fire_at_xy(t, x, y);
+        }
+    } else if (thing_has_ability_triple_shot(t)) {
+        double spread = RAD_360 / 40;
+
+        double x = t->x + fcos(angle + spread) * d;
+        double y = t->y + fsin(angle + spread) * d;
+        thing_fire_at_xy(t, x, y);
+
+        x = t->x + fcos(angle - spread) * d;
+        y = t->y + fsin(angle - spread) * d;
+        thing_fire_at_xy(t, x, y);
+
+        x = t->x + fcos(angle) * d;
+        y = t->y + fsin(angle) * d;
+        thing_fire_at_xy(t, x, y);
+    } else if (thing_has_ability_double_shot(t)) {
+        double spread = RAD_360 / 60;
+
+        double x = t->x + fcos(angle - spread) * d;
+        double y = t->y + fsin(angle - spread) * d;
+        thing_fire_at_xy(t, x, y);
+
+        x = t->x + fcos(angle + spread) * d;
+        y = t->y + fsin(angle + spread) * d;
+        thing_fire_at_xy(t, x, y);
+
+    } else if (thing_has_ability_reverse_shot(t)) {
+        double spread = RAD_360 / 2;
+
+        double x = t->x + fcos(angle - spread) * d;
+        double y = t->y + fsin(angle - spread) * d;
+        thing_fire_at_xy(t, x, y);
+
+        x = t->x + fcos(angle) * d;
+        y = t->y + fsin(angle) * d;
+        thing_fire_at_xy(t, x, y);
+    } else {
+        double x = t->x + fcos(angle) * d;
+        double y = t->y + fsin(angle) * d;
 
         thing_fire_at_xy(t, x, y);
     }

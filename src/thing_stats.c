@@ -4,7 +4,6 @@
  * See the LICENSE file for license.
  */
 
-
 #include "string_util.h"
 #include "name.h"
 #include "wid_player_info.h"
