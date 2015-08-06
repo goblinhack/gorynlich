@@ -18,7 +18,7 @@
  is_animated
  fires="data/things/energy1"
  weapon_fire_delay_hundredths=50
- d10000_chance_of_appearing=800
+ d10000_chance_of_appearing=100
  tiles={
   tile={ delay=50 tile="trap1-1" }
   tile={ delay=50 tile="trap1-2" }

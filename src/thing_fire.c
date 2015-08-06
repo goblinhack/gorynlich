@@ -25,7 +25,10 @@ static uint32_t thing_possible_hit_size;
 /*
  * Used for monsters firing intrinsic weapons
  */
-static void thing_fire_at_xy (thingp t, double target_x, double target_y)
+static void thing_fire_at_target_xy_ (thingp t, 
+                                      double target_x, 
+                                      double target_y, 
+                                      int line_of_fire)
 {
     /*
      * Cannot fire until we're on a level.
@@ -68,17 +71,7 @@ static void thing_fire_at_xy (thingp t, double target_x, double target_y)
     }
 
     if (!projectile) {
-        /*
-         * Might be a sword.
-         */
-        if (distance > 2.0) {
-            return;
-        }
-
-        t->dir = thing_angle_to_dir(dx, dy);
-        thing_update(t);
-
-        thing_swing(t);
+        ERR("nothing to fire");
         return;
     }
 
@@ -117,7 +110,7 @@ static void thing_fire_at_xy (thingp t, double target_x, double target_y)
 
     p->dx = sx;
     p->dy = sy;
-    p->dir = t->dir;
+    p->dir = thing_angle_to_dir(p->dx, p->dy);
 
     /*
      * Check for immediate collision with a wall
@@ -143,8 +136,93 @@ static void thing_fire_at_xy (thingp t, double target_x, double target_y)
     /*
      * Point the shooter at the target.
      */
-    t->dir = thing_angle_to_dir(p->dx, p->dy);
-    thing_update(t);
+    if (line_of_fire) {
+        t->dir = thing_angle_to_dir(p->dx, p->dy);
+        thing_update(t);
+    }
+}
+
+/*
+ * Used for monster and players firing.
+ */
+static void thing_fire_at_target_xy (thingp t, double target_x, double target_y)
+{
+    /*
+     * Cannot fire until we're on a level.
+     */
+    if (!t->wid) {
+        THING_LOG(t, "cannot fire yet, not on the level");
+        return;
+    }
+
+    fpoint p1;
+
+    p1.x = target_x - t->x;
+    p1.y = target_y - t->y;
+
+    double d = 10.0;
+    double angle = anglerot(p1);
+
+    if (thing_has_ability_burst_shot(t)) {
+        double spread = RAD_360 / 20.0;
+        double density = 3.0;
+
+        double a;
+        for (a = -spread; a <= spread; a += spread / density) {
+            double x = t->x + fcos(a + angle) * d;
+            double y = t->y + fsin(a + angle) * d;
+
+            if (a != 0) {
+                thing_fire_at_target_xy_(t, x, y, false);
+            }
+        }
+
+        double x = t->x + fcos(angle) * d;
+        double y = t->y + fsin(angle) * d;
+        thing_fire_at_target_xy_(t, x, y, true);
+
+    } else if (thing_has_ability_triple_shot(t)) {
+        double spread = RAD_360 / 40;
+
+        double x = t->x + fcos(angle + spread) * d;
+        double y = t->y + fsin(angle + spread) * d;
+        thing_fire_at_target_xy_(t, x, y, false);
+
+        x = t->x + fcos(angle - spread) * d;
+        y = t->y + fsin(angle - spread) * d;
+        thing_fire_at_target_xy_(t, x, y, false);
+
+        x = t->x + fcos(angle) * d;
+        y = t->y + fsin(angle) * d;
+        thing_fire_at_target_xy_(t, x, y, true);
+
+    } else if (thing_has_ability_double_shot(t)) {
+        double spread = RAD_360 / 60;
+
+        double x = t->x + fcos(angle - spread) * d;
+        double y = t->y + fsin(angle - spread) * d;
+        thing_fire_at_target_xy_(t, x, y, false);
+
+        x = t->x + fcos(angle + spread) * d;
+        y = t->y + fsin(angle + spread) * d;
+        thing_fire_at_target_xy_(t, x, y, true);
+
+    } else if (thing_has_ability_reverse_shot(t)) {
+        double spread = RAD_360 / 2;
+
+        double x = t->x + fcos(angle - spread) * d;
+        double y = t->y + fsin(angle - spread) * d;
+        thing_fire_at_target_xy_(t, x, y, false);
+
+        x = t->x + fcos(angle) * d;
+        y = t->y + fsin(angle) * d;
+        thing_fire_at_target_xy_(t, x, y, true);
+    } else {
+        double x = t->x + fcos(angle) * d;
+        double y = t->y + fsin(angle) * d;
+
+        thing_fire_at_target_xy_(t, x, y, true);
+    }
 }
 
 /*
@@ -273,67 +351,6 @@ void thing_server_fire (thingp t,
     double target_x = x + dx * 10;
     double target_y = y + dy * 10;
 
-    fpoint p1;
-
-    p1.x = target_x - t->x;
-    p1.y = target_y - t->y;
-
-    double d = 10.0;
-    double angle = anglerot(p1);
-
-    if (thing_has_ability_burst_shot(t)) {
-        double spread = RAD_360 / 20.0;
-        double density = 3.0;
-
-        double a;
-        for (a = -spread; a <= spread; a += spread / density) {
-            double x = t->x + fcos(a + angle) * d;
-            double y = t->y + fsin(a + angle) * d;
-
-            thing_fire_at_xy(t, x, y);
-        }
-    } else if (thing_has_ability_triple_shot(t)) {
-        double spread = RAD_360 / 40;
-
-        double x = t->x + fcos(angle + spread) * d;
-        double y = t->y + fsin(angle + spread) * d;
-        thing_fire_at_xy(t, x, y);
-
-        x = t->x + fcos(angle - spread) * d;
-        y = t->y + fsin(angle - spread) * d;
-        thing_fire_at_xy(t, x, y);
-
-        x = t->x + fcos(angle) * d;
-        y = t->y + fsin(angle) * d;
-        thing_fire_at_xy(t, x, y);
-    } else if (thing_has_ability_double_shot(t)) {
-        double spread = RAD_360 / 60;
-
-        double x = t->x + fcos(angle - spread) * d;
-        double y = t->y + fsin(angle - spread) * d;
-        thing_fire_at_xy(t, x, y);
-
-        x = t->x + fcos(angle + spread) * d;
-        y = t->y + fsin(angle + spread) * d;
-        thing_fire_at_xy(t, x, y);
-
-    } else if (thing_has_ability_reverse_shot(t)) {
-        double spread = RAD_360 / 2;
-
-        double x = t->x + fcos(angle - spread) * d;
-        double y = t->y + fsin(angle - spread) * d;
-        thing_fire_at_xy(t, x, y);
-
-        x = t->x + fcos(angle) * d;
-        y = t->y + fsin(angle) * d;
-        thing_fire_at_xy(t, x, y);
-    } else {
-        double x = t->x + fcos(angle) * d;
-        double y = t->y + fsin(angle) * d;
-
-        thing_fire_at_xy(t, x, y);
-    }
-
     tpp projectile = tp_fires(weapon);
     if (!projectile) {
         /*
@@ -347,62 +364,7 @@ void thing_server_fire (thingp t,
          */
     }
 
-#if 0
-    widp w = wid_game_map_server_replace_tile(
-                                    wid_game_map_server_grid_container,
-                                    x,
-                                    y,
-                                    0, /* thing */
-                                    projectile,
-                                    0, /* tpp data */
-                                    0, /* item */
-                                    0 /* stats */);
-
-    thingp p = wid_get_thing(w);
-
-    /*
-     * Make sure we keep track of who fired so we can award scores.
-     */
-    thing_set_owner(p, t);
-
-    /*
-     * Set up the modifier damage if this is say a fireball or bow for ex.
-     */
-    p->damage = thing_stats_get_total_damage(t);
-
-    /*
-     * Round up say -0.7 to -1.0
-     */
-    dx *= 10.0;
-    dy *= 10.0;
-    dx /= (dist_from_player * 10.0);
-    dy /= (dist_from_player * 10.0);
-
-    p->dx = dx;
-    p->dy = dy;
-    p->dir = t->dir;
-
-    /*
-     * Check for immediate collision with a wall
-     */
-    thing_handle_collisions(wid_game_map_server_grid_container, p);
-    if (thing_is_dead_or_dying(p)) {
-        return;
-    }
-
-    double fnexthop_x = p->x + p->dx;
-    double fnexthop_y = p->y + p->dy;
-
-    thing_server_move(p,
-                      fnexthop_x,
-                      fnexthop_y,
-                      fnexthop_y < p->y,
-                      fnexthop_y > p->y,
-                      fnexthop_x < p->x,
-                      fnexthop_x > p->x,
-                      false, /* fire */
-                      false  /* magic */);
-#endif
+    thing_fire_at_target_xy(t, target_x, target_y);
 }
 
 static void thing_fire_conical_at (thingp t, thingp target)
@@ -452,7 +414,38 @@ static void thing_fire_at (thingp t, thingp target)
         return;
     }
 
-    thing_fire_at_xy(t, target->x, target->y);
+    tpp projectile = 0;
+
+    tpp weapon = thing_weapon(t);
+    if (weapon) {
+        projectile = tp_fires(weapon);
+    }
+
+    if (!projectile) {
+        projectile = tp_fires(t->tp);
+    }
+
+    if (!projectile) {
+        /*
+         * Might be a sword, so don't swing if too far from the target else it 
+         * just looks daft.
+         */
+        double distance = DISTANCE(t->x, t->y, target->x, target->y);
+        double dx = (target->x - t->x) / distance;
+        double dy = (target->y - t->y) / distance;
+
+        if (distance > 2.0) {
+            return;
+        }
+
+        t->dir = thing_angle_to_dir(dx, dy);
+        thing_update(t);
+
+        thing_swing(t);
+        return;
+    }
+
+    thing_fire_at_target_xy(t, target->x, target->y);
 }
 
 /*

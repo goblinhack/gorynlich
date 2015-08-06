@@ -8,9 +8,9 @@
  is_shield_carry_anim
  max_hp=30000
  hit_priority=100
- scale=0.4
+ scale=0.35
  is_light_source
- light_radius=1.0
+ light_radius=0.5
  is_ethereal
  tiles={
   tile={
