@@ -67,22 +67,22 @@ static player_stats_row player_stats_arr[PLAYER_STATS_MAX] = {
     { /* STAT_LEVEL           */ "Level",           0,   0,
     "Your current experience level" },
 
-    { /* STAT_MAX_HP          */ "%%fmt=left$Health",          "+", 5,
+    { /* STAT_MAX_HP          */ "%%fmt=left$Health force",    "+", 5,
     "Health points. This is the max you can recover to with your healing ability." },
 
-    { /* STAT_MAX_MAGIC       */ "%%fmt=left$Magic",           "+", 5,
+    { /* STAT_MAX_MAGIC       */ "%%fmt=left$Magic force",     "+", 5,
     "ID is your life force used for magic and life changing events." },
 
-    { /* STAT_ATTACK_MELEE    */ "%%fmt=left$Melee",           "+", 1,
+    { /* STAT_ATTACK_MELEE    */ "%%fmt=left$Melee weapons",   "+", 1,
     "This modifier is the percentage damage gain you get in physical attacks." },
 
-    { /* STAT_ATTACK_RANGED   */ "%%fmt=left$Range damage",    "+", 1,
+    { /* STAT_ATTACK_RANGED   */ "%%fmt=left$Range weapons",   "+", 1,
     "This modifier is the percentage damage gain you get in missile attacks." },
 
-    { /* STAT_ATTACK_MAGIC    */ "%%fmt=left$Magic damage",    "+", 1,
+    { /* STAT_ATTACK_MAGIC    */ "%%fmt=left$Magic attack",    "+", 1,
     "This modifier is the percentage damage gain you get in magical attacks." },
 
-    { /* STAT_DEFENSE         */ "%%fmt=left$Damage deduce",   "+", 1,
+    { /* STAT_DEFENSE         */ "%%fmt=left$Damage reduction","+", 1,
     "Damage is divided by modifier" },
 
     { /* STAT_SPEED           */ "%%fmt=left$Speed",           "+", 1,

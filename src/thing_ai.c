@@ -800,8 +800,10 @@ static uint8_t thing_try_nexthop (thingp t,
     }
 
     if (thing_server_move(t, *nexthop_x, *nexthop_y,
-                          *nexthop_y < t->y, *nexthop_y > t->y,
-                          *nexthop_x < t->x, *nexthop_x > t->x, 
+                          *nexthop_y < t->y, 
+                          *nexthop_y > t->y,
+                          *nexthop_x < t->x, 
+                          *nexthop_x > t->x, 
                           false, /* fire */
                           false  /* magic */)) {
         return (true);
@@ -827,8 +829,10 @@ static uint8_t thing_dmap_try_nexthop (thingp t,
         }
 
         if (thing_server_move(t, *nexthop_x, *nexthop_y,
-                              *nexthop_y < t->y, *nexthop_y > t->y,
-                              *nexthop_x < t->x, *nexthop_x > t->x, 
+                              *nexthop_y < t->y, 
+                              *nexthop_y > t->y,
+                              *nexthop_x < t->x, 
+                              *nexthop_x > t->x, 
                               false, /* fire */
                               false  /* magic */)) {
             return (true);

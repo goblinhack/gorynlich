@@ -1563,6 +1563,13 @@ void socket_rx_client_status (gsocketp s, UDPpacket *packet, uint8_t *data)
         socket_tx_server_status(s);
     }
 
+    /*
+     * See if abilities have been unlocked.
+     */
+    if (p->thing) {
+        thing_stats_check_for_changes(p->thing);
+    }
+
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
 }
