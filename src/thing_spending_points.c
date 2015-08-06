@@ -38,7 +38,7 @@ void thing_stats_check_for_changes (thingp t)
     switch (ranged_modifier) {
     case 2:
         if (!thing_has_ability_reverse_shot(t)) {
-            t->is_ability_reverse_shot = true;
+            t->has_ability_reverse_shot = true;
             MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
                                 "%%%%font=%s$%%%%fg=%s$reverse shot ability unlocked",
                                 "vlarge", "green");
@@ -46,7 +46,7 @@ void thing_stats_check_for_changes (thingp t)
         break;
     case 3:
         if (!thing_has_ability_double_shot(t)) {
-            t->is_ability_double_shot = true;
+            t->has_ability_double_shot = true;
             MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
                                 "%%%%font=%s$%%%%fg=%s$double shot ability unlocked",
                                 "vlarge", "green");
@@ -54,7 +54,7 @@ void thing_stats_check_for_changes (thingp t)
         break;
     case 4:
         if (!thing_has_ability_triple_shot(t)) {
-            t->is_ability_triple_shot = true;
+            t->has_ability_triple_shot = true;
             MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
                                 "%%%%font=%s$%%%%fg=%s$triple shot ability unlocked",
                                 "vlarge", "green");
@@ -62,7 +62,7 @@ void thing_stats_check_for_changes (thingp t)
         break;
     case 5:
         if (!thing_has_ability_burst_shot(t)) {
-            t->is_ability_burst_shot = true;
+            t->has_ability_burst_shot = true;
             MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
                                 "%%%%font=%s$%%%%fg=%s$burst shot ability unlocked",
                                 "vlarge", "green");
