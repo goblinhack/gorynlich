@@ -8,7 +8,7 @@
  is_shield_carry_anim
  max_hp=30000
  hit_priority=100
- scale=2.5
+ scale=1.5
  is_light_source
  light_radius=1.0
  is_ethereal

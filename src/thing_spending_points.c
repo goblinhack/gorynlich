@@ -34,7 +34,6 @@ void thing_stats_check_for_changes (thingp t)
     int ranged_modifier = 
         thing_stats_val_to_modifier(thing_stats_get_attack_ranged(t));
 
-    ranged_modifier = 2;
     switch (ranged_modifier) {
     case 2:
         if (!thing_has_ability_reverse_shot(t)) {
