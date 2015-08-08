@@ -1231,11 +1231,11 @@ static inline uint8_t thing_is_rrr4 (thingp t)
     return (tp_is_rrr4(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr6 (thingp t)
+static inline uint8_t thing_is_single_mob_spawner (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr6(thing_tp(t)));
+    return (tp_is_single_mob_spawner(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_jesus (thingp t)
@@ -2054,9 +2054,9 @@ static inline uint8_t thing_has_ability_burst_shot_noverify (thingp t)
     return (t->tp->has_ability_burst_shot);
 }
 
-static inline uint8_t thing_is_rrr6_noverify (thingp t)
+static inline uint8_t thing_is_single_mob_spawner_noverify (thingp t)
 {
-    return (t->tp->is_rrr6);
+    return (t->tp->is_single_mob_spawner);
 }
 
 static inline uint8_t thing_has_ability_triple_shot_noverify (thingp t)
