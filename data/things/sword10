@@ -20,6 +20,7 @@
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
+ stats_toughness=12
  d10000_chance_of_appearing=1
  d10000_chance_of_breaking=0
  weapon_carry_anim="data/things/sword10_anim"

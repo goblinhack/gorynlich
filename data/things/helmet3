@@ -3,7 +3,7 @@
  raw_name="helmet3"
  tooltip="gold helmet"
  z_depth="monst"
- stats_defense=21
+ stats_defense=12
  cost=3000
  is_treasure
  is_stackable

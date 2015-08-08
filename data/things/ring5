@@ -14,11 +14,11 @@
  is_ring
  can_be_enchanted
  d10000_chance_of_appearing=4
- stats_healing=21
- stats_attack_melee=21
- stats_attack_ranged=21
- stats_attack_magical=21
- stats_defense=21
+ stats_toughness=12
+ stats_attack_melee=12
+ stats_attack_ranged=12
+ stats_attack_magical=12
+ stats_defense=12
  is_hand_item
  is_light_source
  light_radius=0.5

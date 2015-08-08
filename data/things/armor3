@@ -3,7 +3,7 @@
  raw_name="armor3"
  tooltip="gold armor"
  z_depth="monst"
- stats_defense=21
+ stats_defense=12
  cost=4000
  is_treasure
  is_stackable
