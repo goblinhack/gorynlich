@@ -663,7 +663,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
         GET_OPT_NAMED_BITFIELD(ctx, "has_ability_burst_shot", t->has_ability_burst_shot);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_single_mob_spawner", t->is_single_mob_spawner);
         GET_OPT_NAMED_BITFIELD(ctx, "has_ability_triple_shot", t->has_ability_triple_shot);
         GET_OPT_NAMED_BITFIELD(ctx, "has_ability_double_shot", t->has_ability_double_shot);
         GET_OPT_NAMED_BITFIELD(ctx, "has_ability_reverse_shot", t->has_ability_reverse_shot);
@@ -915,7 +915,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
     PUT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
     PUT_NAMED_BITFIELD(ctx, "has_ability_burst_shot", t->has_ability_burst_shot);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
+    PUT_NAMED_BITFIELD(ctx, "is_single_mob_spawner", t->is_single_mob_spawner);
     PUT_NAMED_BITFIELD(ctx, "has_ability_triple_shot", t->has_ability_triple_shot);
     PUT_NAMED_BITFIELD(ctx, "has_ability_double_shot", t->has_ability_double_shot);
     PUT_NAMED_BITFIELD(ctx, "has_ability_reverse_shot", t->has_ability_reverse_shot);

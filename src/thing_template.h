@@ -307,7 +307,7 @@ typedef struct tp_ {
     uint8_t is_rrr2:1;
     uint8_t is_rrr3:1;
     uint8_t is_rrr4:1;
-    uint8_t is_rrr6:1;
+    uint8_t is_single_mob_spawner:1;
     uint8_t has_ability_burst_shot:1;
     uint8_t has_ability_triple_shot:1;
     uint8_t has_ability_double_shot:1;
@@ -715,9 +715,9 @@ static inline uint8_t tp_has_ability_burst_shot (tpp t)
     return (t->has_ability_burst_shot);
 }
 
-static inline uint8_t tp_is_rrr6 (tpp t)
+static inline uint8_t tp_is_single_mob_spawner (tpp t)
 {
-    return (t->is_rrr6);
+    return (t->is_single_mob_spawner);
 }
 
 static inline uint8_t tp_has_ability_triple_shot (tpp t)
