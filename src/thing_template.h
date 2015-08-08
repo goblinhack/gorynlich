@@ -312,6 +312,12 @@ typedef struct tp_ {
     uint8_t has_ability_triple_shot:1;
     uint8_t has_ability_double_shot:1;
     uint8_t has_ability_reverse_shot:1;
+    uint8_t has_ability_double_damage_swing:1;
+    uint8_t has_ability_triple_speed_swing:1;
+    uint8_t has_ability_double_speed_swing:1;
+    uint8_t has_ability_reverse_swing:1;
+    uint8_t has_ability_rage:1;
+    uint8_t has_ability_perma_rage:1;
     uint8_t is_jesus:1;
     uint8_t is_blit_y_offset:1;
     uint8_t is_dirt:1;
@@ -478,7 +484,7 @@ uint32_t tp_get_stats_attack_ranged(tpp);
 uint32_t tp_get_stats_attack_magical(tpp);
 uint32_t tp_get_stats_speed(tpp);
 uint32_t tp_get_stats_vision(tpp);
-uint32_t tp_get_stats_healing(tpp);
+uint32_t tp_get_stats_toughness(tpp);
 uint32_t tp_get_stats_cash(tpp);
 uint32_t tp_get_stats_defense(tpp);
 
@@ -733,6 +739,36 @@ static inline uint8_t tp_has_ability_double_shot (tpp t)
 static inline uint8_t tp_has_ability_reverse_shot (tpp t)
 {
     return (t->has_ability_reverse_shot);
+}
+
+static inline uint8_t tp_has_ability_double_damage_swing (tpp t)
+{
+    return (t->has_ability_double_damage_swing);
+}
+
+static inline uint8_t tp_has_ability_triple_speed_swing (tpp t)
+{
+    return (t->has_ability_triple_speed_swing);
+}
+
+static inline uint8_t tp_has_ability_double_speed_swing (tpp t)
+{
+    return (t->has_ability_double_speed_swing);
+}
+
+static inline uint8_t tp_has_ability_reverse_swing (tpp t)
+{
+    return (t->has_ability_reverse_swing);
+}
+
+static inline uint8_t tp_has_ability_rage (tpp t)
+{
+    return (t->has_ability_rage);
+}
+
+static inline uint8_t tp_has_ability_perma_rage (tpp t)
+{
+    return (t->has_ability_perma_rage);
 }
 
 static inline uint8_t tp_is_jesus (tpp t)

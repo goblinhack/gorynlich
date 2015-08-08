@@ -43,7 +43,7 @@ void thing_stats_dump (const thing_statsp s)
 
     LOG("    %-20s %4u %-20s %4u", 
         "speed", s->speed, 
-        "healing", s->healing);
+        "toughness", s->toughness);
 
     LOG("    %-20s %4u %-20s %4u", 
         "action bar", s->action_bar_index, 
@@ -272,9 +272,9 @@ int thing_stats_diff (const thing_statsp old_stats,
         changed = 1;
     }
 
-    if (old_stats->healing != new_stats->healing) {
+    if (old_stats->toughness != new_stats->toughness) {
         LOG("%sHealing changed from %d to %d", indent, 
-            old_stats->healing, new_stats->healing);
+            old_stats->toughness, new_stats->toughness);
         changed = 1;
     }
 
@@ -1258,10 +1258,10 @@ void thing_stats_get_random (thing_statsp stats,
     stats->vision = gaussrand(stats->vision, 2);
 
     /*
-     * healing
+     * toughness
      */
-    stats->healing = tp_get_stats_healing(tp);
-    stats->healing = gaussrand(stats->healing, 2);
+    stats->toughness = tp_get_stats_toughness(tp);
+    stats->toughness = gaussrand(stats->toughness, 2);
 
     /*
      * cash
@@ -1304,7 +1304,7 @@ void thing_stats_get_random (thing_statsp stats,
     LOG(" %20s %d", "Defense", stats->defense);
     LOG(" %20s %d", "Speed", stats->speed);
     LOG(" %20s %d", "Vision", stats->vision);
-    LOG(" %20s %d", "Healing", stats->healing);
+    LOG(" %20s %d", "Healing", stats->toughness);
 
     /*
      * Be generous and give some items at startup.
@@ -1349,8 +1349,8 @@ void thing_stats_init (thing_statsp stats)
     if (!stats->vision) {
         stats->vision = 10;
     }
-    if (!stats->healing) {
-        stats->healing = 10;
+    if (!stats->toughness) {
+        stats->toughness = 10;
     }
 }
 
@@ -1552,18 +1552,18 @@ int32_t thing_stats_get_vision (thingp t)
     return (val);
 }
 
-int32_t thing_stats_get_healing (thingp t)
+int32_t thing_stats_get_toughness (thingp t)
 {
     int32_t val;
 
     verify(t);
 
-    val = t->stats.healing;
+    val = t->stats.toughness;
     if (val) {
         return (val);
     }
 
-    val = tp_get_stats_healing(t->tp);
+    val = tp_get_stats_toughness(t->tp);
     return (val);
 }
 
@@ -1696,11 +1696,11 @@ void thing_stats_set_vision (thingp t, int32_t val)
     stats_set_vision(&t->stats, val);
 }
 
-void thing_stats_set_healing (thingp t, int32_t val)
+void thing_stats_set_toughness (thingp t, int32_t val)
 {
     thing_stats_verify(t);
 
-    stats_set_healing(&t->stats, val);
+    stats_set_toughness(&t->stats, val);
 }
 
 void thing_stats_set_defense (thingp t, int32_t val)
@@ -1844,7 +1844,7 @@ void thing_stats_modify_vision (thingp t, int32_t val)
     stats_modify_vision(&t->stats, val);
 }
 
-void thing_stats_modify_healing (thingp t, int32_t val)
+void thing_stats_modify_toughness (thingp t, int32_t val)
 {
     thing_stats_verify(t);
 
@@ -1852,7 +1852,7 @@ void thing_stats_modify_healing (thingp t, int32_t val)
         MSG_SERVER_SHOUT_AT(SOUND, t, t->x, t->y, "effect");
     }
 
-    stats_modify_healing(&t->stats, val);
+    stats_modify_toughness(&t->stats, val);
 }
 
 void thing_stats_modify_defense (thingp t, int32_t val)
@@ -1986,11 +1986,11 @@ int32_t stats_get_vision (thing_statsp stats)
     return (val);
 }
 
-int32_t stats_get_healing (thing_statsp stats)
+int32_t stats_get_toughness (thing_statsp stats)
 {
     int32_t val;
 
-    val = stats->healing;
+    val = stats->toughness;
     return (val);
 }
 
@@ -2149,13 +2149,13 @@ void stats_set_vision (thing_statsp stats, int32_t val)
     stats_bump_version(stats);
 }
 
-void stats_set_healing (thing_statsp stats, int32_t val)
+void stats_set_toughness (thing_statsp stats, int32_t val)
 {
-    if (stats->healing == val) {
+    if (stats->toughness == val) {
         return;
     }
 
-    stats->healing = val;
+    stats->toughness = val;
     stats_bump_version(stats);
 }
 
@@ -2256,9 +2256,9 @@ void stats_modify_vision (thing_statsp stats, int32_t val)
     stats_bump_version(stats);
 }
 
-void stats_modify_healing (thing_statsp stats, int32_t val)
+void stats_modify_toughness (thing_statsp stats, int32_t val)
 {
-    stats->healing += val;
+    stats->toughness += val;
     stats_bump_version(stats);
 }
 

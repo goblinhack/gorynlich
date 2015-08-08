@@ -7,9 +7,12 @@
 
 #include "color.h"
 #include "thing.h"
+#include "time_util.h"
 
 int32_t thing_stats_get_total_damage (thingp t)
 {
+    static uint32_t last_msg;
+
     double damage = t->damage;
 
     if (!damage) {
@@ -124,16 +127,80 @@ int32_t thing_stats_get_total_damage (thingp t)
     /*
      * Modifier of 1 maps to +10 % in damage.
      */
-    int32_t final_damage = ceil(damage + (damage * (modifier / 10.0)));
+    double final_damage = ceil(damage + (damage * (modifier / 10.0)));
+
+    /*
+     * Ok, not quite final
+     */
+    if (thing_has_ability_double_damage_swing(t)) {
+        if (tp_is_melee_weapon(weapon)) {
+            final_damage *= 2.0;
+
+            if (thing_is_player(t)) {
+                if (time_have_x_tenths_passed_since(2, last_msg)) {
+                    last_msg = time_get_time_ms();
+
+                    MSG_SERVER_SHOUT_AT(OVER_THING, t, 0, 0,
+                                        "%%%%font=%s$%%%%fg=%s$x2",
+                                        "large", "red");
+                }
+            }
+        }
+    }
+
+    if (thing_has_ability_rage(t)) {
+        if (tp_is_melee_weapon(weapon)) {
+            if (thing_stats_get_hp(t) <= thing_stats_get_max_hp(t) / 4) {
+                final_damage *= 1.25;
+
+                if (thing_is_player(t)) {
+                    if (thing_is_player(t)) {
+                        if (time_have_x_tenths_passed_since(5, last_msg)) {
+                            MSG_SERVER_SHOUT_AT(OVER_THING, t, 0, 0,
+                                                "%%%%font=%s$%%%%fg=%s$Grr!",
+                                                "large", "yellow");
+                        }
+                    }
+                }
+            } else if (thing_stats_get_hp(t) <= thing_stats_get_max_hp(t) / 8) {
+                final_damage *= 2.0;
+
+                if (thing_is_player(t)) {
+                    if (time_have_x_tenths_passed_since(5, last_msg)) {
+                        last_msg = time_get_time_ms();
+                        MSG_SERVER_SHOUT_AT(OVER_THING, t, 0, 0,
+                                            "%%%%font=%s$%%%%fg=%s$Grr!",
+                                            "large", "red");
+                    }
+                }
+            }
+        }
+    }
+
+    if (thing_has_ability_perma_rage(t)) {
+        if (tp_is_melee_weapon(weapon)) {
+            final_damage *= 1.25;
+
+            if (thing_is_player(t)) {
+                if (time_have_x_tenths_passed_since(5, last_msg)) {
+                    last_msg = time_get_time_ms();
+
+                    MSG_SERVER_SHOUT_AT(OVER_THING, t, 0, 0,
+                                        "%%%%font=%s$%%%%fg=%s$Grr!",
+                                        "large", "red");
+                }
+            }
+        }
+    }
 
     if (thing_is_monst(t) || thing_is_player(t)) {
         if (weapon) {
             THING_LOG(t, "attack damage (from %s), modifier %d, damage %d -> %d", 
                       weapon ? tp_name(weapon) : 0,
-                      (int) modifier, (int) damage, final_damage);
+                      (int) modifier, (int) damage, (int) final_damage);
         } else {
             THING_LOG(t, "attack damage, modifier %d, damage %d -> %d", 
-                      (int) modifier, (int) damage, final_damage);
+                      (int) modifier, (int) damage, (int) final_damage);
         }
     }
 
@@ -144,5 +211,5 @@ int32_t thing_stats_get_total_damage (thingp t)
     /*
      * 1dx damage.
      */
-    return (myrand() % final_damage);
+    return (myrand() % (int)final_damage);
 }
