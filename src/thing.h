@@ -911,6 +911,14 @@ typedef struct thing_ {
     uint8_t has_ability_burst_shot:1;
     uint8_t has_ability_triple_shot:1;
     uint8_t has_ability_double_shot:1;
+
+    uint8_t has_ability_reverse_swing:1;
+    uint8_t has_ability_double_damage_swing:1;
+    uint8_t has_ability_triple_speed_swing:1;
+    uint8_t has_ability_double_speed_swing:1;
+
+    uint8_t has_ability_rage:1;
+    uint8_t has_ability_perma_rage:1;
 } thing;
 
 #include "thing_template.h"
@@ -2745,6 +2753,60 @@ static inline int thing_has_ability_burst_shot (const thingp t)
     }
 
     return (tp_has_ability_burst_shot(t->tp));
+}
+
+static inline int thing_has_ability_double_speed_swing (const thingp t)
+{
+    if (t->has_ability_double_speed_swing) {
+        return (true);
+    }
+
+    return (tp_has_ability_double_speed_swing(t->tp));
+}
+
+static inline int thing_has_ability_reverse_swing (const thingp t)
+{
+    if (t->has_ability_reverse_swing) {
+        return (true);
+    }
+
+    return (tp_has_ability_reverse_swing(t->tp));
+}
+
+static inline int thing_has_ability_triple_speed_swing (const thingp t)
+{
+    if (t->has_ability_triple_speed_swing) {
+        return (true);
+    }
+
+    return (tp_has_ability_triple_speed_swing(t->tp));
+}
+
+static inline int thing_has_ability_double_damage_swing (const thingp t)
+{
+    if (t->has_ability_double_damage_swing) {
+        return (true);
+    }
+
+    return (tp_has_ability_double_damage_swing(t->tp));
+}
+
+static inline int thing_has_ability_rage (const thingp t)
+{
+    if (t->has_ability_rage) {
+        return (true);
+    }
+
+    return (tp_has_ability_rage(t->tp));
+}
+
+static inline int thing_has_ability_perma_rage (const thingp t)
+{
+    if (t->has_ability_perma_rage) {
+        return (true);
+    }
+
+    return (tp_has_ability_perma_rage(t->tp));
 }
 
 /*

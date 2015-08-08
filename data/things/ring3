@@ -1,7 +1,7 @@
 {
- short_name="ring of healing"
+ short_name="ring of toughness"
  raw_name="ring3"
- tooltip="ring of healing"
+ tooltip="ring of toughness"
  z_depth="player"
  cost=1000
  is_treasure
@@ -14,7 +14,7 @@
  is_ring
  can_be_enchanted
  d10000_chance_of_appearing=10
- stats_healing=21
+ stats_toughness=12
  is_hand_item
  is_light_source
  light_radius=0.5

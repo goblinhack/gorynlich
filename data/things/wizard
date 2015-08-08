@@ -19,7 +19,7 @@
  stats_attack_magical=12
  stats_speed=8
  stats_vision=6
- stats_healing=8
+ stats_toughness=8
  stats_defense=8
  is_animate_only_when_moving
  is_warm_blooded

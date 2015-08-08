@@ -590,8 +590,8 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
             stats_set_vision(&t->stats, tmp_uint32);
         }
 
-        if (GET_OPT_NAMED_UINT32(ctx, "stats_healing", tmp_uint32)) {
-            stats_set_healing(&t->stats, tmp_uint32);
+        if (GET_OPT_NAMED_UINT32(ctx, "stats_toughness", tmp_uint32)) {
+            stats_set_toughness(&t->stats, tmp_uint32);
         }
 
         if (GET_OPT_NAMED_UINT32(ctx, "stats_defense", tmp_uint32)) {
@@ -662,11 +662,17 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_life_saving", t->is_life_saving);
-        GET_OPT_NAMED_BITFIELD(ctx, "has_ability_burst_shot", t->has_ability_burst_shot);
         GET_OPT_NAMED_BITFIELD(ctx, "is_single_mob_spawner", t->is_single_mob_spawner);
+        GET_OPT_NAMED_BITFIELD(ctx, "has_ability_burst_shot", t->has_ability_burst_shot);
         GET_OPT_NAMED_BITFIELD(ctx, "has_ability_triple_shot", t->has_ability_triple_shot);
         GET_OPT_NAMED_BITFIELD(ctx, "has_ability_double_shot", t->has_ability_double_shot);
         GET_OPT_NAMED_BITFIELD(ctx, "has_ability_reverse_shot", t->has_ability_reverse_shot);
+        GET_OPT_NAMED_BITFIELD(ctx, "has_ability_double_damage_swing", t->has_ability_double_damage_swing);
+        GET_OPT_NAMED_BITFIELD(ctx, "has_ability_triple_speed_swing", t->has_ability_triple_speed_swing);
+        GET_OPT_NAMED_BITFIELD(ctx, "has_ability_double_speed_swing", t->has_ability_double_speed_swing);
+        GET_OPT_NAMED_BITFIELD(ctx, "has_ability_reverse_swing", t->has_ability_reverse_swing);
+        GET_OPT_NAMED_BITFIELD(ctx, "has_ability_rage", t->has_ability_rage);
+        GET_OPT_NAMED_BITFIELD(ctx, "has_ability_perma_rage", t->has_ability_perma_rage);
         GET_OPT_NAMED_BITFIELD(ctx, "is_jesus", t->is_jesus);
         GET_OPT_NAMED_BITFIELD(ctx, "is_blit_y_offset", t->is_blit_y_offset);
         GET_OPT_NAMED_BITFIELD(ctx, "is_dirt", t->is_dirt);
@@ -853,7 +859,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "stats_attack_magical", t->stats.attack_magical);
     PUT_NAMED_INT32(ctx, "stats_speed", t->stats.speed);
     PUT_NAMED_INT32(ctx, "stats_vision", t->stats.vision);
-    PUT_NAMED_INT32(ctx, "stats_healing", t->stats.healing);
+    PUT_NAMED_INT32(ctx, "stats_toughness", t->stats.toughness);
     PUT_NAMED_INT32(ctx, "stats_defense", t->stats.defense);
     PUT_NAMED_INT32(ctx, "hp_per_level", t->hp_per_level);
     PUT_NAMED_INT32(ctx, "id_per_level", t->id_per_level);
@@ -914,11 +920,17 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
     PUT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
     PUT_NAMED_BITFIELD(ctx, "is_life_saving", t->is_life_saving);
-    PUT_NAMED_BITFIELD(ctx, "has_ability_burst_shot", t->has_ability_burst_shot);
     PUT_NAMED_BITFIELD(ctx, "is_single_mob_spawner", t->is_single_mob_spawner);
+    PUT_NAMED_BITFIELD(ctx, "has_ability_burst_shot", t->has_ability_burst_shot);
     PUT_NAMED_BITFIELD(ctx, "has_ability_triple_shot", t->has_ability_triple_shot);
     PUT_NAMED_BITFIELD(ctx, "has_ability_double_shot", t->has_ability_double_shot);
     PUT_NAMED_BITFIELD(ctx, "has_ability_reverse_shot", t->has_ability_reverse_shot);
+    PUT_NAMED_BITFIELD(ctx, "has_ability_double_damage_swing", t->has_ability_double_damage_swing);
+    PUT_NAMED_BITFIELD(ctx, "has_ability_triple_speed_swing", t->has_ability_triple_speed_swing);
+    PUT_NAMED_BITFIELD(ctx, "has_ability_double_speed_swing", t->has_ability_double_speed_swing);
+    PUT_NAMED_BITFIELD(ctx, "has_ability_reverse_swing", t->has_ability_reverse_swing);
+    PUT_NAMED_BITFIELD(ctx, "has_ability_rage", t->has_ability_rage);
+    PUT_NAMED_BITFIELD(ctx, "has_ability_perma_rage", t->has_ability_perma_rage);
     PUT_NAMED_BITFIELD(ctx, "is_jesus", t->is_jesus);
     PUT_NAMED_BITFIELD(ctx, "is_blit_y_offset", t->is_blit_y_offset);
     PUT_NAMED_BITFIELD(ctx, "is_dirt", t->is_dirt);
@@ -1267,9 +1279,9 @@ uint32_t tp_get_stats_vision (tpp t)
     return (t->stats.vision);
 }
 
-uint32_t tp_get_stats_healing (tpp t)
+uint32_t tp_get_stats_toughness (tpp t)
 {
-    return (t->stats.healing);
+    return (t->stats.toughness);
 }
 
 uint32_t tp_get_stats_cash (tpp t)

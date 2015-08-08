@@ -422,7 +422,7 @@ void thing_magic_tick (thingp t)
      * Auto heal
      */
     if (thing_stats_get_magic(t) < thing_stats_get_max_magic(t)) {
-        int delta = thing_stats_val_to_modifier(thing_stats_get_healing(t));
+        int delta = thing_stats_val_to_modifier(thing_stats_get_toughness(t));
         if (delta > 0) {
             thing_stats_modify_magic(t, delta);
         }
