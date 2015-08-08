@@ -1,7 +1,7 @@
 {
- short_name="tin armour"
- raw_name="armour1"
- tooltip="tin armour"
+ short_name="tin armor"
+ raw_name="armor1"
+ tooltip="tin armor"
  z_depth="monst"
  stats_defense=12
  cost=1000
@@ -10,12 +10,12 @@
  hit_priority=1
  is_carryable
  is_given_randomly_at_start
- is_armour
+ is_armor
  can_be_enchanted
  d10000_chance_of_appearing=5
  tiles={
   tile={
-   tile="armour1"
+   tile="armor1"
   }
  }
 }

@@ -89,7 +89,7 @@ wid_player_action_button_mouse_down (widp w,
         }
 
         if (!client_joined_server) {
-            MESG(WARNING, "Not connected to server");
+            MESG(CRITICAL, "Not connected to server");
             return (true);
         }
 

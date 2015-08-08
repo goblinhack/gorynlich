@@ -1,7 +1,7 @@
 {
- short_name="bronze armour"
- raw_name="armour2"
- tooltip="bronze armour"
+ short_name="bronze armor"
+ raw_name="armor2"
+ tooltip="bronze armor"
  z_depth="monst"
  stats_defense=16
  cost=2000
@@ -10,12 +10,12 @@
  hit_priority=1
  is_carryable
  is_given_randomly_at_start
- is_armour
+ is_armor
  can_be_enchanted
  d10000_chance_of_appearing=3
  tiles={
   tile={
-   tile="armour2"
+   tile="armor2"
   }
  }
 }

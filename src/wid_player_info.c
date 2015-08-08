@@ -184,9 +184,9 @@ wid_player_info_button_style_mouse_down (widp w,
 
         switch (id) {
         case THING_WORN_ARMOR:
-            if (!tp_is_armour(item_tp)) {
+            if (!tp_is_armor(item_tp)) {
                 valid = false;
-                MESG(WARNING, "This item wont work as armour");
+                MESG(WARNING, "This item wont work as armor");
                 break;
             }
             break;
@@ -212,7 +212,7 @@ wid_player_info_button_style_mouse_down (widp w,
             if (!tp_is_hand_item(item_tp)) {
                 valid = false;
                 MESG(WARNING, "This item can't be worn on the hand. "
-                    "This slot is for things like rings.");
+                     "This slot is for things like rings.");
                 break;
             }
             break;
@@ -514,13 +514,13 @@ static void wid_player_info_create (thing_statsp s, int fast)
 
     {
         widp w = wid_new_square_button(wid_player_info, 
-                                       "wid intro item armour");
+                                       "wid intro item armor");
 
         fpoint tl = {0.3, 0.55};
         fpoint br = {0.45, 0.63};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_tooltip(w, "Your armour", 0 /* font */);
+        wid_set_tooltip(w, "Your armor", 0 /* font */);
 
         item_t item = s->worn[THING_WORN_HELMET];
 

@@ -1,7 +1,7 @@
 {
- short_name="ring of protection"
- raw_name="ring1"
- tooltip="ring of protection"
+ short_name="ring of bubble wrap"
+ raw_name="ring2"
+ tooltip="ring of bubble wrap"
  z_depth="player"
  cost=1000
  is_treasure

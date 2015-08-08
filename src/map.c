@@ -443,9 +443,9 @@ uint8_t map_is_helmet_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_helmet));
 }
 
-uint8_t map_is_armour_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_armor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_armour));
+    return (map_is_x_at(level, x, y, tp_is_armor));
 }
 
 uint8_t map_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
@@ -885,9 +885,9 @@ thingp map_thing_is_helmet_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_helmet));
 }
 
-thingp map_thing_is_armour_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_armor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_armour));
+    return (map_thing_is_x_at(level, x, y, tp_is_armor));
 }
 
 thingp map_thing_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
@@ -1343,9 +1343,9 @@ tree_rootp map_all_things_is_helmet_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_helmet));
 }
 
-tree_rootp map_all_things_is_armour_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_armor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_armour));
+    return (map_all_things_is_x_at(level, x, y, tp_is_armor));
 }
 
 tree_rootp map_all_things_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
@@ -2481,9 +2481,9 @@ tree_rootp map_all_things_is_helmet (levelp level)
     return (map_all_things_is_x(level, tp_is_helmet));
 }
 
-tree_rootp map_all_things_is_armour (levelp level)
+tree_rootp map_all_things_is_armor (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_armour));
+    return (map_all_things_is_x(level, tp_is_armor));
 }
 
 tree_rootp map_all_things_is_given_randomly_at_start (levelp level)
