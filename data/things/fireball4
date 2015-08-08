@@ -13,8 +13,8 @@
  is_light_source
  is_fire
  light_radius=5.0
- scale=0.5
- collision_radius=1.0
+ scale=0.2
+ is_collision_map_medium
  is_effect_pulse
  is_variable_size
  sound_on_creation="fireball3"
