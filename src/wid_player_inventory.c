@@ -397,6 +397,20 @@ void wid_player_inventory_button_style (widp w,
             }
         }
 
+        if (tp_is_life_saving(tp)) {
+            int val = thing_stats_val_to_modifier(tp_get_stats_attack_melee(tp));
+            char *tmp2;
+
+            tmp2 = dynprintf("%%%%fmt=left$This item might just save your life, if you wear it...\n", val);
+
+            if (tmp2) {
+                char *old = tmp;
+                tmp = strappend(old, tmp2);
+                myfree(old);
+                myfree(tmp2);
+            }
+        }
+
         if (tp_get_stats_attack_melee(tp)) {
             int val = thing_stats_val_to_modifier(tp_get_stats_attack_melee(tp));
             char *tmp2;

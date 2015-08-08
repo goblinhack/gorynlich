@@ -256,7 +256,7 @@ void shop_pay_for_items (thingp t)
         "Blessings upon you! My pet slime mold eats tonight!",
         "Blessings upon you! My pet goblin eats tonight!",
         "A worthy purchase!",
-        "May the sun shine on your armour!",
+        "May the sun shine on your armor!",
         "A thousand thank-yous!",
         "A thousand salutations!",
         "May your camel always be watered!",
