@@ -1,30 +1,29 @@
 {
- short_name="ring of war"
- raw_name="ring4"
- tooltip="ring of war"
+ short_name="ring of resurrectioness"
+ raw_name="ring6"
+ tooltip="ring of resurrectioness"
  z_depth="player"
- cost=4000
+ cost=10000
  is_treasure
  is_stackable
  sound_on_collect="potion"
  hit_priority=1
  is_carryable
+ sound_on_death="choir"
  is_given_randomly_at_start
  is_hand_item
  is_ring
  can_be_enchanted
- d10000_chance_of_appearing=5
- stats_attack_melee=21
- stats_attack_ranged=21
- stats_defense=21
+ d10000_chance_of_appearing=2
+ is_life_saving
  is_hand_item
  is_light_source
- light_radius=0.5
- light_tint="green"
+ light_radius=1.5
+ light_tint="purple"
  is_candle_light
  tiles={
   tile={
-   tile="ring4"
+   tile="ring6"
   }
  }
 }

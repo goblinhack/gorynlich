@@ -519,6 +519,11 @@ static void msg_ (uint32_t level,
 
     switch (level) {
     case WARNING:
+        if (wid_notify(level, buf)) {
+            wid_console_log(buf);
+        }
+        break;
+
     case CRITICAL:
 
         timestamp(buf, sizeof(buf));

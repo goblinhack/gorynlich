@@ -224,7 +224,7 @@ static void server_rx_client_close (gsocketp s)
 
     char *tmp = dynprintf("%s suddenly left the game", 
                           p->stats_from_client.pname);
-    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(WARNING, 0, 0, "%s", tmp);
+    MSG_SERVER_SHOUT_AT_ALL_PLAYERS(CRITICAL, 0, 0, "%s", tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);

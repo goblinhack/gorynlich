@@ -1,7 +1,7 @@
 {
- short_name="ring of completeness"
+ short_name="ring of well roundedness"
  raw_name="ring5"
- tooltip="ring of completeness"
+ tooltip="ring of roundedness"
  z_depth="player"
  cost=7000
  is_treasure
@@ -13,7 +13,7 @@
  is_hand_item
  is_ring
  can_be_enchanted
- d10000_chance_of_appearing=10
+ d10000_chance_of_appearing=4
  stats_healing=21
  stats_attack_melee=21
  stats_attack_ranged=21

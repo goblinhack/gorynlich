@@ -251,8 +251,8 @@ void thing_used (thingp t, tpp tp)
     int bonus_hp = tp_get_bonus_hp_on_use(tp);
     if (item->cursed) {
         MSG_SERVER_SHOUT_AT(WARNING, t, 0, 0,
-                                   "Cursed %s zaps %d health",
-                                   tp_short_name(tp), bonus_hp);
+                            "Cursed %s zaps %d health",
+                            tp_short_name(tp), bonus_hp);
         bonus_hp = -bonus_hp;
     }
 
@@ -275,14 +275,35 @@ void thing_used (thingp t, tpp tp)
         }
     }
 
+    if (thing_stats_get_hp(t) <= 0) {
+        if (tp_is_life_saving(tp)) {
+            thing_stats_set_hp(t, thing_stats_get_max_hp(t) / 2);
+
+            t->is_dying = false;
+
+            MSG_SERVER_SHOUT_AT(WARNING, t, 0, 0,
+                                "%s crumbles to dust, yet you live",
+                                tp_short_name(tp));
+        }
+    } else {
+        /*
+         * Can this happen?
+         */
+        if (tp_is_life_saving(tp)) {
+            MSG_SERVER_SHOUT_AT(WARNING, t, 0, 0,
+                                "%s crumbles to dust, sadly with no effect",
+                                tp_short_name(tp));
+        }
+    }
+
     /*
      * id modifications.
      */
     int bonus_magic = tp_get_bonus_magic_on_use(tp);
     if (item->cursed) {
         MSG_SERVER_SHOUT_AT(WARNING, t, 0, 0,
-                                   "Cursed %s zaps %d of ID",
-                                   tp_short_name(tp), bonus_hp);
+                            "Cursed %s zaps %d of ID",
+                            tp_short_name(tp), bonus_hp);
 
         bonus_magic = -bonus_magic;
     }

@@ -45,7 +45,7 @@ wid_notify_internal (const char *text, uint32_t level)
     uint32_t chars_per_line;
     uint32_t max_rows;
 
-    chars_per_line = 40;
+    chars_per_line = 80;
     max_rows = 22;
 
     d = split(text, chars_per_line);
@@ -108,13 +108,12 @@ wid_notify_internal (const char *text, uint32_t level)
             fg = YELLOW;
             break;
         case WARNING:
-            bg = ORANGE3;
-            bg.a = 150;
+            bg = RED;
             fg = BLACK;
             break;
         case CRITICAL:
-            bg = DARKRED;
-            fg = RED;
+            bg = RED;
+            fg = WHITE;
             break;
         }
 
