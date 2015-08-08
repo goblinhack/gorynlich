@@ -105,7 +105,7 @@
 #define MAP_LIGHT_CANDLELIGHT_FLICKER_RADIUS    20
 #define MAP_LIGHT_CANDLELIGHT_RADIUS            30
 
-#define MAP_THINGS_PER_CELL         32
+#define MAP_THINGS_PER_CELL         128
 
 /*
  * Tile pixel width.
