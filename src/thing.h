@@ -468,6 +468,7 @@ enum {
     THING_RING3,
     THING_RING4,
     THING_RING5,
+    THING_RING6,
     THING_TRAP1,
     THING_TRAP2,
     THING_TRAP3,
@@ -1224,11 +1225,11 @@ static inline uint8_t thing_is_rrr3 (thingp t)
     return (tp_is_rrr3(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr4 (thingp t)
+static inline uint8_t thing_is_life_saving (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr4(thing_tp(t)));
+    return (tp_is_life_saving(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_single_mob_spawner (thingp t)
@@ -1707,11 +1708,11 @@ static inline uint8_t thing_is_helmet (thingp t)
     return (tp_is_helmet(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_armour (thingp t)
+static inline uint8_t thing_is_armor (thingp t)
 {
     verify(t);
 
-    return (tp_is_armour(thing_tp(t)));
+    return (tp_is_armor(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_given_randomly_at_start (thingp t)
@@ -2044,9 +2045,9 @@ static inline uint8_t thing_is_rrr3_noverify (thingp t)
     return (t->tp->is_rrr3);
 }
 
-static inline uint8_t thing_is_rrr4_noverify (thingp t)
+static inline uint8_t thing_is_life_saving_noverify (thingp t)
 {
-    return (t->tp->is_rrr4);
+    return (t->tp->is_life_saving);
 }
 
 static inline uint8_t thing_has_ability_burst_shot_noverify (thingp t)
@@ -2394,9 +2395,9 @@ static inline uint8_t thing_is_helmet_noverify (thingp t)
     return (t->tp->is_helmet);
 }
 
-static inline uint8_t thing_is_armour_noverify (thingp t)
+static inline uint8_t thing_is_armor_noverify (thingp t)
 {
-    return (t->tp->is_armour);
+    return (t->tp->is_armor);
 }
 
 static inline uint8_t thing_is_given_randomly_at_start_noverify (thingp t)
@@ -2635,7 +2636,7 @@ static inline tpp thing_weapon (const thingp t)
     return (id_to_tp(item->id));
 }
 
-static inline tpp thing_armour (const thingp t)
+static inline tpp thing_armor (const thingp t)
 {
     thing_statsp s = &t->stats;
 

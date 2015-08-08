@@ -306,7 +306,7 @@ typedef struct tp_ {
     uint8_t is_rrr1:1;
     uint8_t is_rrr2:1;
     uint8_t is_rrr3:1;
-    uint8_t is_rrr4:1;
+    uint8_t is_life_saving:1;
     uint8_t is_single_mob_spawner:1;
     uint8_t has_ability_burst_shot:1;
     uint8_t has_ability_triple_shot:1;
@@ -377,7 +377,7 @@ typedef struct tp_ {
     uint8_t is_hand_item:1;
     uint8_t is_boots:1;
     uint8_t is_helmet:1;
-    uint8_t is_armour:1;
+    uint8_t is_armor:1;
     uint8_t is_given_randomly_at_start:1;
     uint8_t is_magical:1;
     uint8_t is_degradable:1;
@@ -705,9 +705,9 @@ static inline uint8_t tp_is_rrr3 (tpp t)
     return (t->is_rrr3);
 }
 
-static inline uint8_t tp_is_rrr4 (tpp t)
+static inline uint8_t tp_is_life_saving (tpp t)
 {
-    return (t->is_rrr4);
+    return (t->is_life_saving);
 }
 
 static inline uint8_t tp_has_ability_burst_shot (tpp t)
@@ -1060,9 +1060,9 @@ static inline uint8_t tp_is_helmet (tpp t)
     return (t->is_helmet);
 }
 
-static inline uint8_t tp_is_armour (tpp t)
+static inline uint8_t tp_is_armor (tpp t)
 {
-    return (t->is_armour);
+    return (t->is_armor);
 }
 
 static inline uint8_t tp_is_given_randomly_at_start (tpp t)

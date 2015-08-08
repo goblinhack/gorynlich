@@ -1701,9 +1701,9 @@ uint32_t level_count_is_helmet (levelp level)
     return (level_count_is_x(level, tp_is_helmet));
 }
 
-uint32_t level_count_is_armour (levelp level)
+uint32_t level_count_is_armor (levelp level)
 {
-    return (level_count_is_x(level, tp_is_armour));
+    return (level_count_is_x(level, tp_is_armor));
 }
 
 uint32_t level_count_is_given_randomly_at_start (levelp level)

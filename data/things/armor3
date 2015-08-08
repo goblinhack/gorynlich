@@ -1,7 +1,7 @@
 {
- short_name="gold armour"
- raw_name="armour3"
- tooltip="gold armour"
+ short_name="gold armor"
+ raw_name="armor3"
+ tooltip="gold armor"
  z_depth="monst"
  stats_defense=21
  cost=4000
@@ -10,12 +10,12 @@
  hit_priority=1
  is_carryable
  is_given_randomly_at_start
- is_armour
+ is_armor
  can_be_enchanted
  d10000_chance_of_appearing=1
  tiles={
   tile={
-   tile="armour3"
+   tile="armor3"
   }
  }
 }

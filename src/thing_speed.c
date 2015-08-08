@@ -23,9 +23,9 @@ double thing_stats_get_total_speed (thingp t)
         modifier += thing_stats_val_to_modifier(tp_get_stats_speed(boots));
     }
 
-    tpp armour = thing_armour(t);
-    if (armour) {
-        modifier += thing_stats_val_to_modifier(tp_get_stats_speed(armour));
+    tpp armor = thing_armor(t);
+    if (armor) {
+        modifier += thing_stats_val_to_modifier(tp_get_stats_speed(armor));
     }
 
     tpp left_arm = thing_arm_left(t);
