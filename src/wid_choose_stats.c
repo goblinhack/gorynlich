@@ -68,7 +68,7 @@ static player_stats_row player_stats_arr[PLAYER_STATS_MAX] = {
     "Your current experience level" },
 
     { /* STAT_MAX_HP          */ "%%fmt=left$Health force",    "+", 5,
-    "Health points. This is the max you can recover to with your healing ability." },
+    "Health points. This is the max you can recover to with your toughness ability." },
 
     { /* STAT_MAX_MAGIC       */ "%%fmt=left$Magic force",     "+", 5,
     "ID is your life force used for magic and life changing events." },
@@ -249,7 +249,7 @@ static void wid_choose_stats_callback (widp w)
         s->vision++;
         break;
     case 9:
-        s->healing++;
+        s->toughness++;
         break;
     }
 
@@ -437,7 +437,7 @@ static void wid_choose_stats_create (void)
             stat = s->vision;
             break;
         case STAT_HEALING:
-            stat = s->healing;
+            stat = s->toughness;
             break;
         }
 

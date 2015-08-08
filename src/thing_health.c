@@ -25,7 +25,7 @@ void thing_health_tick (thingp t)
              */
             if (thing_stats_get_hp(t) > 0) {
                 int delta = 
-                    thing_stats_val_to_modifier(thing_stats_get_healing(t));
+                    thing_stats_val_to_modifier(thing_stats_get_toughness(t));
                 if (delta > 0) {
                     thing_stats_modify_hp(t, delta);
                 }

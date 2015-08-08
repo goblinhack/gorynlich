@@ -68,4 +68,64 @@ void thing_stats_check_for_changes (thingp t)
         }
         break;
     }
+
+    int melee_modifier = 
+        thing_stats_val_to_modifier(thing_stats_get_attack_melee(t));
+
+    switch (melee_modifier) {
+    case 2:
+        if (!thing_has_ability_reverse_swing(t)) {
+            t->has_ability_reverse_swing = true;
+            MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$reverse swing ability unlocked",
+                                "vlarge", "green");
+        }
+        break;
+    case 3:
+        if (!thing_has_ability_double_speed_swing(t)) {
+            t->has_ability_double_speed_swing = true;
+            MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$double speed swing ability unlocked",
+                                "vlarge", "green");
+        }
+        break;
+    case 4:
+        if (!thing_has_ability_triple_speed_swing(t)) {
+            t->has_ability_triple_speed_swing = true;
+            MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$triple speed swing unlocked",
+                                "vlarge", "green");
+        }
+        break;
+    case 5:
+        if (!thing_has_ability_double_damage_swing(t)) {
+            t->has_ability_double_damage_swing = true;
+            MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$double damage swing unlocked",
+                                "vlarge", "green");
+        }
+        break;
+    }
+
+    int health_modifier = 
+        thing_stats_val_to_modifier(thing_stats_get_toughness(t));
+
+    switch (health_modifier) {
+    case 2:
+        if (!thing_has_ability_rage(t)) {
+            t->has_ability_rage = true;
+            MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$rage when quarter health unlocked",
+                                "vlarge", "green");
+        }
+        break;
+    case 3:
+        if (!thing_has_ability_perma_rage(t)) {
+            t->has_ability_perma_rage = true;
+            MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0,
+                                "%%%%font=%s$%%%%fg=%s$permanent rage ability unlocked",
+                                "vlarge", "green");
+        }
+        break;
+    }
 }

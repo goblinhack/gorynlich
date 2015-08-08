@@ -491,14 +491,14 @@ void wid_player_inventory_button_style (widp w,
             }
         }
 
-        if (tp_get_stats_healing(tp)) {
-            int val = thing_stats_val_to_modifier(tp_get_stats_healing(tp));
+        if (tp_get_stats_toughness(tp)) {
+            int val = thing_stats_val_to_modifier(tp_get_stats_toughness(tp));
             char *tmp2;
 
             if (val > 0) {
-                tmp2 = dynprintf("%%%%fmt=left$This beautiful item gives +%d healing modifier\n", val);
+                tmp2 = dynprintf("%%%%fmt=left$This beautiful item gives +%d toughness modifier\n", val);
             } else if (val < 0) {
-                tmp2 = dynprintf("%%%%fmt=left$This diabolic item gives %d healing modifier\n", val);
+                tmp2 = dynprintf("%%%%fmt=left$This diabolic item gives %d toughness modifier\n", val);
             } else {
                 tmp2 = 0;
             }

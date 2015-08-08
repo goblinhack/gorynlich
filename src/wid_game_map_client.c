@@ -380,6 +380,16 @@ uint8_t wid_game_map_client_player_move (void)
 
             uint32_t delay = tp_get_weapon_fire_delay_hundredths(weapon);
             
+            if (tp_is_melee_weapon(weapon)) {
+                if (thing_has_ability_double_speed_swing(player)) {
+                    delay /= 2;
+                } else if (thing_has_ability_triple_speed_swing(player)) {
+                    delay /= 3;
+                } else if (thing_has_ability_double_damage_swing(player)) {
+                    delay = 0;
+                }
+            }
+
             if (!time_have_x_hundredths_passed_since(delay, last_fired)) {
                 fire = 0;
 
