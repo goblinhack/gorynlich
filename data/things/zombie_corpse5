@@ -2,13 +2,17 @@
  short_name="zombie corpse"
  raw_name="zombie_corpse5"
  tooltip="zombie corpse"
+ mob_spawn={
+    1000 "data/things/zombie5"
+ }
  z_depth="monst"
  max_hp=1
  is_undead
  is_monst
  hit_priority=10
- spawn_on_death="data/things/zombie1"
- lifespan=10
+ mob_spawn_delay_tenths=200
+ is_single_mob_spawner
+ is_mob_spawner
  tiles={
   tile={
    tile="wizard-dying10"

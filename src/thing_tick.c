@@ -136,11 +136,18 @@ static void thing_tick_server_all (void)
                         * loop.
                         */
                         thing_mob_spawn(t);
+
+                        /*
+                         * Some things like corpses, spawn once and then die
+                         */
+                        if (thing_is_dead(t)) {
+                            continue;
+                        }
                     }
 
                     /*
-                    * Add some jitter.
-                    */
+                     * Add some jitter.
+                     */
                     t->timestamp_mob_spawn = time_get_time_ms() +
                                     (myrand() % (delay * 100));
                 }

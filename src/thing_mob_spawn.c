@@ -164,6 +164,11 @@ uint8_t thing_mob_spawn (thingp t)
                                          0, /* tpp data */
                                          0 /* item */,
                                          0 /* stats */);
+
+        if (thing_is_single_mob_spawner(t)) {
+            thing_dead(t, 0, "finished single mob spawn");
+        }
+
         return (true);
     }
 
