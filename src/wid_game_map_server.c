@@ -243,6 +243,10 @@ wid_game_map_server_replace_tile (widp w,
     verify(level);
 
 #if 0
+    /*
+     * Does not handle rotation of triggers correctly, so commented out for 
+     * now
+     */
     if (server_level_is_being_loaded) {
         if (level != last_level) {
             last_level = level;

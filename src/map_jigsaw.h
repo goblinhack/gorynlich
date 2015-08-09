@@ -99,7 +99,7 @@ enum {
     MAP_CORRIDOR        = ',',
     MAP_CORRIDOR_WALL   = '+',
     MAP_MONST           = 'm',
-    MAP_MONST_OR_MOB       = 'M',
+    MAP_MONST_OR_MOB    = 'M',
     MAP_TRAP            = '!',
     MAP_TELEPORT        = 'T',
     MAP_TREASURE        = '$',
@@ -118,6 +118,8 @@ enum {
     MAP_WEAPON          = 'w',
     MAP_GENERATOR       = 'G',
     MAP_BRAZIER         = 'b',
+    MAP_TRIGGER_HERO    = 'h',
+    MAP_TRIGGER_MONST   = 'O',
     MAP_MAX             = 255,
 };
 

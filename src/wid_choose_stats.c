@@ -91,7 +91,7 @@ static player_stats_row player_stats_arr[PLAYER_STATS_MAX] = {
     { /* STAT_VISION          */ "%%fmt=left$Vision",          "+", 1,
     "This modifier is the percentage gain you get in seeing bad stuffs." },
 
-    { /* STAT_HEALING         */ "%%fmt=left$Healing",         "+", 1,
+    { /* STAT_HEALING         */ "%%fmt=left$Toughness",       "+", 1,
     "This modifier is the percentage gain you get in recovering health points." },
 };
 

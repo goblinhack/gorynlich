@@ -15,6 +15,7 @@ void glcolor_restore(void);
 color string2color(const char **s);
 color color_find(const char *s);
 const char *color_find_name(const char *s);
+const char *color_find_nth(int nth);
 
 extern color ALICE_BLUE;
 extern color ALICEBLUE;

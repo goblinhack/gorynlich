@@ -38,6 +38,7 @@
 #include "ramdisk.h"
 #include "thing_shop.h"
 #include "bits.h"
+#include "color.h"
 
 /*
  * Creates a map somewhat like this
@@ -94,6 +95,9 @@ char map_jigsaw_buffer[MAP_WIDTH][MAP_HEIGHT];
 static char map_jigsaw_buffer_old[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t map_jigsaw_buffer_fg[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t map_jigsaw_buffer_bg[MAP_WIDTH][MAP_HEIGHT];
+static uint8_t map_jigsaw_buffer_action1[MAP_WIDTH][MAP_HEIGHT];
+static uint8_t map_jigsaw_buffer_action2[MAP_WIDTH][MAP_HEIGHT];
+static const char *map_jigsaw_buffer_color[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t map_jigsaw_buffer_solved[MAP_WIDTH][MAP_HEIGHT];
 static int32_t map_jigsaw_buffer_at_x;
 static int32_t map_jigsaw_buffer_at_y;
@@ -219,13 +223,31 @@ typedef struct {
     int32_t jigpieces_cnt;
     jigpiece_t jigpiece[JIGPIECE_MAX];
 
+    /*
+     * Fragments
+     */
     int32_t frag_cnt;
     jigpiece_t frag[MAZE_FRAG_DIRECTIONS][JIGPIECE_MAX];
     int32_t frag_to_alt_base[JIGPIECE_MAX];
     int32_t frag_cnt_alts[JIGPIECE_MAX];
-
     int32_t frag_alt_cnt;
     jigpiece_t frag_alt[MAZE_FRAG_DIRECTIONS][JIGPIECE_MAX];
+
+    /*
+     * Triggers
+     */
+    int32_t trigger_fragment_cnt;
+    jigpiece_t trigger_fragment[MAZE_FRAG_DIRECTIONS][JIGPIECE_MAX];
+    int32_t trigger_fragment_to_alt_base[JIGPIECE_MAX];
+    int32_t trigger_cnt_alts[JIGPIECE_MAX];
+    int32_t action1_cnt_alts[JIGPIECE_MAX];
+    int32_t action2_cnt_alts[JIGPIECE_MAX];
+    int32_t trigger_cnt;
+    int32_t action1_cnt;
+    int32_t action2_cnt;
+    jigpiece_t trigger[MAZE_FRAG_DIRECTIONS][JIGPIECE_MAX];
+    jigpiece_t action1[MAZE_FRAG_DIRECTIONS][JIGPIECE_MAX];
+    jigpiece_t action2[MAZE_FRAG_DIRECTIONS][JIGPIECE_MAX];
 
     maze_cell_t maze[MAP_JIGSAW_PIECES_ACROSS * MAP_JIGSAW_PIECES_DOWN];
 
@@ -496,10 +518,18 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
     int32_t reading_jigpieces;
     int32_t reading_frag;
     int32_t reading_frag_alt;
+    int32_t reading_trigger_fragment;
+    int32_t reading_trigger;
+    int32_t reading_action1;
+    int32_t reading_action2;
 
     reading_jigpieces = 0;
     reading_frag = 0;
     reading_frag_alt = 0;
+    reading_trigger_fragment = 0;
+    reading_trigger = 0;
+    reading_action1 = 0;
+    reading_action2 = 0;
 
     col = 1;
     line = 1;
@@ -545,6 +575,10 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
                 reading_jigpieces = 0;
                 reading_frag = 0;
                 reading_frag_alt = 0;
+                reading_trigger_fragment = 0;
+                reading_trigger = 0;
+                reading_action1 = 0;
+                reading_action2 = 0;
 
                 if (!strcasecmp(command, "jigpieces")) {
                     reading_jigpieces = 1;
@@ -552,6 +586,14 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
                     reading_frag = 1;
                 } else if (!strcasecmp(command, "alternative")) {
                     reading_frag_alt = 1;
+                } else if (!strcasecmp(command, "trigger-fragment")) {
+                    reading_trigger_fragment = 1;
+                } else if (!strcasecmp(command, "trigger")) {
+                    reading_trigger = 1;
+                } else if (!strcasecmp(command, "action1")) {
+                    reading_action1 = 1;
+                } else if (!strcasecmp(command, "action2")) {
+                    reading_action2 = 1;
                 } else {
                     dieat(line, col, "unknown command");
                 }
@@ -574,6 +616,10 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
 
         if (!reading_jigpieces &&
             !reading_frag &&
+            !reading_trigger_fragment &&
+            !reading_trigger &&
+            !reading_action1 &&
+            !reading_action2 &&
             !reading_frag_alt) {
             dieat(line, col,
                   "data found when no reading jigpieces or frag");
@@ -670,6 +716,42 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
                         dg->frag_alt[0][dg->frag_alt_cnt + n].vert_flip = 
                                         jigpiece_vert_flip;
 
+                    } else if (reading_trigger_fragment) {
+                        dg->trigger_fragment[0][dg->trigger_fragment_cnt + n].c[x][y] = *c;
+                        dg->trigger_fragment[0][dg->trigger_fragment_cnt + n].rotatable = 
+                                        jigpiece_rotatable;
+                        dg->trigger_fragment[0][dg->trigger_fragment_cnt + n].horiz_flip = 
+                                        jigpiece_horiz_flip;
+                        dg->trigger_fragment[0][dg->trigger_fragment_cnt + n].vert_flip = 
+                                        jigpiece_vert_flip;
+
+                    } else if (reading_trigger) {
+                        dg->trigger[0][dg->trigger_cnt + n].c[x][y] = *c;
+                        dg->trigger[0][dg->trigger_cnt + n].rotatable = 
+                                        jigpiece_rotatable;
+                        dg->trigger[0][dg->trigger_cnt + n].horiz_flip = 
+                                        jigpiece_horiz_flip;
+                        dg->trigger[0][dg->trigger_cnt + n].vert_flip = 
+                                        jigpiece_vert_flip;
+
+                    } else if (reading_action1) {
+                        dg->action1[0][dg->action1_cnt + n].c[x][y] = *c;
+                        dg->action1[0][dg->action1_cnt + n].rotatable = 
+                                        jigpiece_rotatable;
+                        dg->action1[0][dg->action1_cnt + n].horiz_flip = 
+                                        jigpiece_horiz_flip;
+                        dg->action1[0][dg->action1_cnt + n].vert_flip = 
+                                        jigpiece_vert_flip;
+
+                    } else if (reading_action2) {
+                        dg->action2[0][dg->action2_cnt + n].c[x][y] = *c;
+                        dg->action2[0][dg->action2_cnt + n].rotatable = 
+                                        jigpiece_rotatable;
+                        dg->action2[0][dg->action2_cnt + n].horiz_flip = 
+                                        jigpiece_horiz_flip;
+                        dg->action2[0][dg->action2_cnt + n].vert_flip = 
+                                        jigpiece_vert_flip;
+
                     } else {
                         ERR("bug");
                     }
@@ -706,16 +788,33 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
         } else if (reading_frag) {
 
             if (!dg->frag_to_alt_base[dg->frag_cnt]) {
-                dg->frag_to_alt_base[dg->frag_cnt] =
-                                dg->frag_alt_cnt;
+                dg->frag_to_alt_base[dg->frag_cnt] = dg->frag_alt_cnt;
             }
 
             dg->frag_cnt += cnt_cells_per_line;
         } else if (reading_frag_alt) {
             dg->frag_alt_cnt += cnt_cells_per_line;
 
-            dg->frag_cnt_alts[dg->frag_cnt-1] +=
-                            cnt_cells_per_line;
+            dg->frag_cnt_alts[dg->frag_cnt-1] += cnt_cells_per_line;
+        } else if (reading_trigger_fragment) {
+
+            if (!dg->trigger_fragment_to_alt_base[dg->trigger_fragment_cnt]) {
+                dg->trigger_fragment_to_alt_base[dg->trigger_fragment_cnt] = dg->trigger_cnt;
+            }
+
+            dg->trigger_fragment_cnt += cnt_cells_per_line;
+        } else if (reading_trigger) {
+            dg->trigger_cnt += cnt_cells_per_line;
+
+            dg->trigger_cnt_alts[dg->trigger_fragment_cnt-1] += cnt_cells_per_line;
+        } else if (reading_action1) {
+            dg->action1_cnt += cnt_cells_per_line;
+
+            dg->action1_cnt_alts[dg->trigger_fragment_cnt-1] += cnt_cells_per_line;
+        } else if (reading_action2) {
+            dg->action2_cnt += cnt_cells_per_line;
+
+            dg->action2_cnt_alts[dg->trigger_fragment_cnt-1] += cnt_cells_per_line;
         }
     }
 }
@@ -730,6 +829,8 @@ static int32_t jigpiece_char_is_occupiable (char c)
            (c == MAP_MONST) ||
            (c == MAP_MONST_OR_MOB) ||
            (c == MAP_GENERATOR) ||
+           (c == MAP_TRIGGER_HERO) ||
+           (c == MAP_TRIGGER_MONST) ||
            (c == MAP_TREASURE);
 }
 
@@ -744,9 +845,10 @@ static int32_t jigpiece_char_is_passable (char c)
            (c == MAP_GENERATOR) ||
            (c == MAP_DOOR) ||
            (c == MAP_WEAPON) ||
-           (c == MAP_GENERATOR) ||
            (c == MAP_BRAZIER) ||
            (c == MAP_POTION) ||
+           (c == MAP_TRIGGER_HERO) ||
+           (c == MAP_TRIGGER_MONST) ||
            (c == MAP_TREASURE);
 }
 
@@ -1332,6 +1434,203 @@ static void jigpiece_add_frag (dungeon_t *dg)
 
                             map_jigsaw_buffer_goto(cx, cy);
                             map_jigsaw_buffer_putchar(alt);
+                        }
+                    }
+
+                    break;
+next:
+                    continue;
+                }
+            }
+        }
+    }
+}
+
+/*
+ * jigpiece_add_triggers
+ *
+ * Replace a fragment of the maze to make it more interesting.
+ */
+static void jigpiece_add_triggers (dungeon_t *dg)
+{
+    int32_t f;
+    int32_t i;
+    int32_t c;
+    int32_t x;
+    int32_t y;
+    int32_t ax;
+    int32_t ay;
+    int32_t cx;
+    int32_t cy;
+    int32_t tries;
+    int32_t dir;
+    int32_t frag;
+    int32_t action1;
+    int32_t action2;
+    int32_t alt;
+    int32_t map;
+    int32_t color_n = 0;
+    const char *color;
+
+    /*
+     * For each frag.
+     */
+    for (f = 0; f < dg->trigger_fragment_cnt; f++) {
+
+        for (y = 0; y < JIGPIECE_HEIGHT; y++) {
+            for (x = 0; x < JIGPIECE_WIDTH; x++) {
+                uint32_t fragchar = dg->frag[0][f].c[x][y];
+
+                if (!valid_frag_char[fragchar]) {
+                    for (y = 0; y < JIGPIECE_HEIGHT; y++) {
+                        for (x = 0; x < JIGPIECE_WIDTH; x++) {
+                            uint32_t fragchar = dg->frag[0][f].c[x][y];
+
+                            printf("%c", fragchar);
+                        }
+                        printf("\n");
+                    }
+                    printf("\n");
+
+                    ERR("invalid fragment char [0x%x/%c] above", fragchar, fragchar);
+                }
+            }
+        }
+    }
+
+    int F;
+
+    for (F = 0; F < dg->trigger_fragment_cnt; F++) {
+
+        int f = myrand() % dg->trigger_fragment_cnt;
+
+#if 0
+        if ((myrand() % 100) < 30) {
+            continue;
+        }
+#endif
+
+        /*
+         * For each orientation of a frag.
+         */
+        for (dir = 0; dir < MAZE_FRAG_DIRECTIONS; dir++) {
+
+            if (dg->frag[dir][f].empty) {
+                continue;
+            }
+
+            /*
+             * For each orientation of a frag.
+             */
+            for (c = 0; c < dg->trigger_cnt_alts[f]; c++) {
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
+                maze_print_cells(dg);
+                map_jigsaw_buffer_print();
+#endif
+                /*
+                 * Try and place the frag.
+                 */
+                tries = 0;
+                while (tries++ < MAX_MAP_NUMBER_OF_TIMES_TO_TRY_AND_PLACE_FRAG) {
+
+                    ax = myrand() % (MAP_WIDTH + JIGPIECE_WIDTH);
+                    ay = myrand() % (MAP_HEIGHT + JIGPIECE_HEIGHT);
+                    ax -= JIGPIECE_WIDTH;
+                    ay -= JIGPIECE_HEIGHT;
+
+                    for (x = 0; x < JIGPIECE_WIDTH; x++) {
+                        for (y = 0; y < JIGPIECE_HEIGHT; y++) {
+                            /*
+                             * Skip empty spaces.
+                             */
+                            frag = dg->trigger_fragment[dir][f].c[x][y];
+                            if (frag == MAP_EMPTY) {
+                                continue;
+                            }
+
+                            cx = ax + x;
+                            cy = ay + y;
+
+                            /*
+                             * It's ok to be off map but only if a space.
+                             */
+                            if ((cx < 0) || (cx >= MAP_WIDTH) ||
+                                (cy < 0) || (cy >= MAP_HEIGHT)) {
+                                goto next;
+                            }
+
+                            /*
+                             * Check the frag is an exact match.
+                             */
+                            map = map_jigsaw_buffer_getchar(cx, cy);
+                            if (map != frag) {
+                                /*
+                                 * Allow the frag to force that spaces
+                                 * must exist.
+                                 */
+                                if (frag == MAP_SPACE) {
+                                    if (map == MAP_EMPTY) {
+                                        continue;
+                                    }
+                                }
+                                goto next;
+                            }
+                        }
+                    }
+
+                    /*
+                     * Choose something to replace the frag.
+                     */
+                    do {
+                        i = myrand() % dg->trigger_cnt_alts[f];
+                        i += dg->trigger_fragment_to_alt_base[f];
+
+                    } while (dg->trigger[dir][i].empty);
+
+                    color = color_find_nth(color_n++);
+
+                    /*
+                     * Place the frag.
+                     */
+                    for (x = 0; x < JIGPIECE_WIDTH; x++) {
+                        for (y = 0; y < JIGPIECE_HEIGHT; y++) {
+                            alt = dg->trigger[dir][i].c[x][y];
+                            frag = dg->trigger_fragment[dir][f].c[x][y];
+                            action1 = dg->action1[dir][f].c[x][y];
+                            action2 = dg->action2[dir][f].c[x][y];
+
+                            cx = ax + x;
+                            cy = ay + y;
+
+                            /*
+                             * Skip off map.
+                             */
+                            if ((cx < 0) || (cx >= MAP_WIDTH) ||
+                                (cy < 0) || (cy >= MAP_HEIGHT)) {
+                                continue;
+                            }
+
+                            if (alt == frag) {
+                                continue;
+                            }
+
+                            map_jigsaw_buffer_goto(cx, cy);
+                            map_jigsaw_buffer_putchar(alt);
+
+                            map_jigsaw_buffer_at_x--;
+                            if (action1 != frag) {
+                                map_jigsaw_buffer_action1[map_jigsaw_buffer_at_x][map_jigsaw_buffer_at_y] = 
+                                            action1;
+                            }
+
+                            if (action2 != frag) {
+                                map_jigsaw_buffer_action2[map_jigsaw_buffer_at_x][map_jigsaw_buffer_at_y] = 
+                                            action2;
+                            }
+
+                            map_jigsaw_buffer_color[map_jigsaw_buffer_at_x][map_jigsaw_buffer_at_y] = 
+                                            color;
+
                         }
                     }
 
@@ -2228,6 +2527,7 @@ static void maze_convert_to_map (dungeon_t *dg)
         }
     }
 
+    jigpiece_add_triggers(dg);
     jigpiece_add_frag(dg);
     LOG("Maze: Replaced maze fragments:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
@@ -2861,6 +3161,8 @@ static void init (void)
     map_fg[MAP_GENERATOR]      = TERM_COLOR_CYAN;
     map_fg[MAP_BRAZIER]        = TERM_COLOR_YELLOW;
     map_fg[MAP_POTION]         = TERM_COLOR_CYAN;
+    map_fg[MAP_TRIGGER_HERO]   = TERM_COLOR_RED;
+    map_fg[MAP_TRIGGER_MONST]  = TERM_COLOR_RED;
 
     map_bg[MAP_EMPTY]          = TERM_COLOR_BLACK;
     map_bg[MAP_SPACE]          = TERM_COLOR_BLACK;
@@ -2888,8 +3190,10 @@ static void init (void)
     map_bg[MAP_START]          = TERM_COLOR_BLACK;
     map_bg[MAP_PADDING]        = TERM_COLOR_BLACK;
     map_bg[MAP_DOOR]           = TERM_COLOR_CYAN;
-    map_fg[MAP_BRAZIER]        = TERM_COLOR_YELLOW;
-    map_fg[MAP_POTION]         = TERM_COLOR_CYAN;
+    map_bg[MAP_BRAZIER]        = TERM_COLOR_YELLOW;
+    map_bg[MAP_POTION]         = TERM_COLOR_CYAN;
+    map_bg[MAP_TRIGGER_HERO]   = TERM_COLOR_BLACK;
+    map_bg[MAP_TRIGGER_MONST]  = TERM_COLOR_BLACK;
 
     valid_frag_char[MAP_EMPTY]          = true;
     valid_frag_char[MAP_SPACE]          = true;
@@ -2932,7 +3236,7 @@ static void init (void)
     valid_frag_alt_char[MAP_CORRIDOR]       = true;
     valid_frag_alt_char[MAP_CORRIDOR_WALL]  = true;
     valid_frag_alt_char[MAP_MONST]          = true;
-    valid_frag_alt_char[MAP_MONST_OR_MOB]      = true;
+    valid_frag_alt_char[MAP_MONST_OR_MOB]   = true;
     valid_frag_alt_char[MAP_TRAP]           = true;
     valid_frag_alt_char[MAP_TELEPORT]       = true;
     valid_frag_alt_char[MAP_TREASURE]       = true;
@@ -2991,6 +3295,158 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
 #include "thing_template.h"
 #include "wid_game_map_server.h"
 
+static tpp map_char_to_tp (char c,
+                           levelp level,
+                           int depth,
+                           int shop_floor,
+                           tpp *wall,
+                           tpp *wall2,
+                           tpp *door,
+                           tpp *floor,
+                           tpp *floor2,
+                           tpp *floor3,
+                           tpp *rock,
+                           tpp *gen)
+{
+    tpp tp = 0;
+
+    switch (c) {
+    case MAP_WALL: 
+        if (!*wall) {
+            *wall = random_wall();
+        }
+        tp = *wall;
+        break;
+
+    case MAP_CORRIDOR_WALL: 
+        if (!*wall2) {
+            *wall2 = random_corridor_wall();
+        }
+        tp = *wall2;
+        break;
+
+    case MAP_DOOR: 
+        if (!*door) {
+            *door = random_door();
+        }
+        tp = *door;
+        break;
+
+    case MAP_ROCK: 
+        if (!*rock) {
+            *rock = random_rock();
+        }
+        tp = *rock;
+        break;
+
+    case MAP_LAVA:
+        tp = random_lava();
+        break;
+
+    case MAP_TELEPORT:
+        tp = tp_find("data/things/teleport1");
+        break;
+
+    case MAP_SHOP_FLOOR: 
+        tp = tp_find("data/things/shop_floor1"); 
+        if (level) {
+            level_set_has_shop(level, true);
+        }
+        break;
+
+    case MAP_SHOPKEEPER: 
+        tp = tp_find("data/things/shopkeeper"); 
+        break;
+
+    case MAP_START: 
+        tp = random_player(); 
+        break;
+
+    case MAP_END: 
+        tp = random_exit(); 
+        break;
+
+    case MAP_FOOD: 
+        tp = random_food(); 
+        break;
+
+    case MAP_GENERATOR: 
+        if (!*gen) {
+            *gen = random_mob(depth); 
+        }
+        tp = *gen;
+        break;
+
+    case MAP_MONST_OR_MOB:
+        if ((myrand() % 100) < 20) {
+            /*
+             * Nothing
+             */
+        } else if ((myrand() % 100) < 75) {
+            tp = random_monst(depth); 
+        } else {
+            tp = random_mob(depth); 
+        }
+        break;
+
+    case MAP_TRAP:
+        {
+            int r = myrand() % 100;
+
+            if (r < 95) {
+                tp = random_trap(depth); 
+            } else {
+                tp = random_lava();
+            }
+        }
+        break;
+
+    case MAP_WIDTH: 
+        tp = random_weapon(shop_floor); 
+        break;
+
+    case MAP_POTION: 
+        tp = random_potion(shop_floor); 
+        break;
+
+    case MAP_MONST: 
+        tp = random_monst(depth); 
+        break;
+
+    case MAP_BRAZIER: 
+        {
+            int r = myrand() % 100;
+
+            if (r < 95) {
+                tp = tp_find("data/things/brazier");
+            } else {
+                tp = random_treasure(shop_floor);
+            }
+        }
+        break;
+
+    case MAP_TREASURE: {
+        int r = myrand() % 100;
+
+        if (shop_floor) {
+            tp = random_treasure(shop_floor);
+        } else {
+            if (r < 20) {
+                tp = tp_find("data/things/brazier");
+            } else {
+                tp = random_treasure(shop_floor);
+            }
+        }
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    return (tp);
+}
+
 /*
  * map_jigsaw_generate
  */
@@ -2999,8 +3455,14 @@ void map_jigsaw_generate (levelp level, widp wid, int depth, grid_wid_replace_t 
     const char *jigsaw_map;
 
     tpp map_tp[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH_MAX];
+    tpp map_tp_action1[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH_MAX];
+    tpp map_tp_action2[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH_MAX];
+    tpp_data map_tp_data[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH_MAX];
 
     memset(map_tp, 0, sizeof(map_tp));
+    memset(map_tp_action1, 0, sizeof(map_tp_action1));
+    memset(map_tp_action2, 0, sizeof(map_tp_action2));
+    memset(map_tp_data, 0, sizeof(map_tp_data));
 
     init();
 
@@ -3089,141 +3551,11 @@ void map_jigsaw_generate (levelp level, widp wid, int depth, grid_wid_replace_t 
 
             map_tp[x][y][tp_get_z_depth(tp)] = tp;
 
-            tp = 0;
-
-            switch (c) {
-            case MAP_WALL: 
-                if (!wall) {
-                    wall = random_wall();
-                }
-                tp = wall;
-                break;
-
-            case MAP_CORRIDOR_WALL: 
-                if (!wall2) {
-                    wall2 = random_corridor_wall();
-                }
-                tp = wall2;
-                break;
-
-            case MAP_DOOR: 
-                if (!door) {
-                    door = random_door();
-                }
-                tp = door;
-                break;
-
-            case MAP_ROCK: 
-                if (!rock) {
-                    rock = random_rock();
-                }
-                tp = rock;
-                break;
-
-            case MAP_LAVA:
-                tp = random_lava();
-                break;
-
-            case MAP_TELEPORT:
-                tp = tp_find("data/things/teleport1");
-                break;
-
-            case MAP_SHOP_FLOOR: 
-                tp = tp_find("data/things/shop_floor1"); 
-                if (level) {
-                    level_set_has_shop(level, true);
-                }
-                break;
-
-            case MAP_SHOPKEEPER: 
-                tp = tp_find("data/things/shopkeeper"); 
-                break;
-
-            case MAP_START: 
-                tp = random_player(); 
-                break;
-
-            case MAP_END: 
-                tp = random_exit(); 
-                break;
-
-            case MAP_FOOD: 
-                tp = random_food(); 
-                break;
-
-            case MAP_GENERATOR: 
-                if (!gen) {
-                    gen = random_mob(depth); 
-                }
-                tp = gen;
-                break;
-
-            case MAP_MONST_OR_MOB:
-                if ((myrand() % 100) < 20) {
-                    /*
-                     * Nothing
-                     */
-                } else if ((myrand() % 100) < 75) {
-                    tp = random_monst(depth); 
-                } else {
-                    tp = random_mob(depth); 
-                }
-                break;
-
-            case MAP_TRAP:
-                {
-                    int r = myrand() % 100;
-
-                    if (r < 95) {
-                        tp = random_trap(depth); 
-                    } else {
-                        tp = random_lava();
-                    }
-                }
-                break;
-
-            case MAP_WIDTH: 
-                tp = random_weapon(shop_floor); 
-                break;
-
-            case MAP_POTION: 
-                tp = random_potion(shop_floor); 
-                break;
-
-            case MAP_MONST: 
-                tp = random_monst(depth); 
-                break;
-
-            case MAP_BRAZIER: 
-                {
-                    int r = myrand() % 100;
-
-                    if (r < 95) {
-                        tp = tp_find("data/things/brazier");
-                    } else {
-                        tp = random_treasure(shop_floor);
-                    }
-                }
-                break;
-
-            case MAP_TREASURE: {
-                int r = myrand() % 100;
-
-                if (shop_floor) {
-                    tp = random_treasure(shop_floor);
-                } else {
-                    if (r < 20) {
-                        tp = tp_find("data/things/brazier");
-                    } else {
-                        tp = random_treasure(shop_floor);
-                    }
-                }
-                break;
-            }
-
-            default:
-                break;
-            }
+            tp = map_char_to_tp(c, 
+                                level,
+                                depth,
+                                shop_floor,
+                                &wall, &wall2, &door, &floor, &floor2, &floor3, &rock, &gen);
 
             if (!tp) {
                 continue;
