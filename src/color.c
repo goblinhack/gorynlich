@@ -1636,3 +1636,16 @@ const char *color_find_name (const char *s)
 
     return (target->tree.key);
 }
+
+const char *color_find_nth (int nth)
+{
+    tree_color_val *target;
+
+    target = (typeof(target)) tree_root_get_nth(colors, nth);
+    if (!target) {
+        ERR("cannot find nth color %d", nth);
+        return (0);
+    }
+
+    return (target->tree.key);
+}
