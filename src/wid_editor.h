@@ -139,7 +139,7 @@ typedef struct {
     /*
      * Current color
      */
-    char *col_name;
+    const char *col_name;
     color col;
 
     /*
