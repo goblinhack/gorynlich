@@ -425,7 +425,7 @@ typedef struct tpp_data_ {
     /*
      * Color of the thing, mainly used in triggers.
      */
-    char *col_name;
+    const char *col_name;
     color col;
 
     uint8_t exit_set:1;
