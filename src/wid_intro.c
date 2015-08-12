@@ -602,7 +602,7 @@ static void wid_intro_menu_create (void)
         widp w = wid_popup(
                   "Version 0.0.2 alpha dive dive",
                   "",               /* title */
-                  0.9f, 0.95f,      /* x,y postition in percent */
+                  0.9f, 0.90f,      /* x,y postition in percent */
                   0,                /* title font */
                   vsmall_font,      /* body font */
                   0,                /* button font */
