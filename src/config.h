@@ -85,8 +85,10 @@
 /*
  * How many tiles per map
  */
-#define MAP_WIDTH                   64
-#define MAP_HEIGHT                  64
+#define MAP_WIDTH                   96
+#define MAP_HEIGHT                  96
+#define MAP_CHUNK_WIDTH             32
+#define MAP_CHUNK_HEIGHT            32
 
 /*
  * The number of tiles per screen.

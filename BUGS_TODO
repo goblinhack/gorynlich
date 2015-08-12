@@ -21,6 +21,9 @@
 - multi player
 - magic gives health to other players
 
+Tue Aug 11 22:45:50 EDT 2015
+- made levels 96x96 to allow chunks of 32x32 in world mode
+
 Mon Aug 10 22:20:25 EDT 2015
 - pcg triggers not quite working yet with colors
 
