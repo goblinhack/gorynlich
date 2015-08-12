@@ -1,5 +1,5 @@
 --------------------------------------- plan for aug --------------------------------------
-- jigsaw levels with actions
+- move triggers do not seem to work on rocks
 - portion of teleport
 - money/xp doubler ring
 - cheese bomb turns enemies into cheese
@@ -20,6 +20,9 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Wed Aug 12 16:44:17 EDT 2015
+- jigsaw levels with actions
 
 Tue Aug 11 22:45:50 EDT 2015
 - made levels 96x96 to allow chunks of 32x32 in world mode
