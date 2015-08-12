@@ -20,8 +20,8 @@
  * How many jigsaw pieces across and down make up the map. We substract
  * one so we can have a small border and center the tiles.
  */
-#define MAP_JIGSAW_PIECES_ACROSS    ((MAP_WIDTH / JIGPIECE_WIDTH))
-#define MAP_JIGSAW_PIECES_DOWN      ((MAP_WIDTH / JIGPIECE_WIDTH))
+#define MAP_JIGSAW_PIECES_ACROSS    5
+#define MAP_JIGSAW_PIECES_DOWN      5
 
 /*
  * The map is made up of jigsaw pieces that are joined togethere. This is the 
