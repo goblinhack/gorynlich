@@ -35,8 +35,6 @@ typedef enum {
     MARSHAL_FLOAT,
     MARSHAL_STRING,
     MARSHAL_NAME,
-    MARSHAL_PTR,
-    MARSHAL_PTR_REF,
     MARSHAL_BRA,
     MARSHAL_KET,
 } demarshal_type;
@@ -84,29 +82,25 @@ typedef struct tree_demarshal_ptr_ref_ {
  * Tree of demarshal nodes.
  */
 typedef struct tree_demarshal_node_ {
-    tree_key_int tree;
 
     union {
         float v_float;
         int64_t v_int;
         char *v_string;
         char *v_name;
-        void *v_ptr;
-        void *v_ptr_ref;
     } val;
 
-    tree_demarshal_ptr_ref_node *ptr_ref_node;
-    tree_demarshal_ptr_node *ptr_node;
     int8_t depth;
     int8_t type;
     int16_t line;
 } tree_demarshal_node;
 
+#define MAX_NODES 200000
+
 typedef struct tree_demarshal_ {
-    tree_root *root;
-    tree_demarshal_node *node;
-    tree_demarshal_ptr ptr_tree;
-    tree_demarshal_ptr_ref ptr_ref_tree;
+    tree_demarshal_node node[MAX_NODES];
+    int nodecnt;
+    int nodeat;
     /*
      * Used during parsing to indicate an optional field was read.
      */
@@ -114,59 +108,24 @@ typedef struct tree_demarshal_ {
     int8_t peek;
 } tree_demarshal;
 
-static tree_demarshal_ptr_node *
-demarshal_ptr_alloc_node (tree_demarshal *ctx, void *ptr)
-{
-    tree_demarshal_ptr_node *node;
-
-    node = (typeof(node)) myzalloc(sizeof(*node), "demarshal ptr");
-    node->tree.key = ptr;
-
-    if (!tree_insert(ctx->ptr_tree.root, &node->tree.node)) {
-        ERR("insert ptr node %p fail", ptr);
-    }
-
-    return (node);
-}
-
-static tree_demarshal_ptr_ref_node *
-demarshal_ptr_ref_alloc_node (tree_demarshal *ctx, void *ptr_ref)
-{
-    static int32_t key;
-
-    tree_demarshal_ptr_ref_node *node;
-
-    node = (typeof(node)) myzalloc(sizeof(*node), "demarshal ptr ref");
-    node->tree.key = key++;;
-    node->ptr_ref = ptr_ref;
-
-    if (!tree_insert(ctx->ptr_ref_tree.root, &node->tree.node)) {
-        ERR("insert ptr ref %p fail", ptr_ref);
-    }
-
-    return (node);
-}
-
 static const char *demarshal_parse_filename;
 static int32_t demarshal_parse_line;
 static char *demarshal_buf_end;
 
-static tree_demarshal_node *demarshal_alloc_node (tree_demarshal *ctx,
-                                                  const int8_t depth,
-                                                  const int8_t type)
+static inline tree_demarshal_node *demarshal_alloc_node (tree_demarshal *ctx,
+                                                         const int8_t depth,
+                                                         const int8_t type)
 {
-    static int32_t key;
     tree_demarshal_node *node;
 
-    node = (typeof(node)) myzalloc(sizeof(*node), "demarshal node");
-    node->tree.key = key++;
+    if (unlikely(ctx->nodecnt > MAX_NODES)) {
+        DIE("overflow in demarshal");
+    }
+
+    node = &ctx->node[ctx->nodecnt++];
     node->depth = depth;
     node->type = type;
     node->line = demarshal_parse_line;
-
-    if (!tree_insert(ctx->root, &node->tree.node)) {
-        ERR("insert demarshal node %d fail", key);
-    }
 
     return (node);
 }
@@ -199,42 +158,6 @@ static tree_demarshal_node *demarshal_push_int64 (tree_demarshal *ctx,
     }
 
     node->val.v_int = val;
-
-    return (node);
-}
-
-static tree_demarshal_node *demarshal_push_ptr (tree_demarshal *ctx,
-                                                const int8_t depth,
-                                                void *val)
-{
-    tree_demarshal_node *node;
-
-    node = demarshal_alloc_node(ctx, depth, MARSHAL_PTR);
-    if (!node) {
-        return (0);
-    }
-
-    node->val.v_ptr = val;
-
-    node->ptr_node = demarshal_ptr_alloc_node(ctx, val);
-
-    return (node);
-}
-
-static tree_demarshal_node *demarshal_push_ptr_ref (tree_demarshal *ctx,
-                                                    const int8_t depth,
-                                                    void *val)
-{
-    tree_demarshal_node *node;
-
-    node = demarshal_alloc_node(ctx, depth, MARSHAL_PTR_REF);
-    if (!node) {
-        return (0);
-    }
-
-    node->val.v_ptr_ref = val;
-
-    node->ptr_ref_node = demarshal_ptr_ref_alloc_node(ctx, val);
 
     return (node);
 }
@@ -287,33 +210,21 @@ static tree_demarshal_node *demarshal_push_node (tree_demarshal *ctx,
 
 void demarshal_fini (tree_demarshal *ctx)
 {
-    tree_demarshal_node *n;
-    tree_demarshal_ptr_ref_node *r;
+    tree_demarshal_node *node;
 
     /*
      * Walk all pointer refs, find the pointer they were referring to and
      * change them to point at the new real pointer.
      */
     tree_demarshal_ptr_node target;
-    tree_demarshal_ptr_node *found;
 
     memset(&target, 0, sizeof(target));
 
-    { TREE_WALK(ctx->ptr_ref_tree.root, r) {
-        target.tree.key = r->ptr_ref;
+    int n;
+    for (n = 0; n < ctx->nodecnt; n++) {
+        node = &ctx->node[n];
 
-        found = (tree_demarshal_ptr_node*)
-            tree_find(ctx->ptr_tree.root, (tree_node*)&target);
-
-        if (!found) {
-            ERR("pointer ref %p not found", target.tree.key);
-        }
-
-        (*r->pptr_ref) = (*found->ptr);
-    } }
-
-    TREE_WALK(ctx->root, n) {
-        switch (n->type) {
+        switch (node->type) {
         case MARSHAL_NONE:
             break;
         case MARSHAL_INT:
@@ -321,28 +232,21 @@ void demarshal_fini (tree_demarshal *ctx)
         case MARSHAL_FLOAT:
             break;
         case MARSHAL_STRING:
-            myfree(n->val.v_string);
+            myfree(node->val.v_string);
+            node->val.v_string = 0;
             break;
         case MARSHAL_NAME:
-            myfree(n->val.v_name);
-            break;
-        case MARSHAL_PTR:
-            break;
-        case MARSHAL_PTR_REF:
+            myfree(node->val.v_name);
+            node->val.v_name = 0;
             break;
         case MARSHAL_BRA:
             break;
         case MARSHAL_KET:
             break;
         }
-
-        tree_remove(ctx->root, &n->tree.node);
-        myfree(n);
     }
 
-    tree_destroy(&ctx->root, 0);
-    tree_destroy(&ctx->ptr_tree.root, 0);
-    tree_destroy(&ctx->ptr_ref_tree.root, 0);
+    ctx->nodecnt = 0;
 
     myfree(ctx);
 }
@@ -366,12 +270,6 @@ static void demarshal_print_node (tree_demarshal_node *n)
         break;
     case MARSHAL_STRING:
         printf("[string] \"%s\"", n->val.v_string);
-        break;
-    case MARSHAL_PTR:
-        printf("[ptr] *%p", n->val.v_ptr);
-        break;
-    case MARSHAL_PTR_REF:
-        printf("[ptr-ref] @%p", n->val.v_ptr_ref);
         break;
     case MARSHAL_NAME:
         printf("[name] \"%s\"", n->val.v_name);
@@ -406,12 +304,6 @@ static const char *demarshal_node2str (tree_demarshal_node *n)
     case MARSHAL_STRING:
         snprintf(buf, sizeof(buf), "[string] \"%s\"", n->val.v_string);
         break;
-    case MARSHAL_PTR:
-        snprintf(buf, sizeof(buf), "[ptr] *%p", n->val.v_ptr);
-        break;
-    case MARSHAL_PTR_REF:
-        snprintf(buf, sizeof(buf), "[ptr-ref] @%p", n->val.v_ptr_ref);
-        break;
     case MARSHAL_NAME:
         snprintf(buf, sizeof(buf), "[name] \"%s\"", n->val.v_name);
         break;
@@ -431,25 +323,13 @@ static const char *demarshal_node2str (tree_demarshal_node *n)
 
 void demarshal_print (tree_demarshal *ctx)
 {
-    tree_demarshal_node *n;
+    int n;
+    tree_demarshal_node *node;
 
-    TREE_WALK(ctx->root, n) {
-        demarshal_print_node(n);
-    }
-}
+    for (n = 0; n < ctx->nodecnt; n++) {
+        node = &ctx->node[n];
 
-static int8_t tree_demarshal_ptr_compare_func (const tree_node *a,
-                                               const tree_node *b)
-{
-    tree_demarshal_ptr_node *A = (typeof(A))a;
-    tree_demarshal_ptr_node *B = (typeof(B))b;
-
-    if (A->tree.key < B->tree.key) {
-        return (-1);
-    } else if (A->tree.key > B->tree.key) {
-        return (1);
-    } else {
-        return (0);
+        demarshal_print_node(node);
     }
 }
 
@@ -469,11 +349,6 @@ tree_demarshal *demarshal (const char *filename)
     uint64_t tmp_hex = 0;
     int64_t tmp_mul = 0;
     uint8_t compress;
-    uint8_t reading_ptr;
-    uint8_t reading_ptr_ref;
-
-    reading_ptr = 0;
-    reading_ptr_ref = 0;
 
     demarshal_parse_filename = filename;
     demarshal_parse_line = 1;
@@ -488,11 +363,6 @@ tree_demarshal *demarshal (const char *filename)
     }
 
     ctx = (typeof(ctx)) myzalloc(sizeof(*ctx), "demarshal ctx");
-    ctx->root = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: demarshal");
-    ctx->ptr_tree.root = tree_alloc_custom(tree_demarshal_ptr_compare_func,
-                                           "TREE ROOT: demarshal ptr");
-    ctx->ptr_ref_tree.root = tree_alloc(TREE_KEY_INTEGER,
-                                        "TREE ROOT: demarshal ptr ref");
 
     demarshal_buf_end = buf + size;
 
@@ -546,14 +416,6 @@ tree_demarshal *demarshal (const char *filename)
             default:
                 state = MARSHAL_PARSE_STATE_NAME;
                 tmp_at = at;
-                continue;
-
-            case '*':
-                reading_ptr = 1;
-                continue;
-
-            case '@':
-                reading_ptr_ref = 1;
                 continue;
 
             case '0':
@@ -704,16 +566,7 @@ tree_demarshal *demarshal (const char *filename)
                 }
             }
 
-            if (reading_ptr) {
-                demarshal_push_ptr(ctx, depth, (void*)(uintptr_t)tmp_hex);
-            } else if (reading_ptr_ref) {
-                demarshal_push_ptr_ref(ctx, depth, (void*)(uintptr_t)tmp_hex);
-            } else {
-                demarshal_push_int64(ctx, depth, (int64_t)tmp_hex);
-            }
-
-            reading_ptr = 0;
-            reading_ptr_ref = 0;
+            demarshal_push_int64(ctx, depth, (int64_t)tmp_hex);
 
             state = MARSHAL_PARSE_STATE_NONE;
             next = at;
@@ -775,7 +628,7 @@ tree_demarshal *demarshal (const char *filename)
             demarshal_parse_line);
     }
 
-    ctx->node = (typeof(ctx->node)) tree_root_first(ctx->root);
+    ctx->nodeat = 0;
 
     myfree(buf);
 
@@ -791,9 +644,7 @@ tree_demarshal *demarshal (const char *filename)
 //
 static uint8_t demarshal_internal_name (tree_demarshal *ctx, const char *want)
 {
-    tree_root *root = ctx->root;
-    tree_demarshal_node **n = &ctx->node;
-    tree_demarshal_node *node = *n;
+    tree_demarshal_node *node = &ctx->node[ctx->nodeat];
 
     if (!node) {
         if (ctx->peek) {
@@ -868,9 +719,7 @@ static uint8_t demarshal_internal_name (tree_demarshal *ctx, const char *want)
     }
 
     if (!ctx->peek) {
-        *n = (tree_demarshal_node*) tree_get_next(root,
-                                                  root->node,
-                                                  &node->tree.node);
+        ctx->nodeat++;
     }
 
     ctx->gotone = true;
@@ -883,9 +732,7 @@ static uint8_t demarshal_internal_name (tree_demarshal *ctx, const char *want)
 //
 static uint8_t demarshal_internal_string (tree_demarshal *ctx, char **out)
 {
-    tree_root *root = ctx->root;
-    tree_demarshal_node **n = &ctx->node;
-    tree_demarshal_node *node = *n;
+    tree_demarshal_node *node = &ctx->node[ctx->nodeat];
 
     if (!node) {
         if (ctx->peek) {
@@ -929,9 +776,7 @@ static uint8_t demarshal_internal_string (tree_demarshal *ctx, char **out)
     if (!ctx->peek) {
         *out = dupstr(node->val.v_string, "demarshal string");
 
-        *n = (tree_demarshal_node*) tree_get_next(root,
-                                                  root->node,
-                                                  &node->tree.node);
+        ctx->nodeat++;
     }
 
     ctx->gotone = true;
@@ -944,9 +789,7 @@ static uint8_t demarshal_internal_string (tree_demarshal *ctx, char **out)
 //
 static uint8_t demarshal_internal_int (tree_demarshal *ctx, int64_t *out)
 {
-    tree_root *root = ctx->root;
-    tree_demarshal_node **n = &ctx->node;
-    tree_demarshal_node *node = *n;
+    tree_demarshal_node *node = &ctx->node[ctx->nodeat];
 
     if (!node) {
         if (ctx->peek) {
@@ -990,9 +833,7 @@ static uint8_t demarshal_internal_int (tree_demarshal *ctx, int64_t *out)
     if (!ctx->peek) {
         *out = node->val.v_int;
 
-        *n = (tree_demarshal_node*) tree_get_next(root,
-                                                  root->node,
-                                                  &node->tree.node);
+        ctx->nodeat++;
     }
 
     ctx->gotone = true;
@@ -1005,9 +846,7 @@ static uint8_t demarshal_internal_int (tree_demarshal *ctx, int64_t *out)
 //
 static uint8_t demarshal_internal_float (tree_demarshal *ctx, float *out)
 {
-    tree_root *root = ctx->root;
-    tree_demarshal_node **n = &ctx->node;
-    tree_demarshal_node *node = *n;
+    tree_demarshal_node *node = &ctx->node[ctx->nodeat];
 
     if (!node) {
         if (ctx->peek) {
@@ -1053,9 +892,7 @@ static uint8_t demarshal_internal_float (tree_demarshal *ctx, float *out)
     if (!ctx->peek) {
         *out = node->val.v_float;
 
-        *n = (tree_demarshal_node*) tree_get_next(root,
-                                                  root->node,
-                                                  &node->tree.node);
+        ctx->nodeat++;
     }
 
     ctx->gotone = true;
@@ -1063,135 +900,12 @@ static uint8_t demarshal_internal_float (tree_demarshal *ctx, float *out)
     return (1);
 }
 
-//
-// Get or peek at the next node
-//
-static uint8_t demarshal_internal_ptr (tree_demarshal *ctx, void **out)
-{
-    tree_root *root = ctx->root;
-    tree_demarshal_node **n = &ctx->node;
-    tree_demarshal_node *node = *n;
-
-    if (!node) {
-        if (ctx->peek) {
-            return (0);
-        }
-
-        MSG_BOX("Error at file %s, line %d, no node",
-            demarshal_parse_filename,
-            demarshal_parse_line);
-
-        return (0);
-    }
-
-    //
-    // Make sure we've got a string and not some junk.
-    //
-    switch (node->type) {
-        case MARSHAL_PTR:
-            break;
-        //
-        // Hit the end of a class or the start of a sub class?
-        //
-        case MARSHAL_KET:
-        case MARSHAL_BRA:
-            return (0);
-
-        default:
-            if (ctx->peek) {
-                return (0);
-            }
-
-            MSG_BOX("Error at file %s, line %d, "
-                "expecting type ptr, got %s",
-                demarshal_parse_filename,
-                node->line,
-                demarshal_node2str(node));
-
-            return (0);
-    }
-
-    if (!ctx->peek) {
-        node->ptr_node->ptr = out;
-
-        *n = (tree_demarshal_node*) tree_get_next(root,
-                                                  root->node,
-                                                  &node->tree.node);
-    }
-
-    ctx->gotone = true;
-
-    return (1);
-}
-
-//
-// Get or peek at the next node
-//
-static uint8_t demarshal_internal_ptr_ref (tree_demarshal *ctx, void **out)
-{
-    tree_root *root = ctx->root;
-    tree_demarshal_node **n = &ctx->node;
-    tree_demarshal_node *node = *n;
-
-    if (!node) {
-        if (ctx->peek) {
-            return (0);
-        }
-
-        MSG_BOX("Error at file %s, line %d, no node",
-            demarshal_parse_filename,
-            demarshal_parse_line);
-
-        return (0);
-    }
-
-    //
-    // Make sure we've got a string and not some junk.
-    //
-    switch (node->type) {
-        case MARSHAL_PTR_REF:
-            break;
-        //
-        // Hit the end of a class or the start of a sub class?
-        //
-        case MARSHAL_KET:
-        case MARSHAL_BRA:
-            return (0);
-
-        default:
-            if (ctx->peek) {
-                return (0);
-            }
-
-            MSG_BOX("Error at file %s, line %d, "
-                "expecting type ptr-ref, got %s",
-                demarshal_parse_filename,
-                node->line,
-                demarshal_node2str(node));
-
-            return (0);
-    }
-
-    if (!ctx->peek) {
-        node->ptr_ref_node->pptr_ref = out;
-
-        *n = (tree_demarshal_node*) tree_get_next(root,
-                                                  root->node,
-                                                  &node->tree.node);
-    }
-
-    ctx->gotone = true;
-
-    return (1);
-}
 //
 // Get or peek at the next node
 //
 static uint8_t demarshal_internal_bra (tree_demarshal *ctx)
 {
-    tree_root *root = ctx->root;
-    tree_demarshal_node **n = &ctx->node;
-    tree_demarshal_node *node = *n;
+    tree_demarshal_node *node = &ctx->node[ctx->nodeat];
 
     if (!node) {
         if (ctx->peek) {
@@ -1229,9 +943,7 @@ static uint8_t demarshal_internal_bra (tree_demarshal *ctx)
     }
 
     if (!ctx->peek) {
-        *n = (tree_demarshal_node*) tree_get_next(root,
-                                                  root->node,
-                                                  &node->tree.node);
+        ctx->nodeat++;
     }
 
     ctx->gotone = true;
@@ -1244,9 +956,7 @@ static uint8_t demarshal_internal_bra (tree_demarshal *ctx)
 //
 static uint8_t demarshal_internal_ket (tree_demarshal *ctx)
 {
-    tree_root *root = ctx->root;
-    tree_demarshal_node **n = &ctx->node;
-    tree_demarshal_node *node = *n;
+    tree_demarshal_node *node = &ctx->node[ctx->nodeat];
 
     if (!node) {
         if (ctx->peek) {
@@ -1284,9 +994,7 @@ static uint8_t demarshal_internal_ket (tree_demarshal *ctx)
     }
 
     if (!ctx->peek) {
-        *n = (tree_demarshal_node*) tree_get_next(root,
-                                                  root->node,
-                                                  &node->tree.node);
+        ctx->nodeat++;
     }
 
     ctx->gotone = true;
@@ -1814,54 +1522,6 @@ uint8_t demarshal_opt_def_named_float (tree_demarshal *ctx, const char *name,
         return (0);
     }
     return (1);
-}
-
-uint8_t demarshal_named_ptr (tree_demarshal *ctx, const char *name,
-                         void **out)
-{
-    ctx->peek = 0;
-
-    if (!demarshal_internal_name(ctx, name)) {
-        return (0);
-    }
-
-    return (demarshal_internal_ptr(ctx, out));
-}
-
-uint8_t demarshal_opt_named_ptr (tree_demarshal *ctx, const char *name,
-                             void **out)
-{
-    ctx->peek = 1;
-
-    if (!demarshal_internal_name(ctx, name)) {
-        return (0);
-    }
-
-    return (demarshal_named_ptr(ctx, name, out));
-}
-
-uint8_t demarshal_named_ptr_ref (tree_demarshal *ctx, const char *name,
-                             void **out)
-{
-    ctx->peek = 0;
-
-    if (!demarshal_internal_name(ctx, name)) {
-        return (0);
-    }
-
-    return (demarshal_internal_ptr_ref(ctx, out));
-}
-
-uint8_t demarshal_opt_named_ptr_ref (tree_demarshal *ctx, const char *name,
-                                 void **out)
-{
-    ctx->peek = 1;
-
-    if (!demarshal_internal_name(ctx, name)) {
-        return (0);
-    }
-
-    return (demarshal_named_ptr_ref(ctx, name, out));
 }
 
 uint8_t demarshal_bra (tree_demarshal *ctx)

@@ -103,8 +103,6 @@ tree_node *tree_find(tree_root *, const tree_node *);
 
 typedef uint8_t (*tree_walker_func)(const tree_node *, void *arg);
 
-tree_node *tree_next(tree_root *root, tree_node *node);
-tree_node *tree_prev(tree_root *root, tree_node *node);
 uint8_t tree_walk(tree_root *, tree_walker_func, void *arg);
 uint8_t tree_walk_reverse(tree_root *, tree_walker_func, void *arg);
 
@@ -697,5 +695,64 @@ static inline tree_node *tree_last (tree_node *top)
     }
 
     return (top);
+}
+
+/*
+ * Walk all nodes. Not safe if next node is destroyed. Use TREE_WALK instead.
+ */
+static inline tree_node *tree_next (tree_root *root, tree_node *node)
+{
+    tree_node *next;
+    int32_t compare;
+
+    if (!node) {
+        return (0);
+    }
+
+    if (node->right) {
+        next = tree_first_noverify(node->right);
+    } else if (node->parent) {
+        next = node;
+        do {
+            next = next->parent;
+            if (!next) {
+                break;
+            }
+
+            compare = tree_node_compare_func(root, next, node);
+        } while (compare <= 0);
+    } else {
+        next = 0;
+    }
+
+    return (next);
+}
+
+static inline tree_node *tree_prev (tree_root *root, tree_node *node)
+{
+    tree_node *next;
+    int32_t compare;
+
+    if (!node) {
+        return (0);
+    }
+
+    if (node->left) {
+        next = tree_last(node->left);
+    } else if (node->parent) {
+        next = node;
+        do {
+            next = next->parent;
+            if (!next) {
+                break;
+            }
+
+            compare = tree_node_compare_func(root, next, node);
+        } while (compare > 0);
+    } else {
+        next = 0;
+    }
+
+    return (next);
 }
 #endif

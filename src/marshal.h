@@ -182,6 +182,7 @@ uint8_t marshal_array_ket(marshal_p);
 #define GET_OPT_NAMED_FLOAT(D, N, V)   demarshal_opt_named_float((D), (N), &(V))
 #define GET_OPT_DEF_NAMED_FLOAT(D, N, V, DEF)   demarshal_opt_def_named_float((D), (N), &(V), DEF)
 
+#ifdef TOO_SLOW
 #define GET_PTR(D, V)                  demarshal_ptr((D), &(V))
 #define GET_PEEK_PTR(D, V)             demarshal_peek_ptr((D), &(V))
 #define GET_NAMED_PTR(D, N, V)         demarshal_named_ptr((D), (N), &(V))
@@ -190,6 +191,7 @@ uint8_t marshal_array_ket(marshal_p);
 #define GET_NAMED_PTR_REF(D, N, V)     demarshal_named_ptr_ref((D), (N), &(V))
 #define GET_PEEK_PTR_REF(D, V)         demarshal_peek_ptr_ref((D), &(V))
 #define GET_OPT_NAMED_PTR_REF(D, N, V) demarshal_opt_named_ptr_ref((D), (N), &(V))
+#endif
 
 #define GET_PEEK_BRA(D)                demarshal_peek_bra((D))
 #define GET_BRA(D)                     demarshal_bra((D))
