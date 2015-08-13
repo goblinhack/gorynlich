@@ -812,23 +812,25 @@ static void wid_map_find_player_start (int x, int y)
 
     int mx, my, mz;
 
-    for (mx = 0; mx < MAP_WIDTH; mx++) 
-    for (my = 0; my < MAP_HEIGHT; my++) 
-    for (mz = 0; mz < MAP_DEPTH_MAX; mz++) {
-        wid_map_tile *tile = &map->tiles[mx][my][mz];
-        if (!tile) {
-            continue;
-        }
+    for (my = 0; my < MAP_HEIGHT; my++) {
+        for (mx = 0; mx < MAP_WIDTH; mx++) {
+            mz = MAP_DEPTH_PLAYER;
 
-        tpp tp = tile->tp;
-        if (!tp) {
-            continue;
-        }
+            wid_map_tile *tile = &map->tiles[mx][my][mz];
+            if (!tile) {
+                continue;
+            }
 
-        if (tp_is_player(tp)) {
-            map->px = mx;
-            map->py = my;
-            map->player_count++;
+            tpp tp = tile->tp;
+            if (!tp) {
+                continue;
+            }
+
+            if (tp_is_player(tp)) {
+                map->px = mx;
+                map->py = my;
+                map->player_count++;
+            }
         }
     }
 }

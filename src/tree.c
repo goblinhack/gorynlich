@@ -113,12 +113,12 @@ tree_node *tree_root_first (tree_root *root)
 {
     tree_node *top;
 
-    if (!root) {
+    if (unlikely(!root)) {
         return (0);
     }
 
     top = root->node;
-    if (!top) {
+    if (unlikely(!top)) {
         return (0);
     }
 
@@ -281,65 +281,6 @@ int tree_walk (tree_root *root, tree_walker_func walker_func, void *arg)
     return (1);
 }
 #endif
-
-/*
- * Walk all nodes. Not safe if next node is destroyed. Use TREE_WALK instead.
- */
-tree_node *tree_next (tree_root *root, tree_node *node)
-{
-    tree_node *next;
-    int32_t compare;
-
-    if (!node) {
-        return (0);
-    }
-
-    if (node->right) {
-        next = tree_first_noverify(node->right);
-    } else if (node->parent) {
-        next = node;
-        do {
-            next = next->parent;
-            if (!next) {
-                break;
-            }
-
-            compare = tree_node_compare_func(root, next, node);
-        } while (compare <= 0);
-    } else {
-        next = 0;
-    }
-
-    return (next);
-}
-
-tree_node *tree_prev (tree_root *root, tree_node *node)
-{
-    tree_node *next;
-    int32_t compare;
-
-    if (!node) {
-        return (0);
-    }
-
-    if (node->left) {
-        next = tree_last(node->left);
-    } else if (node->parent) {
-        next = node;
-        do {
-            next = next->parent;
-            if (!next) {
-                break;
-            }
-
-            compare = tree_node_compare_func(root, next, node);
-        } while (compare > 0);
-    } else {
-        next = 0;
-    }
-
-    return (next);
-}
 
 /*
  * Walk all nodes. Not safe if next node is destroyed. Use TREE_WALK instead.
@@ -1270,7 +1211,7 @@ void tree_empty (tree_root *root, tree_destroy_func func)
             break;
         }
 
-        tree_remove(root, node);
+        tree_remove_found_node(root, node);
 
         if (func) {
             (*func)(node);
