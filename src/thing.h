@@ -558,6 +558,61 @@ enum {
     THING_HELMET2,
     THING_HELMET3,
     THING_HELMET4,
+
+    THING_GRASS1,
+    THING_GRASS2,
+    THING_GRASS3,
+    THING_GRASS4,
+    THING_GRASS5,
+    THING_GRASS6,
+    THING_GRASS7,
+    THING_GRASS8,
+
+    THING_STONE1,
+    THING_STONE2,
+    THING_STONE3,
+    THING_STONE4,
+    THING_STONE5,
+    THING_STONE6,
+    THING_STONE7,
+    THING_STONE8,
+
+    THING_SOIL1,
+    THING_SOIL2,
+    THING_SOIL3,
+    THING_SOIL4,
+    THING_SOIL5,
+    THING_SOIL6,
+    THING_SOIL7,
+    THING_SOIL8,
+
+    THING_SNOW1,
+    THING_SNOW2,
+    THING_SNOW3,
+    THING_SNOW4,
+    THING_SNOW5,
+    THING_SNOW6,
+    THING_SNOW7,
+    THING_SNOW8,
+
+    THING_WATER1,
+    THING_WATER2,
+    THING_WATER3,
+    THING_WATER4,
+    THING_WATER5,
+    THING_WATER6,
+    THING_WATER7,
+    THING_WATER8,
+
+    THING_SAND1,
+    THING_SAND2,
+    THING_SAND3,
+    THING_SAND4,
+    THING_SAND5,
+    THING_SAND6,
+    THING_SAND7,
+    THING_SAND8,
+
     THING_MAX_ID,
 };
 
@@ -1231,6 +1286,195 @@ static inline uint8_t thing_is_rrr3 (thingp t)
     verify(t);
 
     return (tp_is_rrr3(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr4 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr4(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr5 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr5(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr6 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr6(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr7 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr7(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr8 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr8(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr9 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr9(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr10 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr10(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr11 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr11(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr12 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr12(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr13 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr13(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr14 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr14(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr15 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr15(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr16 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr16(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr17 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr17(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr18 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr18(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr19 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr19(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr20 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr20(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr21 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr21(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr22 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr22(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr23 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr23(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr24 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr24(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_world_tile (thingp t)
+{
+    verify(t);
+
+    return (tp_is_world_tile(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_soil (thingp t)
+{
+    verify(t);
+
+    return (tp_is_soil(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_sand (thingp t)
+{
+    verify(t);
+
+    return (tp_is_sand(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_stone (thingp t)
+{
+    verify(t);
+
+    return (tp_is_stone(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_snow (thingp t)
+{
+    verify(t);
+
+    return (tp_is_snow(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_grass (thingp t)
+{
+    verify(t);
+
+    return (tp_is_grass(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_life_saving (thingp t)
@@ -2051,6 +2295,141 @@ static inline uint8_t thing_is_rrr2_noverify (thingp t)
 static inline uint8_t thing_is_rrr3_noverify (thingp t)
 {
     return (t->tp->is_rrr3);
+}
+
+static inline uint8_t thing_is_rrr4_noverify (thingp t)
+{
+    return (t->tp->is_rrr4);
+}
+
+static inline uint8_t thing_is_rrr5_noverify (thingp t)
+{
+    return (t->tp->is_rrr5);
+}
+
+static inline uint8_t thing_is_rrr6_noverify (thingp t)
+{
+    return (t->tp->is_rrr6);
+}
+
+static inline uint8_t thing_is_rrr7_noverify (thingp t)
+{
+    return (t->tp->is_rrr7);
+}
+
+static inline uint8_t thing_is_rrr8_noverify (thingp t)
+{
+    return (t->tp->is_rrr8);
+}
+
+static inline uint8_t thing_is_rrr9_noverify (thingp t)
+{
+    return (t->tp->is_rrr9);
+}
+
+static inline uint8_t thing_is_rrr10_noverify (thingp t)
+{
+    return (t->tp->is_rrr10);
+}
+
+static inline uint8_t thing_is_rrr11_noverify (thingp t)
+{
+    return (t->tp->is_rrr11);
+}
+
+static inline uint8_t thing_is_rrr12_noverify (thingp t)
+{
+    return (t->tp->is_rrr12);
+}
+
+static inline uint8_t thing_is_rrr13_noverify (thingp t)
+{
+    return (t->tp->is_rrr13);
+}
+
+static inline uint8_t thing_is_rrr14_noverify (thingp t)
+{
+    return (t->tp->is_rrr14);
+}
+
+static inline uint8_t thing_is_rrr15_noverify (thingp t)
+{
+    return (t->tp->is_rrr15);
+}
+
+static inline uint8_t thing_is_rrr16_noverify (thingp t)
+{
+    return (t->tp->is_rrr16);
+}
+
+static inline uint8_t thing_is_rrr17_noverify (thingp t)
+{
+    return (t->tp->is_rrr17);
+}
+
+static inline uint8_t thing_is_rrr18_noverify (thingp t)
+{
+    return (t->tp->is_rrr18);
+}
+
+static inline uint8_t thing_is_rrr19_noverify (thingp t)
+{
+    return (t->tp->is_rrr19);
+}
+
+static inline uint8_t thing_is_rrr20_noverify (thingp t)
+{
+    return (t->tp->is_rrr20);
+}
+
+static inline uint8_t thing_is_rrr21_noverify (thingp t)
+{
+    return (t->tp->is_rrr21);
+}
+
+static inline uint8_t thing_is_rrr22_noverify (thingp t)
+{
+    return (t->tp->is_rrr22);
+}
+
+static inline uint8_t thing_is_rrr23_noverify (thingp t)
+{
+    return (t->tp->is_rrr23);
+}
+
+static inline uint8_t thing_is_rrr24_noverify (thingp t)
+{
+    return (t->tp->is_rrr24);
+}
+
+static inline uint8_t thing_is_world_tile_noverify (thingp t)
+{
+    return (t->tp->is_world_tile);
+}
+
+static inline uint8_t thing_is_soil_noverify (thingp t)
+{
+    return (t->tp->is_soil);
+}
+
+static inline uint8_t thing_is_sand_noverify (thingp t)
+{
+    return (t->tp->is_sand);
+}
+
+static inline uint8_t thing_is_stone_noverify (thingp t)
+{
+    return (t->tp->is_stone);
+}
+
+static inline uint8_t thing_is_snow_noverify (thingp t)
+{
+    return (t->tp->is_snow);
+}
+
+static inline uint8_t thing_is_grass_noverify (thingp t)
+{
+    return (t->tp->is_grass);
 }
 
 static inline uint8_t thing_is_life_saving_noverify (thingp t)

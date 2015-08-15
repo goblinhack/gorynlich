@@ -13,8 +13,8 @@ tpp random_wall (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random wall");
+        if (loop++ > 1000) {
+            LOG("couldn't find random wall");
             return (0);
         }
 
@@ -49,8 +49,8 @@ tpp random_corridor_wall (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random wall");
+        if (loop++ > 1000) {
+            LOG("couldn't find random wall");
             return (0);
         }
 
@@ -74,8 +74,8 @@ tpp random_door (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random door");
+        if (loop++ > 1000) {
+            LOG("couldn't find random door");
             return (0);
         }
 
@@ -99,8 +99,8 @@ tpp random_floor (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random floor");
+        if (loop++ > 1000) {
+            LOG("couldn't find random floor");
             return (0);
         }
 
@@ -140,8 +140,8 @@ tpp random_corridor (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random floor");
+        if (loop++ > 1000) {
+            LOG("couldn't find random floor");
             return (0);
         }
 
@@ -173,8 +173,8 @@ tpp random_dirt (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random floor");
+        if (loop++ > 1000) {
+            LOG("couldn't find random floor");
             return (0);
         }
 
@@ -206,8 +206,8 @@ tpp random_player (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random player");
+        if (loop++ > 1000) {
+            LOG("couldn't find random player");
             return (0);
         }
 
@@ -256,8 +256,8 @@ tpp random_food (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random food");
+        if (loop++ > 1000) {
+            LOG("couldn't find random food");
             return (0);
         }
 
@@ -284,8 +284,8 @@ tpp random_treasure (int shop_floor)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random treasure");
+        if (loop++ > 1000) {
+            LOG("couldn't find random treasure");
             return (0);
         }
 
@@ -319,8 +319,8 @@ tpp random_weapon (int shop_floor)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random weapon");
+        if (loop++ > 1000) {
+            LOG("couldn't find random weapon");
             return (0);
         }
 
@@ -354,8 +354,8 @@ tpp random_potion (int shop_floor)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random potion");
+        if (loop++ > 1000) {
+            LOG("couldn't find random potion");
             return (0);
         }
 
@@ -389,8 +389,8 @@ tpp random_rock (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random rock");
+        if (loop++ > 1000) {
+            LOG("couldn't find random rock");
             return (0);
         }
 
@@ -417,8 +417,8 @@ tpp random_lava (void)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random lava");
+        if (loop++ > 1000) {
+            LOG("couldn't find random lava");
             return (0);
         }
 
@@ -442,8 +442,8 @@ tpp random_monst (int depth)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random monst");
+        if (loop++ > 1000) {
+            LOG("couldn't find random monst");
             return (0);
         }
 
@@ -488,8 +488,8 @@ tpp random_trap (int depth)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random trap");
+        if (loop++ > 1000) {
+            LOG("couldn't find random trap");
             return (0);
         }
 
@@ -514,8 +514,8 @@ tpp random_mob (int depth)
 
     for (;;) {
 
-        if (loop++ > 100000) {
-            ERR("couldn't find random mob");
+        if (loop++ > 1000) {
+            LOG("couldn't find random mob");
             return (0);
         }
 
