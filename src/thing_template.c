@@ -533,7 +533,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
             GET_OPT_NAMED_ENUM(ctx, "z_depth", en, map_depth_str2val);
             t->z_depth = en;
             if (t->z_depth >= MAP_DEPTH_MAX) {
-                ERR("%s has unknown depth", t->short_name); 
+                ERR("%s/%s has unknown depth", tp_name(t), t->short_name); 
             }
         }
 
@@ -661,6 +661,33 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr1", t->is_rrr1);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr5", t->is_rrr5);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr7", t->is_rrr7);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr8", t->is_rrr8);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr20", t->is_rrr20);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr21", t->is_rrr21);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr24", t->is_rrr24);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_world_tile", t->is_world_tile);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_soil", t->is_soil);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_sand", t->is_sand);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_stone", t->is_stone);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_snow", t->is_snow);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_grass", t->is_grass);
         GET_OPT_NAMED_BITFIELD(ctx, "is_life_saving", t->is_life_saving);
         GET_OPT_NAMED_BITFIELD(ctx, "is_single_mob_spawner", t->is_single_mob_spawner);
         GET_OPT_NAMED_BITFIELD(ctx, "has_ability_burst_shot", t->has_ability_burst_shot);
@@ -919,6 +946,33 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr1", t->is_rrr1);
     PUT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
     PUT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr5", t->is_rrr5);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr7", t->is_rrr7);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr8", t->is_rrr8);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr20", t->is_rrr20);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr21", t->is_rrr21);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
+    PUT_NAMED_BITFIELD(ctx, "is_rrr24", t->is_rrr24);
+    PUT_NAMED_BITFIELD(ctx, "is_world_tile", t->is_world_tile);
+    PUT_NAMED_BITFIELD(ctx, "is_soil", t->is_soil);
+    PUT_NAMED_BITFIELD(ctx, "is_sand", t->is_sand);
+    PUT_NAMED_BITFIELD(ctx, "is_stone", t->is_stone);
+    PUT_NAMED_BITFIELD(ctx, "is_snow", t->is_snow);
+    PUT_NAMED_BITFIELD(ctx, "is_grass", t->is_grass);
     PUT_NAMED_BITFIELD(ctx, "is_life_saving", t->is_life_saving);
     PUT_NAMED_BITFIELD(ctx, "is_single_mob_spawner", t->is_single_mob_spawner);
     PUT_NAMED_BITFIELD(ctx, "has_ability_burst_shot", t->has_ability_burst_shot);
