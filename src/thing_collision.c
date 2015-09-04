@@ -471,7 +471,8 @@ static void thing_handle_collision (thingp me, thingp it,
     /*
      * Filter out boring things.
      */
-    if (thing_is_floor(it)                  ||
+    if (thing_is_dungeon_floor(it)          ||
+        thing_is_world_floor(it)            ||
         thing_is_weapon_carry_anim(it)      ||
         thing_is_animation(it)) {
 
@@ -578,7 +579,8 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
 #endif
 
     if (!thing_is_teleport(me)        &&
-        !thing_is_floor(me)) {
+        !thing_is_world_floor(me)     &&
+        !thing_is_dungeon_floor(me)) {
 
         if (thing_is_teleport(it)) {
             thing_reached_teleport(me, it);
@@ -1103,7 +1105,8 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             /*
              * No collisions with the floor!
              */
-            if (thing_is_floor(it)          ||
+            if (thing_is_dungeon_floor(it)  ||
+                thing_is_world_floor(it)    ||
                 thing_is_action(it)         ||
                 thing_is_animation(it)) {
                 continue;
@@ -1326,7 +1329,8 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
             /*
              * No collisions with the floor!
              */
-            if (thing_is_floor(it)) {
+            if (thing_is_dungeon_floor(it) ||
+                thing_is_world_floor(it)) {
                 wid_it = wid_next;
                 continue;
             }

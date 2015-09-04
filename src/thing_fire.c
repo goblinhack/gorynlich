@@ -544,7 +544,8 @@ static void thing_consider_target (thingp me, thingp it,
     /*
      * Filter out boring things.
      */
-    if (thing_is_floor(it) ||
+    if (thing_is_dungeon_floor(it)  ||
+        thing_is_world_floor(it)    ||
         thing_is_animation(it)) {
         return;
     }

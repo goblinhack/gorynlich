@@ -1791,9 +1791,9 @@ uint32_t level_count_is_food (levelp level)
     return (level_count_is_x(level, tp_is_food));
 }
 
-uint32_t level_count_is_floor (levelp level)
+uint32_t level_count_is_dungeon_floor (levelp level)
 {
-    return (level_count_is_x(level, tp_is_floor));
+    return (level_count_is_x(level, tp_is_dungeon_floor));
 }
 
 uint32_t level_count_is_exit (levelp level)

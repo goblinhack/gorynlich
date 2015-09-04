@@ -5,7 +5,7 @@
  z_depth="floor"
  is_inactive
  is_dirt
- is_floor
+ is_dungeon_floor
  tiles={
   tile={
    tile="dirt1.1"

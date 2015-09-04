@@ -4,7 +4,7 @@
  tooltip="sand4"
  z_depth="floor"
  is_inactive
- is_world_tile
+ is_world_floor
  is_sand
  tiles={
   tile={

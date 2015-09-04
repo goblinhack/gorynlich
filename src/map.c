@@ -533,9 +533,9 @@ uint8_t map_is_food_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_food));
 }
 
-uint8_t map_is_floor_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_dungeon_floor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_floor));
+    return (map_is_x_at(level, x, y, tp_is_dungeon_floor));
 }
 
 uint8_t map_is_exit_at (levelp level, int32_t x, int32_t y)
@@ -975,9 +975,9 @@ thingp map_thing_is_food_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_food));
 }
 
-thingp map_thing_is_floor_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_dungeon_floor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_floor));
+    return (map_thing_is_x_at(level, x, y, tp_is_dungeon_floor));
 }
 
 thingp map_thing_is_exit_at (levelp level, int32_t x, int32_t y)
@@ -1433,9 +1433,9 @@ tree_rootp map_all_things_is_food_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_food));
 }
 
-tree_rootp map_all_things_is_floor_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_dungeon_floor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_floor));
+    return (map_all_things_is_x_at(level, x, y, tp_is_dungeon_floor));
 }
 
 tree_rootp map_all_things_is_exit_at (levelp level, int32_t x, int32_t y)
@@ -1828,7 +1828,7 @@ tpp map_find_food_at (levelp level, int32_t x, int32_t y, widp *w)
 
 tpp map_find_floor_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_floor, w));
+    return (map_find_x_at(level, x, y, tp_is_dungeon_floor, w));
 }
 
 tpp map_find_exit_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2571,9 +2571,9 @@ tree_rootp map_all_things_is_food (levelp level)
     return (map_all_things_is_x(level, tp_is_food));
 }
 
-tree_rootp map_all_things_is_floor (levelp level)
+tree_rootp map_all_things_is_dungeon_floor (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_floor));
+    return (map_all_things_is_x(level, tp_is_dungeon_floor));
 }
 
 tree_rootp map_all_things_is_exit (levelp level)

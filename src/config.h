@@ -112,14 +112,14 @@
 /*
  * Tile pixel width.
  */
-#define TILE_WIDTH                  16
-#define TILE_HEIGHT                 16
+#define TILE_WIDTH                  32
+#define TILE_HEIGHT                 32
 
 /*
  * The width of wall blocks and floor tiles not counting shadow pixels
  */
-#define TILE_PIX_WIDTH              12
-#define TILE_PIX_HEIGHT             12
+#define TILE_PIX_WIDTH              24
+#define TILE_PIX_HEIGHT             24
 
 /*
  * The width including shadow pixels.

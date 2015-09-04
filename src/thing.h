@@ -560,13 +560,6 @@ enum {
     THING_HELMET4,
 
     THING_GRASS1,
-    THING_GRASS2,
-    THING_GRASS3,
-    THING_GRASS4,
-    THING_GRASS5,
-    THING_GRASS6,
-    THING_GRASS7,
-    THING_GRASS8,
 
     THING_STONE1,
     THING_STONE2,
@@ -1046,11 +1039,11 @@ static inline uint8_t thing_is_exit (thingp t)
     return (tp_is_exit(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_floor (thingp t)
+static inline uint8_t thing_is_dungeon_floor (thingp t)
 {
     verify(t);
 
-    return (tp_is_floor(thing_tp(t)));
+    return (tp_is_dungeon_floor(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_food (thingp t)
@@ -1435,11 +1428,11 @@ static inline uint8_t thing_is_rrr24 (thingp t)
     return (tp_is_rrr24(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_world_tile (thingp t)
+static inline uint8_t thing_is_world_floor (thingp t)
 {
     verify(t);
 
-    return (tp_is_world_tile(thing_tp(t)));
+    return (tp_is_world_floor(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_soil (thingp t)
@@ -2132,9 +2125,9 @@ static inline uint8_t thing_is_exit_noverify (thingp t)
     return (t->tp->is_exit);
 }
 
-static inline uint8_t thing_is_floor_noverify (thingp t)
+static inline uint8_t thing_is_dungeon_floor_noverify (thingp t)
 {
-    return (t->tp->is_floor);
+    return (t->tp->is_dungeon_floor);
 }
 
 static inline uint8_t thing_is_food_noverify (thingp t)
@@ -2402,9 +2395,9 @@ static inline uint8_t thing_is_rrr24_noverify (thingp t)
     return (t->tp->is_rrr24);
 }
 
-static inline uint8_t thing_is_world_tile_noverify (thingp t)
+static inline uint8_t thing_is_world_floor_noverify (thingp t)
 {
-    return (t->tp->is_world_tile);
+    return (t->tp->is_world_floor);
 }
 
 static inline uint8_t thing_is_soil_noverify (thingp t)

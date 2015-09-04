@@ -5,7 +5,7 @@
  z_depth="floor"
  is_inactive
  is_corridor
- is_floor
+ is_dungeon_floor
  tiles={
   tile={
    tile="corridor1.1"
