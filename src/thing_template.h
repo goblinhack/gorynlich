@@ -275,7 +275,7 @@ typedef struct tp_ {
     uint32_t mob_spawn_delay_tenths;
 
     uint8_t is_exit:1;
-    uint8_t is_floor:1;
+    uint8_t is_dungeon_floor:1;
     uint8_t is_food:1;
     uint8_t is_monst:1;
     uint8_t is_plant:1;
@@ -327,7 +327,7 @@ typedef struct tp_ {
     uint8_t is_rrr22:1;
     uint8_t is_rrr23:1;
     uint8_t is_rrr24:1;
-    uint8_t is_world_tile:1;
+    uint8_t is_world_floor:1;
     uint8_t is_soil:1;
     uint8_t is_sand:1;
     uint8_t is_stone:1;
@@ -578,9 +578,9 @@ static inline uint8_t tp_is_exit (tpp t)
     return (t->is_exit);
 }
 
-static inline uint8_t tp_is_floor (tpp t)
+static inline uint8_t tp_is_dungeon_floor (tpp t)
 {
-    return (t->is_floor);
+    return (t->is_dungeon_floor);
 }
 
 static inline uint8_t tp_is_food (tpp t)
@@ -843,9 +843,9 @@ static inline uint8_t tp_is_rrr24 (tpp t)
     return (t->is_rrr24);
 }
 
-static inline uint8_t tp_is_world_tile (tpp t)
+static inline uint8_t tp_is_world_floor (tpp t)
 {
-    return (t->is_world_tile);
+    return (t->is_world_floor);
 }
 
 static inline uint8_t tp_is_soil (tpp t)

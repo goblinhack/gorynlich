@@ -356,7 +356,11 @@ void level_trigger_move_thing (tpp me, thingp t)
      * be used for something that moves under the tile. If we remove this 
      * check then the floor tile itself will move.
      */
-    if (thing_is_floor(t)) {
+    if (thing_is_dungeon_floor(t)) {
+        return;
+    }
+
+    if (thing_is_world_floor(t)) {
         return;
     }
 

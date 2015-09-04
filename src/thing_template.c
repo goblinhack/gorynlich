@@ -626,7 +626,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
 
         GET_OPT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
         GET_OPT_NAMED_BITFIELD(ctx, "is_exit", t->is_exit);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_floor", t->is_floor);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_dungeon_floor", t->is_dungeon_floor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_food", t->is_food);
         GET_OPT_NAMED_BITFIELD(ctx, "is_monst", t->is_monst);
         GET_OPT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
@@ -682,7 +682,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr24", t->is_rrr24);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_world_tile", t->is_world_tile);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_world_floor", t->is_world_floor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_soil", t->is_soil);
         GET_OPT_NAMED_BITFIELD(ctx, "is_sand", t->is_sand);
         GET_OPT_NAMED_BITFIELD(ctx, "is_stone", t->is_stone);
@@ -911,7 +911,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
 
     PUT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
     PUT_NAMED_BITFIELD(ctx, "is_exit", t->is_exit);
-    PUT_NAMED_BITFIELD(ctx, "is_floor", t->is_floor);
+    PUT_NAMED_BITFIELD(ctx, "is_dungeon_floor", t->is_dungeon_floor);
     PUT_NAMED_BITFIELD(ctx, "is_food", t->is_food);
     PUT_NAMED_BITFIELD(ctx, "is_monst", t->is_monst);
     PUT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
@@ -967,7 +967,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
     PUT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
     PUT_NAMED_BITFIELD(ctx, "is_rrr24", t->is_rrr24);
-    PUT_NAMED_BITFIELD(ctx, "is_world_tile", t->is_world_tile);
+    PUT_NAMED_BITFIELD(ctx, "is_world_floor", t->is_world_floor);
     PUT_NAMED_BITFIELD(ctx, "is_soil", t->is_soil);
     PUT_NAMED_BITFIELD(ctx, "is_sand", t->is_sand);
     PUT_NAMED_BITFIELD(ctx, "is_stone", t->is_stone);
