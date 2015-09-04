@@ -151,7 +151,7 @@ static void dmap_print (levelp level, level_walls *dmap)
                 continue;
             }
 
-            if (!map_is_floor_at(level, x, y)) {
+            if (!map_is_dungeon_floor_at(level, x, y)) {
                 fprintf(fp, " -- ");
                 continue;
             }

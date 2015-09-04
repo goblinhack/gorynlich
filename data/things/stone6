@@ -4,7 +4,7 @@
  tooltip="stone6"
  z_depth="floor3"
  is_inactive
- is_world_tile
+ is_world_floor
  is_stone
  tiles={
   tile={

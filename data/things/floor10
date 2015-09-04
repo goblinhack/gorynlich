@@ -4,7 +4,7 @@
  tooltip="floor10"
  z_depth="floor"
  is_inactive
- is_floor
+ is_dungeon_floor
  tiles={
   tile={
    tile="floor10.1"
