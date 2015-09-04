@@ -4,7 +4,7 @@
  tooltip="shop_floor1"
  z_depth="floor"
  is_inactive
- is_floor
+ is_dungeon_floor
  is_shop_floor
  tiles={
   tile={

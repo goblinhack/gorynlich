@@ -4,7 +4,7 @@
  tooltip="snow4"
  z_depth="floor4"
  is_inactive
- is_world_tile
+ is_world_floor
  is_snow
  tiles={
   tile={

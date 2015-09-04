@@ -9,14 +9,7 @@
 
 tpp random_wall (void)
 {
-    int loop = 0;
-
     for (;;) {
-
-        if (loop++ > 1000) {
-            LOG("couldn't find random wall");
-            return (0);
-        }
 
         uint16_t id = myrand() % THING_MAX_ID;
 
@@ -45,15 +38,7 @@ tpp random_wall (void)
 
 tpp random_corridor_wall (void)
 {
-    int loop = 0;
-
     for (;;) {
-
-        if (loop++ > 1000) {
-            LOG("couldn't find random wall");
-            return (0);
-        }
-
         uint16_t id = myrand() % THING_MAX_ID;
 
         tpp tp = id_to_tp(id);
@@ -70,14 +55,7 @@ tpp random_corridor_wall (void)
 
 tpp random_door (void)
 {
-    int loop = 0;
-
     for (;;) {
-
-        if (loop++ > 1000) {
-            LOG("couldn't find random door");
-            return (0);
-        }
 
         uint16_t id = myrand() % THING_MAX_ID;
 
@@ -95,14 +73,7 @@ tpp random_door (void)
 
 tpp random_floor (void)
 {
-    int loop = 0;
-
     for (;;) {
-
-        if (loop++ > 1000) {
-            LOG("couldn't find random floor");
-            return (0);
-        }
 
         uint16_t id = myrand() % THING_MAX_ID;
 
@@ -128,7 +99,7 @@ tpp random_floor (void)
             continue;
         }
 
-        if (tp_is_floor(tp)) {
+        if (tp_is_dungeon_floor(tp)) {
             return (tp);
         }
     }
@@ -136,14 +107,7 @@ tpp random_floor (void)
 
 tpp random_corridor (void)
 {
-    int loop = 0;
-
     for (;;) {
-
-        if (loop++ > 1000) {
-            LOG("couldn't find random floor");
-            return (0);
-        }
 
         uint16_t id = myrand() % THING_MAX_ID;
 
@@ -169,14 +133,7 @@ tpp random_corridor (void)
 
 tpp random_dirt (void)
 {
-    int loop = 0;
-
     for (;;) {
-
-        if (loop++ > 1000) {
-            LOG("couldn't find random floor");
-            return (0);
-        }
 
         uint16_t id = myrand() % THING_MAX_ID;
 
@@ -202,14 +159,7 @@ tpp random_dirt (void)
 
 tpp random_player (void)
 {
-    int loop = 0;
-
     for (;;) {
-
-        if (loop++ > 1000) {
-            LOG("couldn't find random player");
-            return (0);
-        }
 
         uint16_t id = myrand() % THING_MAX_ID;
 
@@ -227,14 +177,7 @@ tpp random_player (void)
 
 tpp random_exit (void)
 {
-    int loop = 0;
-
     for (;;) {
-
-        if (loop++ > 10000000) {
-            ERR("couldn't find random exit");
-            return (0);
-        }
 
         uint16_t id = myrand() % THING_MAX_ID;
 
@@ -253,12 +196,12 @@ tpp random_exit (void)
 tpp random_food (void)
 {
     int loop = 0;
+    int any = false;
 
     for (;;) {
 
         if (loop++ > 1000) {
-            LOG("couldn't find random food");
-            return (0);
+            any = true;
         }
 
         uint16_t id = myrand() % THING_MAX_ID;
@@ -270,6 +213,10 @@ tpp random_food (void)
         }
 
         if (tp_is_food(tp)) {
+            if (any) {
+                return (tp);
+            }
+
             int r =  myrand() % 10000;
             if (r < tp_get_d10000_chance_of_appearing(tp)) {
                 return (tp);
@@ -281,12 +228,12 @@ tpp random_food (void)
 tpp random_treasure (int shop_floor)
 {
     int loop = 0;
+    int any = false;
 
     for (;;) {
 
         if (loop++ > 1000) {
-            LOG("couldn't find random treasure");
-            return (0);
+            any = true;
         }
 
         uint16_t id = myrand() % THING_MAX_ID;
@@ -305,6 +252,10 @@ tpp random_treasure (int shop_floor)
         }
 
         if (tp_is_treasure(tp)) {
+            if (any) {
+                return (tp);
+            }
+
             int r =  myrand() % 10000;
             if (r < tp_get_d10000_chance_of_appearing(tp)) {
                 return (tp);
@@ -316,12 +267,12 @@ tpp random_treasure (int shop_floor)
 tpp random_weapon (int shop_floor)
 {
     int loop = 0;
+    int any = false;
 
     for (;;) {
 
         if (loop++ > 1000) {
-            LOG("couldn't find random weapon");
-            return (0);
+            any = true;
         }
 
         uint16_t id = myrand() % THING_MAX_ID;
@@ -340,6 +291,10 @@ tpp random_weapon (int shop_floor)
         }
 
         if (tp_is_weapon(tp)) {
+            if (any) {
+                return (tp);
+            }
+
             int r =  myrand() % 10000;
             if (r < tp_get_d10000_chance_of_appearing(tp)) {
                 return (tp);
@@ -351,12 +306,12 @@ tpp random_weapon (int shop_floor)
 tpp random_potion (int shop_floor)
 {
     int loop = 0;
+    int any = false;
 
     for (;;) {
 
         if (loop++ > 1000) {
-            LOG("couldn't find random potion");
-            return (0);
+            any = true;
         }
 
         uint16_t id = myrand() % THING_MAX_ID;
@@ -375,6 +330,10 @@ tpp random_potion (int shop_floor)
         }
 
         if (tp_is_potion(tp)) {
+            if (any) {
+                return (tp);
+            }
+
             int r =  myrand() % 10000;
             if (r < tp_get_d10000_chance_of_appearing(tp)) {
                 return (tp);
@@ -385,14 +344,7 @@ tpp random_potion (int shop_floor)
 
 tpp random_rock (void)
 {
-    int loop = 0;
-
     for (;;) {
-
-        if (loop++ > 1000) {
-            LOG("couldn't find random rock");
-            return (0);
-        }
 
         uint16_t id = myrand() % THING_MAX_ID;
 
@@ -403,24 +355,14 @@ tpp random_rock (void)
         }
 
         if (tp_is_rock(tp)) {
-            int r =  myrand() % 10000;
-            if (r < tp_get_d10000_chance_of_appearing(tp)) {
-                return (tp);
-            }
+            return (tp);
         }
     }
 }
 
 tpp random_lava (void)
 {
-    int loop = 0;
-
     for (;;) {
-
-        if (loop++ > 1000) {
-            LOG("couldn't find random lava");
-            return (0);
-        }
 
         uint16_t id = myrand() % THING_MAX_ID;
 
@@ -439,12 +381,12 @@ tpp random_lava (void)
 tpp random_monst (int depth)
 {
     int loop = 0;
+    int any = false;
 
     for (;;) {
 
         if (loop++ > 1000) {
-            LOG("couldn't find random monst");
-            return (0);
+            any = true;
         }
 
         uint16_t id = myrand() % THING_MAX_ID;
@@ -457,6 +399,10 @@ tpp random_monst (int depth)
 
         if (tp_is_trap(tp)) {
             continue;
+        }
+
+        if (any) {
+            return (tp);
         }
 
         /*
@@ -485,12 +431,12 @@ tpp random_monst (int depth)
 tpp random_trap (int depth)
 {
     int loop = 0;
+    int any = false;
 
     for (;;) {
 
         if (loop++ > 1000) {
-            LOG("couldn't find random trap");
-            return (0);
+            any = true;
         }
 
         uint16_t id = myrand() % THING_MAX_ID;
@@ -499,6 +445,10 @@ tpp random_trap (int depth)
 
         if (!tp_is_trap(tp)) {
             continue;
+        }
+
+        if (any) {
+            return (tp);
         }
 
         int r = myrand() % 10000;
@@ -511,12 +461,12 @@ tpp random_trap (int depth)
 tpp random_mob (int depth)
 {
     int loop = 0;
+    int any = false;
 
     for (;;) {
 
         if (loop++ > 1000) {
-            LOG("couldn't find random mob");
-            return (0);
+            any = true;
         }
 
         uint16_t id = myrand() % THING_MAX_ID;
@@ -529,6 +479,10 @@ tpp random_mob (int depth)
 
         if (!tp_is_generator(tp)) {
             continue;
+        }
+
+        if (any) {
+            return (tp);
         }
 
         int r =  myrand() % 10000;
