@@ -525,7 +525,7 @@ static void wid_intro_demo_buttons_tick (widp wid)
 
         char tilename[40];
 
-        snprintf(tilename, sizeof(tilename) - 1, "%s-demo-right", tn);
+        snprintf(tilename, sizeof(tilename) - 1, "%s-right", tn);
 
         wid_set_tilename(wid, tilename);
 

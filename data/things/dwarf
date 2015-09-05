@@ -209,50 +209,6 @@
    tile="dwarf-br4"
   }
   tile={
-   delay=200
-   is_dir_up
-   tile="dwarf-up5"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   tile="dwarf-down5"
-  }
-  tile={
-   delay=200
-   is_dir_left
-   tile="dwarf-left5"
-  }
-  tile={
-   delay=200
-   is_dir_right
-   tile="dwarf-right5"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_left
-   tile="dwarf-tl5"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_left
-   tile="dwarf-bl5"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_right
-   tile="dwarf-tr5"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_right
-   tile="dwarf-br5"
-  }
-  tile={
    delay=1000
    is_dying
    tile="dwarf-dying1"

@@ -183,17 +183,17 @@ typedef struct {
     /*
      * THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT
      */
-    uint8_t weapon_id;
+    uint16_t weapon_id;
 
     /*
      * THING_STATE_BIT_SHIFT_EXT1_SHIELD_ID_PRESENT
      */
-    uint8_t shield_id;
+    uint16_t shield_id;
 
     /*
      * THING_STATE_BIT_SHIFT_EXT2_MAGIC_ID_PRESENT
      */
-    uint8_t magic_id;
+    uint16_t magic_id;
 
     /*
      * THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT

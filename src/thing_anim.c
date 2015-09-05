@@ -203,6 +203,10 @@ void thing_animate (thingp t)
 
     if (!tile->tile) {
         tile->tile = tile_find(thing_tile_name(tile));
+        if (!tile->tile) {
+            ERR("cannot find tile %s", thing_tile_name(tile));
+            return;
+        }
     }
 
     wid_set_tile(t->wid, tile->tile);
