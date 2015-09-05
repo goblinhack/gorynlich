@@ -1,0 +1,64 @@
+{
+ short_name="deathly mushman"
+ raw_name="mushman3"
+ tooltip="deathly mushman"
+ mob_spawn={ 1000 "data/things/mushman3" }
+ z_depth="monst"
+ max_hp=5
+ damage=1
+ is_effect_rotate_2way
+ bonus_xp_on_death=100
+ vision_distance=5
+ hit_delay_tenths=10
+ sound_on_death="urgh"
+ is_monst
+ is_shadow_caster
+ is_shadow_caster_soft
+ is_variable_size
+ hit_priority=10
+ is_cats_eyes
+ is_collision_map_medium
+ is_animated
+ is_mob_spawner
+ mob_spawn_delay_tenths=300
+ d10000_chance_of_appearing=50
+ min_appear_depth=1
+ max_appear_depth=100
+ fires="data/things/cloudkill1"
+ weapon_fire_delay_hundredths=200
+ sound_on_death="squelch"
+ tiles={
+  tile={ delay=50 tile="mushman3-1" }
+  tile={ delay=50 tile="mushman3-2" }
+  tile={ delay=50 tile="mushman3-3" }
+  tile={ delay=50 tile="mushman3-4" }
+  tile={ delay=50 tile="mushman3-5" }
+  tile={ delay=50 tile="mushman3-6" }
+  tile={ delay=50 tile="mushman3-7" }
+  tile={ delay=50 tile="mushman3-8" }
+  tile={ delay=50 tile="mushman3-9" }
+  tile={ delay=50 tile="mushman3-10" }
+  tile={ delay=50 tile="mushman3-11" }
+  tile={ delay=50 tile="mushman3-12" }
+  tile={ delay=50 tile="mushman3-13" }
+  tile={ delay=50 tile="mushman3-14" }
+  tile={ delay=50 tile="mushman3-15" }
+  tile={ delay=50 tile="mushman3-16" }
+  tile={ delay=50 tile="mushman3-17" }
+  tile={ delay=50 tile="mushman3-18" }
+  tile={ delay=50 tile="mushman3-19" }
+  tile={ delay=50 tile="mushman3-20" }
+  tile={ delay=50 tile="mushman3-21" }
+  tile={ delay=50 tile="mushman3-22" }
+  tile={ delay=50 tile="mushman3-23" }
+  tile={ delay=50 tile="mushman3-24" }
+  tile={ delay=50 tile="mushman3-25" }
+  tile={ delay=50 tile="mushman3-26" }
+  tile={ delay=50 tile="mushman3-27" }
+  tile={ delay=50 tile="mushman3-28" }
+  tile={ delay=50 tile="mushman3-29" }
+  tile={ delay=50 tile="mushman3-30" }
+  tile={ delay=50 tile="mushman3-31" }
+  tile={ delay=50 tile="mushman3-32" }
+ }
+}
