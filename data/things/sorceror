@@ -156,5 +156,49 @@
    is_dir_right
    tile="sorceror-br3"
   }
+  tile={
+   delay=200
+   is_dir_up
+   tile="sorceror-up4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="sorceror-down4"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="sorceror-left4"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="sorceror-right4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="sorceror-tl4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="sorceror-bl4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="sorceror-tr4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="sorceror-br4"
+  }
  }
 }
