@@ -1,31 +1,29 @@
 {
- short_name="poison slime"
+ short_name="fire slime"
  raw_name="slime-3"
- tooltip="poison slime"
+ tooltip="pink slime"
  mob_spawn={ 1000 "data/things/slime3" }
  z_depth="monst"
  speed=1
- max_hp=20
- damage=10
+ max_hp=10
+ damage=5
  jump_speed=30
  is_monst
  is_effect_rotate_2way
- bonus_xp_on_death=100
- vision_distance=10
+ bonus_xp_on_death=20
+ vision_distance=6
  hit_delay_tenths=10
  sound_on_death="urgh"
  is_shadow_caster
  is_shadow_caster_soft
  is_variable_size
- is_combustable
- explodes_as="data/things/poison2"
- is_poison
  hit_priority=10
  is_cats_eyes
  is_collision_map_medium
+ explodes_as="data/things/explosion1"
  is_animated
- d10000_chance_of_appearing=5 
- min_appear_depth=3
+ d10000_chance_of_appearing=10
+ min_appear_depth=1
  max_appear_depth=100
  is_mob_spawner
  mob_spawn_delay_tenths=300

@@ -1,10 +1,10 @@
 {
- short_name="purple slime"
+ short_name="chocolate slime"
  raw_name="slime-1"
- tooltip="purple slime"
+ tooltip="chocolate slime"
  mob_spawn={ 1000 "data/things/slime1" }
  z_depth="monst"
- max_hp=5
+ max_hp=1
  damage=1
  jump_speed=30
  is_effect_rotate_2way
@@ -21,7 +21,8 @@
  is_collision_map_medium
  is_animated
  is_mob_spawner
- mob_spawn_delay_tenths=300
+ bonus_hp_on_use=5
+ mob_spawn_delay_tenths=500
  d10000_chance_of_appearing=50
  min_appear_depth=1
  max_appear_depth=100
