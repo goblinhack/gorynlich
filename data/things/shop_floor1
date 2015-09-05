@@ -8,28 +8,109 @@
  is_shop_floor
  tiles={
   tile={
-   tile="shop_floor1a"
+   tile="floor47.1"
   }
   tile={
-   tile="shop_floor1b"
+   tile="floor47.1"
   }
   tile={
-   tile="shop_floor1c"
+   tile="floor47.1"
   }
   tile={
-   tile="shop_floor1d"
+   tile="floor47.1"
   }
   tile={
-   tile="shop_floor1e"
+   tile="floor47.1"
   }
   tile={
-   tile="shop_floor1f"
+   tile="floor47.1"
   }
   tile={
-   tile="shop_floor1g"
+   tile="floor47.1"
   }
   tile={
-   tile="shop_floor1h"
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.1"
+  }
+  tile={
+   tile="floor47.2"
+  }
+  tile={
+   tile="floor47.2"
+  }
+  tile={
+   tile="floor47.2"
+  }
+  tile={
+   tile="floor47.2"
+  }
+  tile={
+   tile="floor47.2"
+  }
+  tile={
+   tile="floor47.2"
+  }
+  tile={
+   tile="floor47.2"
+  }
+  tile={
+   tile="floor47.3"
+  }
+  tile={
+   tile="floor47.4"
+  }
+  tile={
+   tile="floor47.5"
+  }
+  tile={
+   tile="floor47.6"
+  }
+  tile={
+   tile="floor47.7"
+  }
+  tile={
+   tile="floor47.8"
   }
  }
 }
