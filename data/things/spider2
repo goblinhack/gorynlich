@@ -25,7 +25,6 @@
  max_appear_depth=100
  sound_on_death="squelch"
  tiles={
-
   tile={ delay=200 is_dir_down tile="spider-down.1" }
   tile={ delay=200 is_dir_down tile="spider-down.2" }
   tile={ delay=200 is_dir_down tile="spider-down.3" }
