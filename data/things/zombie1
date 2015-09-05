@@ -1,9 +1,9 @@
 {
- short_name="zomboy"
+ short_name="zombie"
  raw_name="zombie1"
  tooltip="zomboy"
  z_depth="monst"
- speed=15
+ speed=5
  max_hp=10
  damage=6
  bonus_xp_on_death=35
