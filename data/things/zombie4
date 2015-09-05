@@ -1,9 +1,9 @@
 {
- short_name="part time zombie"
+ short_name="zombie farmer"
  raw_name="zombie4"
  tooltip="amateur zombie"
  z_depth="monst"
- speed=15
+ speed=5
  max_hp=1
  damage=5
  bonus_xp_on_death=35

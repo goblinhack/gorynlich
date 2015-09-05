@@ -1,9 +1,9 @@
 {
- short_name="professional zombie"
+ short_name="zombie doctor"
  raw_name="zombie5"
  tooltip="professional zombie"
  z_depth="monst"
- speed=15
+ speed=5
  max_hp=15
  damage=12
  bonus_xp_on_death=35

@@ -12,7 +12,7 @@
  mob_spawn_delay_tenths=200
  is_mob_spawner
  z_depth="monst"
- speed=15
+ speed=5
  max_hp=10
  damage=6
  bonus_xp_on_death=35
