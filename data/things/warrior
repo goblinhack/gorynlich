@@ -210,50 +210,6 @@
    tile="warrior-br4"
   }
   tile={
-   delay=200
-   is_dir_up
-   tile="warrior-up5"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   tile="warrior-down5"
-  }
-  tile={
-   delay=200
-   is_dir_left
-   tile="warrior-left5"
-  }
-  tile={
-   delay=200
-   is_dir_right
-   tile="warrior-right5"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_left
-   tile="warrior-tl5"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_left
-   tile="warrior-bl5"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_right
-   tile="warrior-tr5"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_right
-   tile="warrior-br5"
-  }
-  tile={
    delay=1000
    is_dying
    tile="warrior-dying1"

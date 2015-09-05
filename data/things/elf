@@ -209,50 +209,6 @@
    tile="elf-br4"
   }
   tile={
-   delay=200
-   is_dir_up
-   tile="elf-up5"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   tile="elf-down5"
-  }
-  tile={
-   delay=200
-   is_dir_left
-   tile="elf-left5"
-  }
-  tile={
-   delay=200
-   is_dir_right
-   tile="elf-right5"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_left
-   tile="elf-tl5"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_left
-   tile="elf-bl5"
-  }
-  tile={
-   delay=200
-   is_dir_up
-   is_dir_right
-   tile="elf-tr5"
-  }
-  tile={
-   delay=200
-   is_dir_down
-   is_dir_right
-   tile="elf-br5"
-  }
-  tile={
    delay=1000
    is_dying
    tile="elf-dying1"
