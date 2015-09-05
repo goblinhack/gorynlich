@@ -96,14 +96,14 @@ static void wid_player_info_buttons_tick (widp wid)
     char tilename[40];
 
     switch (which) {
-    case 0: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-right", tn); break;
-    case 1: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-br", tn); break;
-    case 2: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-down", tn); break;
-    case 3: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-bl", tn); break;
-    case 4: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-left", tn); break;
-    case 5: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-tl", tn); break;
-    case 6: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-up", tn); break;
-    case 7: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-tr", tn); break;
+    case 0: snprintf(tilename, sizeof(tilename) - 1, "%s-right", tn); break;
+    case 1: snprintf(tilename, sizeof(tilename) - 1, "%s-br", tn); break;
+    case 2: snprintf(tilename, sizeof(tilename) - 1, "%s-down", tn); break;
+    case 3: snprintf(tilename, sizeof(tilename) - 1, "%s-bl", tn); break;
+    case 4: snprintf(tilename, sizeof(tilename) - 1, "%s-left", tn); break;
+    case 5: snprintf(tilename, sizeof(tilename) - 1, "%s-tl", tn); break;
+    case 6: snprintf(tilename, sizeof(tilename) - 1, "%s-up", tn); break;
+    case 7: snprintf(tilename, sizeof(tilename) - 1, "%s-tr", tn); break;
     }
 
     wid_set_tilename(wid, tilename);
