@@ -1,0 +1,32 @@
+{
+ short_name="plantpod"
+ raw_name="plantpod"
+ tooltip="plantpod"
+ z_depth="monst"
+ is_mob_spawner
+ is_generator
+ is_effect_pulse
+ is_light_source
+ light_radius=0.2
+ light_tint="green"
+ is_candle_light
+ hit_priority=20
+ is_collision_map_medium
+ d10000_chance_of_appearing=1000
+ damage=1
+ bonus_xp_on_death=10
+ mob_spawn_delay_tenths=30
+ spawn_on_death="data/things/plant"
+ tiles={
+  tile={ delay=10000 tile="plantpod1-1" }
+  tile={ delay=50 tile="plantpod1-2" }
+  tile={ delay=50 tile="plantpod1-3" }
+  tile={ delay=50 tile="plantpod1-4" }
+  tile={ delay=50 tile="plantpod1-5" }
+  tile={ delay=50 tile="plantpod1-6" }
+  tile={ delay=50 tile="plantpod1-7" }
+  tile={ delay=50 tile="plantpod1-8" }
+  tile={ delay=50 tile="plantpod1-9" }
+  tile={ delay=50 tile="plantpod1-10" is_end_of_anim is_dead_on_end_of_anim }
+ }
+}
