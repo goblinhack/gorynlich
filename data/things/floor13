@@ -7,28 +7,109 @@
  is_dungeon_floor
  tiles={
   tile={
-   tile="floor13a"
+   tile="floor13.1"
   }
   tile={
-   tile="floor13b"
+   tile="floor13.1"
   }
   tile={
-   tile="floor13c"
+   tile="floor13.1"
   }
   tile={
-   tile="floor13d"
+   tile="floor13.1"
   }
   tile={
-   tile="floor13e"
+   tile="floor13.1"
   }
   tile={
-   tile="floor13f"
+   tile="floor13.1"
   }
   tile={
-   tile="floor13g"
+   tile="floor13.1"
   }
   tile={
-   tile="floor13h"
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.1"
+  }
+  tile={
+   tile="floor13.2"
+  }
+  tile={
+   tile="floor13.2"
+  }
+  tile={
+   tile="floor13.2"
+  }
+  tile={
+   tile="floor13.2"
+  }
+  tile={
+   tile="floor13.2"
+  }
+  tile={
+   tile="floor13.2"
+  }
+  tile={
+   tile="floor13.2"
+  }
+  tile={
+   tile="floor13.3"
+  }
+  tile={
+   tile="floor13.4"
+  }
+  tile={
+   tile="floor13.5"
+  }
+  tile={
+   tile="floor13.6"
+  }
+  tile={
+   tile="floor13.7"
+  }
+  tile={
+   tile="floor13.8"
   }
  }
 }

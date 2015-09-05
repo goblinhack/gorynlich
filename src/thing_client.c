@@ -152,6 +152,7 @@ static void thing_client_wid_move (thingp t,
      * The center is 24x24 and with shadow it is 32x32. We need to
      * stretch the tile so it overlaps so the inner 24x24 if seamless.
      */
+#if 0
     double tile_width = ((br.x - tl.x) / 
                          (double)TILE_PIX_WIDTH) * 
                             (double)TILE_PIX_WITH_SHADOW_WIDTH;
@@ -159,11 +160,26 @@ static void thing_client_wid_move (thingp t,
     double tile_height = ((br.y - tl.y) / 
                          (double)TILE_PIX_HEIGHT) * 
                             (double)TILE_PIX_WITH_SHADOW_HEIGHT;
+    double tile_width = (br.x - tl.x);
+    double tile_height = (br.y - tl.y);
 
+    tile_width *= 0.50;
+    tile_height *= 0.50;
+#endif
+    double tile_width = (br.x - tl.x);
+    double tile_height = (br.y - tl.y);
+
+    if (thing_is_wall(t) || thing_is_door(t)) {
+        tl.y -= tile_height / 3.0;
+        br.x += tile_width / 3.0;
+    }
+
+#if 0
     if (scale_x == 1) {
         tl.y -= tile_height / 4.0;
         br.x += tile_width / 4.0;
     }
+#endif
 
 #if 0
     /*
