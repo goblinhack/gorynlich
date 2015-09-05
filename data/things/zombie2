@@ -1,9 +1,9 @@
 {
- short_name="two headed zom-baby"
+ short_name="zomboy"
  raw_name="zombie2"
  tooltip="two headed zom-baby"
  z_depth="monst"
- speed=15
+ speed=5
  max_hp=10
  damage=4
  bonus_xp_on_death=35
