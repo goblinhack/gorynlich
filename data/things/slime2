@@ -1,19 +1,18 @@
 {
- short_name="pink slime"
+ short_name="poison slime"
  raw_name="slime-2"
- tooltip="pink slime"
+ tooltip="purple slime"
  mob_spawn={ 1000 "data/things/slime2" }
  z_depth="monst"
- speed=1
- max_hp=10
- damage=5
+ max_hp=5
+ damage=1
  jump_speed=30
- is_monst
  is_effect_rotate_2way
- bonus_xp_on_death=20
- vision_distance=6
+ bonus_xp_on_death=2
+ vision_distance=5
  hit_delay_tenths=10
  sound_on_death="urgh"
+ is_monst
  is_shadow_caster
  is_shadow_caster_soft
  is_variable_size
@@ -21,11 +20,12 @@
  is_cats_eyes
  is_collision_map_medium
  is_animated
- d10000_chance_of_appearing=10
+ is_mob_spawner
+ explodes_as="data/things/poison2"
+ mob_spawn_delay_tenths=300
+ d10000_chance_of_appearing=50
  min_appear_depth=1
  max_appear_depth=100
- is_mob_spawner
- mob_spawn_delay_tenths=300
  sound_on_death="squelch"
  tiles={
   tile={ delay=100 tile="slime-2-1" }
