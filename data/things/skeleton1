@@ -22,7 +22,7 @@
  is_collision_map_medium
  is_animated
  d10000_chance_of_appearing=500
- weapon_fire_delay_hundredths=500
+ weapon_fire_delay_hundredths=50
  min_appear_depth=1
  approach_distance=5
  max_appear_depth=100
