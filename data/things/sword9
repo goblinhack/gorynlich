@@ -22,7 +22,7 @@
  is_valid_for_action_bar
  stats_attack_melee=12
  stats_toughness=12
- d10000_chance_of_appearing=2
+ d10000_chance_of_appearing=1
  d10000_chance_of_breaking=0
  weapon_carry_anim="data/things/sword9_anim"
  weapon_swing_anim="data/things/weapon_swing1"

@@ -17,7 +17,7 @@
  weapon_fire_delay_hundredths=25
  is_fragile
  is_damaged_on_firing
- d10000_chance_of_appearing=50
+ d10000_chance_of_appearing=10
  d10000_chance_of_breaking=5
  is_valid_for_action_bar
  is_wearable
