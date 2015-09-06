@@ -271,8 +271,12 @@ CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dis
             ERR("no wall for collisions");
         }
 
+#if 0
         xscale = 1.0 / (wall->px2 - wall->px1);
         yscale = 1.0 / (wall->py2 - wall->py1);
+#endif
+        xscale = 1.0;
+        yscale = 1.0;
 
         tilep tile = tile_find("large-collision-map");
         if (!tile) {
