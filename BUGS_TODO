@@ -2,6 +2,8 @@
 - reverse swing ability was unlocked at start of game!
 - could not wield weapon door
 - fixed levels need floors changed
+- hit shopkeeper should make him mad
+- damage stuff in shop should also make him mad
 - collision detection for blades needs fixed
 - plant and seeds
 - giant mushroom generator
@@ -11,7 +13,7 @@
 - mushpeople use fire/gas attacks, leave slime to make you slow
 - spam, filling but slows you down (same speed things as slime)
 - remove extra grass / need landsape tiles again
-- add plants
+- add plants, plants stuck in mid growth, no random tile
 - add juggernaut
 - never seen skeleton 
 - acid and lava should damage armor
@@ -34,6 +36,9 @@
 - thief, kill thief to recover items
 - multi player
 - magic gives health to other players
+
+Sun Sep  6 08:56:48 EDT 2015
+- light no longer leaks through doors!
 
 Sat Sep  5 09:25:20 EDT 2015
 - double graphics resolution!

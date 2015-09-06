@@ -11,6 +11,7 @@
  light_tint="green"
  is_candle_light
  hit_priority=20
+ is_animated
  is_collision_map_medium
  d10000_chance_of_appearing=1000
  damage=1
