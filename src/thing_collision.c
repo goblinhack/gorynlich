@@ -271,52 +271,48 @@ CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dis
             ERR("no wall for collisions");
         }
 
-#if 0
         xscale = 1.0 / (wall->px2 - wall->px1);
         yscale = 1.0 / (wall->py2 - wall->py1);
-#endif
-        xscale = 1.0;
-        yscale = 1.0;
 
         tilep tile = tile_find("large-collision-map");
         if (!tile) {
             ERR("no tile for collisions");
         }
 
-        collision_map_large_x1 = tile->px1 * xscale;
-        collision_map_large_x2 = tile->px2 * xscale;
-        collision_map_large_y1 = tile->py1 * yscale;
-        collision_map_large_y2 = tile->py2 * yscale;
+        collision_map_large_x1 = tile->px1;
+        collision_map_large_x2 = tile->px2;
+        collision_map_large_y1 = tile->py1;
+        collision_map_large_y2 = tile->py2;
 
         tile = tile_find("medium-collision-map");
         if (!tile) {
             ERR("no tile for collisions");
         }
 
-        collision_map_medium_x1 = tile->px1 * xscale;
-        collision_map_medium_x2 = tile->px2 * xscale;
-        collision_map_medium_y1 = tile->py1 * yscale;
-        collision_map_medium_y2 = tile->py2 * yscale;
+        collision_map_medium_x1 = tile->px1;
+        collision_map_medium_x2 = tile->px2;
+        collision_map_medium_y1 = tile->py1;
+        collision_map_medium_y2 = tile->py2;
 
         tile = tile_find("small-collision-map");
         if (!tile) {
             ERR("no tile for collisions");
         }
 
-        collision_map_small_x1 = tile->px1 * xscale;
-        collision_map_small_x2 = tile->px2 * xscale;
-        collision_map_small_y1 = tile->py1 * yscale;
-        collision_map_small_y2 = tile->py2 * yscale;
+        collision_map_small_x1 = tile->px1;
+        collision_map_small_x2 = tile->px2;
+        collision_map_small_y1 = tile->py1;
+        collision_map_small_y2 = tile->py2;
 
         tile = tile_find("tiny-collision-map");
         if (!tile) {
             ERR("no tile for collisions");
         }
 
-        collision_map_tiny_x1 = tile->px1 * xscale;
-        collision_map_tiny_x2 = tile->px2 * xscale;
-        collision_map_tiny_y1 = tile->py1 * yscale;
-        collision_map_tiny_y2 = tile->py2 * yscale;
+        collision_map_tiny_x1 = tile->px1;
+        collision_map_tiny_x2 = tile->px2;
+        collision_map_tiny_y1 = tile->py1;
+        collision_map_tiny_y2 = tile->py2;
     }
 
     double Apx1;
@@ -329,7 +325,15 @@ CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dis
     double Bpy1;
     double Bpy2;
 
-    if (thing_is_collision_map_large(A)) {
+    if (thing_is_wall(A) || thing_is_door(A)) {
+        tilep tileA = wid_get_tile(Aw);
+
+        Apx1 = tileA->px1 * xscale;
+        Apx2 = tileA->px2 * xscale;
+        Apy1 = tileA->py1 * yscale;
+        Apy2 = tileA->py2 * yscale;
+
+    } else if (thing_is_collision_map_large(A)) {
         Apx1 = collision_map_large_x1;
         Apx2 = collision_map_large_x2;
         Apy1 = collision_map_large_y1;
@@ -355,13 +359,21 @@ CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dis
          */
         tilep tileA = wid_get_tile(Aw);
 
-        Apx1 = tileA->px1 * xscale;
-        Apx2 = tileA->px2 * xscale;
-        Apy1 = tileA->py1 * yscale;
-        Apy2 = tileA->py2 * yscale;
+        Apx1 = tileA->px1;
+        Apx2 = tileA->px2;
+        Apy1 = tileA->py1;
+        Apy2 = tileA->py2;
     }
 
-    if (thing_is_collision_map_large(B)) {
+    if (thing_is_wall(B) || thing_is_door(B)) {
+        tilep tileB = wid_get_tile(Bw);
+
+        Bpx1 = tileB->px1 * xscale;
+        Bpx2 = tileB->px2 * xscale;
+        Bpy1 = tileB->py1 * yscale;
+        Bpy2 = tileB->py2 * yscale;
+
+    } else if (thing_is_collision_map_large(B)) {
         Bpx1 = collision_map_large_x1;
         Bpx2 = collision_map_large_x2;
         Bpy1 = collision_map_large_y1;
@@ -387,10 +399,10 @@ CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dis
          */
         tilep tileB = wid_get_tile(Bw);
 
-        Bpx1 = tileB->px1 * xscale;
-        Bpx2 = tileB->px2 * xscale;
-        Bpy1 = tileB->py1 * yscale;
-        Bpy2 = tileB->py2 * yscale;
+        Bpx1 = tileB->px1;
+        Bpx2 = tileB->px2;
+        Bpy1 = tileB->py1;
+        Bpy2 = tileB->py2;
     }
 
     /*
