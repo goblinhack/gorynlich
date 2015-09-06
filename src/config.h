@@ -176,10 +176,10 @@
 #define VSMALL_FONT_SIZE            6
 #define SMALL_FONT_SIZE             8
 #define FIXED_FONT_SIZE             10
-#define MED_FONT_SIZE               14
-#define LARGE_FONT_SIZE             18
-#define VLARGE_FONT_SIZE            24
-#define VVLARGE_FONT_SIZE           30
+#define MED_FONT_SIZE               12
+#define LARGE_FONT_SIZE             16
+#define VLARGE_FONT_SIZE            20
+#define VVLARGE_FONT_SIZE           24
 #define MAX_FONT_SIZE               60
 
 /*
