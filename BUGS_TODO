@@ -1,4 +1,7 @@
 --------------------------------------- plan for sep --------------------------------------
+- skeleton and arrow did not attack
+- levels too empty
+- add more fragmens then remove if 0 check in map_jigsaw.c
 - reverse swing ability was unlocked at start of game!
 - could not wield weapon door
 - fixed levels need floors changed
