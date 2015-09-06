@@ -187,8 +187,6 @@ static uint8_t things_overlap (const thingp A,
                                const thingp B)
 {
     static tilep wall;
-    static double xscale;
-    static double yscale;
     static double collision_map_large_x1;
     static double collision_map_large_x2;
     static double collision_map_large_y1;
@@ -271,9 +269,6 @@ CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dis
             ERR("no wall for collisions");
         }
 
-        xscale = 1.0 / (wall->px2 - wall->px1);
-        yscale = 1.0 / (wall->py2 - wall->py1);
-
         tilep tile = tile_find("large-collision-map");
         if (!tile) {
             ERR("no tile for collisions");
@@ -328,10 +323,16 @@ CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dis
     if (thing_is_wall(A) || thing_is_door(A)) {
         tilep tileA = wid_get_tile(Aw);
 
-        Apx1 = tileA->px1 * xscale;
-        Apx2 = tileA->px2 * xscale;
-        Apy1 = tileA->py1 * yscale;
-        Apy2 = tileA->py2 * yscale;
+        Apx1 = tileA->px1;
+        Apx2 = tileA->px2;
+        Apy1 = tileA->py1;
+        Apy2 = tileA->py2;
+
+        double tile_width = (Apx2 - Apx1);
+        double tile_height = (Apy2 - Apy1);
+
+        Apy1 -= tile_height / 3.0;
+        Apx2 += tile_width / 3.0;
 
     } else if (thing_is_collision_map_large(A)) {
         Apx1 = collision_map_large_x1;
@@ -368,10 +369,16 @@ CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dis
     if (thing_is_wall(B) || thing_is_door(B)) {
         tilep tileB = wid_get_tile(Bw);
 
-        Bpx1 = tileB->px1 * xscale;
-        Bpx2 = tileB->px2 * xscale;
-        Bpy1 = tileB->py1 * yscale;
-        Bpy2 = tileB->py2 * yscale;
+        Bpx1 = tileB->px1;
+        Bpx2 = tileB->px2;
+        Bpy1 = tileB->py1;
+        Bpy2 = tileB->py2;
+
+        double tile_width = (Bpx2 - Bpx1);
+        double tile_height = (Bpy2 - Bpy1);
+
+        Bpy1 -= tile_height / 3.0;
+        Bpx2 += tile_width / 3.0;
 
     } else if (thing_is_collision_map_large(B)) {
         Bpx1 = collision_map_large_x1;
