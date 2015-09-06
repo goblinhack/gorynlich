@@ -17,7 +17,7 @@
  is_given_randomly_at_start
  is_fragile
  is_damaged_on_firing
- d10000_chance_of_appearing=5
+ d10000_chance_of_appearing=20
  d10000_chance_of_breaking=10
  is_light_source
  light_tint="orange"
