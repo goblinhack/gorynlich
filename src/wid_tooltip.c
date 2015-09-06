@@ -50,7 +50,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
     }
 
     if (!font) {
-        font = large_font;
+        font = med_font;
     }
 
     if (font == large_font) {
