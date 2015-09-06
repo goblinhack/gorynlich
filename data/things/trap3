@@ -22,9 +22,9 @@
  d10000_chance_of_appearing=20
  has_ability_triple_shot
  tiles={
-  tile={ delay=50 tile="trap3-1" }
-  tile={ delay=50 tile="trap3-2" }
-  tile={ delay=50 tile="trap3-3" }
-  tile={ delay=50 tile="trap3-4" }
+  tile={ delay=500 tile="trap3-1" }
+  tile={ delay=500 tile="trap3-2" }
+  tile={ delay=500 tile="trap3-3" }
+  tile={ delay=500 tile="trap3-4" }
  }
 }
