@@ -28,7 +28,7 @@
  is_candle_light
  light_tint="white"
  light_radius=7.0
- is_collision_map_medium
+ is_collision_map_small
  spawn_on_death="data/things/bonepile2"
  sound_on_death="player_death"
  is_animated
