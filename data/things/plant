@@ -1,0 +1,38 @@
+{
+ short_name="triffid"
+ raw_name="triffid"
+ tooltip="triffid"
+ mob_spawn={ 1000 "data/things/plantpod" }
+ z_depth="monst"
+ speed=1
+ max_hp=20
+ damage=10
+ bonus_xp_on_death=200
+ is_effect_rotate_2way
+ vision_distance=20
+ hit_delay_tenths=10
+ sound_on_death="squelch"
+ is_monst
+ is_shadow_caster
+ is_shadow_caster_soft
+ hit_priority=10
+ is_animated
+ min_appear_depth=1
+ max_appear_depth=100
+ is_mob_spawner
+ mob_spawn_delay_tenths=100
+ tiles={
+  tile={ delay=50 tile="plant1-1" }
+  tile={ delay=50 tile="plant1-2" }
+  tile={ delay=50 tile="plant1-3" }
+  tile={ delay=50 tile="plant1-4" }
+  tile={ delay=50 tile="plant1-5" }
+  tile={ delay=50 tile="plant1-6" }
+  tile={ delay=50 tile="plant1-7" }
+  tile={ delay=50 tile="plant1-8" }
+  tile={ delay=50 tile="plant1-9" }
+  tile={ delay=50 tile="plant1-10" }
+  tile={ delay=50 tile="plant1-11" }
+  tile={ delay=50 tile="plant1-12" }
+ }
+}
