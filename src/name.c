@@ -176,6 +176,7 @@ const char *name_random (const char *pclass)
         return (names[myrand() % ARRAY_SIZE(names)]);
     } else if (!strcasecmp(pclass, "elf")) {
         static const char *names[] = {
+            "Yeldarb, Deathbringer",
             "Elgal",
             "Gaysprig",
             "Alandiel",
