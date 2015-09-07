@@ -1,0 +1,25 @@
+{
+ short_name="juggernaut"
+ raw_name="juggernaut"
+ tooltip="juggernaut"
+ z_depth="player"
+ is_hard
+ speed=30
+ is_shadow_caster
+ is_monst
+ hit_priority=9
+ max_hp=1000
+ damage=60
+ is_juggernaut
+ is_animated
+ is_fragile
+ is_wanderer
+ is_effect_rotate_4way
+ is_effect_rotate_2way
+ polymorph_on_death="data/things/juggernaut"
+ tiles={
+  tile={
+   tile="juggernaut"
+  }
+ }
+}

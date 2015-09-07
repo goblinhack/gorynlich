@@ -435,16 +435,36 @@ static void thing_tick_client_all (void)
                 if (tp_is_effect_rotate_2way(tp)) {
                     wid_flip_vert(w, false);
                 }
+
+                if (tp_is_effect_rotate_2way(tp)) {
+                    wid_rotate_immediate(w, 180);
+                    wid_flip_vert(w, true);
+                }
                 break;
+
             case THING_DIR_TR:
             case THING_DIR_BR:
             case THING_DIR_RIGHT:
                 if (tp_is_effect_rotate_2way(tp)) {
                     wid_flip_vert(w, true);
                 }
+
+                if (tp_is_effect_rotate_2way(tp)) {
+                    wid_rotate_immediate(w, 0);
+                    wid_flip_vert(w, false);
+                }
                 break;
+
             case THING_DIR_UP:
+                if (tp_is_effect_rotate_4way(tp)) {
+                    wid_rotate_immediate(w, 270);
+                }
+                break;
+
             case THING_DIR_DOWN:
+                if (tp_is_effect_rotate_4way(tp)) {
+                    wid_rotate_immediate(w, 90);
+                }
                 break;
             }
         }

@@ -362,7 +362,7 @@ static void wid_player_info_create (thing_statsp s, int fast)
             wid_new_square_button(wid_player_info, 
                                   "wid player_stats player");
 
-        fpoint tl = {0.38, 0.15};
+        fpoint tl = {0.08, 0.15};
         fpoint br = {0.8, 0.35};
 
         wid_set_tl_br_pct(w, tl, br);

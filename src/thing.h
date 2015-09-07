@@ -308,6 +308,7 @@ enum {
     THING_WALL10,
     THING_DOOR1,
     THING_DOOR2,
+    THING_JUGGERNAUT,
     THING_SAWBLADE1,
     THING_SAWBLADE2,
     THING_SAWBLADE3,
@@ -412,7 +413,6 @@ enum {
     THING_SKELETON1,
     THING_PLANTPOD,
     THING_PLANT,
-    THING_JUGGERNAUT,
     THING_ORC1,
     THING_ORC2,
     THING_ORC3,
@@ -1460,25 +1460,25 @@ static inline uint8_t thing_is_rrr20 (thingp t)
     return (tp_is_rrr20(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr21 (thingp t)
+static inline uint8_t thing_is_effect_rotate_4way (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr21(thing_tp(t)));
+    return (tp_is_effect_rotate_4way(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr22 (thingp t)
+static inline uint8_t thing_is_juggernaut (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr22(thing_tp(t)));
+    return (tp_is_juggernaut(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr23 (thingp t)
+static inline uint8_t thing_is_wanderer (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr23(thing_tp(t)));
+    return (tp_is_wanderer(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_rrr24 (thingp t)
@@ -2146,13 +2146,6 @@ static inline uint8_t thing_is_effect_pulse (thingp t)
     return (tp_is_effect_pulse(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_effect_rotate_4way (thingp t)
-{
-    verify(t);
-
-    return (tp_is_effect_rotate_4way(thing_tp(t)));
-}
-
 static inline uint8_t thing_is_effect_rotate_2way (thingp t)
 {
     verify(t);
@@ -2435,19 +2428,19 @@ static inline uint8_t thing_is_rrr20_noverify (thingp t)
     return (t->tp->is_rrr20);
 }
 
-static inline uint8_t thing_is_rrr21_noverify (thingp t)
+static inline uint8_t thing_is_effect_rotate_4way_noverify (thingp t)
 {
-    return (t->tp->is_rrr21);
+    return (t->tp->is_effect_rotate_4way);
 }
 
-static inline uint8_t thing_is_rrr22_noverify (thingp t)
+static inline uint8_t thing_is_juggernaut_noverify (thingp t)
 {
-    return (t->tp->is_rrr22);
+    return (t->tp->is_juggernaut);
 }
 
-static inline uint8_t thing_is_rrr23_noverify (thingp t)
+static inline uint8_t thing_is_wanderer_noverify (thingp t)
 {
-    return (t->tp->is_rrr23);
+    return (t->tp->is_wanderer);
 }
 
 static inline uint8_t thing_is_rrr24_noverify (thingp t)
@@ -2928,11 +2921,6 @@ static inline uint8_t thing_is_effect_sway_noverify (thingp t)
 static inline uint8_t thing_is_effect_pulse_noverify (thingp t)
 {
     return (t->tp->is_effect_pulse);
-}
-
-static inline uint8_t thing_is_effect_rotate_4way_noverify (thingp t)
-{
-    return (t->tp->is_effect_rotate_4way);
 }
 
 static inline uint8_t thing_is_effect_rotate_2way_noverify (thingp t)
