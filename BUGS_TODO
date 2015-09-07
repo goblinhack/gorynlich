@@ -1,26 +1,27 @@
 --------------------------------------- plan for sep --------------------------------------
-- slimes eat items in backpack if not eaten quickly
-- spinning in stats window needs centered
+- fix lava and acid
+- acid and lava should damage armor
 - stats font too large
 - skeleton and arrow did not attack
-- add more fragmens then remove if 0 check in map_jigsaw.c
-- reverse swing ability was unlocked at start of game!
-- fixed levels need floors changed
-- hit shopkeeper should make him mad
-- damage stuff in shop should also make him mad
-- collision detection for blades needs fixed
-- plant and seeds
-- giant mushroom generator
-- rename sorceror lich lord?
-- consult desktopbackground for more levels
-- add back jellies - can eat them but if in your backpack they eat your food
-- mushpeople use fire/gas attacks, leave slime to make you slow
-- spam, filling but slows you down (same speed things as slime)
-- remove extra grass / need landsape tiles again
-- add plants, plants stuck in mid growth, no random tile
-- add juggernaut
 - never seen skeleton 
-- acid and lava should damage armor
+- spinning in stats window needs centered
+- plant and seeds
+- add plants, plants stuck in mid growth, no random tile
+- fixed levels need floors changed
+- mushmen need less anim frames
+
+- hit shopkeeper should make him mad
+- reverse swing ability was unlocked at start of game!
+- damage stuff in shop should also make him mad
+- add more fragmens then remove if 0 check in map_jigsaw.c
+- spam, filling but slows you down (same speed things as slime)
+- slimes eat items in backpack if not eaten quickly
+- mushpeople use fire/gas attacks, leave slime to make you slow
+- giant mushroom generator
+- sword of life sucking, steals hp and gives to you
+
+--------------------------------------- plan for oct --------------------------------------
+- consult desktopbackground for more levels
 - move triggers do not seem to work on rocks
 - portion of teleport
 - money/xp doubler ring
@@ -28,7 +29,6 @@
 - cheese, lots of
 - more slime molds? chocolate / vampiric etc?
 - imp that teleports and steals
-- sword of life sucking, steals hp and gives to you
 - ring of power attack, divert defense to attack
 - hulks for charlotte from goblin hack
 - possession ghost, cursed weapon, hit self
@@ -36,12 +36,18 @@
 - mirror traps that bounce back weapon fire?
 - teletrap monster
 - minor: colision map tiny not used
+
+--------------------------------------- plan for nov --------------------------------------
+- multi player
 - backpack drop on death
 - thief, kill thief to recover items
-- multi player
 - magic gives health to other players
 
 Sun Sep  6 08:56:48 EDT 2015
+- collision detection for blades needs fixed
+- saw blade sounds
+- more volume levels
+- add juggernaut
 - saw blades need to move like juggernaut and be larger
 - light no longer leaks through doors!
 
