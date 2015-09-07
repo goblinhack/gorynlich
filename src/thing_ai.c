@@ -787,16 +787,13 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
 }
 
 static uint8_t thing_try_nexthop (thingp t,
-                                  int32_t *nexthop_x, 
-                                  int32_t *nexthop_y,
-                                  uint8_t can_change_dir_without_moving)
+                                  const int32_t *nexthop_x, 
+                                  const int32_t *nexthop_y)
 {
-    if (!can_change_dir_without_moving) {
-        if (thing_hit_solid_obstacle(wid_game_map_server_grid_container, 
-                                        t,
-                                        *nexthop_x, *nexthop_y)) {
-            return (false);
-        }
+    if (thing_hit_solid_obstacle(wid_game_map_server_grid_container, 
+                                    t,
+                                    *nexthop_x, *nexthop_y)) {
+        return (false);
     }
 
     if (thing_server_move(t, *nexthop_x, *nexthop_y,
@@ -946,12 +943,108 @@ static int thing_run_from (thingp t, int32_t *nexthop_x, int32_t *nexthop_y, tpp
     return (true);
 }
 
+static int thing_wander_in_straight_lines (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
+{
+    if ((t->dx < 0) && (t->dy == 0)) {
+        *nexthop_x = t->x;
+        *nexthop_y = t->y - 1;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+        *nexthop_x = t->x;
+        *nexthop_y = t->y + 1;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+        *nexthop_x = t->x + 1;
+        *nexthop_y = t->y;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+    } else if ((t->dx > 0) && (t->dy == 0)) {
+
+        *nexthop_x = t->x;
+        *nexthop_y = t->y + 1;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+        *nexthop_x = t->x;
+        *nexthop_y = t->y - 1;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+        *nexthop_x = t->x - 1;
+        *nexthop_y = t->y;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+    } else if ((t->dx == 0) && (t->dy < 0)) {
+
+        *nexthop_x = t->x + 1;
+        *nexthop_y = t->y;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+        *nexthop_x = t->x - 1;
+        *nexthop_y = t->y;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+        *nexthop_x = t->x;
+        *nexthop_y = t->y + 1;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+    } else if ((t->dx == 0) && (t->dy > 0)) {
+
+        *nexthop_x = t->x - 1;
+        *nexthop_y = t->y;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+        *nexthop_x = t->x + 1;
+        *nexthop_y = t->y;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+
+        *nexthop_x = t->x;
+        *nexthop_y = t->y - 1;
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) { return (true); }
+    }
+
+    return (false);
+}
+
 uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 {
-    /*
-     * Walk through walls to get to the player?
-     */
-    if (thing_is_ethereal(t)) {
+    if (thing_is_wanderer(t)) {
+        /*
+         * Like a juggernaut
+         */
+        if (!t->dx && !t->dy) {
+            static int dir;
+            switch (dir & 3) {
+            case 0: t->dx = -1; t->dy = 0;  break;
+            case 1: t->dx =  1; t->dy = 0;  break;
+            case 2: t->dx =  0; t->dy = -1; break;
+            case 3: t->dx =  0; t->dy =  1; break;
+            }
+
+            dir++;
+        }
+
+        *nexthop_x = t->x + t->dx;
+        *nexthop_y = t->y + t->dy;
+
+        if (thing_try_nexthop(t, nexthop_x, nexthop_y)) {
+            return (true);
+        }
+
+        double tx = t->x;
+        double ty = t->y;
+
+        if (thing_wander_in_straight_lines(t, nexthop_x, nexthop_y)) {
+            t->dx = *nexthop_x - tx;
+            t->dy = *nexthop_y - ty;
+            return (true);
+        }
+
+        return (false);
+
+    } else if (thing_is_ethereal(t)) {
+        /*
+         * Walk through walls to get to the player?
+         */
+
         /*
          * Make death run from jesus
          */
@@ -965,8 +1058,7 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 
         if (thing_chase_closest_player(t, nexthop_x, nexthop_y)) {
 
-            if (thing_try_nexthop(t, nexthop_x, nexthop_y,
-                                  false /* can_change_dir_without_moving */)) {
+            if (thing_try_nexthop(t, nexthop_x, nexthop_y)) {
                 return (true);
             }
 
