@@ -1878,6 +1878,20 @@ if (level != server_level)
                 fprintf(fp,"D");
 #endif
                 mywid = w;
+
+            } else if ((tp = map_find_lava_at(level, x, y, &w))) {
+#ifdef GORY_DEBUG
+if (level != server_level)
+                fprintf(fp,"D");
+#endif
+                mywid = w;
+
+            } else if ((tp = map_find_acid_at(level, x, y, &w))) {
+#ifdef GORY_DEBUG
+if (level != server_level)
+                fprintf(fp,"D");
+#endif
+                mywid = w;
             }
 
             if (!mywid) {
@@ -1915,6 +1929,32 @@ if (level != server_level)
                         }
 
                         tp = map_find_door_at(level, x + dx, y + dy, &w);
+                        if (thing_wid_is_active(w)) {
+                            continue;
+                        }
+
+                        nbrs[dx + 1][dy + 1] = tp;
+                    }
+
+                    if (map_find_acid_at(level, x, y, &w)) {
+                        if (thing_wid_is_active(w)) {
+                            continue;
+                        }
+
+                        tp = map_find_acid_at(level, x + dx, y + dy, &w);
+                        if (thing_wid_is_active(w)) {
+                            continue;
+                        }
+
+                        nbrs[dx + 1][dy + 1] = tp;
+                    }
+
+                    if (map_find_lava_at(level, x, y, &w)) {
+                        if (thing_wid_is_active(w)) {
+                            continue;
+                        }
+
+                        tp = map_find_lava_at(level, x + dx, y + dy, &w);
                         if (thing_wid_is_active(w)) {
                             continue;
                         }
