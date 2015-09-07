@@ -235,7 +235,6 @@ tpp tp_load (uint16_t id, const char *name)
 static void tp_destroy_internal (tpp t)
 {
     tree_destroy(&t->tiles, (tree_destroy_func)thing_tile_free);
-    tree_destroy(&t->tiles2, (tree_destroy_func)thing_tile_free);
 
     if (t->tooltip) {
         myfree(t->tooltip);
@@ -822,7 +821,6 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
      * Read the tiles tree.
      */
     demarshal_thing_tiles(ctx, t);
-    demarshal_thing_tiles2(ctx, t);
 
     myfree(name);
 
@@ -1073,7 +1071,6 @@ void marshal_thing_template (marshal_p ctx, tpp t)
      * Write the tiles tree.
      */
     marshal_thing_tiles(ctx, t);
-    marshal_thing_tiles2(ctx, t);
 
     PUT_KET(ctx);
 }
@@ -1455,9 +1452,4 @@ uint32_t tp_get_mob_spawn_delay_tenths (tpp t)
 tree_rootp tp_get_tiles (tpp t)
 {
     return (t->tiles);
-}
-
-tree_rootp tp_get_tiles2 (tpp t)
-{
-    return (t->tiles2);
 }

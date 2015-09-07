@@ -6,8 +6,6 @@
 
 void demarshal_thing_tiles(demarshal_p, tpp);
 void marshal_thing_tiles(marshal_p, tpp);
-void demarshal_thing_tiles2(demarshal_p, tpp);
-void marshal_thing_tiles2(marshal_p, tpp);
 void thing_tile_free(thing_tilep);
 
 const char *thing_tile_name(thing_tilep);

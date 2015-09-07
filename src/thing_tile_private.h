@@ -11,6 +11,7 @@ typedef struct thing_tile_ {
     tree_key_int tree;
 
     char *tilename;
+    char *tilename2;
     char *command;
     tilep tile;
 

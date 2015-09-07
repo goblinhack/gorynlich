@@ -175,7 +175,6 @@ typedef struct tp_ {
      * Animation tiles.
      */
     tree_rootp tiles;
-    tree_rootp tiles2;
 
     /*
      * Speed in milliseconds it takes to move one tile.
@@ -550,7 +549,6 @@ uint32_t tp_get_hit_delay_tenths(tpp);
 uint32_t tp_get_mob_spawn_delay_tenths(tpp);
 
 tree_rootp tp_get_tiles(tpp);
-tree_rootp tp_get_tiles2(tpp);
 
 extern tree_rootp thing_templates;
 extern tree_rootp thing_templates_create_order;
