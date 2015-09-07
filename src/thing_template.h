@@ -433,7 +433,6 @@ typedef struct tp_ {
     uint8_t is_wall:1;
     uint8_t is_effect_sway:1;
     uint8_t is_effect_pulse:1;
-    uint8_t is_effect_rotate_4way:1;
     uint8_t is_effect_rotate_2way:1;
     uint8_t has_dir_anim:1;
 
@@ -820,11 +819,6 @@ static inline uint8_t tp_is_rrr19 (tpp t)
 static inline uint8_t tp_is_rrr20 (tpp t)
 {
     return (t->is_rrr20);
-}
-
-static inline uint8_t tp_is_effect_rotate_4way (tpp t)
-{
-    return (t->is_effect_rotate_4way);
 }
 
 static inline uint8_t tp_is_juggernaut (tpp t)

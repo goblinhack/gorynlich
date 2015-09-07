@@ -4,22 +4,81 @@
  tooltip="juggernaut"
  z_depth="player"
  is_hard
- speed=30
+ speed=25
  is_shadow_caster
  is_monst
  hit_priority=9
  max_hp=1000
- damage=60
+ damage=10
  is_juggernaut
  is_animated
  is_fragile
  is_wanderer
- is_effect_rotate_4way
  is_effect_rotate_2way
  polymorph_on_death="data/things/juggernaut"
+ sound_random="beep"
+ sound_random_delay_secs=5
+ sound_on_hitting_something="beep"
  tiles={
   tile={
-   tile="juggernaut"
+   delay=200
+   is_dir_left
+   tile="juggernaut.1"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="juggernaut.2"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="juggernaut.3"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="juggernaut.1"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="juggernaut.2"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="juggernaut.3"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="juggernaut.4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="juggernaut.5"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="juggernaut.6"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="juggernaut.7"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="juggernaut.8"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="juggernaut.9"
   }
  }
 }

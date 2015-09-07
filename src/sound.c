@@ -377,4 +377,7 @@ void sound_load_all (void)
     sound_load(1.0, "data/sound/65195__uair01__chamber_choir_chord_o.wav", "choir");
     sound_load(0.5, "data/sound/238855__limetoe__collected_item.wav", "potion");
     sound_load(0.5, "data/sound/317827__blockfighter298__weapon_pickup.wav", "pickup");
+    sound_load(0.5, "data/sound/170243__beatsbycasper__car_horn.wav", "beep");
+    sound_load(0.5, "data/sound/244745__reitanna__egg_crack19.wav", "egg");
+    sound_load(0.5, "data/sound/saw.wav", "saw");
 }
