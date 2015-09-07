@@ -67,7 +67,6 @@ const char *thing_short_name(thingp);
 uint8_t thing_z_depth(thingp);
 uint8_t thing_z_order(thingp);
 tree_rootp thing_tile_tiles(thingp);
-tree_rootp thing_tile_tiles2(thingp);
 void thing_animate(thingp);
 uint8_t thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
 uint8_t thing_hit_any_obstacle(widp grid, thingp t, double nx, double ny);
@@ -125,7 +124,6 @@ int32_t thing_player_cost(thingp);
 int32_t thing_monst_cost(thingp);
 double thing_speed(thingp);
 tree_rootp thing_tiles(thingp);
-tree_rootp thing_tiles2(thingp);
 
 thing_tilep thing_current_tile(thingp t);
 void thing_place_timed(tpp t, 
