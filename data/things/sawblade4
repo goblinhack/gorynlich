@@ -17,6 +17,9 @@
  is_fragile
  is_trap
  is_wanderer
+ sound_random="saw"
+ sound_random_delay_secs=10
+ sound_on_hitting_something="saw"
  polymorph_on_death="data/things/sawblade5"
  tiles={
   tile={

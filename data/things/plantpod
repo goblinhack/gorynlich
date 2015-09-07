@@ -18,6 +18,8 @@
  bonus_xp_on_death=10
  mob_spawn_delay_tenths=30
  spawn_on_death="data/things/plant"
+ sound_random="egg"
+ sound_random_delay_secs=10
  tiles={
   tile={ delay=10000 tile="plantpod1-1" }
   tile={ delay=50 tile="plantpod1-2" }
