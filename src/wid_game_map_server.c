@@ -579,6 +579,8 @@ wid_game_map_server_replace_tile (widp w,
     }
 
     if (thing_is_wall(t) ||
+        thing_is_acid(t) ||
+        thing_is_lava(t) ||
         thing_is_door(t)) {
         map_fixup(level);
     }

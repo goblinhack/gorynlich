@@ -1,283 +1,283 @@
 {
- short_name="corrosive acid"
- raw_name="acid1"
- tooltip="corrosive acid"
- mob_spawn={ 1000 "data/things/acid1" }
+ short_name="lava"
+ raw_name="lava1"
+ tooltip="lava"
+ mob_spawn={ 1000 "data/things/lava1" }
  z_depth="floor2"
  is_mob_spawner
- is_acid
+ is_lava
  is_monst
  hit_delay_tenths=5
  is_animated
  hit_priority=0
- damage=10
- mob_spawn_delay_tenths=100
+ damage=20
+ mob_spawn_delay_tenths=50
  can_be_hit_chance=2000000
  d10000_chance_of_appearing=20
  is_animated
  tiles={
   tile={
-   tile="acid2.1"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.2"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.3"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.4"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.5"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.6"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.7"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.8"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.9"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.10"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.11"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.12"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.13"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.14"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid2.15"
-   delay=500
-   is_join_block
-  }
-  tile={
-   tile="acid1_0"
+   tile="lava2.1"
    is_join_block
    delay=500
   }
   tile={
-   tile="acid1_is_join_node"
+   tile="lava2.2"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.3"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.4"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.5"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.6"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.7"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.8"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.9"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.10"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.11"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.12"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.13"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.14"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava2.15"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava1_0"
+   is_join_block
+   delay=500
+  }
+  tile={
+   tile="lava1_is_join_node"
    is_join_node
   }
   tile={
-   tile="acid1_is_join_left"
+   tile="lava1_is_join_left"
    is_join_left
   }
   tile={
-   tile="acid1_is_join_bot"
+   tile="lava1_is_join_bot"
    is_join_bot
   }
   tile={
-   tile="acid1_is_join_right"
+   tile="lava1_is_join_right"
    is_join_right
   }
   tile={
-   tile="acid1_is_join_top"
+   tile="lava1_is_join_top"
    is_join_top
   }
   tile={
-   tile="acid1_is_join_horiz"
+   tile="lava1_is_join_horiz"
    is_join_horiz
   }
   tile={
-   tile="acid1_is_join_vert"
+   tile="lava1_is_join_vert"
    is_join_vert
   }
   tile={
-   tile="acid1_is_join_tl2"
+   tile="lava1_is_join_tl2"
    is_join_tl2
   }
   tile={
-   tile="acid1_is_join_bl2"
+   tile="lava1_is_join_bl2"
    is_join_bl2
   }
   tile={
-   tile="acid1_is_join_br2"
+   tile="lava1_is_join_br2"
    is_join_br2
   }
   tile={
-   tile="acid1_is_join_tr2"
+   tile="lava1_is_join_tr2"
    is_join_tr2
   }
   tile={
-   tile="acid1_is_join_tl"
+   tile="lava1_is_join_tl"
    is_join_tl
   }
   tile={
-   tile="acid1_is_join_bl"
+   tile="lava1_is_join_bl"
    is_join_bl
   }
   tile={
-   tile="acid1_is_join_br"
+   tile="lava1_is_join_br"
    is_join_br
   }
   tile={
-   tile="acid1_is_join_tr"
+   tile="lava1_is_join_tr"
    is_join_tr
   }
   tile={
-   tile="acid1_is_join_t270_3"
+   tile="lava1_is_join_t270_3"
    is_join_t270_3
   }
   tile={
-   tile="acid1_is_join_t180_3"
+   tile="lava1_is_join_t180_3"
    is_join_t180_3
   }
   tile={
-   tile="acid1_is_join_t90_3"
+   tile="lava1_is_join_t90_3"
    is_join_t90_3
   }
   tile={
-   tile="acid1_is_join_t_3"
+   tile="lava1_is_join_t_3"
    is_join_t_3
   }
   tile={
-   tile="acid1_is_join_t270"
+   tile="lava1_is_join_t270"
    is_join_t270
   }
   tile={
-   tile="acid1_is_join_t180"
+   tile="lava1_is_join_t180"
    is_join_t180
   }
   tile={
-   tile="acid1_is_join_t90"
+   tile="lava1_is_join_t90"
    is_join_t90
   }
   tile={
-   tile="acid1_is_join_t"
+   tile="lava1_is_join_t"
    is_join_t
   }
   tile={
-   tile="acid1_is_join_t270_2"
+   tile="lava1_is_join_t270_2"
    is_join_t270_2
   }
   tile={
-   tile="acid1_is_join_t180_2"
+   tile="lava1_is_join_t180_2"
    is_join_t180_2
   }
   tile={
-   tile="acid1_is_join_t90_2"
+   tile="lava1_is_join_t90_2"
    is_join_t90_2
   }
   tile={
-   tile="acid1_is_join_t_2"
+   tile="lava1_is_join_t_2"
    is_join_t_2
   }
   tile={
-   tile="acid1_is_join_t270_1"
+   tile="lava1_is_join_t270_1"
    is_join_t270_1
   }
   tile={
-   tile="acid1_is_join_t180_1"
+   tile="lava1_is_join_t180_1"
    is_join_t180_1
   }
   tile={
-   tile="acid1_is_join_t90_1"
+   tile="lava1_is_join_t90_1"
    is_join_t90_1
   }
   tile={
-   tile="acid1_is_join_t_1"
+   tile="lava1_is_join_t_1"
    is_join_t_1
   }
   tile={
-   tile="acid1_is_join_x"
+   tile="lava1_is_join_x"
    is_join_x
   }
   tile={
-   tile="acid1_is_join_x1"
+   tile="lava1_is_join_x1"
    is_join_x1
   }
   tile={
-   tile="acid1_is_join_x1_270"
+   tile="lava1_is_join_x1_270"
    is_join_x1_270
   }
   tile={
-   tile="acid1_is_join_x1_180"
+   tile="lava1_is_join_x1_180"
    is_join_x1_180
   }
   tile={
-   tile="acid1_is_join_x1_90"
+   tile="lava1_is_join_x1_90"
    is_join_x1_90
   }
   tile={
-   tile="acid1_is_join_x2"
+   tile="lava1_is_join_x2"
    is_join_x2
   }
   tile={
-   tile="acid1_is_join_x2_270"
+   tile="lava1_is_join_x2_270"
    is_join_x2_270
   }
   tile={
-   tile="acid1_is_join_x2_180"
+   tile="lava1_is_join_x2_180"
    is_join_x2_180
   }
   tile={
-   tile="acid1_is_join_x2_90"
+   tile="lava1_is_join_x2_90"
    is_join_x2_90
   }
   tile={
-   tile="acid1_is_join_x3"
+   tile="lava1_is_join_x3"
    is_join_x3
   }
   tile={
-   tile="acid1_is_join_x3_180"
+   tile="lava1_is_join_x3_180"
    is_join_x3_180
   }
   tile={
-   tile="acid1_is_join_x4"
+   tile="lava1_is_join_x4"
    is_join_x4
   }
   tile={
-   tile="acid1_is_join_x4_270"
+   tile="lava1_is_join_x4_270"
    is_join_x4_270
   }
   tile={
-   tile="acid1_is_join_x4_180"
+   tile="lava1_is_join_x4_180"
    is_join_x4_180
   }
   tile={
-   tile="acid1_is_join_x4_90"
+   tile="lava1_is_join_x4_90"
    is_join_x4_90
   }
  }
