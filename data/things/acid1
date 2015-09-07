@@ -17,77 +17,77 @@
  is_animated
  tiles={
   tile={
-   tile="acid2.1"
+   tile="acid1.1"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.2"
+   tile="acid1.2"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.3"
+   tile="acid1.3"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.4"
+   tile="acid1.4"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.5"
+   tile="acid1.5"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.6"
+   tile="acid1.6"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.7"
+   tile="acid1.7"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.8"
+   tile="acid1.8"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.9"
+   tile="acid1.9"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.10"
+   tile="acid1.10"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.11"
+   tile="acid1.11"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.12"
+   tile="acid1.12"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.13"
+   tile="acid1.13"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.14"
+   tile="acid1.14"
    delay=500
    is_join_block
   }
   tile={
-   tile="acid2.15"
+   tile="acid1.15"
    delay=500
    is_join_block
   }
