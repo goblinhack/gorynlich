@@ -307,57 +307,6 @@ void marshal_thing_tiles (marshal_p ctx, tpp t)
     PUT_KET(ctx);
 }
 
-void demarshal_thing_tiles2 (demarshal_p ctx, tpp t)
-{
-    static uint32_t id;
-
-    if (!GET_PEEK_NAME(ctx, "tiles2")) {
-        return;
-    }
-
-    GET_NAME(ctx, "tiles2");
-    GET_BRA(ctx);
-
-    t->tiles2 = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing tiles2");
-
-    while (GET_PEEK_NAME(ctx, "tile")) {
-        GET_NAME(ctx, "tile");
-
-        thing_tile *tile;
-
-        tile = (typeof(tile)) myzalloc(sizeof(*tile),
-                                       "TREE NODE: thing tile");
-        tile->tree.key = id++;
-
-        if (!tree_insert(t->tiles2, &tile->tree.node)) {
-            ERR("insert thing tiles2 node fail");
-        }
-
-        demarshal_thing_tile(ctx, tile);
-    }
-
-    GET_KET(ctx);
-}
-
-void marshal_thing_tiles2 (marshal_p ctx, tpp t)
-{
-    thing_tile *tile;
-
-    if (!t->tiles2) {
-        return;
-    }
-
-    PUT_NAME(ctx, "tiles2");
-    PUT_BRA(ctx);
-
-    TREE_WALK(t->tiles2, tile) {
-        PUT_NAME(ctx, "tile");
-        marshal_thing_tile(ctx, tile);
-    }
-
-    PUT_KET(ctx);
-}
-
 const char *thing_tile_name (thing_tile *t)
 {
     return (t->tilename);
