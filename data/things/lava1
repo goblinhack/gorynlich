@@ -17,77 +17,77 @@
  is_animated
  tiles={
   tile={
-   tile="lava2.1"
+   tile="lava1.1"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.2"
+   tile="lava1.2"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.3"
+   tile="lava1.3"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.4"
+   tile="lava1.4"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.5"
+   tile="lava1.5"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.6"
+   tile="lava1.6"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.7"
+   tile="lava1.7"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.8"
+   tile="lava1.8"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.9"
+   tile="lava1.9"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.10"
+   tile="lava1.10"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.11"
+   tile="lava1.11"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.12"
+   tile="lava1.12"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.13"
+   tile="lava1.13"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.14"
+   tile="lava1.14"
    is_join_block
    delay=500
   }
   tile={
-   tile="lava2.15"
+   tile="lava1.15"
    is_join_block
    delay=500
   }
