@@ -678,9 +678,9 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr20", t->is_rrr20);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr21", t->is_rrr21);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_effect_rotate_4way", t->is_effect_rotate_4way);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_juggernaut", t->is_juggernaut);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_wanderer", t->is_wanderer);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr24", t->is_rrr24);
         GET_OPT_NAMED_BITFIELD(ctx, "is_world_floor", t->is_world_floor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_soil", t->is_soil);
@@ -963,9 +963,9 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
     PUT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
     PUT_NAMED_BITFIELD(ctx, "is_rrr20", t->is_rrr20);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr21", t->is_rrr21);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
+    PUT_NAMED_BITFIELD(ctx, "is_effect_rotate_4way", t->is_effect_rotate_4way);
+    PUT_NAMED_BITFIELD(ctx, "is_juggernaut", t->is_juggernaut);
+    PUT_NAMED_BITFIELD(ctx, "is_wanderer", t->is_wanderer);
     PUT_NAMED_BITFIELD(ctx, "is_rrr24", t->is_rrr24);
     PUT_NAMED_BITFIELD(ctx, "is_world_floor", t->is_world_floor);
     PUT_NAMED_BITFIELD(ctx, "is_soil", t->is_soil);

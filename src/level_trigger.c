@@ -307,6 +307,14 @@ void level_trigger_activate_default_triggers (levelp level)
                 continue;
             }
 
+            if (tp_is_action(it)) {
+                const char *it_trigger = tile->data.col_name;
+
+                LEVEL_LOG(level, "Found action color %s", it_trigger);
+
+                level_trigger_alloc(level, it_trigger);
+            }
+
             if (tp_is_action_trigger(it)) {
                 const char *it_trigger = tile->data.col_name;
 
