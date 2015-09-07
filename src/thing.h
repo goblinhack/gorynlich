@@ -1460,13 +1460,6 @@ static inline uint8_t thing_is_rrr20 (thingp t)
     return (tp_is_rrr20(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_effect_rotate_4way (thingp t)
-{
-    verify(t);
-
-    return (tp_is_effect_rotate_4way(thing_tp(t)));
-}
-
 static inline uint8_t thing_is_juggernaut (thingp t)
 {
     verify(t);
@@ -2426,11 +2419,6 @@ static inline uint8_t thing_is_rrr19_noverify (thingp t)
 static inline uint8_t thing_is_rrr20_noverify (thingp t)
 {
     return (t->tp->is_rrr20);
-}
-
-static inline uint8_t thing_is_effect_rotate_4way_noverify (thingp t)
-{
-    return (t->tp->is_effect_rotate_4way);
 }
 
 static inline uint8_t thing_is_juggernaut_noverify (thingp t)

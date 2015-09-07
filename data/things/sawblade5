@@ -17,6 +17,9 @@
  is_animated
  is_trap
  is_wanderer
+ sound_random="saw"
+ sound_random_delay_secs=10
+ sound_on_hitting_something="saw"
  tiles={
   tile={
    tile="sawblade5.1"

@@ -466,11 +466,7 @@ struct config {
 
 extern struct config global_config;
 
-#define SOUND_VQUIET 0
-#define SOUND_QUIET 1
-#define SOUND_LOW 2
-#define SOUND_MED 3
-#define SOUND_MAX 4
+#define SOUND_MAX 20
 
 /*
  * color.c

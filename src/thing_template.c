@@ -678,7 +678,6 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr20", t->is_rrr20);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_effect_rotate_4way", t->is_effect_rotate_4way);
         GET_OPT_NAMED_BITFIELD(ctx, "is_juggernaut", t->is_juggernaut);
         GET_OPT_NAMED_BITFIELD(ctx, "is_wanderer", t->is_wanderer);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr24", t->is_rrr24);
@@ -786,7 +785,6 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
         GET_OPT_NAMED_BITFIELD(ctx, "is_effect_sway", t->is_effect_sway);
         GET_OPT_NAMED_BITFIELD(ctx, "is_effect_pulse", t->is_effect_pulse);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_effect_rotate_4way", t->is_effect_rotate_4way);
         GET_OPT_NAMED_BITFIELD(ctx, "is_effect_rotate_2way", t->is_effect_rotate_2way);
 
     } while (demarshal_gotone(ctx));
@@ -963,7 +961,6 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
     PUT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
     PUT_NAMED_BITFIELD(ctx, "is_rrr20", t->is_rrr20);
-    PUT_NAMED_BITFIELD(ctx, "is_effect_rotate_4way", t->is_effect_rotate_4way);
     PUT_NAMED_BITFIELD(ctx, "is_juggernaut", t->is_juggernaut);
     PUT_NAMED_BITFIELD(ctx, "is_wanderer", t->is_wanderer);
     PUT_NAMED_BITFIELD(ctx, "is_rrr24", t->is_rrr24);
@@ -1070,7 +1067,6 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
     PUT_NAMED_BITFIELD(ctx, "is_effect_sway", t->is_effect_sway);
     PUT_NAMED_BITFIELD(ctx, "is_effect_pulse", t->is_effect_pulse);
-    PUT_NAMED_BITFIELD(ctx, "is_effect_rotate_4way", t->is_effect_rotate_4way);
     PUT_NAMED_BITFIELD(ctx, "is_effect_rotate_2way", t->is_effect_rotate_2way);
 
     /*
