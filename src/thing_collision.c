@@ -227,36 +227,6 @@ static uint8_t things_overlap (const thingp A,
         By = B->y;
     }
 
-    widp Aw = thing_wid(A);
-    widp Bw = thing_wid(B);
-
-    if ((thing_collision_radius(A) > 0.0) || (thing_collision_radius(B) > 0.0)) {
-
-        if (Aw->first_tile) {
-            Ax += ((Aw->first_tile->px1 + Aw->first_tile->px2) / 2.0);
-            Ay += ((Aw->first_tile->py1 + Aw->first_tile->py2) / 2.0);
-        }
-
-        if (Bw->first_tile) {
-            Bx += ((Bw->first_tile->px1 + Bw->first_tile->px2) / 2.0);
-            By += ((Bw->first_tile->py1 + Bw->first_tile->py2) / 2.0);
-        }
-
-        double dist = DISTANCE(Ax, Ay, Bx, By);
-        if (dist < max(thing_collision_radius(A), 
-                       thing_collision_radius(B))) {
-#if 0
-CON(" ");
-CON("%s", thing_logname(A));
-CON("%s", thing_logname(B));
-CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dist);
-#endif
-            return (true);
-        } else {
-            return (false);
-        }
-    }
-
     /*
      * The tiles are considered to be 1 unit wide. However the actual pixels
      * of each tile include shadows. px1/px2 are the bounds and exclude the
@@ -319,6 +289,9 @@ CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dis
     double Bpx2;
     double Bpy1;
     double Bpy2;
+
+    widp Aw = thing_wid(A);
+    widp Bw = thing_wid(B);
 
     if (thing_is_wall(A) || thing_is_door(A)) {
         tilep tileA = wid_get_tile(Aw);
@@ -440,6 +413,40 @@ CON("(%f,%f) %f,%f -> (%f,%f) %f,%f dist %f",A->x,A->y,Ax,Ay,B->x,B->y,Bx,By,dis
         Bpx2 = collision_map_large_x2;
         Bpy1 = collision_map_large_y1;
         Bpy2 = collision_map_large_y2;
+    }
+
+
+    /*
+     * We really only care about collision radius for large objects like 
+     * sawblades. If we use walls here then because of the granularity of
+     * movement of one block at a time, the blade detects a collision too
+     * far from the wall. The solution would be to use smaller next hop
+     * walks but that might cause problems in the client with speed 
+     * calculations. Easier just to save radial collisions for monsters and 
+     * the like.
+     */
+    if (!thing_is_wall(A) && !thing_is_door(A) && !thing_is_action(A) && !thing_is_action_trigger(A) &&
+        !thing_is_wall(B) && !thing_is_door(B) && !thing_is_action(B) && !thing_is_action_trigger(B)) { 
+
+        if ((thing_collision_radius(A) > 0.0) || (thing_collision_radius(B) > 0.0)) {
+
+            if (Aw->first_tile) {
+                Ax += ((Aw->first_tile->px1 + Aw->first_tile->px2) / 2.0);
+                Ay += ((Aw->first_tile->py1 + Aw->first_tile->py2) / 2.0);
+            }
+
+            if (Bw->first_tile) {
+                Bx += ((Bw->first_tile->px1 + Bw->first_tile->px2) / 2.0);
+                By += ((Bw->first_tile->py1 + Bw->first_tile->py2) / 2.0);
+            }
+
+            double dist = DISTANCE(Ax, Ay, Bx, By);
+            if (dist < max(thing_collision_radius(A), thing_collision_radius(B))) {
+                return (true);
+            } else {
+                return (false);
+            }
+        }
     }
 
     /*
@@ -1241,17 +1248,14 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 }
             }
 
-            if (thing_is_wall(me)) {
+            if (thing_is_wall(me) || thing_is_sawblade(me) || thing_is_juggernaut(me)) {
                 /*
-                 * Allow moving walls to crush!
+                 * Allow moving walls to crush most things except walls and 
+                 * doors.
                  */
-                if (!thing_is_wall(it)) {
+                if (!thing_is_wall(it) && !thing_is_door(it)) {
                     continue;
                 }
-            }
-
-            if (thing_is_sawblade(me)) {
-                continue;
             }
 
             if (!things_overlap(me, nx, ny, it)) {

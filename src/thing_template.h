@@ -323,9 +323,8 @@ typedef struct tp_ {
     uint8_t is_rrr18:1;
     uint8_t is_rrr19:1;
     uint8_t is_rrr20:1;
-    uint8_t is_rrr21:1;
-    uint8_t is_rrr22:1;
-    uint8_t is_rrr23:1;
+    uint8_t is_juggernaut:1;
+    uint8_t is_wanderer:1;
     uint8_t is_rrr24:1;
     uint8_t is_world_floor:1;
     uint8_t is_soil:1;
@@ -823,19 +822,19 @@ static inline uint8_t tp_is_rrr20 (tpp t)
     return (t->is_rrr20);
 }
 
-static inline uint8_t tp_is_rrr21 (tpp t)
+static inline uint8_t tp_is_effect_rotate_4way (tpp t)
 {
-    return (t->is_rrr21);
+    return (t->is_effect_rotate_4way);
 }
 
-static inline uint8_t tp_is_rrr22 (tpp t)
+static inline uint8_t tp_is_juggernaut (tpp t)
 {
-    return (t->is_rrr22);
+    return (t->is_juggernaut);
 }
 
-static inline uint8_t tp_is_rrr23 (tpp t)
+static inline uint8_t tp_is_wanderer (tpp t)
 {
-    return (t->is_rrr23);
+    return (t->is_wanderer);
 }
 
 static inline uint8_t tp_is_rrr24 (tpp t)
@@ -1371,11 +1370,6 @@ static inline uint8_t tp_is_effect_sway (tpp t)
 static inline uint8_t tp_is_effect_pulse (tpp t)
 {
     return (t->is_effect_pulse);
-}
-
-static inline uint8_t tp_is_effect_rotate_4way (tpp t)
-{
-    return (t->is_effect_rotate_4way);
 }
 
 static inline uint8_t tp_is_effect_rotate_2way (tpp t)
