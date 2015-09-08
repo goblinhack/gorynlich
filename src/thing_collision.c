@@ -618,6 +618,9 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
         }
     }
 
+    /*
+     * Acid does not attack acid
+     */
     if (thing_is_acid(me) || thing_is_lava(me)) {
         if (thing_is_acid(it) || thing_is_lava(it)) {
             return;

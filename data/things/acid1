@@ -11,90 +11,102 @@
  is_animated
  hit_priority=0
  damage=10
+ is_joinable
  mob_spawn_delay_tenths=100
+ is_animated
  can_be_hit_chance=2000000
  d10000_chance_of_appearing=20
  is_animated
  tiles={
   tile={
    tile="acid1.1"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.2"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.3"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.4"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.5"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.6"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.7"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.8"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.9"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.10"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.11"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.12"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.13"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.14"
-   delay=500
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1.15"
-   delay=500
+   delay=30
+   is_join_block
+  }
+  tile={
+   tile="acid1.16"
+   delay=30
+   is_join_block
+  }
+  tile={
+   tile="acid1.17"
+   delay=30
    is_join_block
   }
   tile={
    tile="acid1_0"
    is_join_block
-   delay=500
+   delay=30
   }
   tile={
    tile="acid1_is_join_node"
