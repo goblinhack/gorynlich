@@ -578,10 +578,7 @@ wid_game_map_server_replace_tile (widp w,
         return (child);
     }
 
-    if (thing_is_wall(t) ||
-        thing_is_acid(t) ||
-        thing_is_lava(t) ||
-        thing_is_door(t)) {
+    if (thing_is_joinable(t)) {
         map_fixup(level);
     }
 

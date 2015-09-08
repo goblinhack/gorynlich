@@ -17,12 +17,22 @@
 void thing_animate (thingp t)
 {
     thing_tilep tile;
+    thing_tilep otile;
     tree_rootp tiles;
     const char *command;
     tpp tp = thing_tp(t);
     widp w = t->wid;
 
-    tile = thing_current_tile(t);
+    otile = tile = thing_current_tile(t);
+
+    /*
+     * Allow map join to choose the type of connector.
+     */
+    if (thing_is_joinable(t)) {
+        if (!otile) {
+            return;
+        }
+    }
 
     if (tile) {
         /*
@@ -167,6 +177,308 @@ void thing_animate (thingp t)
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
+        } else if (thing_is_joinable(t)) {
+            if (otile) {
+                if (thing_tile_is_join_block(otile) &&
+                    !thing_tile_is_join_block(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_horiz(otile) &&
+                    !thing_tile_is_join_horiz(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_vert(otile) &&
+                    !thing_tile_is_join_vert(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_node(otile) &&
+                    !thing_tile_is_join_node(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_left(otile) &&
+                    !thing_tile_is_join_left(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_right(otile) &&
+                    !thing_tile_is_join_right(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_top(otile) &&
+                    !thing_tile_is_join_top(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_bot(otile) &&
+                    !thing_tile_is_join_bot(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_tl(otile) &&
+                    !thing_tile_is_join_tl(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_tr(otile) &&
+                    !thing_tile_is_join_tr(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_bl(otile) &&
+                    !thing_tile_is_join_bl(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_br(otile) &&
+                    !thing_tile_is_join_br(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t(otile) &&
+                    !thing_tile_is_join_t(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t90(otile) &&
+                    !thing_tile_is_join_t90(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t180(otile) &&
+                    !thing_tile_is_join_t180(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t270(otile) &&
+                    !thing_tile_is_join_t270(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x(otile) &&
+                    !thing_tile_is_join_x(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_tl2(otile) &&
+                    !thing_tile_is_join_tl2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_tr2(otile) &&
+                    !thing_tile_is_join_tr2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_bl2(otile) &&
+                    !thing_tile_is_join_bl2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_br2(otile) &&
+                    !thing_tile_is_join_br2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t_1(otile) &&
+                    !thing_tile_is_join_t_1(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t_2(otile) &&
+                    !thing_tile_is_join_t_2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t_3(otile) &&
+                    !thing_tile_is_join_t_3(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t90_1(otile) &&
+                    !thing_tile_is_join_t90_1(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t90_2(otile) &&
+                    !thing_tile_is_join_t90_2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t90_3(otile) &&
+                    !thing_tile_is_join_t90_3(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t180_1(otile) &&
+                    !thing_tile_is_join_t180_1(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t180_2(otile) &&
+                    !thing_tile_is_join_t180_2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t180_3(otile) &&
+                    !thing_tile_is_join_t180_3(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t270_1(otile) &&
+                    !thing_tile_is_join_t270_1(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t270_2(otile) &&
+                    !thing_tile_is_join_t270_2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_t270_3(otile) &&
+                    !thing_tile_is_join_t270_3(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x(otile) &&
+                    !thing_tile_is_join_x(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x1(otile) &&
+                    !thing_tile_is_join_x1(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x1_270(otile) &&
+                    !thing_tile_is_join_x1_270(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x1_180(otile) &&
+                    !thing_tile_is_join_x1_180(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x1_90(otile) &&
+                    !thing_tile_is_join_x1_90(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x2(otile) &&
+                    !thing_tile_is_join_x2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x2_270(otile) &&
+                    !thing_tile_is_join_x2_270(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x2_180(otile) &&
+                    !thing_tile_is_join_x2_180(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x2_90(otile) &&
+                    !thing_tile_is_join_x2_90(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x3(otile) &&
+                    !thing_tile_is_join_x3(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x3_180(otile) &&
+                    !thing_tile_is_join_x3_180(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x4(otile) &&
+                    !thing_tile_is_join_x4(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x4_270(otile) &&
+                    !thing_tile_is_join_x4_270(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x4_180(otile) &&
+                    !thing_tile_is_join_x4_180(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_x4_90(otile) &&
+                    !thing_tile_is_join_x4_90(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_horiz2(otile) &&
+                    !thing_tile_is_join_horiz2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+
+                if (thing_tile_is_join_vert2(otile) &&
+                    !thing_tile_is_join_vert2(tile)) {
+                    tile = thing_tile_next(tiles, tile);
+                    continue;
+                }
+            }
         } else {
             if (thing_tile_is_sleeping(tile)) {
                 tile = thing_tile_next(tiles, tile);
@@ -208,6 +520,14 @@ void thing_animate (thingp t)
             return;
         }
     }
+
+#if 0
+    if (tile && otile) {
+        if(thing_is_joinable(t)) {
+            CON("%s-> %s", thing_tile_name(otile), thing_tile_name(tile));
+        }
+    }
+#endif
 
     wid_set_tile(t->wid, tile->tile);
 
