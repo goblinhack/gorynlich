@@ -17,6 +17,10 @@
  can_be_hit_chance=2000000
  d10000_chance_of_appearing=20
  is_animated
+ is_light_source
+ light_radius=0.2
+ light_tint="green"
+ is_candle_light
  tiles={
   tile={
    tile="acid1.1"
