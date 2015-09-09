@@ -1,5 +1,5 @@
 --------------------------------------- plan for sep --------------------------------------
-- game is jumpy, dmap scale issue at 96x96
+- monsters caught in lava should explode when dead
 - wizard walk left jumpy
 - statues should be destoyable
 - wizards want lights up left hand wall too much
@@ -49,6 +49,9 @@
 - backpack drop on death
 - thief, kill thief to recover items
 - magic gives health to other players
+
+Wed Sep  9 15:05:35 EDT 2015
+- game is jumpy, dmap scale issue at 96x96
 
 Wed Sep  9 07:41:17 EDT 2015
 - much faster dmap calculation
