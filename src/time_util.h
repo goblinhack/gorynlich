@@ -89,3 +89,21 @@ static inline uint32_t time_update_time_milli (void)
 
     return (time_now);
 }
+
+static inline uint32_t time_get_time_milli (void)
+{
+    struct timeval  tv;
+
+    gettimeofday(&tv, NULL);
+
+    uint32_t time_in_mill = 
+            ((uint32_t)(tv.tv_sec) * 1000) + (tv.tv_usec) / 1000;
+
+    if (!base_time_in_mill) {
+        base_time_in_mill = time_in_mill;
+    }
+
+    time_now = (time_in_mill - base_time_in_mill);
+
+    return (time_now);
+}

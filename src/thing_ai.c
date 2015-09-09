@@ -12,6 +12,7 @@
 #include "wid_game_map_server.h"
 #include "math_util.h"
 #include "level.h"
+#include "time_util.h"
 
 static FILE *fp;
 static const int8_t is_a_wall = 63;
@@ -234,62 +235,29 @@ static void dmap_process (level_walls *dmap, level_walls *dmap_final)
     int8_t i;
     int8_t lowest;
     uint8_t changed;
+    static uint8_t valid[MAP_WIDTH][MAP_HEIGHT];
+    static uint8_t new_valid[MAP_WIDTH][MAP_HEIGHT];
+    static uint8_t orig_valid[MAP_WIDTH][MAP_HEIGHT];
 
-    do {
-        changed = false;
+    memset(valid, 1, sizeof(valid));
+    memset(orig_valid, 1, sizeof(valid));
 
-        for (x = 1; x < MAP_WIDTH - 1; x++) {
-            for (y = 1; y < MAP_HEIGHT - 1; y++) {
-                e = &dmap->walls[x  ][y];
-                if (*e == is_a_wall) {
-                    continue;
-                }
-
-                a =  dmap->walls[x-1][y-1] * 2;
-                b =  dmap->walls[x  ][y-1];
-                c =  dmap->walls[x+1][y-1] * 2;
-
-                d =  dmap->walls[x-1][y];
-                f =  dmap->walls[x+1][y];
-                 
-                g =  dmap->walls[x-1][y+1] * 2;
-                h =  dmap->walls[x  ][y+1];
-                i =  dmap->walls[x+1][y+1] * 2;
-
-#define THIS_IS_FASTER
-#ifdef THIS_IS_FASTER
-                if (a < b) {
-                    lowest = a;
-                } else {
-                    lowest = b;
-                }
-
-                if (c < lowest) { lowest = c; }
-                if (d < lowest) { lowest = d; }
-                if (f < lowest) { lowest = f; }
-                if (g < lowest) { lowest = g; }
-                if (h < lowest) { lowest = h; }
-                if (i < lowest) { lowest = i; }
-#else
-                lowest = min(a, 
-                             min(b, 
-                                 min(c, 
-                                     min(d, 
-                                         min(f, 
-                                             min(g, 
-                                                 min(h,i)))))));
-#endif
-
-                if (*e - lowest >= 2) {
-                    *e = lowest + 1;
-                    changed = true;
-                }
+    for (x = 1; x < MAP_WIDTH - 1; x++) {
+        for (y = 1; y < MAP_HEIGHT - 1; y++) {
+            e = &dmap->walls[x  ][y];
+            if (*e != is_a_wall) {
+                continue;
             }
-        }
-    } while (changed);
 
-#ifdef GORY_DEBUG
-    do {
+            valid[y][x] = 0;
+            orig_valid[y][x] = 0;
+        }
+    }
+
+#if 0
+    int count = 0;
+
+    if (1) {
         for (x = 1; x < MAP_WIDTH - 1; x++) {
             for (y = 1; y < MAP_HEIGHT - 1; y++) {
                 e = &dmap->walls[x  ][y];
@@ -303,14 +271,113 @@ static void dmap_process (level_walls *dmap, level_walls *dmap_final)
             printf("\n");
         }
         printf("\n");
-    } while (changed);
+    }
 #endif
+
+    do {
+        changed = false;
+        memset(new_valid, 0, sizeof(new_valid));
+
+#if 0
+        printf("run %d %d %d\n", count, x, y);
+        count++;
+#endif
+        for (x = 1; x < MAP_WIDTH - 1; x++) {
+            for (y = 1; y < MAP_HEIGHT - 1; y++) {
+                if (!valid[y][x]) {
+#if 0
+printf(" ");
+#endif
+                    continue;
+                }
+
+                if (!orig_valid[y][x]) {
+#if 0
+printf("w");
+#endif
+                    continue;
+                }
+
+                e = &dmap->walls[x  ][y];
+
+                a =  dmap->walls[x-1][y-1] * 2;
+                b =  dmap->walls[x  ][y-1];
+                c =  dmap->walls[x+1][y-1] * 2;
+
+                d =  dmap->walls[x-1][y];
+                f =  dmap->walls[x+1][y];
+                 
+                g =  dmap->walls[x-1][y+1] * 2;
+                h =  dmap->walls[x  ][y+1];
+                i =  dmap->walls[x+1][y+1] * 2;
+
+                if (a < b) {
+                    lowest = a;
+                } else {
+                    lowest = b;
+                }
+
+                if (c < lowest) { lowest = c; }
+                if (d < lowest) { lowest = d; }
+                if (f < lowest) { lowest = f; }
+                if (g < lowest) { lowest = g; }
+                if (h < lowest) { lowest = h; }
+                if (i < lowest) { lowest = i; }
+
+                if (*e - lowest >= 2) {
+
+                    new_valid[y-1][x-1] = 1;
+                    new_valid[y-1][x  ] = 1;
+                    new_valid[y-1][x+1] = 1;
+                    new_valid[y  ][x-1] = 1;
+                    new_valid[y  ][x  ] = 1;
+                    new_valid[y  ][x+1] = 1;
+                    new_valid[y+1][x-1] = 1;
+                    new_valid[y+1][x  ] = 1;
+                    new_valid[y+1][x+1] = 1;
+
+                    *e = lowest + 1;
+                    changed = true;
+#if 0
+printf("*");
+                } else {
+printf(".");
+                }
+            }
+printf("\n");
+#else
+                }
+            }
+#endif
+        }
+
+        memcpy(valid, new_valid, sizeof(new_valid));
+
+    } while (changed);
 
     /*
      * Only update the map when done so the monsters never see a map work
      * in progress.
      */
     memcpy(dmap_final, dmap, sizeof(level_walls));
+#if 0
+    if (1) {
+        printf("final:\n");
+        for (x = 1; x < MAP_WIDTH - 1; x++) {
+            for (y = 1; y < MAP_HEIGHT - 1; y++) {
+                e = &dmap->walls[x  ][y];
+                if (*e == is_a_wall) {
+                    printf("  XX");
+                    continue;
+                }
+
+                printf("%4d", *e);
+            }
+            printf("\n");
+        }
+        printf("\n");
+    }
+#endif
 }
 
 /*
@@ -549,33 +616,38 @@ static void *dmap_thread2_func (void *context)
         for (;;) {
             if (!server_level) {
                 /*
-                * Happens whilst we load the level and before we set the 
-                * level pointer.
-                */
+                 * Happens whilst we load the level and before we set the 
+                 * level pointer.
+                 */
                 SDL_Delay(1000);
                 continue;
             }
 
             server_level->locked++;
 
+            static level_walls map_player_target_treat_doors_as_walls;
+
+            memcpy(&map_player_target_treat_doors_as_walls,
+                   &server_level->map_player_target_treat_doors_as_walls,
+                   sizeof(map_player_target_treat_doors_as_walls));
+
             level_walls tmp;
             uint32_t x, y;
 
             for (x = 0; x < MAP_WIDTH; x++) {
                 for (y = 0; y < MAP_HEIGHT; y++) {
-                    dmap_init(&tmp, &server_level->map_player_target_treat_doors_as_walls);
-
                     /*
-                    * If a wall then we can't get to it, period.
-                    */
-                    if (server_level->
-                            map_player_target_treat_doors_as_walls.walls[x][y] != ' ') {
+                     * If a wall then we can't get to it, period.
+                     */
+                    if (map_player_target_treat_doors_as_walls.walls[x][y] != ' ') {
                         continue;
                     }
 
+                    dmap_init(&tmp, &map_player_target_treat_doors_as_walls);
+
                     /*
-                    * Set the goal.
-                    */
+                     * Set the goal.
+                     */
                     tmp.walls[x][y] = 0;
 
                     dmap_process(&tmp, &dmap_map_wander[x][y]);
