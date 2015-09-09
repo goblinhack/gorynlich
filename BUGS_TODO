@@ -1,16 +1,22 @@
 --------------------------------------- plan for sep --------------------------------------
+- game is jumpy, dmap scale issue at 96x96
+- wizard walk left jumpy
+- statues should be destoyable
+- wizards want lights up left hand wall too much
+- big jesus halo is not animated
+- pushable blocks and fix up moving walls
 - light source on edges of acid and lava only
 - bomb animation in backpack looks nuts
 - acid and lava should damage armor
 - stats font too large
 - skeleton and arrow did not attack
-- never seen skeleton 
 - spinning in stats window needs centered
 - plant and seeds
 - add plants, plants stuck in mid growth, no random tile
 - fixed levels need floors changed
 - mushmen need less anim frames
 
+--------------------------------------- plan for oct --------------------------------------
 - hit shopkeeper should make him mad
 - reverse swing ability was unlocked at start of game!
 - damage stuff in shop should also make him mad
@@ -21,7 +27,7 @@
 - giant mushroom generator
 - sword of life sucking, steals hp and gives to you
 
---------------------------------------- plan for oct --------------------------------------
+--------------------------------------- plan for nov --------------------------------------
 - consult desktopbackground for more levels
 - move triggers do not seem to work on rocks
 - portion of teleport
@@ -38,11 +44,14 @@
 - teletrap monster
 - minor: colision map tiny not used
 
---------------------------------------- plan for nov --------------------------------------
+--------------------------------------- plan for dec --------------------------------------
 - multi player
 - backpack drop on death
 - thief, kill thief to recover items
 - magic gives health to other players
+
+Wed Sep  9 07:41:17 EDT 2015
+- much faster dmap calculation
 
 Mon Sep  7 22:01:11 EDT 2015
 - fix lava and acid
