@@ -579,7 +579,10 @@ wid_game_map_server_replace_tile (widp w,
     }
 
     if (thing_is_joinable(t)) {
-        map_fixup(level);
+        /*
+         * Need to do map fixup for things like spawned lava
+         */
+        level_set_needs_fixup(level, true);
     }
 
     /*
