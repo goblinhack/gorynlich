@@ -80,9 +80,16 @@ levelp level_new (widp map,
 {
     levelp level;
 
-    level = (typeof(level)) mymalloc(sizeof(*level), "level");
+    if (is_map_editor) {
+        /*
+         * Loading 100 levels takes time, so only do partial memset
+         */
+        level = (typeof(level)) mymalloc(sizeof(*level), "level");
 
-    memset(&level->memzero_start, 0, (char*)&level->memzero_end - (char*)&level->memzero_start);
+        memset(&level->memzero_start, 0, (char*)&level->memzero_end - (char*)&level->memzero_start);
+    } else {
+        level = (typeof(level)) myzalloc(sizeof(*level), "level");
+    }
 
     if (map) {
         level_set_map(level, map);
