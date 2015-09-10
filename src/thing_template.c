@@ -347,7 +347,7 @@ tpp tp_find (const char *name)
         ERR("no name for thing find");
     }
 
-    memset(&target, 0, sizeof(target));
+    // memset(&target, 0, sizeof(target)); intentional for speed
     target.tree.key = (char*) name;
 
     result = (typeof(result)) tree_find(thing_templates, &target.tree.node);
