@@ -3,7 +3,7 @@
  raw_name="ring cloud"
  z_depth="monst"
  is_animated
- shield_carry_anim="data/things/ring_cloud_anim"
+ shield_carry_anim="ring_cloud_anim"
  tiles={
   tile={
    tile="ring_cloud.1"

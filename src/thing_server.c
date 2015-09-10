@@ -225,7 +225,7 @@ void thing_server_action (thingp t,
             thing_server_effect(t, THING_STATE_EFFECT_IS_POWER_UP);
             break;
         } else if (item->id == THING_POTION_SHIELD) {
-            thing_wield_shield(t, tp_find("data/things/shield1"));
+            thing_wield_shield(t, tp_find("shield1"));
             break;
         } else if (item->id == THING_BOMB) {
             if (level_place_bomb(server_level, t, t->x + 1, t->y)) {

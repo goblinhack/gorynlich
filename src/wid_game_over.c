@@ -368,7 +368,7 @@ static void wid_game_over_create (void)
         tpp thing_template;
         
         if ((myrand() % 10) < 9) {
-            thing_template = tp_find("data/things/cheese");
+            thing_template = tp_find("cheese");
         } else {
             thing_template = random_treasure(0);
         }

@@ -47,7 +47,7 @@ void level_place_hit_success (levelp level,
                         0.0, // radius
                         1, // amount
                         1, // nargs
-                        "data/things/hit_success");
+                        "hit_success");
 }
 
 void level_place_hit_miss (levelp level, 
@@ -60,7 +60,7 @@ void level_place_hit_miss (levelp level,
                         0.0, // radius
                         1, // amount
                         1, // nargs
-                        "data/things/hit_miss");
+                        "hit_miss");
 }
 
 void level_place_blood (levelp level, 
@@ -73,7 +73,7 @@ void level_place_blood (levelp level,
                         0.05, // radius
                         1, // amount
                         1, // nargs
-                        "data/things/blood1");
+                        "blood1");
 }
 
 void level_place_blood_crit (levelp level, 
@@ -86,5 +86,5 @@ void level_place_blood_crit (levelp level,
                         0.1, // radius
                         5, // amount
                         1, // nargs
-                        "data/things/blood2");
+                        "blood2");
 }

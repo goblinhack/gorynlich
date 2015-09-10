@@ -2,7 +2,7 @@
  short_name="lava"
  raw_name="lava1"
  tooltip="lava"
- mob_spawn={ 1000 "data/things/lava1" }
+ mob_spawn={ 1000 "lava1" }
  z_depth="floor2"
  is_mob_spawner
  is_lava

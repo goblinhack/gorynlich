@@ -22,8 +22,8 @@
  is_valid_for_action_bar
  d10000_chance_of_appearing=50
  d10000_chance_of_breaking=10
- weapon_carry_anim="data/things/sword3_anim"
- weapon_swing_anim="data/things/weapon_swing1"
+ weapon_carry_anim="sword3_anim"
+ weapon_swing_anim="weapon_swing1"
  tiles={
   tile={
    tile="sword3"

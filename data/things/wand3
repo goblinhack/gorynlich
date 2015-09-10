@@ -2,7 +2,7 @@
  short_name="wand of yet more plasma"
  raw_name="wand3"
  tooltip="wand of yet more plasma"
- fires="data/things/fireball3"
+ fires="fireball3"
  weapon_fire_delay_hundredths=30
  z_depth="monst"
  cost=800
@@ -23,12 +23,12 @@
  light_tint="orange"
  light_radius=0.1
  is_combustable
- explodes_as="data/things/explosion3"
+ explodes_as="explosion3"
  is_wearable
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
- weapon_carry_anim="data/things/wand3_anim"
+ weapon_carry_anim="wand3_anim"
  tiles={
   tile={
    tile="wand3.1"

@@ -22,7 +22,7 @@
  is_animated
  sound_random="dragon"
  sound_random_delay_secs=10
- fires="data/things/fireburst1"
+ fires="fireburst1"
  weapon_fire_delay_hundredths=500
  d10000_chance_of_appearing=1
  min_appear_depth=10

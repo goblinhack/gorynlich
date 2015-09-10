@@ -21,7 +21,7 @@
  is_levitating
  is_cats_eyes
  is_animated
- fires="data/things/fireball2"
+ fires="fireball2"
  weapon_fire_delay_hundredths=40
  d10000_chance_of_appearing=20
  min_appear_depth=5

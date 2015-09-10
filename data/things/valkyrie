@@ -3,8 +3,8 @@
  raw_name="valkyrie"
  tooltip="valkyrie"
  carrying={
-    "data/things/sword1"
-    "data/things/torches"
+    "sword1"
+    "torches"
  }
  z_depth="player"
  speed=28
@@ -12,7 +12,7 @@
  max_magic=180
  hp_per_level=8
  is_player
- magic_anim="data/things/magic_cloud"
+ magic_anim="magic_cloud"
  hit_priority=20
  stats_attack_melee=11
  stats_attack_ranged=11
@@ -29,7 +29,7 @@
  light_tint="white"
  light_radius=7.0
  is_collision_map_small
- spawn_on_death="data/things/bonepile2"
+ spawn_on_death="bonepile2"
  sound_on_death="player_death"
  is_animated
  tiles={

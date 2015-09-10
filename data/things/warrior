@@ -3,8 +3,8 @@
  raw_name="warrior"
  tooltip="warrior"
  carrying={
-    "data/things/sword2"
-    "data/things/torches"
+    "sword2"
+    "torches"
  }
  z_depth="player"
  speed=28
@@ -12,7 +12,7 @@
  max_magic=80
  hp_per_level=10
  is_player
- magic_anim="data/things/magic_cloud"
+ magic_anim="magic_cloud"
  hit_priority=20
  stats_attack_melee=13
  stats_attack_ranged=10
@@ -29,7 +29,7 @@
  light_tint="white"
  light_radius=7.0
  is_collision_map_small
- spawn_on_death="data/things/bonepile2"
+ spawn_on_death="bonepile2"
  sound_on_death="player_death"
  is_animated
  tiles={

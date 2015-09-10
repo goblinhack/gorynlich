@@ -3,11 +3,11 @@
  raw_name="orcmob"
  tooltip="orc mob spwan"
  mob_spawn={
-    1000 "data/things/orc1"
-    20 "data/things/orc2"
-    5 "data/things/orc3"
-    2 "data/things/orc4"
-    1 "data/things/orc5"
+    1000 "orc1"
+    20 "orc2"
+    5 "orc3"
+    2 "orc4"
+    1 "orc5"
  }
  max_hp=20
  z_depth="monst"

@@ -20,7 +20,7 @@
  sound_random="saw"
  sound_random_delay_secs=10
  sound_on_hitting_something="saw"
- polymorph_on_death="data/things/sawblade2"
+ polymorph_on_death="sawblade2"
  tiles={
   tile={
    tile="sawblade1.1"

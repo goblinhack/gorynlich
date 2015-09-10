@@ -13,6 +13,7 @@
 #include "tile.h"
 #include "thing.h"
 #include "marshal.h"
+#include "string_util.h"
 
 /*
  * Using static memory as these things never change once made.
@@ -212,10 +213,12 @@ tpp tp_load (uint16_t id, const char *name)
         ERR("thing template insert name [%s] failed", name);
     }
 
-    in = demarshal(name);
+    char *data_things_name = dynprintf("data/things/%s", name);
+    in = demarshal(data_things_name);
     if (!in) {
-        ERR("cannot demarshal template name [%s] failed", name);
+        ERR("cannot demarshal template name [%s] failed", data_things_name);
     }
+    myfree(data_things_name);
 
     demarshal_thing_template(in, t);
     demarshal_fini(in);
