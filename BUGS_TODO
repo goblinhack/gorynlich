@@ -1,4 +1,6 @@
 --------------------------------------- plan for sep --------------------------------------
+- slow level loading
+- slow startup
 - monsters caught in lava should explode when dead
 - wizard walk left jumpy
 - statues should be destoyable
@@ -51,6 +53,7 @@
 - magic gives health to other players
 
 Wed Sep  9 15:05:35 EDT 2015
+- use tga instead of png for sightly faster loading and better alpha
 - game is jumpy, dmap scale issue at 96x96
 
 Wed Sep  9 07:41:17 EDT 2015
