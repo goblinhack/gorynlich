@@ -86,8 +86,8 @@ typedef struct tree_demarshal_node_ {
     union {
         float v_float;
         int64_t v_int;
-        char *v_string;
-        char *v_name;
+        char v_string[80];
+        char v_name[80];
     } val;
 
     int8_t depth;
@@ -173,7 +173,7 @@ static tree_demarshal_node *demarshal_push_name (tree_demarshal *ctx,
         return (0);
     }
 
-    node->val.v_name = dupstr(val, "demarshal name");
+    strncpy(node->val.v_name, val, sizeof(node->val.v_name) - 1);
 
     return (node);
 }
@@ -189,7 +189,7 @@ static tree_demarshal_node *demarshal_push_string (tree_demarshal *ctx,
         return (0);
     }
 
-    node->val.v_string = dupstr(val, "demarshal string");
+    strncpy(node->val.v_string, val, sizeof(node->val.v_string) - 1);
 
     return (node);
 }
@@ -210,8 +210,6 @@ static tree_demarshal_node *demarshal_push_node (tree_demarshal *ctx,
 
 void demarshal_fini (tree_demarshal *ctx)
 {
-    tree_demarshal_node *node;
-
     /*
      * Walk all pointer refs, find the pointer they were referring to and
      * change them to point at the new real pointer.
@@ -219,32 +217,6 @@ void demarshal_fini (tree_demarshal *ctx)
     tree_demarshal_ptr_node target;
 
     memset(&target, 0, sizeof(target));
-
-    int n;
-    for (n = 0; n < ctx->nodecnt; n++) {
-        node = &ctx->node[n];
-
-        switch (node->type) {
-        case MARSHAL_NONE:
-            break;
-        case MARSHAL_INT:
-            break;
-        case MARSHAL_FLOAT:
-            break;
-        case MARSHAL_STRING:
-            myfree(node->val.v_string);
-            node->val.v_string = 0;
-            break;
-        case MARSHAL_NAME:
-            myfree(node->val.v_name);
-            node->val.v_name = 0;
-            break;
-        case MARSHAL_BRA:
-            break;
-        case MARSHAL_KET:
-            break;
-        }
-    }
 
     ctx->nodecnt = 0;
 
