@@ -1,5 +1,5 @@
 --------------------------------------- plan for sep --------------------------------------
-- monsters caught in lava should explode when dead
+- zombies leave wizard bones? looks odd
 - wizard walk left jumpy
 - statues should be destoyable
 - wizards want lights up left hand wall too much
@@ -51,6 +51,7 @@
 - magic gives health to other players
 
 Thu Sep 10 07:34:53 EDT 2015
+- monsters caught in lava should explode when dead
 - faster editor map loading
 - got rid of data/things/ in all things names
 
