@@ -86,8 +86,8 @@ typedef struct tree_demarshal_node_ {
     union {
         float v_float;
         int64_t v_int;
-        char v_string[80];
-        char v_name[80];
+        char v_string[40];
+        char v_name[40];
     } val;
 
     int8_t depth;
@@ -95,7 +95,7 @@ typedef struct tree_demarshal_node_ {
     int16_t line;
 } tree_demarshal_node;
 
-#define MAX_NODES 200000
+#define MAX_NODES 180000
 
 typedef struct tree_demarshal_ {
     tree_demarshal_node node[MAX_NODES];

@@ -457,7 +457,7 @@ typedef struct tpp_data_ {
     /*
      * Used for signposts and messages that appear when tiggered.
      */
-    char text[128];
+    char text[SMALL_STRING_LEN_MAX];
 } thing_template_data;
 
 uint8_t tp_init(void);
