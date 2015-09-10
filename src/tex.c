@@ -40,8 +40,6 @@ tree_root *textures;
 static uint8_t tex_init_done;
 
 static texp tex_black_and_white(SDL_Surface *in,
-                                uint32_t tile_width,
-                                uint32_t tile_height,
                                 const char *file,
                                 const char *name);
 uint8_t tex_init (void)
@@ -164,6 +162,61 @@ static SDL_Surface *load_image (const char *filename)
     return (rv);
 }
 
+static int load_image_twice (const char *filename, 
+                             SDL_Surface **s1,
+                             SDL_Surface **s2)
+{
+    uint32_t rmask, gmask, bmask, amask;
+    unsigned char *image_data;
+    int32_t x, y, comp;
+
+    image_data = load_raw_image(filename, &x, &y, &comp);
+    if (!image_data) {
+        DIE("could not read memory for file, %s", filename);
+    }
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
+
+    if (comp == 4) {
+        *s1 = SDL_CreateRGBSurface(0, x, y, 32, rmask, gmask, bmask, amask);
+        newptr(*s1, "SDL_CreateRGBSurface");
+    } else if (comp == 3) {
+        *s1 = SDL_CreateRGBSurface(0, x, y, 24, rmask, gmask, bmask, 0);
+        newptr(*s1, "SDL_CreateRGBSurface");
+    } else {
+        free_raw_image(image_data);
+        return (0);
+    }
+
+    if (comp == 4) {
+        *s2 = SDL_CreateRGBSurface(0, x, y, 32, rmask, gmask, bmask, amask);
+        newptr(*s2, "SDL_CreateRGBSurface");
+    } else if (comp == 3) {
+        *s2 = SDL_CreateRGBSurface(0, x, y, 24, rmask, gmask, bmask, 0);
+        newptr(*s2, "SDL_CreateRGBSurface");
+    } else {
+        free_raw_image(image_data);
+        return (0);
+    }
+
+    memcpy((*s1)->pixels, image_data, comp * x * y);
+    memcpy((*s2)->pixels, image_data, comp * x * y);
+
+    free_raw_image(image_data);
+
+    return (true);
+}
+
 /*
  * Load a texture
  */
@@ -228,11 +281,7 @@ texp tex_load_tiled (const char *file,
         DIE("could not make surface from file, %s", file);
     }
 
-#ifdef TILES_WITH_PIXEL_BOUNDARIES_BETWEEN_TILES
-    t = tex_from_tiled_surface(surface, tile_width, tile_height, file, name);
-#else
     t = tex_from_surface(surface, file, name);
-#endif
 
     t->tile_width = tile_width;
     t->tile_height = tile_height;
@@ -247,34 +296,18 @@ texp tex_load_tiled (const char *file,
  * Load a texture which has regular tiles with single pixel gaps between
  * each tile
  */
-texp tex_load_tiled_black_and_white (const char *file,
-                                     const char *name,
-                                     uint32_t tile_width,
-                                     uint32_t tile_height)
+static texp tex_load_tiled_black_and_white_ (SDL_Surface *surface,
+                                             const char *file,
+                                             const char *name,
+                                             uint32_t tile_width,
+                                             uint32_t tile_height)
 {
     texp t = tex_find(name);
-
     if (t) {
         return (t);
     }
 
-    if (!file) {
-        if (!name) {
-            DIE("no file for tex");
-        } else {
-            DIE("no file for tex loading %s", name);
-        }
-    }
-
-    SDL_Surface *surface = 0;
-
-    surface = load_image(file);
-
-    if (!surface) {
-        DIE("could not make surface from file, %s", file);
-    }
-
-    t = tex_black_and_white(surface, tile_width, tile_height, file, name);
+    t = tex_black_and_white(surface, file, name);
 
     t->tile_width = tile_width;
     t->tile_height = tile_height;
@@ -283,6 +316,63 @@ texp tex_load_tiled_black_and_white (const char *file,
     t->tiles_height = tex_get_height(t) / tile_height;
 
     return (t);
+}
+
+/*
+ * Load a texture which has regular tiles with single pixel gaps between
+ * each tile
+ */
+static texp tex_load_ (SDL_Surface *surface,
+                       const char *file,
+                       const char *name,
+                       uint32_t tile_width,
+                       uint32_t tile_height)
+{
+    texp t = tex_find(name);
+    if (t) {
+        return (t);
+    }
+
+    t = tex_from_surface(surface, file, name);
+
+    t->tile_width = tile_width;
+    t->tile_height = tile_height;
+
+    t->tiles_width = tex_get_width(t) / tile_width;
+    t->tiles_height = tex_get_height(t) / tile_height;
+
+    return (t);
+}
+
+/*
+ * Load a texture which has regular tiles with single pixel gaps between
+ * each tile
+ */
+int tex_load_tiled_black_and_white (const char *file,
+                                    const char *name,
+                                    const char *name2,
+                                    uint32_t tile_width,
+                                    uint32_t tile_height)
+{
+    if (!file) {
+        if (!name) {
+            DIE("no file for tex");
+        } else {
+            DIE("no file for tex loading %s", name);
+        }
+    }
+
+    SDL_Surface *s1 = 0;
+    SDL_Surface *s2 = 0;
+
+    if (!load_image_twice(file, &s1, &s2)) {
+        DIE("could not make surface from file, %s", file);
+    }
+
+    tex_load_(s1, file, name, tile_width, tile_height);
+    tex_load_tiled_black_and_white_(s2, file, name2, tile_width, tile_height);
+
+    return (true);
 }
 
 /*
@@ -577,8 +667,6 @@ texp tex_from_tiled_surface (SDL_Surface *in,
 }
 
 static texp tex_black_and_white (SDL_Surface *in,
-                                 uint32_t tile_width,
-                                 uint32_t tile_height,
                                  const char *file,
                                  const char *name)
 {
