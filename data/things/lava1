@@ -2,14 +2,14 @@
  short_name="lava"
  raw_name="lava1"
  tooltip="lava"
- mob_spawn={ 1000 "lava1" }
+ mob_spawn={ 900 "lava1" 100 "flames1" }
  z_depth="floor2"
  is_mob_spawner
  is_lava
  is_monst
  hit_delay_tenths=5
  hit_priority=0
- damage=20
+ damage=10
  is_joinable
  mob_spawn_delay_tenths=50
  is_animated

@@ -528,22 +528,6 @@ static void thing_handle_collision (thingp me, thingp it,
     }
 
     /*
-     * Monster friendly fire?
-     */
-    if (thing_is_monst(me) && thing_is_monst(it)) {
-        if (thing_is_jesus(me)) {
-            /*
-             * Let jesus get rid of monsters
-             */
-        } else if (!thing_is_shop_floor(me)) {
-            /*
-             * Allow shopkeepers to shoot monsters.
-             */
-            return;
-        }
-    }
-
-    /*
      * Weapon swing of monster should not hit other monsters.
      */
     thingp owner_it = thing_owner(it);
@@ -625,8 +609,50 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
         if (thing_is_acid(it) || thing_is_lava(it)) {
             return;
         }
-    }
+
+        /*
+         * Allow weapon blasts to sail over lava
+         */
+        if (thing_is_projectile(it)) {
+            return;
+        }
+
+        if (thing_is_levitating(it)) {
+            return;
+        }
+
+        if (thing_is_fragile(it)         ||
+            thing_is_combustable(it)) {
+//CON("  %d",__LINE__);
+            thing_possible_hit_add(it, "monst hit thing");
+            return;
+        }
 //CON("%s vs %s",thing_logname(me), thing_logname(it));
+
+        if (thing_is_player(it) ||
+            thing_is_monst(it)) {
+            thing_possible_hit_add(it, "burn attack");
+            return;
+        }
+
+        return;
+    }
+
+    /*
+     * Monster friendly fire?
+     */
+    if (thing_is_monst(me) && thing_is_monst(it)) {
+        if (thing_is_jesus(me)) {
+            /*
+             * Let jesus get rid of monsters
+             */
+        } else if (!thing_is_shop_floor(me)) {
+            /*
+             * Allow shopkeepers to shoot monsters.
+             */
+            return;
+        }
+    }
 
     if (thing_is_player(me)) {
         /*
@@ -675,8 +701,6 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
          * Player bumped into something.
          */
         if (thing_is_shield(it)                ||
-            thing_is_lava(it)                  ||
-            thing_is_acid(it)                  ||
             thing_is_cloud_effect(it)) {
             /*
              * I'm hit!
@@ -710,28 +734,6 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
         }
     }
 
-    if (thing_is_lava(me)                  ||
-        thing_is_acid(me)) {
-
-        /*
-         * Allow weapon blasts to sail over lava
-         */
-        if (thing_is_projectile(it)) {
-            return;
-        }
-
-        if (thing_is_levitating(it)) {
-            return;
-        }
-
-        if (thing_is_fragile(it)         ||
-            thing_is_combustable(it)) {
-//CON("  %d",__LINE__);
-            thing_possible_hit_add(it, "monst hit thing");
-            return;
-        }
-    }
-
     if (thing_is_treasure_eater(me)) {
         if (thing_is_treasure(it)) {
 //CON("  %d",__LINE__);
@@ -755,8 +757,6 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
          */
         if (thing_is_player(it)                ||
             thing_is_shield(it)                ||
-            thing_is_lava(it)                  ||
-            thing_is_acid(it)                  ||
             thing_is_cloud_effect(it)) {
             /*
              * I'm hit!
