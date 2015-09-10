@@ -80,7 +80,9 @@ levelp level_new (widp map,
 {
     levelp level;
 
-    level = (typeof(level)) myzalloc(sizeof(*level), "level");
+    level = (typeof(level)) mymalloc(sizeof(*level), "level");
+
+    memset(&level->memzero_start, 0, (char*)&level->memzero_end - (char*)&level->memzero_start);
 
     if (map) {
         level_set_map(level, map);
