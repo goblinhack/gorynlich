@@ -37,6 +37,12 @@ typedef struct level_t_ {
     uint32_t seed;
 
     /*
+     * Quick look op for initial things on the map and for finding what to 
+     * spawn on a trigger for ex.
+     */
+    level_map_grid map_grid;
+
+    /*
      * This is for monsters. One map where they try to go through doors and 
      * another where they give up. This way in a closed room with a door the
      * monster will wait by the door. If there is an open wall it will hit the
@@ -49,6 +55,11 @@ typedef struct level_t_ {
 
     level_walls walls;
     level_walls doors;
+
+    /*
+     * Zero memory from here on only for speed as the map_grid is large
+     */
+    uint8_t memzero_start;
 
     /*
      * Possible places for players to start.
@@ -76,12 +87,6 @@ typedef struct level_t_ {
      * Grid widget
      */
     widp map;
-
-    /*
-     * Quick look op for initial things on the map and for finding what to 
-     * spawn on a trigger for ex.
-     */
-    level_map_grid map_grid;
 
     /*
      * Timers
@@ -190,5 +195,10 @@ typedef struct level_t_ {
      * Ask the AI thread to finish.
      */
     uint8_t exit_request:1;
+
+    /*
+     * Zero memory from here on only for speed as the map_grid is large
+     */
+    uint8_t memzero_end;
 
 } level_t;
