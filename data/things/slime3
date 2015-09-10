@@ -2,7 +2,7 @@
  short_name="fire slime"
  raw_name="slime-3"
  tooltip="pink slime"
- mob_spawn={ 1000 "data/things/slime3" }
+ mob_spawn={ 1000 "slime3" }
  z_depth="monst"
  speed=1
  max_hp=10
@@ -20,7 +20,7 @@
  hit_priority=10
  is_cats_eyes
  is_collision_map_medium
- explodes_as="data/things/explosion1"
+ explodes_as="explosion1"
  is_animated
  d10000_chance_of_appearing=10
  min_appear_depth=1

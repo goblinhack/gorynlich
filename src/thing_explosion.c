@@ -456,10 +456,10 @@ void level_place_explosion (levelp level,
                                0.5, // density
                                explodes_as,
                                4, // nargs
-                               "data/things/explosion1",
-                               "data/things/explosion2",
-                               "data/things/explosion3",
-                               "data/things/explosion4");
+                               "explosion1",
+                               "explosion2",
+                               "explosion3",
+                               "explosion4");
         return;
     }
 
@@ -476,10 +476,10 @@ void level_place_explosion (levelp level,
                                0.5, // density
                                explodes_as,
                                4, // nargs
-                               "data/things/fireburst1",
-                               "data/things/fireburst2",
-                               "data/things/fireburst3",
-                               "data/things/fireburst4");
+                               "fireburst1",
+                               "fireburst2",
+                               "fireburst3",
+                               "fireburst4");
         return;
     }
 

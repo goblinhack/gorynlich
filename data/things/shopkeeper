@@ -3,7 +3,7 @@
  raw_name="shopkeeper"
  tooltip="shopkeeper"
  carrying={
-    "data/things/shotgun"
+    "shotgun"
  }
  z_depth="monst"
  speed=15

@@ -21,8 +21,8 @@
  light_radius=2.0
  is_ethereal
  d10000_chance_of_appearing=0
- explodes_as="data/things/explosion3"
- fires="data/things/energy2"
+ explodes_as="explosion3"
+ fires="energy2"
  weapon_fire_delay_hundredths=10
  can_be_hit_chance=10
  is_blit_y_offset

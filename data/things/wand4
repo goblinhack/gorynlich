@@ -2,7 +2,7 @@
  short_name="wand of supreme damage"
  raw_name="wand4"
  tooltip="wand of supreme damage"
- fires="data/things/fireball4"
+ fires="fireball4"
  weapon_fire_delay_hundredths=30
  z_depth="monst"
  cost=1000
@@ -23,12 +23,12 @@
  light_tint="orange"
  light_radius=0.1
  is_combustable
- explodes_as="data/things/explosion4"
+ explodes_as="explosion4"
  is_wearable
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
- weapon_carry_anim="data/things/wand4_anim"
+ weapon_carry_anim="wand4_anim"
  tiles={
   tile={
    tile="wand4.1"

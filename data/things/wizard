@@ -3,8 +3,8 @@
  raw_name="wizard"
  tooltip="wizard"
  carrying={
-    "data/things/wand1"
-    "data/things/torches"
+    "wand1"
+    "torches"
  }
  z_depth="player"
  speed=25
@@ -12,7 +12,7 @@
  max_magic=200
  hp_per_level=4
  is_player
- magic_anim="data/things/magic_cloud"
+ magic_anim="magic_cloud"
  hit_priority=20
  stats_attack_melee=8
  stats_attack_ranged=8
@@ -29,7 +29,7 @@
  light_tint="thistle"
  light_radius=5.0
  is_collision_map_small
- spawn_on_death="data/things/bonepile2"
+ spawn_on_death="bonepile2"
  sound_on_death="player_death"
  is_animated
  tiles={

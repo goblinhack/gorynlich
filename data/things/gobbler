@@ -20,7 +20,7 @@
  hit_priority=10
  is_collision_map_medium
  d10000_chance_of_appearing=50
- fires="data/things/fireball2"
+ fires="fireball2"
  weapon_fire_delay_hundredths=200
  min_appear_depth=10
  max_appear_depth=100

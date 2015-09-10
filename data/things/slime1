@@ -2,7 +2,7 @@
  short_name="chocolate slime"
  raw_name="slime-1"
  tooltip="chocolate slime"
- mob_spawn={ 1000 "data/things/slime1" }
+ mob_spawn={ 1000 "slime1" }
  z_depth="monst"
  max_hp=1
  damage=1

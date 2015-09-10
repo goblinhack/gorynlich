@@ -4,7 +4,7 @@
  z_depth="explosion_top"
  is_animated
  is_animated_no_dir
- shield_carry_anim="data/things/shield1_anim"
+ shield_carry_anim="shield1_anim"
  sound_on_creation="shield"
  tiles={
   tile={

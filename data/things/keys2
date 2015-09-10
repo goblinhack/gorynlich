@@ -5,7 +5,7 @@
  z_depth="monst"
  quantity=2
  is_key
- carried_as="data/things/key"
+ carried_as="key"
  is_valid_for_action_bar
  is_stackable
  is_carryable

@@ -15,7 +15,7 @@
  is_valid_for_action_bar
  d10000_chance_of_appearing=100
  is_combustable
- explodes_as="data/things/explosion3"
+ explodes_as="explosion3"
  is_light_source
  light_radius=3.5
  light_tint="white"

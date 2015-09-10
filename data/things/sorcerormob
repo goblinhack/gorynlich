@@ -2,7 +2,7 @@
  short_name="sorceror mob"
  raw_name="sorcerormob"
  tooltip="sorceror generator"
- mob_spawn={ 1000 "data/things/sorceror" }
+ mob_spawn={ 1000 "sorceror" }
  z_depth="monst"
  is_mob_spawner
  is_generator
@@ -18,7 +18,7 @@
  damage=20
  is_animated
  d10000_chance_of_appearing=5 
- explodes_as="data/things/explosion2"
+ explodes_as="explosion2"
  mob_spawn_delay_tenths=100
  tiles={
   tile={

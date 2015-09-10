@@ -15,7 +15,7 @@
  sound_on_collect="potion"
  d10000_chance_of_appearing=100
  is_combustable
- explodes_as="data/things/explosion3"
+ explodes_as="explosion3"
  is_fragile
  tiles={
   tile={

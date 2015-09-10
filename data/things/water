@@ -10,7 +10,7 @@
  is_carryable
  is_given_randomly_at_start
  d10000_chance_of_appearing=80
- polymorph_on_death="data/things/water_poison"
+ polymorph_on_death="water_poison"
  message_on_use="%%fg=lightblue$refreshing"
  bonus_hp_on_use=20
  is_fragile

@@ -15,7 +15,7 @@
  is_fragile
  is_wanderer
  is_effect_rotate_2way
- polymorph_on_death="data/things/juggernaut"
+ polymorph_on_death="juggernaut"
  sound_random="beep"
  sound_random_delay_secs=5
  sound_on_hitting_something="beep"

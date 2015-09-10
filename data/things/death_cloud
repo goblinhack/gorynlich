@@ -4,7 +4,7 @@
  z_depth="explosion_top"
  is_animated
  is_animated_no_dir
- shield_carry_anim="data/things/death_cloud_anim"
+ shield_carry_anim="death_cloud_anim"
  tiles={
   tile={
    tile="death_cloud.1"

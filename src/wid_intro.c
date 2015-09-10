@@ -360,7 +360,7 @@ static void wid_intro_bg_create (void)
 
         wid_set_tl_br_pct(wid, tl, br);
 
-        tpp tp = tp_find("data/things/anim_treasure_chest");
+        tpp tp = tp_find("anim_treasure_chest");
         wid_set_thing_template(wid, tp);
 
         wid_raise(wid);
@@ -379,7 +379,7 @@ static void wid_intro_bg_create (void)
 
         wid_set_tl_br_pct(wid, tl, br);
 
-        tpp tp = tp_find("data/things/anim_eyes");
+        tpp tp = tp_find("anim_eyes");
         wid_set_thing_template(wid, tp);
 
         wid_raise(wid);

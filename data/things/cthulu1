@@ -3,11 +3,11 @@
  raw_name="cthulu1"
  tooltip="baby cthulu"
  mob_spawn={
-    1000 "data/things/zombie1"
-    10 "data/things/zombie2"
-    1000 "data/things/zombie3"
-    1000 "data/things/zombie4"
-    1000 "data/things/zombie5"
+    1000 "zombie1"
+    10 "zombie2"
+    1000 "zombie3"
+    1000 "zombie4"
+    1000 "zombie5"
  }
  mob_spawn_delay_tenths=50
  is_mob_spawner
@@ -30,7 +30,7 @@
  is_levitating
  scale=1.5
  is_animated
- fires="data/things/plasmaball1"
+ fires="plasmaball1"
  weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=2
  min_appear_depth=20

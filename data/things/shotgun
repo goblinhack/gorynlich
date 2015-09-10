@@ -2,7 +2,7 @@
  short_name="shotgun"
  raw_name="shotgun"
  tooltip="shotgun"
- fires="data/things/pellets"
+ fires="pellets"
  weapon_fire_delay_hundredths=30
  z_depth="monst"
  cost=1000
@@ -22,7 +22,7 @@
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
- weapon_carry_anim="data/things/shotgun_anim"
+ weapon_carry_anim="shotgun_anim"
  tiles={
   tile={
    tile="shotgun"
