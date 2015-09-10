@@ -1,6 +1,4 @@
 --------------------------------------- plan for sep --------------------------------------
-- slow level loading
-- slow startup
 - monsters caught in lava should explode when dead
 - wizard walk left jumpy
 - statues should be destoyable
@@ -53,6 +51,7 @@
 - magic gives health to other players
 
 Thu Sep 10 07:34:53 EDT 2015
+- faster editor map loading
 - got rid of data/things/ in all things names
 
 Wed Sep  9 15:05:35 EDT 2015
