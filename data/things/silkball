@@ -12,7 +12,7 @@
  is_effect_pulse
  is_variable_size
  scale=0.2
- spawn_on_death="data/things/cobweb"
+ spawn_on_death="cobweb"
  tiles={
   tile={
    tile="silkball-1"

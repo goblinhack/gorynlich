@@ -10,7 +10,7 @@
  is_stackable
  cost=100
  is_treasure
- carried_as="data/things/torch"
+ carried_as="torch"
  light_radius=3.0
  is_animated
  d10000_chance_of_appearing=200

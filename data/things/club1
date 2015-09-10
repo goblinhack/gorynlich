@@ -22,8 +22,8 @@
  is_valid_for_action_bar
  d10000_chance_of_appearing=15
  d10000_chance_of_breaking=1
- weapon_carry_anim="data/things/club1_anim"
- weapon_swing_anim="data/things/weapon_swing2"
+ weapon_carry_anim="club1_anim"
+ weapon_swing_anim="weapon_swing2"
  tiles={
   tile={
    tile="club1"

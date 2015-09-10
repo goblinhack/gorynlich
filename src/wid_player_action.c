@@ -694,7 +694,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
                 int i = count;
                 while (i--) {
-                    tpp what = tp_find("data/things/heart");
+                    tpp what = tp_find("heart");
                     if (!what) {
                         ERR("cannot place heart");
                     }

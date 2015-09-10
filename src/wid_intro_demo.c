@@ -705,7 +705,7 @@ static void sdl_intro_demo_tick (widp w)
 
                 if (wid) {
                     if ((demo_player_x[i] > X - 0.1) && (demo_player_x[i] < X + 0.2)) {
-                        tpp tp = tp_find("data/things/blood2");
+                        tpp tp = tp_find("blood2");
                         wid_set_thing_template(wid, tp);
                         demo_player_dead[i] = true;
                         wid_set_animate(wid, true);

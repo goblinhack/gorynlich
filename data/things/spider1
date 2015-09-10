@@ -18,7 +18,7 @@
  is_variable_size
  hit_priority=10
  is_animated
- fires="data/things/silkball"
+ fires="silkball"
  weapon_fire_delay_hundredths=500
  d10000_chance_of_appearing=600
  min_appear_depth=1

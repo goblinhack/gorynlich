@@ -18,7 +18,7 @@
  is_effect_pulse
  is_variable_size
  sound_on_creation="fireball3"
- explodes_as="data/things/explosion1"
+ explodes_as="explosion1"
  tiles={
   tile={
    tile="teleport1.1"

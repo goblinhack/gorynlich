@@ -138,7 +138,7 @@ void thing_server_magic_fire (thingp t)
     x += dx;
     y += dy;
 
-    tpp projectile = tp_find("data/things/magic1");
+    tpp projectile = tp_find("magic1");
     if (!projectile) {
         /*
          * Might be a sword.

@@ -5,7 +5,7 @@
  z_depth="player"
  is_inactive
  is_food
- carried_as="data/things/water"
+ carried_as="water"
  is_stackable
  hit_priority=5
  is_carryable

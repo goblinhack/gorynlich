@@ -2,7 +2,7 @@
  short_name="deathly slime"
  raw_name="slime-4"
  tooltip="deathly slime"
- mob_spawn={ 1000 "data/things/slime4" }
+ mob_spawn={ 1000 "slime4" }
  z_depth="monst"
  speed=1
  max_hp=20
@@ -18,7 +18,7 @@
  is_shadow_caster_soft
  is_variable_size
  is_combustable
- explodes_as="data/things/cloudkill1"
+ explodes_as="cloudkill1"
  is_poison
  hit_priority=10
  is_cats_eyes

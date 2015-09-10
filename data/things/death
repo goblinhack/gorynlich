@@ -3,7 +3,7 @@
  raw_name="death"
  tooltip="the reaper"
  carrying={
-    "data/things/scythe1"
+    "scythe1"
  }
  z_depth="monst"
  speed=8
@@ -27,7 +27,7 @@
  is_ethereal
  d10000_chance_of_appearing=0
  can_be_hit_chance=10
- explodes_as="data/things/explosion3"
+ explodes_as="explosion3"
  is_animated
  tiles={
   tile={

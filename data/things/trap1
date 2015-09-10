@@ -16,7 +16,7 @@
  hit_priority=10
  scale=1.0
  is_animated
- fires="data/things/energy1"
+ fires="energy1"
  weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=100
  tiles={

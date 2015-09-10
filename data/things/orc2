@@ -3,7 +3,7 @@
  raw_name="ork2"
  tooltip="orc captain"
  carrying={
-    "data/things/sword2"
+    "sword2"
  }
  z_depth="monst"
  speed=15
