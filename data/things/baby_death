@@ -3,7 +3,7 @@
  raw_name="minideath"
  tooltip="mini reaper"
  carrying={
-    "data/things/scythe1"
+    "scythe1"
  }
  z_depth="monst"
  speed=5
@@ -25,7 +25,7 @@
  d10000_chance_of_appearing=10
  min_appear_depth=5
  max_appear_depth=100
- explodes_as="data/things/explosion2"
+ explodes_as="explosion2"
  is_animated
  tiles={
   tile={

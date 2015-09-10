@@ -2,7 +2,7 @@
  short_name="deathly mushman"
  raw_name="mushman3"
  tooltip="deathly mushman"
- mob_spawn={ 1000 "data/things/mushman3" }
+ mob_spawn={ 1000 "mushman3" }
  z_depth="monst"
  max_hp=5
  damage=1
@@ -24,7 +24,7 @@
  d10000_chance_of_appearing=50
  min_appear_depth=1
  max_appear_depth=100
- fires="data/things/cloudkill1"
+ fires="cloudkill1"
  weapon_fire_delay_hundredths=200
  sound_on_death="squelch"
  tiles={

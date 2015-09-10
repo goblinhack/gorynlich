@@ -22,7 +22,7 @@
  scale=0.5
  is_cats_eyes
  is_animated
- fires="data/things/energy1"
+ fires="energy1"
  weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=800
  tiles={

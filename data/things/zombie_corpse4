@@ -3,7 +3,7 @@
  raw_name="zombie_corpse4"
  tooltip="zombie corpse"
  mob_spawn={
-    1000 "data/things/zombie4"
+    1000 "zombie4"
  }
  z_depth="monst"
  max_hp=1

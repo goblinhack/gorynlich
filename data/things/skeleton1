@@ -3,7 +3,7 @@
  raw_name="skeleton"
  tooltip="skeleton"
  carrying={
-    "data/things/bow1"
+    "bow1"
  }
  z_depth="monst"
  speed=15

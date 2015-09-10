@@ -3,8 +3,8 @@
  raw_name="cobweb"
  tooltip="cobweb"
  mob_spawn={ 
-   1000 "data/things/spider1" 
-   10 "data/things/spider2" 
+   1000 "spider1" 
+   10 "spider2" 
  }
  z_depth="explosion_top"
  max_hp=3

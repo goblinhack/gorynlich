@@ -22,14 +22,14 @@
  is_levitating
  is_cats_eyes
  is_animated
- fires="data/things/fireball4"
+ fires="fireball4"
  weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=0
  is_light_source
  light_radius=1.5
  light_tint="red"
  has_ability_burst_shot
- explodes_as="data/things/explosion3"
+ explodes_as="explosion3"
  tiles={
   tile={ delay=50 tile="demon1-1" }
   tile={ delay=50 tile="demon1-2" }

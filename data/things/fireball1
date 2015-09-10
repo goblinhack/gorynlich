@@ -15,7 +15,7 @@
  is_fire
  is_collision_map_medium
  sound_on_creation="fireball1"
- explodes_as="data/things/explosion1"
+ explodes_as="explosion1"
  is_fire
  tiles={
   tile={

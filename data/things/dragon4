@@ -22,7 +22,7 @@
  is_animated
  sound_random="dragon"
  sound_random_delay_secs=10
- fires="data/things/fireburst1"
+ fires="fireburst1"
  weapon_fire_delay_hundredths=200
  d10000_chance_of_appearing=0
  min_appear_depth=99
@@ -31,7 +31,7 @@
  is_light_source
  is_dragon
  light_radius=3.5
- spawn_on_death="data/things/exit1"
+ spawn_on_death="exit1"
  tiles={
   tile={ delay=100 tile="dragon1-1" }
   tile={ delay=100 tile="dragon1-2" }

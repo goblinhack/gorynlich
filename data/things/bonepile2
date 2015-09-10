@@ -2,7 +2,7 @@
  short_name="bone pile"
  raw_name="bonepile2"
  tooltip="bone pile"
- mob_spawn={ 1000 "data/things/ghost2" }
+ mob_spawn={ 1000 "ghost2" }
  z_depth="monst"
  is_mob_spawner
  is_generator
@@ -17,7 +17,7 @@
  damage=1
  bonus_xp_on_death=50
  mob_spawn_delay_tenths=30
- polymorph_on_death="data/things/bonepile1"
+ polymorph_on_death="bonepile1"
  tiles={
   tile={
    tile="bonepile2"

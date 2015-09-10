@@ -21,7 +21,7 @@
  has_ability_double_shot
  is_collision_map_medium
  is_animated
- fires="data/things/energy1"
+ fires="energy1"
  weapon_fire_delay_hundredths=200
  d10000_chance_of_appearing=80
  min_appear_depth=5

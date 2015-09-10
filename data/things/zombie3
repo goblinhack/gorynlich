@@ -3,11 +3,11 @@
  raw_name="zombie3"
  tooltip="zommom"
  mob_spawn={
-    1000 "data/things/zombie1"
-    10 "data/things/zombie2"
-    1000 "data/things/zombie3"
-    1000 "data/things/zombie4"
-    1000 "data/things/zombie5"
+    1000 "zombie1"
+    10 "zombie2"
+    1000 "zombie3"
+    1000 "zombie4"
+    1000 "zombie5"
  }
  mob_spawn_delay_tenths=200
  is_mob_spawner
@@ -30,7 +30,7 @@
  d10000_chance_of_appearing=30
  min_appear_depth=1
  max_appear_depth=100
- spawn_on_death="data/things/zombie_corpse3"
+ spawn_on_death="zombie_corpse3"
  sound_on_hitting_something="zombie"
  sound_random="urgh"
  sound_random_delay_secs=20
