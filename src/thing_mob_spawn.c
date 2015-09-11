@@ -156,6 +156,14 @@ uint8_t thing_mob_spawn (thingp t)
         x = floor(x);
         y = floor(y);
 
+        /*
+         * Flames on lava pits spawn on the lava.
+         */
+        if (tp_is_spawns_under(what)) {
+            x = t->x;
+            y = t->y;
+        }
+
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          x,
                                          y,
@@ -234,6 +242,14 @@ thingp thing_mob_spawn_on_death (thingp t)
          */
         x = floor(x);
         y = floor(y);
+
+        /*
+         * Flames on lava pits spawn on the lava.
+         */
+        if (tp_is_spawns_under(what)) {
+            x = t->x;
+            y = t->y;
+        }
 
         if (tp_is_cobweb(what)) {
             /*
