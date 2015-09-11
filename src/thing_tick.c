@@ -128,8 +128,8 @@ static void thing_tick_server_all (void)
                 if (time_have_x_tenths_passed_since(delay,
                                                     t->timestamp_mob_spawn)) {
                     /*
-                    * Not sure if should retry rapidly when we can't place.
-                    */
+                     * Not sure if should retry rapidly when we can't place.
+                     */
                     if (t->timestamp_mob_spawn) {
                         /*
                         * Skip first time around else new born things spawn in a 
@@ -149,7 +149,7 @@ static void thing_tick_server_all (void)
                      * Add some jitter.
                      */
                     t->timestamp_mob_spawn = time_get_time_ms() +
-                                    (myrand() % (delay * 100));
+                                    (myrand() % (delay * 200));
                 }
             }
 
