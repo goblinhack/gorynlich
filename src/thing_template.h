@@ -321,7 +321,7 @@ typedef struct tp_ {
     uint8_t is_rrr17:1;
     uint8_t is_rrr18:1;
     uint8_t is_rrr19:1;
-    uint8_t is_rrr20:1;
+    uint8_t is_spawns_under:1;
     uint8_t is_juggernaut:1;
     uint8_t is_wanderer:1;
     uint8_t is_rrr24:1;
@@ -814,9 +814,9 @@ static inline uint8_t tp_is_rrr19 (tpp t)
     return (t->is_rrr19);
 }
 
-static inline uint8_t tp_is_rrr20 (tpp t)
+static inline uint8_t tp_is_spawns_under (tpp t)
 {
-    return (t->is_rrr20);
+    return (t->is_spawns_under);
 }
 
 static inline uint8_t tp_is_juggernaut (tpp t)
