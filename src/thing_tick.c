@@ -10,6 +10,7 @@
 #include "timer.h"
 #include "wid_game_map_client.h"
 #include "thing_shop.h"
+#include "math_util.h"
 
 TREE_GET_NEXT_INLINE(tree_key_int32_compare_func)
 
@@ -108,48 +109,42 @@ static void thing_tick_server_all (void)
             thing_server_magic_fire(t);
         }
 
+        if (thing_is_mob_spawner(t)) {
+            /*
+             * Time to spawn a thing?
+             */
+            uint32_t delay = tp_get_mob_spawn_delay_tenths(tp);
+            if (!delay) {
+                ERR("mob spawner %s with no delay", thing_logname(t));
+            }
+
+            if (time_have_x_tenths_passed_since(delay, t->timestamp_mob_spawn)) {
+                /*
+                 * Skip first time around else new born things spawn in a 
+                 * loop.
+                 */
+                thing_mob_spawn(t);
+
+                /*
+                 * Some things like corpses, spawn once and then die
+                 */
+                if (thing_is_dead(t)) {
+                    continue;
+                }
+
+                /*
+                 * Add some jitter.
+                 */
+                uint32_t delta = time_get_time_ms() - t->timestamp_mob_spawn;
+
+                t->timestamp_mob_spawn = time_get_time_ms() + myrand() % (delta / 2);
+            }
+        }
+
         if (slow_tick) {
             if (thing_is_treasure(t)) {
-
                 if (someone_is_inside_a_shop) {
                     thing_shop_item_tick(t);
-                }
-
-            } else if (thing_is_mob_spawner(t)) {
-                /*
-                 * Time to spawn a thing?
-                 */
-                uint32_t delay = 
-                        tp_get_mob_spawn_delay_tenths(tp);
-                if (!delay) {
-                    ERR("mob spawner %s with no delay", thing_logname(t));
-                }
-
-                if (time_have_x_tenths_passed_since(delay,
-                                                    t->timestamp_mob_spawn)) {
-                    /*
-                     * Not sure if should retry rapidly when we can't place.
-                     */
-                    if (t->timestamp_mob_spawn) {
-                        /*
-                        * Skip first time around else new born things spawn in a 
-                        * loop.
-                        */
-                        thing_mob_spawn(t);
-
-                        /*
-                         * Some things like corpses, spawn once and then die
-                         */
-                        if (thing_is_dead(t)) {
-                            continue;
-                        }
-                    }
-
-                    /*
-                     * Add some jitter.
-                     */
-                    t->timestamp_mob_spawn = time_get_time_ms() +
-                                    (myrand() % (delay * 200));
                 }
             }
 
