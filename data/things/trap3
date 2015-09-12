@@ -1,11 +1,11 @@
 {
- short_name="fireball trap"
+ short_name="gargoyle"
  raw_name="trap3"
- tooltip="fireball trap"
+ tooltip="gargoyle"
  z_depth="monst"
  speed=0
- max_hp=500
- bonus_xp_on_death=500
+ max_hp=150
+ bonus_xp_on_death=300
  vision_distance=4
  hit_delay_tenths=10
  is_trap

@@ -1,11 +1,11 @@
 {
- short_name="fire trap"
+ short_name="gargoyle"
  raw_name="trap2"
- tooltip="fire trap"
+ tooltip="gargoyle"
  z_depth="monst"
  speed=0
- max_hp=500
- bonus_xp_on_death=500
+ max_hp=100
+ bonus_xp_on_death=200
  vision_distance=4
  hit_delay_tenths=10
  is_trap

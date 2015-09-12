@@ -56,7 +56,7 @@ void level_place_explosion_at (levelp level,
         return;
     }
 
-    double delay = DISTANCE(ox, oy, x, y) * 100;
+    double delay = DISTANCE(ox, oy, x, y) * 200;
 
     /*
      * Make the delay on the server a lot smaller so we don't see things die 
@@ -69,7 +69,7 @@ void level_place_explosion_at (levelp level,
         destroy_in = 100;
         jitter = 10;
     } else {
-        destroy_in = 3000;
+        destroy_in = 7000;
         jitter = 100;
     }
 

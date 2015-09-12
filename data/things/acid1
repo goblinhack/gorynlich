@@ -6,7 +6,6 @@
  z_depth="floor2"
  is_mob_spawner
  is_acid
- is_monst
  hit_delay_tenths=5
  is_animated
  hit_priority=0

@@ -391,6 +391,7 @@ static uint8_t things_overlap (const thingp A,
      */
     if (thing_is_projectile(A) &&
         (thing_is_monst(B)          ||
+         thing_is_trap(B)           ||
          thing_is_shield(B)         ||
          thing_is_generator(B))) {
 
@@ -902,6 +903,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             return;
         } else if (thing_is_monst(it)           || 
                    thing_is_fragile(it)         ||
+                   thing_is_trap(it)            ||
                    thing_is_shield(it)          ||
                    thing_is_combustable(it)     ||
                    thing_is_generator(it)) {
@@ -1228,6 +1230,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_teleport(it)               ||
                     thing_is_lava(it)                   ||
                     thing_is_acid(it)                   ||
+                    thing_is_trap(it)                   ||
                     thing_is_monst(it)                  ||
                     /*
                      * Walk through friendly fire.
