@@ -8,6 +8,10 @@
  is_animated_no_dir
  is_spawns_under
  hit_delay_tenths=1
+ is_light_source
+ light_radius=1.0
+ light_tint="red"
+ is_candle_light
  tiles={
   tile={
    tile="flames1.1"
