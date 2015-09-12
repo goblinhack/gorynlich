@@ -6,7 +6,6 @@
  z_depth="floor2"
  is_mob_spawner
  is_lava
- is_monst
  hit_delay_tenths=5
  hit_priority=0
  damage=10
