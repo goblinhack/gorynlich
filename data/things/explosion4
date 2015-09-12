@@ -11,70 +11,70 @@
  is_light_source
  explosion_radius=8.0
  light_radius=8.0
- scale=0.4
+ scale=1.0
  damage=5
  sound_on_creation="boom"
  hit_delay_tenths=1
  tiles={
   tile={
    tile="explosion4.1"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.2"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.3"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.4"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.5"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.8"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.9"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.10"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.11"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.12"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.13"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.14"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.15"
-   delay=100
+   delay=1000
   }
   tile={
    tile="explosion4.16"
-   delay=100
+   delay=1000
   }
   tile={
    tile="space"
-   delay=100
+   delay=1000
    is_end_of_anim
    is_dead_on_end_of_anim
   }

@@ -56,7 +56,7 @@ void level_place_explosion_at (levelp level,
         return;
     }
 
-    double delay = DISTANCE(ox, oy, x, y) * 50;
+    double delay = DISTANCE(ox, oy, x, y) * 100;
 
     /*
      * Make the delay on the server a lot smaller so we don't see things die 
