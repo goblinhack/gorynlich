@@ -6,16 +6,38 @@
     1000 "zombie3"
  }
  z_depth="monst"
- max_hp=1
+ max_hp=10
  is_undead
  is_monst
  hit_priority=10
  mob_spawn_delay_tenths=200
  is_single_mob_spawner
  is_mob_spawner
+ is_light_source
+ light_radius=0.5
+ light_tint="green"
+ is_corpse
+ is_animated
  tiles={
   tile={
-   tile="wizard-dying10"
+   tile="zombie3-corpse1"
+   delay=1000
+  }
+  tile={
+   tile="zombie3-corpse2"
+   delay=1000
+  }
+  tile={
+   tile="zombie3-corpse3"
+   delay=1000
+  }
+  tile={
+   tile="zombie3-corpse4"
+   delay=20000
+  }
+  tile={
+   tile="zombie3-corpse1"
+   is_end_of_anim
   }
  }
 }

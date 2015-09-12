@@ -1444,11 +1444,11 @@ static inline uint8_t thing_is_rrr18 (thingp t)
     return (tp_is_rrr18(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr19 (thingp t)
+static inline uint8_t thing_is_corpse (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr19(thing_tp(t)));
+    return (tp_is_corpse(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_spawns_under (thingp t)
@@ -2409,9 +2409,9 @@ static inline uint8_t thing_is_rrr18_noverify (thingp t)
     return (t->tp->is_rrr18);
 }
 
-static inline uint8_t thing_is_rrr19_noverify (thingp t)
+static inline uint8_t thing_is_corpse_noverify (thingp t)
 {
-    return (t->tp->is_rrr19);
+    return (t->tp->is_corpse);
 }
 
 static inline uint8_t thing_is_spawns_under_noverify (thingp t)
