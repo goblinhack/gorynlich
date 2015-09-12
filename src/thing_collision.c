@@ -1179,6 +1179,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                            thing_is_sawblade(it)               ||
                            thing_is_potion(it)                 ||
                            thing_is_teleport(it)               ||
+                           thing_is_corpse(it)                 ||
                            thing_is_food(it)) {
                     /*
                      * Allow monsters to walk into these things:
