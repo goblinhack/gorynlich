@@ -23,92 +23,92 @@
   tile={
    tile="lava1.1"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.2"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.3"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.4"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.5"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.6"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.7"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.8"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.9"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.10"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.11"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.12"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.13"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.14"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.15"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.16"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1.17"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1_0"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="lava1_is_join_node"

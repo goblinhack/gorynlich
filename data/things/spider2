@@ -25,286 +25,286 @@
  max_appear_depth=100
  sound_on_death="squelch"
  tiles={
-  tile={ delay=200 is_dir_down tile="spider-down.1" }
-  tile={ delay=200 is_dir_down tile="spider-down.2" }
-  tile={ delay=200 is_dir_down tile="spider-down.3" }
-  tile={ delay=200 is_dir_down tile="spider-down.4" }
-  tile={ delay=200 is_dir_down tile="spider-down.5" }
-  tile={ delay=200 is_dir_down tile="spider-down.6" }
-  tile={ delay=200 is_dir_down tile="spider-down.7" }
-  tile={ delay=200 is_dir_down tile="spider-down.1" }
-  tile={ delay=200 is_dir_down tile="spider-down.2" }
-  tile={ delay=200 is_dir_down tile="spider-down.3" }
-  tile={ delay=200 is_dir_down tile="spider-down.4" }
-  tile={ delay=200 is_dir_down tile="spider-down.5" }
-  tile={ delay=200 is_dir_down tile="spider-down.6" }
-  tile={ delay=200 is_dir_down tile="spider-down.7" }
-  tile={ delay=200 is_dir_down tile="spider-down.1" }
-  tile={ delay=200 is_dir_down tile="spider-down.2" }
-  tile={ delay=200 is_dir_down tile="spider-down.3" }
-  tile={ delay=200 is_dir_down tile="spider-down.4" }
-  tile={ delay=200 is_dir_down tile="spider-down.5" }
-  tile={ delay=200 is_dir_down tile="spider-down.6" }
-  tile={ delay=200 is_dir_down tile="spider-down.7" }
-  tile={ delay=200 is_dir_down tile="spider-down.1" }
-  tile={ delay=200 is_dir_down tile="spider-down.2" }
-  tile={ delay=200 is_dir_down tile="spider-down.3" }
-  tile={ delay=200 is_dir_down tile="spider-down.4" }
-  tile={ delay=200 is_dir_down tile="spider-down.5" }
-  tile={ delay=200 is_dir_down tile="spider-down.6" }
-  tile={ delay=200 is_dir_down tile="spider-down.7" begin_jump }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.1" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.2" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.3" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.4" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.5" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.6" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.7" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.1" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.2" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.3" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.4" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.5" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.6" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.7" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.1" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.2" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.3" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.4" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.5" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.6" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.7" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.1" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.2" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.3" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.4" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.5" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.6" }
+  tile={ delay_ms=200 is_dir_down tile="spider-down.7" begin_jump }
 
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.1" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.2" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.3" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.4" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.5" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.6" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.7" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.1" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.2" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.3" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.4" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.5" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.6" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.7" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.1" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.2" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.3" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.4" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.5" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.6" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.7" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.1" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.2" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.3" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.4" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.5" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.6" }
-  tile={ delay=200 is_dir_down is_dir_left tile="spider-bl.7" begin_jump }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.1" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.2" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.3" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.4" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.5" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.6" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.7" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.1" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.2" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.3" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.4" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.5" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.6" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.7" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.1" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.2" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.3" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.4" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.5" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.6" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.7" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.1" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.2" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.3" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.4" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.5" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.6" }
+  tile={ delay_ms=200 is_dir_down is_dir_left tile="spider-bl.7" begin_jump }
 
-  tile={ delay=200 is_dir_left tile="spider-left.1" }
-  tile={ delay=200 is_dir_left tile="spider-left.2" }
-  tile={ delay=200 is_dir_left tile="spider-left.3" }
-  tile={ delay=200 is_dir_left tile="spider-left.4" }
-  tile={ delay=200 is_dir_left tile="spider-left.5" }
-  tile={ delay=200 is_dir_left tile="spider-left.6" }
-  tile={ delay=200 is_dir_left tile="spider-left.7" }
-  tile={ delay=200 is_dir_left tile="spider-left.1" }
-  tile={ delay=200 is_dir_left tile="spider-left.2" }
-  tile={ delay=200 is_dir_left tile="spider-left.3" }
-  tile={ delay=200 is_dir_left tile="spider-left.4" }
-  tile={ delay=200 is_dir_left tile="spider-left.5" }
-  tile={ delay=200 is_dir_left tile="spider-left.6" }
-  tile={ delay=200 is_dir_left tile="spider-left.7" }
-  tile={ delay=200 is_dir_left tile="spider-left.1" }
-  tile={ delay=200 is_dir_left tile="spider-left.2" }
-  tile={ delay=200 is_dir_left tile="spider-left.3" }
-  tile={ delay=200 is_dir_left tile="spider-left.4" }
-  tile={ delay=200 is_dir_left tile="spider-left.5" }
-  tile={ delay=200 is_dir_left tile="spider-left.6" }
-  tile={ delay=200 is_dir_left tile="spider-left.7" }
-  tile={ delay=200 is_dir_left tile="spider-left.1" }
-  tile={ delay=200 is_dir_left tile="spider-left.2" }
-  tile={ delay=200 is_dir_left tile="spider-left.3" }
-  tile={ delay=200 is_dir_left tile="spider-left.4" }
-  tile={ delay=200 is_dir_left tile="spider-left.5" }
-  tile={ delay=200 is_dir_left tile="spider-left.6" }
-  tile={ delay=200 is_dir_left tile="spider-left.7" }
-  tile={ delay=200 is_dir_left tile="spider-left.1" }
-  tile={ delay=200 is_dir_left tile="spider-left.2" }
-  tile={ delay=200 is_dir_left tile="spider-left.3" }
-  tile={ delay=200 is_dir_left tile="spider-left.4" }
-  tile={ delay=200 is_dir_left tile="spider-left.5" }
-  tile={ delay=200 is_dir_left tile="spider-left.6" }
-  tile={ delay=200 is_dir_left tile="spider-left.7" begin_jump }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.1" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.2" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.3" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.4" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.5" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.6" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.7" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.1" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.2" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.3" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.4" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.5" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.6" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.7" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.1" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.2" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.3" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.4" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.5" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.6" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.7" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.1" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.2" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.3" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.4" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.5" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.6" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.7" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.1" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.2" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.3" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.4" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.5" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.6" }
+  tile={ delay_ms=200 is_dir_left tile="spider-left.7" begin_jump }
 
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.1" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.2" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.3" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.4" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.5" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.6" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.7" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.1" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.2" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.3" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.4" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.5" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.6" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.7" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.1" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.2" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.3" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.4" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.5" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.6" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.7" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.1" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.2" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.3" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.4" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.5" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.6" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.7" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.1" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.2" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.3" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.4" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.5" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.6" }
-  tile={ delay=200 is_dir_up is_dir_left tile="spider-tl.7" begin_jump }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.1" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.2" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.3" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.4" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.5" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.6" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.7" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.1" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.2" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.3" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.4" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.5" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.6" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.7" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.1" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.2" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.3" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.4" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.5" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.6" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.7" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.1" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.2" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.3" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.4" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.5" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.6" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.7" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.1" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.2" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.3" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.4" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.5" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.6" }
+  tile={ delay_ms=200 is_dir_up is_dir_left tile="spider-tl.7" begin_jump }
 
-  tile={ delay=200 is_dir_up tile="spider-top.1" }
-  tile={ delay=200 is_dir_up tile="spider-top.2" }
-  tile={ delay=200 is_dir_up tile="spider-top.3" }
-  tile={ delay=200 is_dir_up tile="spider-top.4" }
-  tile={ delay=200 is_dir_up tile="spider-top.5" }
-  tile={ delay=200 is_dir_up tile="spider-top.6" }
-  tile={ delay=200 is_dir_up tile="spider-top.7" }
-  tile={ delay=200 is_dir_up tile="spider-top.1" }
-  tile={ delay=200 is_dir_up tile="spider-top.2" }
-  tile={ delay=200 is_dir_up tile="spider-top.3" }
-  tile={ delay=200 is_dir_up tile="spider-top.4" }
-  tile={ delay=200 is_dir_up tile="spider-top.5" }
-  tile={ delay=200 is_dir_up tile="spider-top.6" }
-  tile={ delay=200 is_dir_up tile="spider-top.7" }
-  tile={ delay=200 is_dir_up tile="spider-top.1" }
-  tile={ delay=200 is_dir_up tile="spider-top.2" }
-  tile={ delay=200 is_dir_up tile="spider-top.3" }
-  tile={ delay=200 is_dir_up tile="spider-top.4" }
-  tile={ delay=200 is_dir_up tile="spider-top.5" }
-  tile={ delay=200 is_dir_up tile="spider-top.6" }
-  tile={ delay=200 is_dir_up tile="spider-top.7" }
-  tile={ delay=200 is_dir_up tile="spider-top.1" }
-  tile={ delay=200 is_dir_up tile="spider-top.2" }
-  tile={ delay=200 is_dir_up tile="spider-top.3" }
-  tile={ delay=200 is_dir_up tile="spider-top.4" }
-  tile={ delay=200 is_dir_up tile="spider-top.5" }
-  tile={ delay=200 is_dir_up tile="spider-top.6" }
-  tile={ delay=200 is_dir_up tile="spider-top.7" }
-  tile={ delay=200 is_dir_up tile="spider-top.1" }
-  tile={ delay=200 is_dir_up tile="spider-top.2" }
-  tile={ delay=200 is_dir_up tile="spider-top.3" }
-  tile={ delay=200 is_dir_up tile="spider-top.4" }
-  tile={ delay=200 is_dir_up tile="spider-top.5" }
-  tile={ delay=200 is_dir_up tile="spider-top.6" }
-  tile={ delay=200 is_dir_up tile="spider-top.7" }
-  tile={ delay=200 is_dir_up tile="spider-top.1" }
-  tile={ delay=200 is_dir_up tile="spider-top.2" }
-  tile={ delay=200 is_dir_up tile="spider-top.3" }
-  tile={ delay=200 is_dir_up tile="spider-top.4" }
-  tile={ delay=200 is_dir_up tile="spider-top.5" }
-  tile={ delay=200 is_dir_up tile="spider-top.6" }
-  tile={ delay=200 is_dir_up tile="spider-top.7" begin_jump }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.1" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.2" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.3" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.4" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.5" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.6" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.7" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.1" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.2" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.3" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.4" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.5" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.6" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.7" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.1" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.2" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.3" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.4" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.5" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.6" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.7" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.1" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.2" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.3" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.4" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.5" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.6" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.7" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.1" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.2" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.3" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.4" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.5" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.6" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.7" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.1" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.2" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.3" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.4" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.5" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.6" }
+  tile={ delay_ms=200 is_dir_up tile="spider-top.7" begin_jump }
 
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.1" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.2" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.3" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.4" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.5" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.6" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.7" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.1" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.2" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.3" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.4" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.5" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.6" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.7" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.1" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.2" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.3" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.4" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.5" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.6" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.7" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.1" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.2" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.3" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.4" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.5" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.6" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.7" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.1" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.2" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.3" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.4" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.5" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.6" }
-  tile={ delay=200 is_dir_up is_dir_right tile="spider-tr.7" begin_jump }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.1" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.2" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.3" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.4" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.5" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.6" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.7" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.1" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.2" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.3" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.4" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.5" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.6" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.7" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.1" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.2" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.3" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.4" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.5" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.6" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.7" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.1" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.2" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.3" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.4" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.5" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.6" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.7" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.1" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.2" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.3" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.4" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.5" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.6" }
+  tile={ delay_ms=200 is_dir_up is_dir_right tile="spider-tr.7" begin_jump }
 
-  tile={ delay=200 is_dir_right tile="spider-right.1" }
-  tile={ delay=200 is_dir_right tile="spider-right.2" }
-  tile={ delay=200 is_dir_right tile="spider-right.3" }
-  tile={ delay=200 is_dir_right tile="spider-right.4" }
-  tile={ delay=200 is_dir_right tile="spider-right.5" }
-  tile={ delay=200 is_dir_right tile="spider-right.6" }
-  tile={ delay=200 is_dir_right tile="spider-right.7" }
-  tile={ delay=200 is_dir_right tile="spider-right.1" }
-  tile={ delay=200 is_dir_right tile="spider-right.2" }
-  tile={ delay=200 is_dir_right tile="spider-right.3" }
-  tile={ delay=200 is_dir_right tile="spider-right.4" }
-  tile={ delay=200 is_dir_right tile="spider-right.5" }
-  tile={ delay=200 is_dir_right tile="spider-right.6" }
-  tile={ delay=200 is_dir_right tile="spider-right.7" }
-  tile={ delay=200 is_dir_right tile="spider-right.1" }
-  tile={ delay=200 is_dir_right tile="spider-right.2" }
-  tile={ delay=200 is_dir_right tile="spider-right.3" }
-  tile={ delay=200 is_dir_right tile="spider-right.4" }
-  tile={ delay=200 is_dir_right tile="spider-right.5" }
-  tile={ delay=200 is_dir_right tile="spider-right.6" }
-  tile={ delay=200 is_dir_right tile="spider-right.7" }
-  tile={ delay=200 is_dir_right tile="spider-right.1" }
-  tile={ delay=200 is_dir_right tile="spider-right.2" }
-  tile={ delay=200 is_dir_right tile="spider-right.3" }
-  tile={ delay=200 is_dir_right tile="spider-right.4" }
-  tile={ delay=200 is_dir_right tile="spider-right.5" }
-  tile={ delay=200 is_dir_right tile="spider-right.6" }
-  tile={ delay=200 is_dir_right tile="spider-right.7" }
-  tile={ delay=200 is_dir_right tile="spider-right.1" }
-  tile={ delay=200 is_dir_right tile="spider-right.2" }
-  tile={ delay=200 is_dir_right tile="spider-right.3" }
-  tile={ delay=200 is_dir_right tile="spider-right.4" }
-  tile={ delay=200 is_dir_right tile="spider-right.5" }
-  tile={ delay=200 is_dir_right tile="spider-right.6" }
-  tile={ delay=200 is_dir_right tile="spider-right.7" begin_jump }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.1" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.2" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.3" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.4" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.5" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.6" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.7" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.1" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.2" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.3" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.4" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.5" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.6" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.7" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.1" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.2" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.3" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.4" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.5" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.6" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.7" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.1" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.2" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.3" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.4" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.5" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.6" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.7" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.1" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.2" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.3" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.4" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.5" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.6" }
+  tile={ delay_ms=200 is_dir_right tile="spider-right.7" begin_jump }
 
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.1" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.2" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.3" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.4" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.5" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.6" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.7" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.1" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.2" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.3" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.4" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.5" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.6" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.7" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.1" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.2" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.3" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.4" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.5" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.6" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.7" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.1" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.2" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.3" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.4" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.5" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.6" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.7" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.1" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.2" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.3" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.4" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.5" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.6" }
-  tile={ delay=200 is_dir_down is_dir_right tile="spider-br.7" begin_jump }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.1" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.2" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.3" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.4" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.5" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.6" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.7" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.1" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.2" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.3" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.4" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.5" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.6" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.7" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.1" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.2" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.3" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.4" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.5" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.6" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.7" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.1" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.2" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.3" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.4" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.5" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.6" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.7" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.1" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.2" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.3" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.4" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.5" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.6" }
+  tile={ delay_ms=200 is_dir_down is_dir_right tile="spider-br.7" begin_jump }
   }
 }
 

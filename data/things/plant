@@ -22,17 +22,17 @@
  is_mob_spawner
  mob_spawn_delay_tenths=100
  tiles={
-  tile={ delay=50 tile="plant1-1" }
-  tile={ delay=50 tile="plant1-2" }
-  tile={ delay=50 tile="plant1-3" }
-  tile={ delay=50 tile="plant1-4" }
-  tile={ delay=50 tile="plant1-5" }
-  tile={ delay=50 tile="plant1-6" }
-  tile={ delay=50 tile="plant1-7" }
-  tile={ delay=50 tile="plant1-8" }
-  tile={ delay=50 tile="plant1-9" }
-  tile={ delay=50 tile="plant1-10" }
-  tile={ delay=50 tile="plant1-11" }
-  tile={ delay=50 tile="plant1-12" }
+  tile={ delay_ms=50 tile="plant1-1" }
+  tile={ delay_ms=50 tile="plant1-2" }
+  tile={ delay_ms=50 tile="plant1-3" }
+  tile={ delay_ms=50 tile="plant1-4" }
+  tile={ delay_ms=50 tile="plant1-5" }
+  tile={ delay_ms=50 tile="plant1-6" }
+  tile={ delay_ms=50 tile="plant1-7" }
+  tile={ delay_ms=50 tile="plant1-8" }
+  tile={ delay_ms=50 tile="plant1-9" }
+  tile={ delay_ms=50 tile="plant1-10" }
+  tile={ delay_ms=50 tile="plant1-11" }
+  tile={ delay_ms=50 tile="plant1-12" }
  }
 }

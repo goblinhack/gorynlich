@@ -10,27 +10,27 @@
  tiles={
   tile={
    tile="blood2.1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="blood2.2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="blood2.3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="blood2.4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="blood2.5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="space"
-   delay=100
+   delay_ms=100
    is_end_of_anim
    is_dead_on_end_of_anim
   }

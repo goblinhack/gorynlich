@@ -17,31 +17,31 @@
  tiles={
   tile={
    tile="torches3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torches1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torches2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torches4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torches3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torches3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torches4"
-   delay=100
+   delay_ms=100
   }
  }
 }

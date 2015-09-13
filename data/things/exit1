@@ -10,47 +10,47 @@
  tiles={
   tile={
    tile="exit1.1"
-   delay=5
+   delay_ms=5
   }
   tile={
    tile="exit1.2"
-   delay=5
+   delay_ms=5
   }
   tile={
    tile="exit1.1"
-   delay=5
+   delay_ms=5
   }
   tile={
    tile="exit1.3"
-   delay=5
+   delay_ms=5
   }
   tile={
    tile="exit1.1"
-   delay=5
+   delay_ms=5
   }
   tile={
    tile="exit1.1"
-   delay=5
+   delay_ms=5
   }
   tile={
    tile="exit1.4"
-   delay=5
+   delay_ms=5
   }
   tile={
    tile="exit1.1"
-   delay=5
+   delay_ms=5
   }
   tile={
    tile="exit1.5"
-   delay=5
+   delay_ms=5
   }
   tile={
    tile="exit1.6"
-   delay=5
+   delay_ms=5
   }
   tile={
    tile="exit1.1"
-   delay=5
+   delay_ms=5
   }
  }
 }

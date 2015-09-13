@@ -32,21 +32,21 @@
  is_dragon
  light_radius=3.5
  tiles={
-  tile={ delay=100 tile="dragon3-1" }
-  tile={ delay=100 tile="dragon3-2" }
-  tile={ delay=100 tile="dragon3-3" }
-  tile={ delay=100 tile="dragon3-4" }
-  tile={ delay=100 tile="dragon3-5" }
-  tile={ delay=100 tile="dragon3-6" }
-  tile={ delay=100 tile="dragon3-7" }
-  tile={ delay=100 tile="dragon3-8" }
-  tile={ delay=100 tile="dragon3-9" }
-  tile={ delay=100 tile="dragon3-10" }
-  tile={ delay=100 tile="dragon3-11" }
-  tile={ delay=100 tile="dragon3-12" }
-  tile={ delay=100 tile="dragon3-13" }
-  tile={ delay=100 tile="dragon3-14" }
-  tile={ delay=100 tile="dragon3-15" }
-  tile={ delay=100 tile="dragon3-16" }
+  tile={ delay_ms=100 tile="dragon3-1" }
+  tile={ delay_ms=100 tile="dragon3-2" }
+  tile={ delay_ms=100 tile="dragon3-3" }
+  tile={ delay_ms=100 tile="dragon3-4" }
+  tile={ delay_ms=100 tile="dragon3-5" }
+  tile={ delay_ms=100 tile="dragon3-6" }
+  tile={ delay_ms=100 tile="dragon3-7" }
+  tile={ delay_ms=100 tile="dragon3-8" }
+  tile={ delay_ms=100 tile="dragon3-9" }
+  tile={ delay_ms=100 tile="dragon3-10" }
+  tile={ delay_ms=100 tile="dragon3-11" }
+  tile={ delay_ms=100 tile="dragon3-12" }
+  tile={ delay_ms=100 tile="dragon3-13" }
+  tile={ delay_ms=100 tile="dragon3-14" }
+  tile={ delay_ms=100 tile="dragon3-15" }
+  tile={ delay_ms=100 tile="dragon3-16" }
  }
 }

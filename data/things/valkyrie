@@ -34,228 +34,228 @@
  is_animated
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="valkyrie-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="valkyrie-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="valkyrie-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="valkyrie-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="valkyrie-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="valkyrie-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="valkyrie-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="valkyrie-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="valkyrie-up2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="valkyrie-down2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="valkyrie-left2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="valkyrie-right2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="valkyrie-tl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="valkyrie-bl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="valkyrie-tr2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="valkyrie-br2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="valkyrie-up3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="valkyrie-down3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="valkyrie-left3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="valkyrie-right3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="valkyrie-tl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="valkyrie-bl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="valkyrie-tr3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="valkyrie-br3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="valkyrie-up4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="valkyrie-down4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="valkyrie-left4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="valkyrie-right4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="valkyrie-tl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="valkyrie-bl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="valkyrie-tr4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="valkyrie-br4"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="valkyrie-dying1"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="valkyrie-dying2"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="valkyrie-dying3"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="valkyrie-dying4"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="valkyrie-dying5"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="valkyrie-dying6"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="valkyrie-dying7"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="valkyrie-dying8"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="valkyrie-dying9"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="valkyrie-dying10"
    is_end_of_anim

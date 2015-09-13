@@ -29,133 +29,133 @@
  is_animated
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="death1-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="death1-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="death1-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="death1-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="death1-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="death1-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="death1-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="death1-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="death1-up2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="death1-down2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="death1-left2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="death1-right2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="death1-tl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="death1-bl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="death1-tr2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="death1-br2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="death1-up3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="death1-down3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="death1-left3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="death1-right3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="death1-tl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="death1-bl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="death1-tr3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="death1-br3"

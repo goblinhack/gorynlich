@@ -21,62 +21,62 @@
  sound_on_hitting_something="beep"
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="juggernaut.1"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="juggernaut.2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="juggernaut.3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="juggernaut.1"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="juggernaut.2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="juggernaut.3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="juggernaut.4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="juggernaut.5"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="juggernaut.6"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="juggernaut.7"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="juggernaut.8"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="juggernaut.9"
   }

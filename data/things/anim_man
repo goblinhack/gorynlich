@@ -6,347 +6,347 @@
  tiles={
   tile={
    tile="anim_man1.1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.8"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.11"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.12"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.13"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.14"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.15"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.16"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.8"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.11"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.12"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.15"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.16"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.8"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.11"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.12"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.15"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.16"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.8"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.11"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.12"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.15"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.13"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.14"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.16"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.8"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.11"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.12"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.15"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.16"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.8"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.9"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.10"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.11"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.12"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.15"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.16"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.8"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.11"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.12"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.15"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.16"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.8"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.11"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.12"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.15"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="anim_man1.16"
-   delay=100
+   delay_ms=100
   }
  }
 }

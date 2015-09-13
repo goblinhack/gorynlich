@@ -34,7 +34,7 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
 
     do {
 
-        GET_OPT_NAMED_UINT32(ctx, "delay", t->delay);
+        GET_OPT_NAMED_UINT32(ctx, "delay_ms", t->delay);
         GET_OPT_NAMED_STRING(ctx, "tile", t->tilename);
         GET_OPT_NAMED_STRING(ctx, "command", t->command);
         GET_OPT_NAMED_BITFIELD(ctx, "is_moving", t->is_moving);
@@ -160,7 +160,7 @@ static void marshal_thing_tile (marshal_p ctx, thing_tile *t)
     }
 
     if (t->delay) {
-        PUT_NAMED_UINT32(ctx, "delay", t->delay);
+        PUT_NAMED_UINT32(ctx, "delay_ms", t->delay);
     }
 
     PUT_NAMED_BITFIELD(ctx, "is_join_block", t->is_join_block);

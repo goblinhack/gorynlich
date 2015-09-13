@@ -21,19 +21,19 @@
  tiles={
   tile={
    tile="zombie2-corpse1"
-   delay=1000
+   delay_ms=1000
   }
   tile={
    tile="zombie2-corpse2"
-   delay=1000
+   delay_ms=1000
   }
   tile={
    tile="zombie2-corpse3"
-   delay=1000
+   delay_ms=1000
   }
   tile={
    tile="zombie2-corpse4"
-   delay=20000
+   delay_ms=20000
   }
   tile={
    tile="zombie2-corpse1"

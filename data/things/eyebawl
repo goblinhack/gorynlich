@@ -26,177 +26,177 @@
  is_animated
  tiles={
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    tile="eyebawla-up"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    tile="eyebawla-down"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_left
    tile="eyebawla-left"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_right
    tile="eyebawla-right"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_left
    tile="eyebawla-tl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_left
    tile="eyebawla-bl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_right
    tile="eyebawla-tr"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_right
    tile="eyebawla-br"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    tile="eyebawlb-up"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    tile="eyebawlb-down"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_left
    tile="eyebawlb-left"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_right
    tile="eyebawlb-right"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_left
    tile="eyebawlb-tl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_left
    tile="eyebawlb-bl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_right
    tile="eyebawlb-tr"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_right
    tile="eyebawlb-br"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    tile="eyebawlc-up"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    tile="eyebawlc-down"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_left
    tile="eyebawlc-left"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_right
    tile="eyebawlc-right"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_left
    tile="eyebawlc-tl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_left
    tile="eyebawlc-bl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_right
    tile="eyebawlc-tr"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_right
    tile="eyebawlc-br"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    tile="eyebawld-up"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    tile="eyebawld-down"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_left
    tile="eyebawld-left"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_right
    tile="eyebawld-right"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_left
    tile="eyebawld-tl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_left
    tile="eyebawld-bl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_right
    tile="eyebawld-tr"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_right
    tile="eyebawld-br"

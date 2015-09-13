@@ -33,228 +33,228 @@
  is_animated
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="elf-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="elf-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="elf-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="elf-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="elf-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="elf-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="elf-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="elf-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="elf-up2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="elf-down2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="elf-left2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="elf-right2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="elf-tl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="elf-bl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="elf-tr2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="elf-br2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="elf-up3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="elf-down3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="elf-left3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="elf-right3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="elf-tl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="elf-bl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="elf-tr3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="elf-br3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="elf-up4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="elf-down4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="elf-left4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="elf-right4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="elf-tl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="elf-bl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="elf-tr4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="elf-br4"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="elf-dying1"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="elf-dying2"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="elf-dying3"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="elf-dying4"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="elf-dying5"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="elf-dying6"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="elf-dying7"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="elf-dying8"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="elf-dying9"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="elf-dying10"
    is_end_of_anim

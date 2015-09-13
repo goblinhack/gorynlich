@@ -34,228 +34,228 @@
  is_animated
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="warrior-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="warrior-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="warrior-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="warrior-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="warrior-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="warrior-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="warrior-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="warrior-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="warrior-up2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="warrior-down2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="warrior-left2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="warrior-right2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="warrior-tl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="warrior-bl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="warrior-tr2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="warrior-br2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="warrior-up3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="warrior-down3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="warrior-left3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="warrior-right3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="warrior-tl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="warrior-bl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="warrior-tr3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="warrior-br3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="warrior-up4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="warrior-down4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="warrior-left4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="warrior-right4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="warrior-tl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="warrior-bl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="warrior-tr4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="warrior-br4"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="warrior-dying1"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="warrior-dying2"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="warrior-dying3"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="warrior-dying4"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="warrior-dying5"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="warrior-dying6"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="warrior-dying7"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="warrior-dying8"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="warrior-dying9"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="warrior-dying10"
    is_end_of_anim

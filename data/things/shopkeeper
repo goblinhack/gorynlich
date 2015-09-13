@@ -28,177 +28,177 @@
  max_appear_depth=100
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="shopkeepera-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="shopkeepera-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="shopkeepera-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="shopkeepera-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="shopkeepera-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="shopkeepera-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="shopkeepera-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="shopkeepera-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="shopkeeperb-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="shopkeeperb-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="shopkeeperb-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="shopkeeperb-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="shopkeeperb-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="shopkeeperb-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="shopkeeperb-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="shopkeeperb-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="shopkeeperc-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="shopkeeperc-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="shopkeeperc-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="shopkeeperc-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="shopkeeperc-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="shopkeeperc-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="shopkeeperc-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="shopkeeperc-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="shopkeeperd-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="shopkeeperd-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="shopkeeperd-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="shopkeeperd-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="shopkeeperd-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="shopkeeperd-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="shopkeeperd-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="shopkeeperd-br"
