@@ -1,5 +1,4 @@
 --------------------------------------- plan for sep --------------------------------------
-- wizard wand explodes too massively
 - wizards want lights up left hand wall too much
 - big jesus halo is not animated
 - pushable blocks and fix up moving walls
@@ -49,6 +48,7 @@
 - magic gives health to other players
 
 Sat Sep 12 18:56:02 EDT 2015
+- wizard wand explodes too massively
 - wizard walk left jumpy
 - statues should be destoyable
 - is lava a monster? jesus attacked it
