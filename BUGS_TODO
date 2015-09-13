@@ -1,6 +1,5 @@
 --------------------------------------- plan for sep --------------------------------------
-- wizards want lights up left hand wall too much
-- big jesus halo is not animated
+- wizards wand lights up left hand wall too much
 - pushable blocks and fix up moving walls
 - light source on edges of acid and lava only
 - bomb animation in backpack looks nuts
@@ -48,6 +47,7 @@
 - magic gives health to other players
 
 Sat Sep 12 18:56:02 EDT 2015
+- big jesus halo is not animated
 - wizard wand explodes too massively
 - wizard walk left jumpy
 - statues should be destoyable
