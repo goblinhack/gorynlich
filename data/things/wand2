@@ -23,7 +23,7 @@
  light_tint="orange"
  light_radius=0.1
  is_combustable
- explodes_as="explosion2"
+ explodes_as="explosion1"
  is_wearable
  is_collision_map_medium
  is_animated

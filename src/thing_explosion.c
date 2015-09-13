@@ -463,6 +463,46 @@ void level_place_explosion (levelp level,
         return;
     }
 
+    if ((id == THING_SMALL_EXPLOSION1) ||
+        (id == THING_SMALL_EXPLOSION2) ||
+        (id == THING_SMALL_EXPLOSION3) ||
+        (id == THING_SMALL_EXPLOSION4)) {
+
+        level_place_explosion_(level, 
+                               owner,
+                               ox, oy,
+                               x, y,
+                               explosion_radius,
+                               0.5, // density
+                               explodes_as,
+                               4, // nargs
+                               "small_explosion1",
+                               "small_explosion2",
+                               "small_explosion3",
+                               "small_explosion4");
+        return;
+    }
+
+    if ((id == THING_MED_EXPLOSION1) ||
+        (id == THING_MED_EXPLOSION2) ||
+        (id == THING_MED_EXPLOSION3) ||
+        (id == THING_MED_EXPLOSION4)) {
+
+        level_place_explosion_(level, 
+                               owner,
+                               ox, oy,
+                               x, y,
+                               explosion_radius,
+                               0.5, // density
+                               explodes_as,
+                               4, // nargs
+                               "med_explosion1",
+                               "med_explosion2",
+                               "med_explosion3",
+                               "med_explosion4");
+        return;
+    }
+
     if ((id == THING_FIREBURST1) ||
         (id == THING_FIREBURST2) ||
         (id == THING_FIREBURST3) ||

@@ -15,7 +15,7 @@
  is_light_source
  light_tint="orange"
  light_radius=0.1
- explodes_as="explosion1"
+ explodes_as="med_explosion1"
  sound_on_creation="shotgun"
  tiles={
   tile={

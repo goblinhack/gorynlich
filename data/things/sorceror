@@ -19,7 +19,7 @@
  bonus_xp_on_death=250
  d10000_chance_of_appearing=100
  fires="fireball3"
- explodes_as="explosion2"
+ explodes_as="explosion1"
  weapon_fire_delay_hundredths=100
  is_effect_fade_in_out
  is_animated
