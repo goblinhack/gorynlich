@@ -12,45 +12,45 @@
  light_radius=3.0
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="wand4_anim.7"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="wand4_anim.3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="wand4_anim.5"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="wand4_anim.1"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="wand4_anim.6"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="wand4_anim.4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="wand4_anim.8"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="wand4_anim.2"

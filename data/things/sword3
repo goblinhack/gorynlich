@@ -27,7 +27,7 @@
  tiles={
   tile={
    tile="sword3"
-   delay=50
+   delay_ms=50
   }
  }
 }

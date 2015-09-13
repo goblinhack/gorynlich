@@ -34,228 +34,228 @@
  is_animated
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="wizard-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="wizard-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="wizard-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="wizard-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="wizard-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="wizard-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="wizard-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="wizard-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="wizard-up2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="wizard-down2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="wizard-left2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="wizard-right2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="wizard-tl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="wizard-bl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="wizard-tr2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="wizard-br2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="wizard-up3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="wizard-down3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="wizard-left3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="wizard-right3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="wizard-tl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="wizard-bl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="wizard-tr3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="wizard-br3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="wizard-up4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="wizard-down4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="wizard-left4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="wizard-right4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="wizard-tl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="wizard-bl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="wizard-tr4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="wizard-br4"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="wizard-dying1"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="wizard-dying2"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="wizard-dying3"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="wizard-dying4"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="wizard-dying5"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="wizard-dying6"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="wizard-dying7"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="wizard-dying8"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="wizard-dying9"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="wizard-dying10"
    is_end_of_anim

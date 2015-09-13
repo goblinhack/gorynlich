@@ -16,255 +16,255 @@
  tiles={
   tile={
    tile="poison1.1"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.2"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.3"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.4"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.5"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.8"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.9"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.10"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.11"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.12"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.13"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.14"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.15"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.16"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.17"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.18"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.19"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.20"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.21"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.22"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.23"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.24"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.25"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.26"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.27"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.28"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.29"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.30"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.31"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.32"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.33"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.34"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.35"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.36"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.37"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.38"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.39"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.40"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.41"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.42"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.43"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.44"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.45"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.46"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.47"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.48"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.49"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.50"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.51"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.52"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.53"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.54"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.55"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.56"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.57"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.58"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.59"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.60"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.61"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.62"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.63"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="poison1.64"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="space"
-   delay=200
+   delay_ms=200
    is_end_of_anim
    is_dead_on_end_of_anim
   }

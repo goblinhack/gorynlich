@@ -32,19 +32,19 @@
  tiles={
   tile={
    tile="wand4.1"
-   delay=50
+   delay_ms=50
   }
   tile={
    tile="wand4.2"
-   delay=50
+   delay_ms=50
   }
   tile={
    tile="wand4.3"
-   delay=50
+   delay_ms=50
   }
   tile={
    tile="wand4.4"
-   delay=50
+   delay_ms=50
   }
  }
 }

@@ -16,123 +16,123 @@
  tiles={
   tile={
    tile="ring_cloud.1"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.2"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.3"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.4"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.5"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.8"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.9"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.10"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.11"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.12"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.13"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.14"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.15"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.16"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.17"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.18"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.19"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.20"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.21"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.22"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.23"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.24"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.25"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.26"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.27"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.28"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.29"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.30"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.31"
-   delay=10
+   delay_ms=10
   }
   tile={
    tile="ring_cloud.32"
-   delay=10
+   delay_ms=10
   }
  }
 }

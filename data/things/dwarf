@@ -33,228 +33,228 @@
  is_animated
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="dwarf-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="dwarf-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="dwarf-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="dwarf-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="dwarf-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="dwarf-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="dwarf-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="dwarf-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="dwarf-up2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="dwarf-down2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="dwarf-left2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="dwarf-right2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="dwarf-tl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="dwarf-bl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="dwarf-tr2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="dwarf-br2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="dwarf-up3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="dwarf-down3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="dwarf-left3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="dwarf-right3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="dwarf-tl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="dwarf-bl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="dwarf-tr3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="dwarf-br3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="dwarf-up4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="dwarf-down4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="dwarf-left4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="dwarf-right4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="dwarf-tl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="dwarf-bl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="dwarf-tr4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="dwarf-br4"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="dwarf-dying1"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="dwarf-dying2"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="dwarf-dying3"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="dwarf-dying4"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="dwarf-dying5"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="dwarf-dying6"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="dwarf-dying7"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="dwarf-dying8"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="dwarf-dying9"
   }
   tile={
-   delay=1000
+   delay_ms=1000
    is_dying
    tile="dwarf-dying10"
    is_end_of_anim
