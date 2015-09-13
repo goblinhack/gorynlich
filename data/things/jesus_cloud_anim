@@ -3,11 +3,12 @@
  raw_name="jesus cloud anim"
  z_depth="monst"
  is_animated
+ is_effect_pulse
  is_hidden_from_editor
  is_shield
  is_shield_carry_anim
  max_hp=30000
- hit_priority=100
+ hit_priority=10
  scale=1.5
  is_light_source
  light_radius=1.0
@@ -15,251 +16,123 @@
  tiles={
   tile={
    tile="ring_cloud.1"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.2"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.3"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.4"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.5"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.8"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.9"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.10"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.11"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.12"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.13"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.14"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.15"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.16"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.17"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.18"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.19"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.20"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.21"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.22"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.23"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.24"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.25"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.26"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.27"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.28"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.29"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.30"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.31"
-   delay=100
+   delay=10
   }
   tile={
    tile="ring_cloud.32"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.33"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.34"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.35"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.36"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.37"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.38"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.39"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.40"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.41"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.42"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.43"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.44"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.45"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.46"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.47"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.48"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.49"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.50"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.51"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.52"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.53"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.54"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.55"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.56"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.57"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.58"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.59"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.60"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.61"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.62"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.63"
-   delay=100
-  }
-  tile={
-   tile="ring_cloud.64"
-   delay=100
+   delay=10
   }
  }
 }
