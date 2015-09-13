@@ -1133,6 +1133,14 @@ wid_game_map_client_replace_tile (widp w,
             (tp->id == THING_EXPLOSION2)        ||
             (tp->id == THING_EXPLOSION3)        ||
             (tp->id == THING_EXPLOSION4)        ||
+            (tp->id == THING_SMALL_EXPLOSION1)  ||
+            (tp->id == THING_SMALL_EXPLOSION2)  ||
+            (tp->id == THING_SMALL_EXPLOSION3)  ||
+            (tp->id == THING_SMALL_EXPLOSION4)  ||
+            (tp->id == THING_MED_EXPLOSION1)    ||
+            (tp->id == THING_MED_EXPLOSION2)    ||
+            (tp->id == THING_MED_EXPLOSION3)    ||
+            (tp->id == THING_MED_EXPLOSION4)    ||
             (tp->id == THING_FIREBURST1)        ||
             (tp->id == THING_FIREBURST2)        ||
             (tp->id == THING_FIREBURST3)        ||

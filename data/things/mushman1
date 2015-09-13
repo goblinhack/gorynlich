@@ -24,7 +24,7 @@
  d10000_chance_of_appearing=50
  min_appear_depth=1
  max_appear_depth=100
- fires="explosion1"
+ fires="med_explosion1"
  weapon_fire_delay_hundredths=200
  sound_on_death="squelch"
  tiles={
