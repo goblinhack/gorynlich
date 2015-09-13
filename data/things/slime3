@@ -29,72 +29,72 @@
  mob_spawn_delay_tenths=300
  sound_on_death="squelch"
  tiles={
-  tile={ delay=100 tile="slime-3-1" }
-  tile={ delay=100 tile="slime-3-2" }
-  tile={ delay=100 tile="slime-3-3" }
-  tile={ delay=100 tile="slime-3-4" }
-  tile={ delay=100 tile="slime-3-5" }
-  tile={ delay=100 tile="slime-3-6" }
-  tile={ delay=100 tile="slime-3-7" }
-  tile={ delay=100 tile="slime-3-8" }
-  tile={ delay=100 tile="slime-3-9" }
-  tile={ delay=100 tile="slime-3-10" }
-  tile={ delay=100 tile="slime-3-11" }
-  tile={ delay=100 tile="slime-3-12" }
-  tile={ delay=100 tile="slime-3-13" }
-  tile={ delay=100 tile="slime-3-14" }
-  tile={ delay=100 tile="slime-3-15" }
-  tile={ delay=100 tile="slime-3-16" }
+  tile={ delay_ms=100 tile="slime-3-1" }
+  tile={ delay_ms=100 tile="slime-3-2" }
+  tile={ delay_ms=100 tile="slime-3-3" }
+  tile={ delay_ms=100 tile="slime-3-4" }
+  tile={ delay_ms=100 tile="slime-3-5" }
+  tile={ delay_ms=100 tile="slime-3-6" }
+  tile={ delay_ms=100 tile="slime-3-7" }
+  tile={ delay_ms=100 tile="slime-3-8" }
+  tile={ delay_ms=100 tile="slime-3-9" }
+  tile={ delay_ms=100 tile="slime-3-10" }
+  tile={ delay_ms=100 tile="slime-3-11" }
+  tile={ delay_ms=100 tile="slime-3-12" }
+  tile={ delay_ms=100 tile="slime-3-13" }
+  tile={ delay_ms=100 tile="slime-3-14" }
+  tile={ delay_ms=100 tile="slime-3-15" }
+  tile={ delay_ms=100 tile="slime-3-16" }
 
-  tile={ delay=100 tile="slime-3-1" }
-  tile={ delay=100 tile="slime-3-2" }
-  tile={ delay=100 tile="slime-3-3" }
-  tile={ delay=100 tile="slime-3-4" }
-  tile={ delay=100 tile="slime-3-5" }
-  tile={ delay=100 tile="slime-3-6" }
-  tile={ delay=100 tile="slime-3-7" }
-  tile={ delay=100 tile="slime-3-8" }
-  tile={ delay=100 tile="slime-3-9" }
-  tile={ delay=100 tile="slime-3-10" }
-  tile={ delay=100 tile="slime-3-11" }
-  tile={ delay=100 tile="slime-3-12" }
-  tile={ delay=100 tile="slime-3-13" }
-  tile={ delay=100 tile="slime-3-14" }
-  tile={ delay=100 tile="slime-3-15" }
-  tile={ delay=100 tile="slime-3-16" }
+  tile={ delay_ms=100 tile="slime-3-1" }
+  tile={ delay_ms=100 tile="slime-3-2" }
+  tile={ delay_ms=100 tile="slime-3-3" }
+  tile={ delay_ms=100 tile="slime-3-4" }
+  tile={ delay_ms=100 tile="slime-3-5" }
+  tile={ delay_ms=100 tile="slime-3-6" }
+  tile={ delay_ms=100 tile="slime-3-7" }
+  tile={ delay_ms=100 tile="slime-3-8" }
+  tile={ delay_ms=100 tile="slime-3-9" }
+  tile={ delay_ms=100 tile="slime-3-10" }
+  tile={ delay_ms=100 tile="slime-3-11" }
+  tile={ delay_ms=100 tile="slime-3-12" }
+  tile={ delay_ms=100 tile="slime-3-13" }
+  tile={ delay_ms=100 tile="slime-3-14" }
+  tile={ delay_ms=100 tile="slime-3-15" }
+  tile={ delay_ms=100 tile="slime-3-16" }
 
-  tile={ delay=100 tile="slime-3-1" }
-  tile={ delay=100 tile="slime-3-2" }
-  tile={ delay=100 tile="slime-3-3" }
-  tile={ delay=100 tile="slime-3-4" }
-  tile={ delay=100 tile="slime-3-5" }
-  tile={ delay=100 tile="slime-3-6" }
-  tile={ delay=100 tile="slime-3-7" }
-  tile={ delay=100 tile="slime-3-8" }
-  tile={ delay=100 tile="slime-3-9" }
-  tile={ delay=100 tile="slime-3-10" }
-  tile={ delay=100 tile="slime-3-11" }
-  tile={ delay=100 tile="slime-3-12" }
-  tile={ delay=100 tile="slime-3-13" }
-  tile={ delay=100 tile="slime-3-14" }
-  tile={ delay=100 tile="slime-3-15" }
-  tile={ delay=100 tile="slime-3-16" }
+  tile={ delay_ms=100 tile="slime-3-1" }
+  tile={ delay_ms=100 tile="slime-3-2" }
+  tile={ delay_ms=100 tile="slime-3-3" }
+  tile={ delay_ms=100 tile="slime-3-4" }
+  tile={ delay_ms=100 tile="slime-3-5" }
+  tile={ delay_ms=100 tile="slime-3-6" }
+  tile={ delay_ms=100 tile="slime-3-7" }
+  tile={ delay_ms=100 tile="slime-3-8" }
+  tile={ delay_ms=100 tile="slime-3-9" }
+  tile={ delay_ms=100 tile="slime-3-10" }
+  tile={ delay_ms=100 tile="slime-3-11" }
+  tile={ delay_ms=100 tile="slime-3-12" }
+  tile={ delay_ms=100 tile="slime-3-13" }
+  tile={ delay_ms=100 tile="slime-3-14" }
+  tile={ delay_ms=100 tile="slime-3-15" }
+  tile={ delay_ms=100 tile="slime-3-16" }
 
-  tile={ delay=100 tile="slime-3-1" }
-  tile={ delay=100 tile="slime-3-2" }
-  tile={ delay=100 tile="slime-3-3" }
-  tile={ delay=100 tile="slime-3-4" }
-  tile={ delay=100 tile="slime-3-5" }
-  tile={ delay=100 tile="slime-3-6" }
-  tile={ delay=100 tile="slime-3-7" }
-  tile={ delay=100 tile="slime-3-8" }
-  tile={ delay=100 tile="slime-3-9" begin_jump is_jumping }
-  tile={ delay=100 tile="slime-3-10" is_moving is_jumping }
-  tile={ delay=100 tile="slime-3-11" is_moving is_jumping }
-  tile={ delay=100 tile="slime-3-12" is_moving is_jumping }
-  tile={ delay=100 tile="slime-3-13" is_moving is_jumping }
-  tile={ delay=100 tile="slime-3-14" is_moving is_jumping }
-  tile={ delay=100 tile="slime-3-15" is_moving is_jumping }
-  tile={ delay=100 tile="slime-3-16" is_moving is_jumping }
+  tile={ delay_ms=100 tile="slime-3-1" }
+  tile={ delay_ms=100 tile="slime-3-2" }
+  tile={ delay_ms=100 tile="slime-3-3" }
+  tile={ delay_ms=100 tile="slime-3-4" }
+  tile={ delay_ms=100 tile="slime-3-5" }
+  tile={ delay_ms=100 tile="slime-3-6" }
+  tile={ delay_ms=100 tile="slime-3-7" }
+  tile={ delay_ms=100 tile="slime-3-8" }
+  tile={ delay_ms=100 tile="slime-3-9" begin_jump is_jumping }
+  tile={ delay_ms=100 tile="slime-3-10" is_moving is_jumping }
+  tile={ delay_ms=100 tile="slime-3-11" is_moving is_jumping }
+  tile={ delay_ms=100 tile="slime-3-12" is_moving is_jumping }
+  tile={ delay_ms=100 tile="slime-3-13" is_moving is_jumping }
+  tile={ delay_ms=100 tile="slime-3-14" is_moving is_jumping }
+  tile={ delay_ms=100 tile="slime-3-15" is_moving is_jumping }
+  tile={ delay_ms=100 tile="slime-3-16" is_moving is_jumping }
  }
 }

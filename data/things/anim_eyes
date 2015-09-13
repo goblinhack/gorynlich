@@ -6,131 +6,131 @@
  tiles={
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.3"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.14"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.5"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.6"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.7"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.8"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.10"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.11"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.12"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.13"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.14"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.15"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.14"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.15"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.1"
-   delay=3000
+   delay_ms=3000
   }
   tile={
    tile="anim_eyes1.10"
-   delay=100
+   delay_ms=100
   }
  }
 }

@@ -28,177 +28,177 @@
  is_animated
  tiles={
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    tile="gobblera-up"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    tile="gobblera-down"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_left
    tile="gobblera-left"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_right
    tile="gobblera-right"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_left
    tile="gobblera-tl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_left
    tile="gobblera-bl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_right
    tile="gobblera-tr"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_right
    tile="gobblera-br"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    tile="gobblerb-up"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    tile="gobblerb-down"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_left
    tile="gobblerb-left"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_right
    tile="gobblerb-right"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_left
    tile="gobblerb-tl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_left
    tile="gobblerb-bl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_right
    tile="gobblerb-tr"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_right
    tile="gobblerb-br"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    tile="gobblerc-up"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    tile="gobblerc-down"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_left
    tile="gobblerc-left"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_right
    tile="gobblerc-right"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_left
    tile="gobblerc-tl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_left
    tile="gobblerc-bl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_right
    tile="gobblerc-tr"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_right
    tile="gobblerc-br"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    tile="gobblerd-up"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    tile="gobblerd-down"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_left
    tile="gobblerd-left"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_right
    tile="gobblerd-right"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_left
    tile="gobblerd-tl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_left
    tile="gobblerd-bl"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_up
    is_dir_right
    tile="gobblerd-tr"
   }
   tile={
-   delay=175
+   delay_ms=175
    is_dir_down
    is_dir_right
    tile="gobblerd-br"

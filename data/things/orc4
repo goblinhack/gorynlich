@@ -30,177 +30,177 @@
  max_appear_depth=100
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="orc4a-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="orc4a-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="orc4a-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="orc4a-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="orc4a-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="orc4a-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="orc4a-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="orc4a-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="orc4b-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="orc4b-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="orc4b-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="orc4b-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="orc4b-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="orc4b-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="orc4b-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="orc4b-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="orc4c-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="orc4c-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="orc4c-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="orc4c-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="orc4c-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="orc4c-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="orc4c-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="orc4c-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="orc4d-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="orc4d-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="orc4d-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="orc4d-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="orc4d-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="orc4d-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="orc4d-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="orc4d-br"

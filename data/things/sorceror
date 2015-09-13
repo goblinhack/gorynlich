@@ -25,177 +25,177 @@
  is_animated
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="sorceror-up"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="sorceror-down"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="sorceror-left"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="sorceror-right"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="sorceror-tl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="sorceror-bl"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="sorceror-tr"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="sorceror-br"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="sorceror-up2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="sorceror-down2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="sorceror-left2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="sorceror-right2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="sorceror-tl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="sorceror-bl2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="sorceror-tr2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="sorceror-br2"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="sorceror-up3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="sorceror-down3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="sorceror-left3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="sorceror-right3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="sorceror-tl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="sorceror-bl3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="sorceror-tr3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="sorceror-br3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="sorceror-up4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="sorceror-down4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="sorceror-left4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="sorceror-right4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="sorceror-tl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="sorceror-bl4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="sorceror-tr4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="sorceror-br4"

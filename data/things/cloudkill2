@@ -15,255 +15,255 @@
  tiles={
   tile={
    tile="cloudkill1.1"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.2"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.3"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.4"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.5"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.8"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.9"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.10"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.11"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.12"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.13"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.14"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.15"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.16"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.17"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.18"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.19"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.20"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.21"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.22"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.23"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.24"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.25"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.26"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.27"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.28"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.29"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.30"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.31"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.32"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.33"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.34"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.35"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.36"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.37"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.38"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.39"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.40"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.41"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.42"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.43"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.44"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.45"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.46"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.47"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.48"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.49"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.50"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.51"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.52"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.53"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.54"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.55"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.56"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.57"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.58"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.59"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.60"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.61"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.62"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.63"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="cloudkill1.64"
-   delay=200
+   delay_ms=200
   }
   tile={
    tile="space"
-   delay=200
+   delay_ms=200
    is_end_of_anim
    is_dead_on_end_of_anim
   }

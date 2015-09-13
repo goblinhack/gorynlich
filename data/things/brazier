@@ -12,131 +12,131 @@
  tiles={
   tile={
    tile="brazier1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier6"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier7"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier8"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier9"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier10"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier11"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier12"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier13"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier14"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier15"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier16"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier17"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier18"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier19"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier20"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier21"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier22"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier23"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier24"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier25"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier26"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier27"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier28"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier29"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier30"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier31"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="brazier32"
-   delay=100
+   delay_ms=100
   }
  }
 }

@@ -20,9 +20,9 @@
  weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=100
  tiles={
-  tile={ delay=500 tile="trap1-1" }
-  tile={ delay=500 tile="trap1-2" }
-  tile={ delay=500 tile="trap1-3" }
-  tile={ delay=500 tile="trap1-4" }
+  tile={ delay_ms=500 tile="trap1-1" }
+  tile={ delay_ms=500 tile="trap1-2" }
+  tile={ delay_ms=500 tile="trap1-3" }
+  tile={ delay_ms=500 tile="trap1-4" }
  }
 }
