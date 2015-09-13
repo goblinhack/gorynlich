@@ -244,7 +244,9 @@ static void thing_client_wid_move (thingp t,
     /*
      * Make the player bounce about as they walk
      */
-    if (thing_is_player(t) || thing_is_monst(t)) {
+    if (thing_is_player(t) || 
+        (thing_is_monst(t) && (t->scale == 1.0))) {
+
         if (!t->wid->bouncing) {
             wid_bounce_to_pct_in(t->wid, 0.1, 0.9, 200, 0);
         }
