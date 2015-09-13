@@ -26,7 +26,7 @@
  tiles={
   tile={
    tile="axe4"
-   delay=50
+   delay_ms=50
   }
  }
 }

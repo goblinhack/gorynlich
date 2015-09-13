@@ -9,45 +9,45 @@
  sound_on_collect="pickup"
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="sword10.7"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="sword10.3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="sword10.5"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="sword10.1"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="sword10.6"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="sword10.4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="sword10.8"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="sword10.2"

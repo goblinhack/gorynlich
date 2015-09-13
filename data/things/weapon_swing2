@@ -16,248 +16,248 @@
  tiles={
   tile={
    tile="weapon_swing2.1"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.2"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.3"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.4"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.5"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.6"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.7"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.8"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.9"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.10"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.11"
-   delay=50
+   delay_ms=50
    is_dir_left
   }
   tile={
    tile="weapon_swing2.12"
-   delay=50
+   delay_ms=50
    is_end_of_anim
    is_dead_on_end_of_anim
    is_dir_left
   }
   tile={
    tile="weapon_swing2.1"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.2"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.3"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.4"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.5"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.6"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.7"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.8"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.9"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.10"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.11"
-   delay=50
+   delay_ms=50
    is_dir_down
   }
   tile={
    tile="weapon_swing2.12"
-   delay=50
+   delay_ms=50
    is_end_of_anim
    is_dead_on_end_of_anim
    is_dir_down
   }
   tile={
    tile="weapon_swing1.1"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.2"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.3"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.4"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.5"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.6"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.7"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.8"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.9"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.10"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.11"
-   delay=50
+   delay_ms=50
    is_dir_right
   }
   tile={
    tile="weapon_swing1.12"
-   delay=50
+   delay_ms=50
    is_end_of_anim
    is_dead_on_end_of_anim
    is_dir_right
   }
   tile={
    tile="weapon_swing3.1"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.2"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.3"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.4"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.5"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.6"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.7"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.8"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.9"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.10"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.11"
-   delay=50
+   delay_ms=50
    is_dir_up
   }
   tile={
    tile="weapon_swing3.12"
-   delay=50
+   delay_ms=50
    is_end_of_anim
    is_dead_on_end_of_anim
    is_dir_up

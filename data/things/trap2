@@ -21,9 +21,9 @@
  d10000_chance_of_appearing=50
  has_ability_double_shot
  tiles={
-  tile={ delay=500 tile="trap2-1" }
-  tile={ delay=500 tile="trap2-2" }
-  tile={ delay=500 tile="trap2-3" }
-  tile={ delay=500 tile="trap2-4" }
+  tile={ delay_ms=500 tile="trap2-1" }
+  tile={ delay_ms=500 tile="trap2-2" }
+  tile={ delay_ms=500 tile="trap2-3" }
+  tile={ delay_ms=500 tile="trap2-4" }
  }
 }

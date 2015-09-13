@@ -14,35 +14,35 @@
  tiles={
   tile={
    tile="torch1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torch3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torch2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torch1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torch3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torch1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torch4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="torch3"
-   delay=100
+   delay_ms=100
   }
  }
 }

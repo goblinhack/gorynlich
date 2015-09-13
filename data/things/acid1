@@ -23,93 +23,93 @@
  tiles={
   tile={
    tile="acid1.1"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.2"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.3"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.4"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.5"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.6"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.7"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.8"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.9"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.10"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.11"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.12"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.13"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.14"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.15"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.16"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1.17"
-   delay=30
+   delay_ms=30
    is_join_block
   }
   tile={
    tile="acid1_0"
    is_join_block
-   delay=30
+   delay_ms=30
   }
   tile={
    tile="acid1_is_join_node"

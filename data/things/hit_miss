@@ -13,27 +13,27 @@
  tiles={
   tile={
    tile="hit_miss.1"
-   delay=20
+   delay_ms=20
   }
   tile={
    tile="hit_miss.2"
-   delay=20
+   delay_ms=20
   }
   tile={
    tile="hit_miss.3"
-   delay=20
+   delay_ms=20
   }
   tile={
    tile="hit_miss.4"
-   delay=20
+   delay_ms=20
   }
   tile={
    tile="hit_miss.5"
-   delay=20
+   delay_ms=20
   }
   tile={
    tile="space"
-   delay=100
+   delay_ms=100
    is_end_of_anim
    is_dead_on_end_of_anim
   }

@@ -8,45 +8,45 @@
  is_weapon_carry_anim
  tiles={
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    tile="sword6.7"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    tile="sword6.3"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_left
    tile="sword6.5"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_right
    tile="sword6.1"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_left
    tile="sword6.6"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_left
    tile="sword6.4"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_up
    is_dir_right
    tile="sword6.8"
   }
   tile={
-   delay=200
+   delay_ms=200
    is_dir_down
    is_dir_right
    tile="sword6.2"

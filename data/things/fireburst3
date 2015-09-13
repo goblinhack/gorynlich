@@ -18,63 +18,63 @@
  tiles={
   tile={
    tile="explosion3.1"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.2"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.3"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.4"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.5"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.8"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.9"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.10"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.11"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.12"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.13"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.14"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.15"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="explosion3.16"
-   delay=100
+   delay_ms=100
   }
   tile={
    tile="space"
-   delay=100
+   delay_ms=100
    is_end_of_anim
    is_dead_on_end_of_anim
   }
