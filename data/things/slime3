@@ -20,7 +20,7 @@
  hit_priority=10
  is_cats_eyes
  is_collision_map_medium
- explodes_as="explosion1"
+ explodes_as="med_explosion1"
  is_animated
  d10000_chance_of_appearing=10
  min_appear_depth=1
