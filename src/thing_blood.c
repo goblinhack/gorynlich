@@ -89,6 +89,19 @@ void level_place_flames (levelp level,
                         "flames1");
 }
 
+void level_place_bubbles (levelp level, 
+                        thingp owner,
+                        double x, double y)
+{
+    level_place_spatter(level, 
+                        owner,
+                        x, y,
+                        0.05, // radius
+                        1, // amount
+                        1, // nargs
+                        "bubbles1");
+}
+
 void level_place_blood_crit (levelp level, 
                              thingp owner,
                              double x, double y)
