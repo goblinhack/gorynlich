@@ -272,7 +272,8 @@ enum {
     THING_STATE_EFFECT_NONE,
     THING_STATE_EFFECT_IS_HIT_MISS,
     THING_STATE_EFFECT_IS_HIT_SUCCESS,
-    THING_STATE_EFFECT_IS_FLAME,
+    THING_STATE_EFFECT_IS_FLAMES,
+    THING_STATE_EFFECT_IS_BUBBLES,
     THING_STATE_EFFECT_IS_POWER_UP,
     THING_STATE_EFFECT_IS_HIT_CRIT,
 };
@@ -503,6 +504,7 @@ enum {
     THING_BLOOD1,
     THING_BLOOD2,
     THING_FLAMES1,
+    THING_BUBBLES1,
     THING_ACTION_LEFT,
     THING_ACTION_RIGHT,
     THING_ACTION_UP,
@@ -3394,6 +3396,9 @@ void level_place_blood(levelp level,
                        thingp owner,
                        double x, double y);
 void level_place_flames(levelp level, 
+                       thingp owner,
+                       double x, double y);
+void level_place_bubbles(levelp level, 
                        thingp owner,
                        double x, double y);
 void level_place_blood_crit(levelp level, 

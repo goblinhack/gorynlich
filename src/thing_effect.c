@@ -14,6 +14,7 @@
 static void thing_client_effect_hit_miss(thingp t);
 static void thing_client_effect_hit_success(thingp t);
 static void thing_client_effect_flames(thingp t);
+static void thing_client_effect_bubbles(thingp t);
 static void thing_client_effect_hit_crit(thingp t);
 static void thing_client_effect_power_up(thingp t);
 
@@ -70,8 +71,11 @@ void thing_client_effect (thingp t, int effect)
     case THING_STATE_EFFECT_IS_HIT_SUCCESS:
         thing_client_effect_hit_success(t);
         break;
-    case THING_STATE_EFFECT_IS_FLAME:
+    case THING_STATE_EFFECT_IS_FLAMES:
         thing_client_effect_flames(t);
+        break;
+    case THING_STATE_EFFECT_IS_BUBBLES:
+        thing_client_effect_bubbles(t);
         break;
     case THING_STATE_EFFECT_IS_POWER_UP:
         thing_client_effect_power_up(t);
@@ -148,7 +152,7 @@ static void thing_client_effect_flames (thingp t)
     widp w = t->wid;
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
-        wid_set_color(w, WID_COLOR_BLIT, RED);
+        wid_set_color(w, WID_COLOR_BLIT, ORANGE);
 
         /*
          * Shake the screen.
@@ -158,6 +162,28 @@ static void thing_client_effect_flames (thingp t)
         }
 
         level_place_flames(client_level,
+                          0, // owner
+                          t->x, t->y);
+    }
+}
+
+static void thing_client_effect_bubbles (thingp t)
+{
+    verify(t);
+
+    widp w = t->wid;
+    if (w) {
+        wid_set_mode(w, WID_MODE_ACTIVE);
+        wid_set_color(w, WID_COLOR_BLIT, GREEN);
+
+        /*
+         * Shake the screen.
+         */
+        if (thing_is_player(t)) {
+            sdl_joy_rumble(1.0, 2000);
+        }
+
+        level_place_bubbles(client_level,
                           0, // owner
                           t->x, t->y);
     }
