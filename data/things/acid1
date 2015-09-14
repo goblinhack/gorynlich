@@ -1,21 +1,19 @@
 {
- short_name="corrosive acid"
+ short_name="acid"
  raw_name="acid1"
- tooltip="corrosive acid"
- mob_spawn={ 1000 "acid1" }
+ tooltip="acid"
+ mob_spawn={ 100 "acid1" 900 "bubbles1" }
  z_depth="floor2"
  is_mob_spawner
  is_acid
  hit_delay_tenths=5
- is_animated
  hit_priority=0
- damage=10
+ damage=5
  is_joinable
- mob_spawn_delay_tenths=100
+ mob_spawn_delay_tenths=10
  is_animated
  can_be_hit_chance=2000000
  d10000_chance_of_appearing=20
- is_animated
  is_light_source
  light_radius=0.2
  light_tint="green"
@@ -23,88 +21,88 @@
  tiles={
   tile={
    tile="acid1.1"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.2"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.3"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.4"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.5"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.6"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.7"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.8"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.9"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.10"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.11"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.12"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.13"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.14"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.15"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.16"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1.17"
-   delay_ms=30
    is_join_block
+   delay_ms=30
   }
   tile={
    tile="acid1_0"
