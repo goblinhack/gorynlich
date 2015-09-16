@@ -604,10 +604,10 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
     }
 
     /*
-     * Acid does not attack acid
+     * Lava does not attack lava
      */
-    if (thing_is_acid(me) || thing_is_lava(me)) {
-        if (thing_is_acid(it) || thing_is_lava(it)) {
+    if (thing_is_lava(me)) {
+        if (thing_is_lava(it)) {
             return;
         }
 
@@ -895,8 +895,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             }
         }
 
-        if (thing_is_lava(it) ||
-            thing_is_acid(it)) {
+        if (thing_is_lava(it)) {
             /*
              * No hitting this.
              */
@@ -1229,7 +1228,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_exit(it)                   ||
                     thing_is_teleport(it)               ||
                     thing_is_lava(it)                   ||
-                    thing_is_acid(it)                   ||
                     thing_is_trap(it)                   ||
                     thing_is_monst(it)                  ||
                     /*
