@@ -194,7 +194,7 @@ typedef struct tp_ {
     /*
      * Lifespan in milliseconds.
      */
-    uint16_t lifespan;
+    uint16_t lifespan_tenths;
 
     /*
      * How far in tiles the thing can detect the monster.
@@ -495,7 +495,7 @@ const char *tp_get_tooltip(tpp);
 uint8_t tp_get_z_depth(tpp);
 uint8_t tp_get_z_order(tpp);
 uint32_t tp_get_speed(tpp);
-uint32_t tp_get_lifespan(tpp);
+uint32_t tp_get_lifespan_tenths(tpp);
 uint16_t tp_get_damage(tpp);
 uint16_t tp_get_cost(tpp);
 int32_t tp_get_bonus_xp_on_death(tpp);

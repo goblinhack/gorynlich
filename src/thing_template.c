@@ -543,7 +543,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_UINT16(ctx, "speed", t->speed);
         GET_OPT_NAMED_UINT16(ctx, "damage", t->damage);
         GET_OPT_NAMED_UINT16(ctx, "cost", t->cost);
-        GET_OPT_NAMED_UINT16(ctx, "lifespan", t->lifespan);
+        GET_OPT_NAMED_UINT16(ctx, "lifespan_tenths", t->lifespan_tenths);
         GET_OPT_NAMED_UINT8(ctx, "vision_distance", t->vision_distance);
         GET_OPT_NAMED_UINT8(ctx, "approach_distance", t->approach_distance);
         GET_OPT_NAMED_INT32(ctx, "bonus_xp_on_death", t->bonus_xp_on_death);
@@ -863,7 +863,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "speed", t->speed);
     PUT_NAMED_INT32(ctx, "damage", t->damage);
     PUT_NAMED_INT32(ctx, "cost", t->cost);
-    PUT_NAMED_INT32(ctx, "lifespan", t->lifespan);
+    PUT_NAMED_INT32(ctx, "lifespan_tenths", t->lifespan_tenths);
     PUT_NAMED_INT32(ctx, "bonus_xp_on_death", t->bonus_xp_on_death);
     PUT_NAMED_INT32(ctx, "vision_distance", t->vision_distance);
     PUT_NAMED_INT32(ctx, "approach_distance", t->approach_distance);
@@ -1219,9 +1219,9 @@ uint16_t tp_get_cost (tpp t)
     return (t->cost);
 }
 
-uint32_t tp_get_lifespan (tpp t)
+uint32_t tp_get_lifespan_tenths (tpp t)
 {
-    return (t->lifespan);
+    return (t->lifespan_tenths);
 }
 
 int32_t tp_get_bonus_xp_on_death (tpp t)
