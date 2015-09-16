@@ -148,9 +148,10 @@ static void thing_tick_server_all (void)
                 }
             }
 
-            if (tp_get_lifespan(tp)) {
-                if (time_have_x_secs_passed_since(tp_get_lifespan(tp),
-                                                  t->timestamp_born)) {
+            if (tp_get_lifespan_tenths(tp)) {
+                if (time_have_x_tenths_passed_since(tp_get_lifespan_tenths(tp) +
+                                                        (myrand() % tp_get_lifespan_tenths(tp)) / 2,
+                                                    t->timestamp_born)) {
                     thing_dead(t, 0, "out of life"); 
                     continue;
                 }

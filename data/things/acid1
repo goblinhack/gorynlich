@@ -1,18 +1,18 @@
 {
- short_name="acid"
+ short_name="living acid blob"
  raw_name="acid1"
- tooltip="acid"
+ tooltip="living acid blob"
  mob_spawn={ 100 "acid1" 900 "bubbles1" }
  z_depth="floor2"
  is_mob_spawner
+ is_monst
  is_acid
  hit_delay_tenths=5
- hit_priority=0
  damage=5
  is_joinable
  mob_spawn_delay_tenths=10
+ lifespan_tenths=200
  is_animated
- can_be_hit_chance=2000000
  d10000_chance_of_appearing=20
  is_light_source
  light_radius=0.2
