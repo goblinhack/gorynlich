@@ -107,6 +107,7 @@ static widp thing_place_ (thingp t,
 
             if (map_find_wall_at(server_level, x, y, 0) ||
                 map_find_door_at(server_level, x, y, 0) ||
+                map_find_crystal_at(server_level, x, y, 0) ||
                 map_find_rock_at(server_level, x, y, 0)) {
                 continue;
             }
@@ -139,6 +140,7 @@ static widp thing_place_ (thingp t,
 
             if (map_find_wall_at(server_level, x, y, 0) ||
                 map_find_door_at(server_level, x, y, 0) ||
+                map_find_crystal_at(server_level, x, y, 0) ||
                 map_find_rock_at(server_level, x, y, 0)) {
                 continue;
             }

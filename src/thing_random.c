@@ -365,6 +365,29 @@ tpp random_rock (void)
     }
 }
 
+tpp random_crystal (void)
+{
+    for (;;) {
+
+        uint16_t id = myrand() % THING_MAX_ID;
+
+        tpp tp = id_to_tp(id);
+
+        if (tp_is_internal(tp)) {
+            continue;
+        }
+
+        if (!tp_is_crystal(tp)) {
+            continue;
+        }
+
+        int r = myrand() % 10000;
+        if (r < tp_get_d10000_chance_of_appearing(tp)) {
+            return (tp);
+        }
+    }
+}
+
 tpp random_lava (void)
 {
     for (;;) {

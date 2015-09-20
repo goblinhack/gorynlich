@@ -23,6 +23,7 @@ static int can_see_obstacle (levelp level, int32_t x, int32_t y)
 {
     if (map_find_wall_at(level, x, y, 0) ||
         map_find_door_at(level, x, y, 0) ||
+        map_find_crystal_at(level, x, y, 0) ||
         map_find_rock_at(level, x, y, 0)) {
 
         return (true);

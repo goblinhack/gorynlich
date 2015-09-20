@@ -299,6 +299,7 @@ static void level_place_explosion_ (levelp level,
             }
 
             if (map_find_wall_at(level, ix, iy, 0) ||
+                map_find_crystal_at(level, ix, iy, 0) ||
                 map_find_rock_at(level, ix, iy, 0)) {
                 printf("+");
                 continue;

@@ -308,7 +308,7 @@ typedef struct tp_ {
     uint8_t is_rrr4:1;
     uint8_t is_rrr5:1;
     uint8_t is_rrr6:1;
-    uint8_t is_rrr7:1;
+    uint8_t is_crystal:1;
     uint8_t is_rrr8:1;
     uint8_t is_rrr9:1;
     uint8_t is_rrr10:1;
@@ -749,9 +749,9 @@ static inline uint8_t tp_is_rrr6 (tpp t)
     return (t->is_rrr6);
 }
 
-static inline uint8_t tp_is_rrr7 (tpp t)
+static inline uint8_t tp_is_crystal (tpp t)
 {
-    return (t->is_rrr7);
+    return (t->is_crystal);
 }
 
 static inline uint8_t tp_is_rrr8 (tpp t)
@@ -1382,6 +1382,7 @@ tpp random_treasure(int shop_floor);
 tpp random_weapon(int shop_floor);
 tpp random_potion(int shop_floor);
 tpp random_rock(void);
+tpp random_crystal(void);
 tpp random_lava(void);
 tpp random_monst(int depth);
 tpp random_trap(int depth);
