@@ -19,6 +19,7 @@
  is_light_source
  light_radius=2.0
  light_tint="red"
+ is_candle_light
  tiles={
   tile={
    tile="rock1.17"
