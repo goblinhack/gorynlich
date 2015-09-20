@@ -2,7 +2,7 @@
  short_name="amethyst"
  raw_name="gem4"
  tooltip="amethyst"
- z_depth="monst"
+ z_depth="obj"
  is_inactive
  is_treasure
  is_stackable

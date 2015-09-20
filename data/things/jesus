@@ -2,7 +2,7 @@
  short_name="jesus"
  raw_name="jesus"
  tooltip="jesus"
- z_depth="explosion_top"
+ z_depth="explosion"
  speed=30
  max_hp=3000
  damage=100

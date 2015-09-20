@@ -2,7 +2,7 @@
  short_name="poison dragon"
  raw_name="dragon3"
  tooltip="poison dragon"
- z_depth="explosion_top"
+ z_depth="explosion"
  speed=20
  max_hp=750
  damage=80

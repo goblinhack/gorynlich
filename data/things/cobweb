@@ -6,7 +6,7 @@
    1000 "spider1" 
    10 "spider2" 
  }
- z_depth="explosion_top"
+ z_depth="obj_top"
  max_hp=3
  is_mob_spawner
  is_generator

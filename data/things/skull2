@@ -2,7 +2,7 @@
  short_name="skull lord"
  raw_name="skull2"
  tooltip="skull lord"
- z_depth="monst"
+ z_depth="obj"
  speed=3
  max_hp=20
  damage=15

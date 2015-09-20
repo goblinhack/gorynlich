@@ -3,7 +3,7 @@
  raw_name="magic bolt"
  tooltip="magic bolt"
  is_hidden_from_editor
- z_depth="explosion_top"
+ z_depth="explosion"
  speed=60
  damage=15
  hit_delay_tenths=1

@@ -2,7 +2,7 @@
  short_name="longish sword"
  raw_name="sword4"
  tooltip="longish sword"
- z_depth="monst"
+ z_depth="obj"
  cost=200
  is_treasure
  is_weapon

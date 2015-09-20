@@ -2,7 +2,7 @@
  short_name="cloudkill potion"
  raw_name="potion_cloudkill"
  tooltip="cloudkill potion"
- z_depth="monst"
+ z_depth="obj"
  cost=100
  is_treasure
  is_potion

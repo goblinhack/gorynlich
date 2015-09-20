@@ -3,7 +3,7 @@
  raw_name="slime-2"
  tooltip="purple slime"
  mob_spawn={ 1000 "slime2" }
- z_depth="monst"
+ z_depth="obj"
  max_hp=5
  damage=1
  jump_speed=30

@@ -2,7 +2,7 @@
  short_name="very short stick"
  raw_name="stick1"
  tooltip="very short stick"
- z_depth="monst"
+ z_depth="obj"
  cost=10
  is_treasure
  is_weapon

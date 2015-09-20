@@ -2,7 +2,7 @@
  short_name="greater ghoul"
  raw_name="ghost3"
  tooltip="greater ghoul"
- z_depth="monst"
+ z_depth="obj"
  speed=15
  max_hp=1
  damage=6

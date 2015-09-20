@@ -2,7 +2,7 @@
  short_name="any weapon"
  raw_name="weapon_any"
  tooltip="random weapon"
- z_depth="monst"
+ z_depth="obj"
  is_treasure
  is_weapon
  is_internal

@@ -2,7 +2,7 @@
  short_name="ring of fisticuffs"
  raw_name="ring2"
  tooltip="ring of fisticuffs"
- z_depth="player"
+ z_depth="obj_top"
  cost=1000
  is_treasure
  is_stackable

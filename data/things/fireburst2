@@ -1,7 +1,7 @@
 {
  short_name="fireburst"
  raw_name="fireburst2"
- z_depth="player"
+ z_depth="obj"
  is_animated
  is_hidden_from_editor
  is_explosion

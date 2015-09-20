@@ -2,7 +2,7 @@
  short_name="shield potion"
  raw_name="potion_shield"
  tooltip="shield potion"
- z_depth="monst"
+ z_depth="obj"
  cost=100
  is_treasure
  is_potion

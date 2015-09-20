@@ -3,7 +3,7 @@
  raw_name="arrow"
  tooltip="a banana"
  is_hidden_from_editor
- z_depth="monst"
+ z_depth="obj"
  speed=70
  damage=6
  hit_delay_tenths=1

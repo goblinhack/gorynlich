@@ -2,7 +2,7 @@
  short_name="big jesus"
  raw_name="potion_jesus"
  tooltip="summon the one and only, big Jesus!"
- z_depth="explosion_top"
+ z_depth="obj_top"
  sound_on_collect="choir"
  cost=1000
  is_treasure

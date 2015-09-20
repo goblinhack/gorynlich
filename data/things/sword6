@@ -2,7 +2,7 @@
  short_name="diamond sword"
  raw_name="sword6"
  tooltip="diamond sword"
- z_depth="monst"
+ z_depth="obj"
  cost=1000
  is_treasure
  is_weapon

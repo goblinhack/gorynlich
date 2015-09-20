@@ -2,7 +2,7 @@
  short_name="any food"
  raw_name="food_any"
  tooltip="random food"
- z_depth="monst"
+ z_depth="obj"
  is_food
  is_internal
  tiles={

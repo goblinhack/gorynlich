@@ -3,7 +3,7 @@
  raw_name="slime-3"
  tooltip="pink slime"
  mob_spawn={ 1000 "slime3" }
- z_depth="monst"
+ z_depth="obj"
  speed=1
  max_hp=10
  damage=5

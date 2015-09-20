@@ -2,7 +2,7 @@
  short_name="the all cheese"
  raw_name="all_cheese"
  tooltip="the all cheese"
- z_depth="monst"
+ z_depth="obj"
  is_food
  is_stackable
  is_carryable

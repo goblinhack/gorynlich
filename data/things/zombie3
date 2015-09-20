@@ -11,7 +11,7 @@
  }
  mob_spawn_delay_tenths=200
  is_mob_spawner
- z_depth="monst"
+ z_depth="obj"
  speed=5
  max_hp=10
  damage=6

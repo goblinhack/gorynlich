@@ -1338,7 +1338,7 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
 
     for (dx = -collision_radius; dx <= collision_radius; dx++) 
     for (dy = -collision_radius; dy <= collision_radius; dy++)
-    for (z = MAP_DEPTH_WALL; z < MAP_DEPTH_MAX; z++) {
+    for (z = MAP_DEPTH_OBJ; z < MAP_DEPTH_MAX; z++) {
         int32_t x = (int32_t)nx + dx;
         int32_t y = (int32_t)ny + dy;
 

@@ -2,7 +2,7 @@
  short_name="bronze helmet"
  raw_name="helmet2"
  tooltip="bronze helmet"
- z_depth="monst"
+ z_depth="obj"
  stats_defense=16
  cost=2000
  is_treasure

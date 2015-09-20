@@ -2,7 +2,7 @@
  short_name="wooden axe"
  raw_name="axe1"
  tooltip="wooden axe"
- z_depth="monst"
+ z_depth="obj"
  cost=100
  is_treasure
  is_weapon

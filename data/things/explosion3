@@ -1,7 +1,7 @@
 {
  short_name="explosion"
  raw_name="explosion3"
- z_depth="player"
+ z_depth="explosion"
  is_animated
  is_hidden_from_editor
  is_explosion

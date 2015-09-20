@@ -2,7 +2,7 @@
  short_name="sword"
  raw_name="sword3"
  tooltip="normal sword (tm)"
- z_depth="monst"
+ z_depth="obj"
  cost=150
  is_treasure
  is_weapon

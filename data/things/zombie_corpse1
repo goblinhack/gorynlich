@@ -5,7 +5,7 @@
  mob_spawn={
     1000 "zombie1"
  }
- z_depth="monst"
+ z_depth="obj"
  max_hp=15
  is_undead
  is_monst
