@@ -5,7 +5,7 @@
  carrying={
     "shotgun"
  }
- z_depth="monst"
+ z_depth="obj"
  speed=15
  max_hp=1500
  damage=1

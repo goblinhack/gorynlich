@@ -2,7 +2,7 @@
  short_name="any mob"
  raw_name="mob_any"
  tooltip="random mob"
- z_depth="monst"
+ z_depth="obj"
  is_mob_spawner
  is_generator
  is_internal

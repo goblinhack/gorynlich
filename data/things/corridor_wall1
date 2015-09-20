@@ -2,7 +2,7 @@
  short_name="corridor_wall"
  raw_name="corridor_wall1"
  tooltip="corridor_wall"
- z_depth="wall"
+ z_depth="obj"
  is_hard
  is_inactive
  is_wall
@@ -13,7 +13,7 @@
  damage=50
  is_joinable
  can_be_hit_chance=5000
- d10000_chance_of_appearing=5000
+ d10000_chance_of_appearing=200
  tiles={
   tile={
    tile="corridor_wall1_0_0"

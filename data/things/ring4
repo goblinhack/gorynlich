@@ -2,7 +2,7 @@
  short_name="ring of war"
  raw_name="ring4"
  tooltip="ring of war"
- z_depth="player"
+ z_depth="obj_top"
  cost=4000
  is_treasure
  is_stackable

@@ -2,7 +2,7 @@
  short_name="noentry"
  raw_name="noentry"
  tooltip="no stuff here"
- z_depth="monst"
+ z_depth="obj"
  is_inactive
  is_hidden_from_editor
  tiles={

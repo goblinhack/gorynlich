@@ -1,0 +1,36 @@
+{
+ short_name="rock7a"
+ raw_name="rock7a"
+ tooltip="rock7a"
+ mob_spawn={ 100 "lava1" 900 "flames1" }
+ z_depth="obj"
+ is_mob_spawner
+ mob_spawn_delay_tenths=100
+ is_hard
+ is_collision_map_large
+ is_shadow_caster
+ is_rock
+ hit_priority=20
+ speed=20
+ damage=50
+ can_be_hit_chance=1000
+ d10000_chance_of_appearing=1000
+ is_blit_y_offset
+ is_light_source
+ light_radius=2.0
+ light_tint="red"
+ tiles={
+  tile={
+   tile="rock1.17"
+  }
+  tile={
+   tile="rock1.18"
+  }
+  tile={
+   tile="rock1.19"
+  }
+  tile={
+   tile="rock1.20"
+  }
+ }
+}

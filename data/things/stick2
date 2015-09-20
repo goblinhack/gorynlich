@@ -2,7 +2,7 @@
  short_name="big stick"
  raw_name="stick2"
  tooltip="big stick"
- z_depth="monst"
+ z_depth="obj"
  cost=50
  is_treasure
  is_weapon

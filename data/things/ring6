@@ -2,7 +2,7 @@
  short_name="ring of resurrectioness"
  raw_name="ring6"
  tooltip="ring of resurrectioness"
- z_depth="player"
+ z_depth="obj_top"
  cost=10000
  is_treasure
  is_stackable

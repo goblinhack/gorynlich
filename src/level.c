@@ -544,7 +544,7 @@ static void level_set_walls (levelp level)
     memset(level->doors.walls, ' ',
            sizeof(level->doors.walls));
 
-    for (z = MAP_DEPTH_WALL; z < MAP_DEPTH_PLAYER; z++) {
+    for (z = MAP_DEPTH_OBJ; z < MAP_DEPTH_OBJ_TOP; z++) {
         for (x = 0; x < MAP_WIDTH; x++) {
             for (y = 0; y < MAP_HEIGHT; y++) {
                 tree_root **tree = 

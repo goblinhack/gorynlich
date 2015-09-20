@@ -2,7 +2,7 @@
  short_name="gorynlich"
  raw_name="dragon4"
  tooltip="gorynlich"
- z_depth="explosion_top"
+ z_depth="explosion"
  speed=25
  max_hp=1250
  damage=100

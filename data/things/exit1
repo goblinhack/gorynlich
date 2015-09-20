@@ -2,7 +2,7 @@
  short_name="exit"
  raw_name="exit1"
  tooltip="level exit"
- z_depth="monst"
+ z_depth="obj"
  is_exit
  is_light_source
  light_radius=1.0

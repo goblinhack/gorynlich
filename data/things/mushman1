@@ -3,7 +3,7 @@
  raw_name="mushman1"
  tooltip="fire mushman"
  mob_spawn={ 1000 "mushman1" }
- z_depth="monst"
+ z_depth="obj"
  max_hp=5
  damage=1
  is_effect_rotate_2way

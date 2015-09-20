@@ -2,7 +2,7 @@
  short_name="ripe apple"
  raw_name="apple2"
  tooltip="ripe apple"
- z_depth="monst"
+ z_depth="obj"
  is_inactive
  is_food
  is_stackable

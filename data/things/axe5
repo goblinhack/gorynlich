@@ -2,7 +2,7 @@
  short_name="diamond hardened axe"
  raw_name="axe5"
  tooltip="diamond hardened axe"
- z_depth="monst"
+ z_depth="obj"
  cost=1000
  is_treasure
  is_weapon

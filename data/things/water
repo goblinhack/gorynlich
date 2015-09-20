@@ -2,7 +2,7 @@
  short_name="water"
  raw_name="water"
  tooltip="water"
- z_depth="monst"
+ z_depth="obj"
  is_inactive
  is_food
  is_stackable

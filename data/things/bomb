@@ -2,7 +2,7 @@
  short_name="bomb"
  raw_name="bomb"
  tooltip="unexploded bomb"
- z_depth="monst"
+ z_depth="obj"
  is_sleeping
  is_bomb
  is_combustable

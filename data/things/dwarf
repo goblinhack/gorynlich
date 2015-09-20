@@ -6,13 +6,13 @@
     "axe1"
     "torches"
  }
- z_depth="player"
+ z_depth="obj"
  speed=26
  max_hp=250
  max_magic=100
  hp_per_level=12
- magic_anim="magic_cloud"
  is_player
+ magic_anim="magic_cloud"
  hit_priority=20
  stats_attack_melee=14
  stats_attack_ranged=8
@@ -30,6 +30,7 @@
  light_radius=9.0
  is_collision_map_small
  spawn_on_death="bonepile2"
+ sound_on_death="player_death"
  is_animated
  tiles={
   tile={

@@ -2,7 +2,7 @@
  short_name="plantpod"
  raw_name="plantpod"
  tooltip="plantpod"
- z_depth="monst"
+ z_depth="obj"
  is_mob_spawner
  is_generator
  is_effect_pulse

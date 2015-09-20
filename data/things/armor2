@@ -2,7 +2,7 @@
  short_name="bronze armor"
  raw_name="armor2"
  tooltip="bronze armor"
- z_depth="monst"
+ z_depth="obj"
  stats_defense=16
  cost=2000
  is_treasure
