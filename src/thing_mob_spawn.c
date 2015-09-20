@@ -57,6 +57,7 @@ uint8_t thing_mob_spawn (thingp t)
             thing_is_acid(t)) {
 
             if (map_is_wall_at(server_level, x, y)   ||
+                map_is_rock_at(server_level, x, y)   ||
                 map_is_lava_at(server_level, x, y)   ||
                 map_is_acid_at(server_level, x, y)   ||
                 map_is_exit_at(server_level, x, y)) {
@@ -81,6 +82,7 @@ uint8_t thing_mob_spawn (thingp t)
                 }
 
                 if (map_is_wall_at(server_level, x, y)   ||
+                    map_is_rock_at(server_level, x, y)   ||
                     map_is_lava_at(server_level, x, y)   ||
                     map_is_acid_at(server_level, x, y)   ||
                     map_is_exit_at(server_level, x, y)) {
@@ -89,6 +91,7 @@ uint8_t thing_mob_spawn (thingp t)
             }
         } else {
             if (map_is_wall_at(server_level, x, y)          ||
+                map_is_rock_at(server_level, x, y)          ||
                 map_is_monst_at(server_level, x, y)         ||
                 map_is_cobweb_at(server_level, x, y)        ||
                 map_is_door_at(server_level, x, y)          ||
@@ -119,6 +122,7 @@ uint8_t thing_mob_spawn (thingp t)
                 }
 
                 if (map_is_wall_at(server_level, x, y)          ||
+                    map_is_rock_at(server_level, x, y)          ||
                     map_is_monst_at(server_level, x, y)         ||
                     map_is_cobweb_at(server_level, x, y)        ||
                     map_is_door_at(server_level, x, y)          ||
@@ -263,6 +267,7 @@ thingp thing_mob_spawn_on_death (thingp t)
              * Things not to spawn onto.
              */
             if (map_is_wall_at(server_level, x, y)          ||
+                map_is_rock_at(server_level, x, y)          ||
                 map_is_door_at(server_level, x, y)          ||
                 map_is_exit_at(server_level, x, y)) {
                 continue;
