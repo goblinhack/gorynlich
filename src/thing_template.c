@@ -666,7 +666,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr5", t->is_rrr5);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr7", t->is_rrr7);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_crystal", t->is_crystal);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr8", t->is_rrr8);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
@@ -948,7 +948,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
     PUT_NAMED_BITFIELD(ctx, "is_rrr5", t->is_rrr5);
     PUT_NAMED_BITFIELD(ctx, "is_rrr6", t->is_rrr6);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr7", t->is_rrr7);
+    PUT_NAMED_BITFIELD(ctx, "is_crystal", t->is_crystal);
     PUT_NAMED_BITFIELD(ctx, "is_rrr8", t->is_rrr8);
     PUT_NAMED_BITFIELD(ctx, "is_rrr9", t->is_rrr9);
     PUT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);

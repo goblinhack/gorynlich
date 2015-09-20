@@ -13,7 +13,7 @@
  damage=50
  is_joinable
  can_be_hit_chance=5000
- d10000_chance_of_appearing=10000
+ d10000_chance_of_appearing=5000
  tiles={
   tile={
    tile="corridor_wall1_0_0"
