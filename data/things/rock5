@@ -1,7 +1,7 @@
 {
- short_name="rock1"
- raw_name="rock1"
- tooltip="rock1"
+ short_name="rock5"
+ raw_name="rock5"
+ tooltip="rock5"
  z_depth="wall"
  is_hard
  is_inactive
@@ -17,67 +17,67 @@
  is_blit_y_offset
  tiles={
   tile={
-   tile="rock1.1"
+   tile="rock5.1"
   }
   tile={
-   tile="rock1.2"
+   tile="rock5.2"
   }
   tile={
-   tile="rock1.3"
+   tile="rock5.3"
   }
   tile={
-   tile="rock1.4"
+   tile="rock5.4"
   }
   tile={
-   tile="rock1.5"
+   tile="rock5.5"
   }
   tile={
-   tile="rock1.6"
+   tile="rock5.6"
   }
   tile={
-   tile="rock1.7"
+   tile="rock5.7"
   }
   tile={
-   tile="rock1.8"
+   tile="rock5.8"
   }
   tile={
-   tile="rock1.9"
+   tile="rock5.9"
   }
   tile={
-   tile="rock1.10"
+   tile="rock5.10"
   }
   tile={
-   tile="rock1.11"
+   tile="rock5.11"
   }
   tile={
-   tile="rock1.12"
+   tile="rock5.12"
   }
   tile={
-   tile="rock1.13"
+   tile="rock5.13"
   }
   tile={
-   tile="rock1.14"
+   tile="rock5.14"
   }
   tile={
-   tile="rock1.15"
+   tile="rock5.15"
   }
   tile={
-   tile="rock1.16"
+   tile="rock5.16"
   }
   tile={
-   tile="rock1.17"
+   tile="rock5.17"
   }
   tile={
-   tile="rock1.18"
+   tile="rock5.18"
   }
   tile={
-   tile="rock1.19"
+   tile="rock5.19"
   }
   tile={
-   tile="rock1.20"
+   tile="rock5.20"
   }
   tile={
-   tile="rock1.21"
+   tile="rock5.21"
   }
  }
 }
