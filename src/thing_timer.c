@@ -133,6 +133,13 @@ void thing_timer_place_and_destroy_callback (void *context)
     }
 
     /*
+     * Some things like projectiles can go offscrenn.
+     */
+    if (!w) {
+        return;
+    }
+
+    /*
      * Just pass the same context along as it has the expire time but add
      * the newborn thing.
      */
@@ -244,6 +251,13 @@ void thing_timer_place_callback (void *context)
                                         place->y,
                                         t,
                                         0 /* tpp */);
+    }
+
+    /*
+     * Some things like projectiles can go offscrenn.
+     */
+    if (!w) {
+        return;
     }
 
     thingp t = wid_get_thing(w);

@@ -567,6 +567,7 @@ static void level_set_walls (levelp level)
                      * Identify obstacles.
                      */
                     if (thing_is_wall(t)        ||
+                        thing_is_rock(t)        ||
                         thing_is_door(t)        ||
                         thing_is_mob_spawner(t) ||
                         thing_is_teleport(t)    ||
@@ -582,6 +583,7 @@ static void level_set_walls (levelp level)
                      * Same as above, but treat doors as passable.
                      */
                     if (thing_is_wall(t)        ||
+                        thing_is_rock(t)        ||
                         thing_is_mob_spawner(t) ||
                         thing_is_teleport(t)    ||
                         thing_is_lava(t)        ||
@@ -593,11 +595,9 @@ static void level_set_walls (levelp level)
                         level->map_treasure_target_treat_doors_as_passable.walls[x][y] = '+';
                     }
 
-                    if (thing_is_wall(t)) {
-                        level->walls.walls[x][y] = '+';
-                    }
-
-                    if (thing_is_door(t)) {
+                    if (thing_is_wall(t) ||
+                        thing_is_rock(t) ||
+                        thing_is_door(t)) {
                         level->doors.walls[x][y] = '+';
                     }
                 }
