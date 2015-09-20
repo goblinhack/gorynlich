@@ -147,6 +147,10 @@ static void thing_client_wid_move (thingp t,
     tl.x -= base_tile_width / 2.0;
     tl.y -= base_tile_height / 2.0;
 
+    if (thing_is_rock(t)) {
+        tl.y -= base_tile_height;
+    }
+
     /*
      * Now the tile itself has a shadow that is 1/4 of the pixels.
      * The center is 24x24 and with shadow it is 32x32. We need to
