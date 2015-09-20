@@ -2136,8 +2136,12 @@ if (level != server_level)
 
                 if (existing_tile && (existing_tile != tile)) {
                     thingp t = wid_get_thing(mywid);
-                    if (t && t->on_server) {
-                        thing_update(t);
+                    if (t) {
+                        t->join_index = index;
+
+                        if (t && t->on_server) {
+                            thing_update(t);
+                        }
                     }
                 }
             }

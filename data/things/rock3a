@@ -19,18 +19,19 @@
  is_light_source
  light_radius=2.0
  light_tint="green"
+ is_candle_light
  tiles={
   tile={
-   tile="rock1.17"
+   tile="rock3.17"
   }
   tile={
-   tile="rock1.18"
+   tile="rock3.18"
   }
   tile={
-   tile="rock1.19"
+   tile="rock3.19"
   }
   tile={
-   tile="rock1.20"
+   tile="rock3.20"
   }
  }
 }
