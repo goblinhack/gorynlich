@@ -173,6 +173,11 @@ uint8_t map_is_rock_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rock));
 }
 
+uint8_t map_is_crystal_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_crystal));
+}
+
 uint8_t map_is_shadow_caster_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, tp_is_shadow_caster));
@@ -608,6 +613,11 @@ thingp map_thing_is_wall_at (levelp level, int32_t x, int32_t y)
 thingp map_thing_is_rock_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, tp_is_rock));
+}
+
+thingp map_thing_is_crystal_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_crystal));
 }
 
 thingp map_thing_is_key_at (levelp level, int32_t x, int32_t y)
@@ -1073,6 +1083,11 @@ tree_rootp map_all_things_is_rock_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rock));
 }
 
+tree_rootp map_all_things_is_crystal_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_crystal));
+}
+
 tree_rootp map_all_things_is_shadow_caster_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, tp_is_shadow_caster));
@@ -1499,6 +1514,11 @@ tpp map_find_wall_at (levelp level, int32_t x, int32_t y, widp *w)
 tpp map_find_rock_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_rock, w));
+}
+
+tpp map_find_crystal_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_crystal, w));
 }
 
 tpp map_find_key_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2227,6 +2247,11 @@ tree_rootp map_all_things_is_key (levelp level)
 tree_rootp map_all_things_is_rock (levelp level)
 {
     return (map_all_things_is_x(level, tp_is_rock));
+}
+
+tree_rootp map_all_things_is_crystal (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_crystal));
 }
 
 tree_rootp map_all_things_is_shadow_caster (levelp level)
