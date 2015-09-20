@@ -556,16 +556,16 @@ void thing_set_weapon_placement (thingp t)
             depth_modifier = 1;
             break;
         case THING_DIR_UP:
-            depth_modifier = -1;
+            depth_modifier = 0;
             break;
         case THING_DIR_DOWN:
             depth_modifier = 1;
             break;
         case THING_DIR_TL:
-            depth_modifier = -1;
+            depth_modifier = 0;
             break;
         case THING_DIR_BL:
-            depth_modifier = -1;
+            depth_modifier = 0;
             break;
         case THING_DIR_TR:
             depth_modifier = 1;
