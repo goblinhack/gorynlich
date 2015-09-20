@@ -942,6 +942,11 @@ typedef struct thing_ {
      */
     uint8_t effect;
 
+    /*
+     * e.g. IS_JOIN_BLOCK
+     */
+    uint8_t join_index;
+
     uint8_t dir:3;
 
     /*
