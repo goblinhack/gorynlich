@@ -6,7 +6,7 @@
     "bow1"
     "torches"
  }
- z_depth="player"
+ z_depth="obj"
  speed=32
  max_hp=150
  max_magic=150
@@ -30,6 +30,7 @@
  light_radius=10.0
  is_collision_map_small
  spawn_on_death="bonepile2"
+ sound_on_death="player_death"
  is_animated
  tiles={
   tile={

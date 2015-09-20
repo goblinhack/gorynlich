@@ -3,7 +3,7 @@
  raw_name="bow1"
  tooltip="plastic bow"
  fires="arrow"
- z_depth="monst"
+ z_depth="obj"
  cost=50
  is_treasure
  is_weapon

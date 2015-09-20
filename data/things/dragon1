@@ -2,7 +2,7 @@
  short_name="fire dragon"
  raw_name="dragon1"
  tooltip="fire dragon"
- z_depth="explosion_top"
+ z_depth="explosion"
  speed=10
  max_hp=350
  damage=50

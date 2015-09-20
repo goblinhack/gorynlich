@@ -2,7 +2,7 @@
  short_name="lifeforce potion"
  raw_name="potion_life"
  tooltip="lifeforce potion"
- z_depth="monst"
+ z_depth="obj"
  cost=100
  is_treasure
  is_potion

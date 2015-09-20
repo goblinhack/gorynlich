@@ -5,7 +5,7 @@
  carrying={
     "scythe1"
  }
- z_depth="monst"
+ z_depth="obj"
  speed=5
  max_hp=5000
  damage=30

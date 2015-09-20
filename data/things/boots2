@@ -2,7 +2,7 @@
  short_name="acid boots"
  raw_name="boots2"
  tooltip="acid boots"
- z_depth="monst"
+ z_depth="obj"
  cost=1000
  is_treasure
  is_stackable

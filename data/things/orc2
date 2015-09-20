@@ -5,7 +5,7 @@
  carrying={
     "sword2"
  }
- z_depth="monst"
+ z_depth="obj"
  speed=15
  max_hp=20
  damage=10

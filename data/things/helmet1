@@ -2,7 +2,7 @@
  short_name="tin helmet"
  raw_name="helmet1"
  tooltip="tin helmet"
- z_depth="monst"
+ z_depth="obj"
  stats_defense=12
  cost=1000
  is_treasure

@@ -2,7 +2,7 @@
  short_name="keys"
  raw_name="keys2"
  tooltip="it's more keys"
- z_depth="monst"
+ z_depth="obj"
  quantity=2
  is_key
  carried_as="key"

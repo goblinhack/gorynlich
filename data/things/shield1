@@ -1,7 +1,7 @@
 {
  short_name="shield I"
  raw_name="shield1"
- z_depth="explosion_top"
+ z_depth="explosion"
  is_animated
  is_animated_no_dir
  shield_carry_anim="shield1_anim"

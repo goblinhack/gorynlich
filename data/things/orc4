@@ -5,7 +5,7 @@
  carrying={
     "club1"
  }
- z_depth="monst"
+ z_depth="obj"
  speed=15
  max_hp=150
  damage=20

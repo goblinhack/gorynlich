@@ -2,7 +2,7 @@
  short_name="lava boots"
  raw_name="boots1"
  tooltip="lava boots"
- z_depth="monst"
+ z_depth="obj"
  cost=1000
  is_treasure
  is_stackable

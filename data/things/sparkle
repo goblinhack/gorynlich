@@ -2,7 +2,7 @@
  short_name="sparkle"
  raw_name="sparkle"
  tooltip="sparkle"
- z_depth="monst"
+ z_depth="obj"
  is_animated
  is_light_source
  light_radius=0.5

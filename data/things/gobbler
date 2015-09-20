@@ -2,7 +2,7 @@
  short_name="treasure gobbler"
  raw_name="gobbler"
  tooltip="treasure gobbler"
- z_depth="monst"
+ z_depth="obj"
  speed=30
  max_hp=15
  damage=15

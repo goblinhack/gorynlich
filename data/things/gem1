@@ -2,7 +2,7 @@
  short_name="crystal gem"
  raw_name="gem1"
  tooltip="crystal gem"
- z_depth="monst"
+ z_depth="obj"
  is_inactive
  is_treasure
  is_stackable

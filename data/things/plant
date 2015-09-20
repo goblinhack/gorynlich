@@ -3,7 +3,7 @@
  raw_name="triffid"
  tooltip="triffid"
  mob_spawn={ 1000 "plantpod" }
- z_depth="monst"
+ z_depth="obj"
  speed=1
  max_hp=20
  damage=10

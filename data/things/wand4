@@ -4,7 +4,7 @@
  tooltip="wand of supreme damage"
  fires="fireball4"
  weapon_fire_delay_hundredths=30
- z_depth="monst"
+ z_depth="obj"
  cost=1000
  is_treasure
  is_weapon

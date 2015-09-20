@@ -2,7 +2,7 @@
  short_name="tin armor"
  raw_name="armor1"
  tooltip="tin armor"
- z_depth="monst"
+ z_depth="obj"
  stats_defense=12
  cost=1000
  is_treasure

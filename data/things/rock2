@@ -2,7 +2,7 @@
  short_name="rock2"
  raw_name="rock2"
  tooltip="rock2"
- z_depth="wall"
+ z_depth="obj"
  is_hard
  is_inactive
  is_collision_map_large
@@ -62,18 +62,6 @@
   }
   tile={
    tile="rock2.16"
-  }
-  tile={
-   tile="rock2.17"
-  }
-  tile={
-   tile="rock2.18"
-  }
-  tile={
-   tile="rock2.19"
-  }
-  tile={
-   tile="rock2.20"
   }
   tile={
    tile="rock2.21"

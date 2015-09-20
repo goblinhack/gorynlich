@@ -2,7 +2,7 @@
  short_name="bread sandwich"
  raw_name="bread"
  tooltip="bread sandwich"
- z_depth="monst"
+ z_depth="obj"
  is_inactive
  is_food
  is_stackable

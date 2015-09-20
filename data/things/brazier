@@ -2,7 +2,7 @@
  short_name="brazier"
  raw_name="brazier"
  tooltip="brazier"
- z_depth="player"
+ z_depth="obj"
  is_light_source
  is_candle_light
  light_tint="orange"

@@ -2,7 +2,7 @@
  short_name="wall"
  raw_name="wall9"
  tooltip="wall9"
- z_depth="wall"
+ z_depth="obj"
  is_hard
  speed=20
  is_inactive

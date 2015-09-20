@@ -2,7 +2,7 @@
  short_name="torch"
  raw_name="torch"
  tooltip="one minute torch"
- z_depth="monst"
+ z_depth="obj"
  is_torch
  is_carryable
  is_stackable

@@ -2,7 +2,7 @@
  short_name="spider"
  raw_name="spider"
  tooltip="spider"
- z_depth="monst"
+ z_depth="obj"
  speed=1
  max_hp=10
  damage=5

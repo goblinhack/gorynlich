@@ -2,7 +2,7 @@
  short_name="holy sword"
  raw_name="sword10"
  tooltip="holy sword"
- z_depth="monst"
+ z_depth="obj"
  cost=3000
  is_treasure
  is_weapon

@@ -1,7 +1,7 @@
 {
  short_name="cloudkill gas"
  raw_name="cloudkill2"
- z_depth="explosion_top"
+ z_depth="explosion"
  is_animated
  is_hidden_from_editor
  is_non_explosive_gas_cloud

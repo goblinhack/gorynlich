@@ -2,7 +2,7 @@
  short_name="steel axe"
  raw_name="axe2"
  tooltip="steel axe"
- z_depth="monst"
+ z_depth="obj"
  cost=200
  is_treasure
  is_weapon

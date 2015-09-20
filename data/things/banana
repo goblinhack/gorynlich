@@ -2,7 +2,7 @@
  short_name="banana"
  raw_name="banana"
  tooltip="a porcupine..."
- z_depth="monst"
+ z_depth="obj"
  is_inactive
  is_food
  is_stackable

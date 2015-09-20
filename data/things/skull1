@@ -2,7 +2,7 @@
  short_name="skull minion"
  raw_name="skull1"
  tooltip="skull minion"
- z_depth="monst"
+ z_depth="obj"
  speed=3
  max_hp=5
  damage=3

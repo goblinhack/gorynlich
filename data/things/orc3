@@ -5,7 +5,7 @@
  carrying={
     "wand2"
  }
- z_depth="monst"
+ z_depth="obj"
  speed=15
  max_hp=5
  damage=1

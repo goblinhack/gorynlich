@@ -2,7 +2,7 @@
  short_name="boots of speed"
  raw_name="boots5"
  tooltip="boots of speed"
- z_depth="monst"
+ z_depth="obj"
  cost=1000
  is_treasure
  is_stackable

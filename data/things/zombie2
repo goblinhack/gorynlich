@@ -2,7 +2,7 @@
  short_name="zomboy"
  raw_name="zombie2"
  tooltip="two headed zom-baby"
- z_depth="monst"
+ z_depth="obj"
  speed=5
  max_hp=10
  damage=4
