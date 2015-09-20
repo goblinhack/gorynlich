@@ -979,6 +979,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_door(it)                   ||
             thing_is_bomb(it)                   ||
             thing_is_player(it)                 ||
+            thing_is_rock(it)                   ||
             thing_is_wall(it)                   ||
             /*
              * Don't hit walls. It's daft.
@@ -1253,7 +1254,9 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 }
             }
 
-            if (thing_is_wall(me) || thing_is_sawblade(me) || thing_is_juggernaut(me)) {
+            if (thing_is_wall(me)     || 
+                thing_is_sawblade(me) || 
+                thing_is_juggernaut(me)) {
                 /*
                  * Allow moving walls to crush most things except walls and 
                  * doors.
