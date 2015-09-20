@@ -3,7 +3,7 @@
  raw_name="slime-4"
  tooltip="deathly slime"
  mob_spawn={ 1000 "slime4" }
- z_depth="monst"
+ z_depth="obj"
  speed=1
  max_hp=20
  damage=10

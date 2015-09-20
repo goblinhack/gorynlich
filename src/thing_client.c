@@ -149,6 +149,8 @@ static void thing_client_wid_move (thingp t,
 
     if (thing_is_rock(t) || thing_is_crystal(t)) {
         tl.y -= base_tile_height;
+        tl.x -= base_tile_width / 8.0;
+        br.x += base_tile_width / 8.0;
     }
 
     /*

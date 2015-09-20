@@ -2,7 +2,7 @@
  short_name="tasty water"
  raw_name="water_poison"
  tooltip="lovely water..."
- z_depth="player"
+ z_depth="obj"
  is_inactive
  is_food
  carried_as="water"

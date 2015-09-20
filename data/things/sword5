@@ -2,7 +2,7 @@
  short_name="two handed sword"
  raw_name="sword5"
  tooltip="two handed sword"
- z_depth="monst"
+ z_depth="obj"
  cost=300
  is_treasure
  is_weapon

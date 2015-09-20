@@ -3,7 +3,7 @@
  raw_name="gobblermob"
  tooltip="gobbler generator"
  mob_spawn={ 1000 "gobbler" }
- z_depth="monst"
+ z_depth="obj"
  is_mob_spawner
  is_generator
  is_effect_pulse

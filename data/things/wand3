@@ -4,7 +4,7 @@
  tooltip="wand of yet more plasma"
  fires="fireball3"
  weapon_fire_delay_hundredths=30
- z_depth="monst"
+ z_depth="obj"
  cost=800
  is_treasure
  is_weapon

@@ -2,7 +2,7 @@
  short_name="triple bladed sword"
  raw_name="sword7"
  tooltip="triple bladed wword"
- z_depth="monst"
+ z_depth="obj"
  cost=800
  is_treasure
  is_weapon

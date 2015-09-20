@@ -5,12 +5,12 @@
  mob_spawn={ 100 "lava1" 900 "flames1" }
  z_depth="floor2"
  is_mob_spawner
+ mob_spawn_delay_tenths=50
  is_lava
  hit_delay_tenths=5
  hit_priority=0
  damage=10
  is_joinable
- mob_spawn_delay_tenths=50
  is_animated
  is_effect_pulse
  can_be_hit_chance=2000000

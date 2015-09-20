@@ -2,7 +2,7 @@
  short_name="any monst"
  raw_name="monst_any"
  tooltip="random monst"
- z_depth="monst"
+ z_depth="obj"
  sound_on_death="urgh"
  is_monst
  is_internal

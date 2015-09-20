@@ -2,7 +2,7 @@
  short_name="any treasure"
  raw_name="treasure_any"
  tooltip="random treasure"
- z_depth="monst"
+ z_depth="obj"
  is_treasure
  is_internal
  tiles={

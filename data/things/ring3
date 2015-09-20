@@ -2,7 +2,7 @@
  short_name="ring of toughness"
  raw_name="ring3"
  tooltip="ring of toughness"
- z_depth="player"
+ z_depth="obj_top"
  cost=1000
  is_treasure
  is_stackable

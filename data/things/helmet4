@@ -2,7 +2,7 @@
  short_name="diamond helmet"
  raw_name="helmet4"
  tooltip="diamond helmet"
- z_depth="monst"
+ z_depth="obj"
  stats_defense=24
  cost=5000
  is_treasure

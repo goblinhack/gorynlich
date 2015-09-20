@@ -9,7 +9,7 @@
     1000 "zombie4"
     1000 "zombie5"
  }
- z_depth="monst"
+ z_depth="obj"
  is_mob_spawner
  is_generator
  is_effect_pulse

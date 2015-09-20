@@ -2,7 +2,7 @@
  short_name="ruby"
  raw_name="gem5"
  tooltip="ruby"
- z_depth="monst"
+ z_depth="obj"
  is_inactive
  is_treasure
  is_stackable

@@ -2,7 +2,7 @@
  short_name="turquoise gem"
  raw_name="gem2"
  tooltip="turquoise gem"
- z_depth="monst"
+ z_depth="obj"
  is_inactive
  is_treasure
  is_stackable

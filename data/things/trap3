@@ -2,7 +2,7 @@
  short_name="gargoyle"
  raw_name="trap3"
  tooltip="gargoyle"
- z_depth="monst"
+ z_depth="obj"
  speed=0
  max_hp=150
  bonus_xp_on_death=300

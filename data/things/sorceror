@@ -2,7 +2,7 @@
  short_name="sorceror"
  raw_name="sorceror"
  tooltip="sorceror"
- z_depth="monst"
+ z_depth="obj"
  speed=10
  max_hp=20
  max_magic=200

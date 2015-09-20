@@ -2,7 +2,7 @@
  short_name="diamond"
  raw_name="gem6"
  tooltip="diamond"
- z_depth="monst"
+ z_depth="obj"
  is_inactive
  is_treasure
  is_stackable

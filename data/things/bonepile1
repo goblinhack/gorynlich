@@ -3,7 +3,7 @@
  raw_name="bonepile1"
  tooltip="small bone pile"
  mob_spawn={ 1000 "ghost1" }
- z_depth="monst"
+ z_depth="obj"
  is_mob_spawner
  is_generator
  is_effect_pulse

@@ -2,7 +2,7 @@
  short_name="very short sword"
  raw_name="sword1"
  tooltip="very short sword"
- z_depth="monst"
+ z_depth="obj"
  cost=80
  is_treasure
  is_weapon

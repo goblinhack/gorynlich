@@ -2,7 +2,7 @@
  short_name="fire demon"
  raw_name="demon2"
  tooltip="fire demon"
- z_depth="monst"
+ z_depth="obj"
  speed=10
  max_hp=550
  damage=20

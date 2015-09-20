@@ -6,7 +6,7 @@
     "sword2"
     "torches"
  }
- z_depth="player"
+ z_depth="obj"
  speed=28
  max_hp=200
  max_magic=80

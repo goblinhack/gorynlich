@@ -2,7 +2,7 @@
  short_name="scythe"
  raw_name="scythe1"
  tooltip="scythe"
- z_depth="monst"
+ z_depth="obj"
  cost=1000
  is_treasure
  is_weapon

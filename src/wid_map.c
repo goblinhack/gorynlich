@@ -814,7 +814,7 @@ static void wid_map_find_player_start (int x, int y)
 
     for (my = 0; my < MAP_HEIGHT; my++) {
         for (mx = 0; mx < MAP_WIDTH; mx++) {
-            mz = MAP_DEPTH_PLAYER;
+            mz = MAP_DEPTH_OBJ;
 
             wid_map_tile *tile = &map->tiles[mx][my][mz];
             if (!tile) {

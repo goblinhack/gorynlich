@@ -2,7 +2,7 @@
  short_name="zombie farmer"
  raw_name="zombie4"
  tooltip="amateur zombie"
- z_depth="monst"
+ z_depth="obj"
  speed=5
  max_hp=1
  damage=5

@@ -1,7 +1,7 @@
 {
  short_name="jesus cloud"
  raw_name="jesus cloud"
- z_depth="monst"
+ z_depth="obj"
  is_animated
  is_effect_pulse
  shield_carry_anim="jesus_cloud_anim"

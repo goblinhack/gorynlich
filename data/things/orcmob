@@ -10,7 +10,7 @@
     1 "orc5"
  }
  max_hp=20
- z_depth="monst"
+ z_depth="obj"
  is_mob_spawner
  is_generator
  is_effect_pulse

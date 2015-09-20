@@ -1,7 +1,7 @@
 {
  short_name="weapon_swing2"
  raw_name="weapon_swing2"
- z_depth="monst"
+ z_depth="obj"
  is_animated
  is_animated_no_dir
  is_hidden_from_editor

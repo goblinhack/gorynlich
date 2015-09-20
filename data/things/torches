@@ -2,7 +2,7 @@
  short_name="bundle of torches"
  raw_name="torches"
  tooltip="bundle of torches"
- z_depth="monst"
+ z_depth="obj"
  quantity=10
  is_torch
  is_carryable

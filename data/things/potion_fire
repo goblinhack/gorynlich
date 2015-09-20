@@ -2,7 +2,7 @@
  short_name="fire potion"
  raw_name="potion_fire"
  tooltip="fire potion"
- z_depth="monst"
+ z_depth="obj"
  cost=100
  is_treasure
  is_potion

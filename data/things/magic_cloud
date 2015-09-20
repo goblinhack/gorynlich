@@ -1,7 +1,7 @@
 {
  short_name="magic powerup"
  raw_name="magic_powerup"
- z_depth="explosion_top"
+ z_depth="explosion"
  is_animated
  speed=60
  is_hidden_from_editor

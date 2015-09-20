@@ -1,7 +1,7 @@
 {
  short_name="ring cloud"
  raw_name="ring cloud"
- z_depth="monst"
+ z_depth="obj"
  is_animated
  shield_carry_anim="ring_cloud_anim"
  tiles={

@@ -2,7 +2,7 @@
  short_name="key"
  raw_name="key"
  tooltip="it's a key..."
- z_depth="monst"
+ z_depth="obj"
  is_key
  is_stackable
  is_carryable
