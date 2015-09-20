@@ -1,4 +1,6 @@
 
+- too many acid blobs made, ran out of ids
+- rings cannot be seen
 - crash
 00:00:18.580: ERROR: server: thing template [med_explosion] cannot be placed at -0.308593 44.805237
 00:00:18.581: FATAL ERROR: Failed assert
