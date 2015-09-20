@@ -1,10 +1,11 @@
 
-- player appears on top of stalacmites
-
 - crash
 00:00:18.580: ERROR: server: thing template [med_explosion] cannot be placed at -0.308593 44.805237
 00:00:18.581: FATAL ERROR: Failed assert
 00:00:18.581: ERROR: FATAL ERROR: Failed assert
+- wand shoot left right hits walls again
+- plant spawning does not work
+- floor tiles under rock wrong sometimes
 
 --------------------------------------- plan for sep --------------------------------------
 - acid and lava should damage armor first
@@ -20,6 +21,7 @@
 - mushmen need less anim frames
 - fixed levels need floors changed
 - pushable blocks and fix up moving walls
+- green super ghost like slimer?
 
 --------------------------------------- plan for oct --------------------------------------
 - hit shopkeeper should make him mad
@@ -58,6 +60,7 @@
 - magic gives health to other players
 
 Sat Sep 19 21:58:25 EDT 2015
+- player appears on top of stalacmites
 - tall rocks
 
 Thu Sep 17 12:10:21 EDT 2015
