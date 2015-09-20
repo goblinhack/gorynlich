@@ -11,11 +11,11 @@
  damage=5
  is_joinable
  mob_spawn_delay_tenths=10
- lifespan_tenths=200
+ lifespan_tenths=150
  is_animated
  d10000_chance_of_appearing=20
  is_light_source
- light_radius=0.2
+ light_radius=1.0
  light_tint="green"
  is_candle_light
  tiles={

@@ -9,7 +9,7 @@
  is_spawns_under
  hit_delay_tenths=1
  is_light_source
- light_radius=1.0
+ light_radius=0.1
  light_tint="white"
  is_candle_light
  is_variable_size
