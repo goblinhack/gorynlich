@@ -13,6 +13,11 @@
 #include <stdlib.h>
 #include <math.h>
 
+extern int server_things_total;
+extern int client_things_total;
+extern int server_monst_things_total;
+extern int client_monst_things_total;
+
 uint8_t thing_init(void);
 void thing_fini(void);
 char *item2str(const item_t i);

@@ -241,6 +241,11 @@
 #define THING_MAX                   512
 
 /*
+ * We will not spawn any monsters above this limit; to keep the game fast.
+ */
+#define THING_MAX_MONSTS_SPAWN_LIMIT 300
+
+/*
  * Thumb in air. Needs to be big enough so wrap arounds and id reuse is less 
  * common. Max is 64K for tx map sending from server to client.
  *
