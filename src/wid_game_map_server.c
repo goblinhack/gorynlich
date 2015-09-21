@@ -405,7 +405,7 @@ wid_game_map_server_replace_tile (widp w,
         /*
          * Trying to fire a weapon off the end of the level?
          */
-        ERR("server: thing template [%s] cannot be placed at %f %f",
+        LOG("server: thing template [%s] cannot be placed at %f %f",
             tp_short_name(tp), x, y);
         return (0);
     }

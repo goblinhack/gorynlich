@@ -11,6 +11,13 @@
 
 uint8_t thing_mob_spawn (thingp t)
 {
+    /*
+     * Not too many things
+     */
+    if (server_monst_things_total > THING_MAX_MONSTS_SPAWN_LIMIT) {
+        return (false);
+    }
+
     const char *mob_spawn = tp_mob_spawn(t->tp);
     if (!mob_spawn) {
         return (false);
