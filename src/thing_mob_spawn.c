@@ -101,6 +101,7 @@ uint8_t thing_mob_spawn (thingp t)
                 map_is_rock_at(server_level, x, y)          ||
                 map_is_monst_at(server_level, x, y)         ||
                 map_is_cobweb_at(server_level, x, y)        ||
+                map_is_stickyslime_at(server_level, x, y)   ||
                 map_is_door_at(server_level, x, y)          ||
                 map_is_player_at(server_level, x, y)        ||
                 map_is_treasure_at(server_level, x, y)      ||
@@ -132,6 +133,7 @@ uint8_t thing_mob_spawn (thingp t)
                     map_is_rock_at(server_level, x, y)          ||
                     map_is_monst_at(server_level, x, y)         ||
                     map_is_cobweb_at(server_level, x, y)        ||
+                    map_is_stickyslime_at(server_level, x, y)   ||
                     map_is_door_at(server_level, x, y)          ||
                     map_is_player_at(server_level, x, y)        ||
                     map_is_treasure_at(server_level, x, y)      ||
@@ -262,11 +264,15 @@ thingp thing_mob_spawn_on_death (thingp t)
             y = t->y;
         }
 
-        if (tp_is_cobweb(what)) {
+        if (tp_is_cobweb(what) || tp_is_stickyslime(what)) {
             /*
-             * Don't want too many cobwebs in the same place.
+             * Don't want too many sticky things in the same place.
              */
             if (map_is_cobweb_at(server_level, x, y)) {
+                continue;
+            }
+
+            if (map_is_stickyslime_at(server_level, x, y)) {
                 continue;
             }
         } else {

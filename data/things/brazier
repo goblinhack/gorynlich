@@ -9,6 +9,7 @@
  light_radius=2.0
  can_walk_through
  is_animated
+ is_blit_y_offset
  tiles={
   tile={
    tile="brazier1"
