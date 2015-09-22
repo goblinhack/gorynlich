@@ -23,6 +23,9 @@
  d10000_chance_of_appearing=100
  min_appear_depth=1
  max_appear_depth=100
+ fires="slimeball"
+ weapon_fire_delay_hundredths=500
+ approach_distance=2
  tiles={
   tile={
    delay_ms=200

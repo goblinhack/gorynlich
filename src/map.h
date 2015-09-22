@@ -51,6 +51,7 @@ uint8_t map_is_potion_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_shield_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_death_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_cobweb_at(levelp, int32_t x, int32_t y);
+uint8_t map_is_stickyslime_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_ethereal_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_variable_size_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_variable_size_at(levelp, int32_t x, int32_t y);

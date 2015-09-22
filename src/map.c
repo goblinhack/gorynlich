@@ -308,6 +308,11 @@ uint8_t map_is_cobweb_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_cobweb));
 }
 
+uint8_t map_is_stickyslime_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_stickyslime));
+}
+
 uint8_t map_is_ethereal_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, tp_is_ethereal));
