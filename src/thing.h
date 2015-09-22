@@ -1608,13 +1608,6 @@ static inline uint8_t thing_is_dragon (thingp t)
     return (tp_is_dragon(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_generator (thingp t)
-{
-    verify(t);
-
-    return (tp_is_generator(thing_tp(t)));
-}
-
 static inline uint8_t thing_is_water (thingp t)
 {
     verify(t);
@@ -2559,9 +2552,9 @@ static inline uint8_t thing_is_dragon_noverify (thingp t)
     return (t->tp->is_dragon);
 }
 
-static inline uint8_t thing_is_generator_noverify (thingp t)
+static inline uint8_t thing_is_mob_spawner_noverify (thingp t)
 {
-    return (t->tp->is_generator);
+    return (t->tp->is_mob_spawner);
 }
 
 static inline uint8_t thing_is_water_noverify (thingp t)

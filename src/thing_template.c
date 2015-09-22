@@ -705,7 +705,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_blit_y_offset", t->is_blit_y_offset);
         GET_OPT_NAMED_BITFIELD(ctx, "is_dirt", t->is_dirt);
         GET_OPT_NAMED_BITFIELD(ctx, "is_dragon", t->is_dragon);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_generator", t->is_generator);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_mob_spawner", t->is_mob_spawner);
         GET_OPT_NAMED_BITFIELD(ctx, "is_water", t->is_water);
         GET_OPT_NAMED_BITFIELD(ctx, "is_undead", t->is_undead);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hidden", t->is_hidden);
@@ -987,7 +987,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_blit_y_offset", t->is_blit_y_offset);
     PUT_NAMED_BITFIELD(ctx, "is_dirt", t->is_dirt);
     PUT_NAMED_BITFIELD(ctx, "is_dragon", t->is_dragon);
-    PUT_NAMED_BITFIELD(ctx, "is_generator", t->is_generator);
+    PUT_NAMED_BITFIELD(ctx, "is_mob_spawner", t->is_mob_spawner);
     PUT_NAMED_BITFIELD(ctx, "is_water", t->is_water);
     PUT_NAMED_BITFIELD(ctx, "is_undead", t->is_undead);
     PUT_NAMED_BITFIELD(ctx, "is_hidden", t->is_hidden);

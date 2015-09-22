@@ -4,7 +4,7 @@
  tooltip="mob spawner"
  z_depth="obj"
  is_mob_spawner
- is_generator
+ is_mob_spawner
  bonus_xp_on_death=200
  hit_priority=20
  damage=1
