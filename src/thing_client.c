@@ -147,7 +147,10 @@ static void thing_client_wid_move (thingp t,
     tl.x -= base_tile_width / 2.0;
     tl.y -= base_tile_height / 2.0;
 
-    if (thing_is_rock(t) || thing_is_crystal(t)) {
+    if (thing_is_rock(t) || 
+        thing_is_crystal(t) || 
+        (tp_to_id(t->tp) == THING_BRAZIER)) {
+
         tl.y -= base_tile_height;
         tl.y -= base_tile_height / 2;
         tl.x -= base_tile_width / 16.0;
