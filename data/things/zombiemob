@@ -23,9 +23,19 @@
  bonus_xp_on_death=120
  mob_spawn_delay_tenths=50
  d10000_chance_of_appearing=100
+ is_animated
  tiles={
   tile={
-   tile="zombiemob"
+   tile="zombiemob.1"
+   delay_ms=500
+  }
+  tile={
+   tile="zombiemob.2"
+   delay_ms=500
+  }
+  tile={
+   tile="zombiemob.3"
+   delay_ms=500
   }
  }
 }

@@ -1007,7 +1007,7 @@ wid_game_map_client_replace_tile (widp w,
     }
 
     if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_WIDTH)) {
-        ERR("client: thing template [%s] cannot be placed at %f %f",
+        LOG("client: thing template [%s] cannot be placed at %f %f",
             tp_short_name(tp), x, y);
         return (0);
     }
