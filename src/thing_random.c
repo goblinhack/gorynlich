@@ -358,6 +358,10 @@ tpp random_rock (void)
             continue;
         }
 
+        if (!tp_is_light_source(tp)) {
+            continue;
+        }
+
         int r = myrand() % 10000;
         if (r < tp_get_d10000_chance_of_appearing(tp)) {
             return (tp);
