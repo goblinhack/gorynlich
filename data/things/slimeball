@@ -1,0 +1,30 @@
+{
+ short_name="slimeball"
+ raw_name="slimeball"
+ tooltip="slimeball"
+ is_hidden_from_editor
+ z_depth="explosion"
+ speed=60
+ hit_delay_tenths=1
+ is_fragile
+ is_projectile
+ is_animated
+ is_effect_pulse
+ is_variable_size
+ scale=0.2
+ spawn_on_death="stickyslime"
+ tiles={
+  tile={
+   tile="stickyslime.1"
+  }
+  tile={
+   tile="stickyslime.2"
+  }
+  tile={
+   tile="stickyslime.3"
+  }
+  tile={
+   tile="stickyslime.4"
+  }
+ }
+}

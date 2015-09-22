@@ -530,6 +530,7 @@ enum {
     THING_HEART,
     THING_BLOOD1,
     THING_BLOOD2,
+    THING_SLIMEBALL,
     THING_FLAMES1,
     THING_BUBBLES1,
     THING_ACTION_LEFT,
@@ -641,6 +642,7 @@ enum {
     THING_PLASMABALL2,
     THING_SILKBALL,
     THING_COBWEB,
+    THING_STICKYSLIME,
     THING_BOOTS1,
     THING_BOOTS2,
     THING_BOOTS3,
@@ -1480,11 +1482,11 @@ static inline uint8_t thing_is_rrr17 (thingp t)
     return (tp_is_rrr17(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr18 (thingp t)
+static inline uint8_t thing_is_stickyslime (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr18(thing_tp(t)));
+    return (tp_is_stickyslime(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_corpse (thingp t)
@@ -2447,9 +2449,9 @@ static inline uint8_t thing_is_rrr17_noverify (thingp t)
     return (t->tp->is_rrr17);
 }
 
-static inline uint8_t thing_is_rrr18_noverify (thingp t)
+static inline uint8_t thing_is_stickyslime_noverify (thingp t)
 {
-    return (t->tp->is_rrr18);
+    return (t->tp->is_stickyslime);
 }
 
 static inline uint8_t thing_is_corpse_noverify (thingp t)

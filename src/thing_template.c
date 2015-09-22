@@ -677,7 +677,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_stickyslime", t->is_stickyslime);
         GET_OPT_NAMED_BITFIELD(ctx, "is_corpse", t->is_corpse);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spawns_under", t->is_spawns_under);
         GET_OPT_NAMED_BITFIELD(ctx, "is_juggernaut", t->is_juggernaut);
@@ -959,7 +959,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
     PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
     PUT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
+    PUT_NAMED_BITFIELD(ctx, "is_stickyslime", t->is_stickyslime);
     PUT_NAMED_BITFIELD(ctx, "is_corpse", t->is_corpse);
     PUT_NAMED_BITFIELD(ctx, "is_spawns_under", t->is_spawns_under);
     PUT_NAMED_BITFIELD(ctx, "is_juggernaut", t->is_juggernaut);

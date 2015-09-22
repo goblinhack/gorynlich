@@ -1276,7 +1276,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             /*
              * You can walk closer to a cobweb, but not back out...
              */
-            if (thing_is_cobweb(it)) {
+            if (thing_is_cobweb(it) || thing_is_stickyslime(it)) {
                 /*
                  * Got spider boots?
                  */
@@ -1389,7 +1389,7 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
             /*
              * You can walk closer to a cobweb, but not back out...
              */
-            if (thing_is_cobweb(it)) {
+            if (thing_is_cobweb(it) || thing_is_stickyslime(it)) {
                 wid_it = wid_next;
                 continue;
             }
