@@ -1262,7 +1262,9 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  * Allow moving walls to crush most things except walls and 
                  * doors.
                  */
-                if (!thing_is_wall(it) && !thing_is_door(it)) {
+                if (!thing_is_wall(it) && 
+                    !thing_is_rock(it) && 
+                    !thing_is_door(it)) {
                     continue;
                 }
             }
