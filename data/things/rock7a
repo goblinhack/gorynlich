@@ -8,7 +8,6 @@
  mob_spawn_delay_tenths=100
  is_hard
  is_collision_map_large
- is_shadow_caster
  is_rock
  hit_priority=20
  speed=20

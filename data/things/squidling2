@@ -1,0 +1,75 @@
+{
+ short_name="squidling"
+ raw_name="squidling2"
+ tooltip="squidling"
+ mob_spawn={
+    1000 "zombie1"
+    10 "zombie2"
+    1000 "zombie3"
+    1000 "zombie4"
+    1000 "zombie5"
+ }
+ mob_spawn_delay_tenths=50
+ is_mob_spawner
+ z_depth="obj"
+ speed=5
+ max_hp=500
+ damage=20
+ is_effect_rotate_2way
+ bonus_xp_on_death=4500
+ vision_distance=20
+ hit_delay_tenths=10
+ sound_on_death="urgh"
+ is_monst
+ collision_radius=0.5
+ is_combustable
+ is_shadow_caster
+ is_shadow_caster_soft
+ hit_priority=10
+ is_cats_eyes
+ is_levitating
+ scale=3.0
+ is_animated
+ fires="plasmaball2"
+ weapon_fire_delay_hundredths=50
+ d10000_chance_of_appearing=0
+ explodes_as="explosion3"
+ is_light_source
+ light_radius=1.5
+ light_tint="green"
+ has_ability_burst_shot
+ tiles={
+  tile={ delay_ms=150 tile="baby-squidling1" }
+  tile={ delay_ms=150 tile="baby-squidling2" }
+  tile={ delay_ms=150 tile="baby-squidling3" }
+  tile={ delay_ms=150 tile="baby-squidling4" }
+  tile={ delay_ms=150 tile="baby-squidling5" }
+  tile={ delay_ms=150 tile="baby-squidling6" }
+  tile={ delay_ms=150 tile="baby-squidling7" }
+  tile={ delay_ms=150 tile="baby-squidling8" }
+  tile={ delay_ms=150 tile="baby-squidling9" }
+  tile={ delay_ms=150 tile="baby-squidling10" }
+  tile={ delay_ms=150 tile="baby-squidling11" }
+  tile={ delay_ms=150 tile="baby-squidling12" }
+  tile={ delay_ms=150 tile="baby-squidling13" }
+  tile={ delay_ms=150 tile="baby-squidling14" }
+  tile={ delay_ms=150 tile="baby-squidling15" }
+  tile={ delay_ms=150 tile="baby-squidling16" }
+  tile={ delay_ms=150 tile="baby-squidling17" }
+  tile={ delay_ms=150 tile="baby-squidling18" }
+  tile={ delay_ms=150 tile="baby-squidling19" }
+  tile={ delay_ms=150 tile="baby-squidling20" }
+  tile={ delay_ms=150 tile="baby-squidling21" }
+  tile={ delay_ms=150 tile="baby-squidling22" }
+  tile={ delay_ms=150 tile="baby-squidling23" }
+  tile={ delay_ms=150 tile="baby-squidling24" }
+  tile={ delay_ms=150 tile="baby-squidling25" }
+  tile={ delay_ms=150 tile="baby-squidling26" }
+  tile={ delay_ms=150 tile="baby-squidling27" }
+  tile={ delay_ms=150 tile="baby-squidling28" }
+  tile={ delay_ms=150 tile="baby-squidling29" }
+  tile={ delay_ms=150 tile="baby-squidling30" }
+  tile={ delay_ms=150 tile="baby-squidling31" }
+  tile={ delay_ms=150 tile="baby-squidling32" }
+ }
+}
