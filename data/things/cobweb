@@ -9,7 +9,7 @@
  z_depth="obj_top"
  max_hp=3
  is_mob_spawner
- is_generator
+ is_mob_spawner
  mob_spawn_delay_tenths=500
  hit_priority=9
  is_cobweb

@@ -4,7 +4,7 @@
  tooltip="random mob"
  z_depth="obj"
  is_mob_spawner
- is_generator
+ is_mob_spawner
  is_internal
  tiles={
   tile={

@@ -50,6 +50,13 @@ typedef struct level_t_ {
      */
     level_walls map_player_target_treat_doors_as_passable;
     level_walls map_player_target_treat_doors_as_walls;
+
+    /*
+     * For ghosts who float over acid
+     */
+    level_walls map_player_target_treat_levitating_over_and_doors_as_passable;
+    level_walls map_player_target_treat_levitating_over_and_doors_as_walls;
+
     level_walls map_treasure_target_treat_doors_as_passable;
     level_walls map_treasure_target_treat_doors_as_walls;
 

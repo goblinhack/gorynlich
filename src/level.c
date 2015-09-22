@@ -534,6 +534,11 @@ static void level_set_walls (levelp level)
     memset(level->map_player_target_treat_doors_as_passable.walls, ' ',
            sizeof(level->map_player_target_treat_doors_as_passable.walls));
 
+    memset(level->map_player_target_treat_levitating_over_and_doors_as_walls.walls, ' ',
+           sizeof(level->map_player_target_treat_levitating_over_and_doors_as_walls.walls));
+    memset(level->map_player_target_treat_levitating_over_and_doors_as_passable.walls, ' ',
+           sizeof(level->map_player_target_treat_levitating_over_and_doors_as_passable.walls));
+
     memset(level->map_treasure_target_treat_doors_as_walls.walls, ' ',
            sizeof(level->map_treasure_target_treat_doors_as_walls.walls));
     memset(level->map_treasure_target_treat_doors_as_passable.walls, ' ',
@@ -593,6 +598,26 @@ static void level_set_walls (levelp level)
                         level->map_player_target_treat_doors_as_passable.walls[x][y] = '+';
 
                         level->map_treasure_target_treat_doors_as_passable.walls[x][y] = '+';
+                    }
+
+                    /*
+                     * Identify obstacles.
+                     */
+                    if (thing_is_wall(t)        ||
+                        thing_is_rock(t)        ||
+                        thing_is_door(t)        ||
+                        thing_is_teleport(t)) {
+                        level->map_player_target_treat_levitating_over_and_doors_as_walls.walls[x][y] = '+';
+                    }
+
+                    /*
+                     * Same as above, but treat doors as passable.
+                     */
+                    if (thing_is_wall(t)        ||
+                        thing_is_rock(t)        ||
+                        thing_is_teleport(t)) {
+                        level->map_player_target_treat_levitating_over_and_doors_as_walls.walls[x][y] = '+';
+                        level->map_player_target_treat_levitating_over_and_doors_as_passable.walls[x][y] = '+';
                     }
 
                     if (thing_is_wall(t) ||

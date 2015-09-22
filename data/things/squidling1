@@ -27,7 +27,6 @@
  is_shadow_caster_soft
  hit_priority=10
  is_cats_eyes
- is_levitating
  scale=1.5
  is_animated
  fires="plasmaball1"

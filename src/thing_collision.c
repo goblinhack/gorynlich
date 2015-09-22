@@ -393,7 +393,7 @@ static uint8_t things_overlap (const thingp A,
         (thing_is_monst(B)          ||
          thing_is_trap(B)           ||
          thing_is_shield(B)         ||
-         thing_is_generator(B))) {
+         thing_is_mob_spawner(B))) {
 
         Bpx1 = collision_map_large_x1;
         Bpx2 = collision_map_large_x2;
@@ -408,7 +408,7 @@ static uint8_t things_overlap (const thingp A,
         (thing_is_monst(B)          ||
          thing_is_player(B)         ||
          thing_is_shield(B)         ||
-         thing_is_generator(B))) {
+         thing_is_mob_spawner(B))) {
 
         Bpx1 = collision_map_large_x1;
         Bpx2 = collision_map_large_x2;
@@ -606,8 +606,8 @@ CON("  overlap %s vs %s",thing_logname(me), thing_logname(it));
     /*
      * Lava does not attack lava
      */
-    if (thing_is_lava(me)) {
-        if (thing_is_lava(it)) {
+    if (thing_is_lava(me) || thing_is_acid(me)) {
+        if (thing_is_lava(it) || thing_is_acid(it)) {
             return;
         }
 
@@ -829,7 +829,9 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             thing_is_potion(it)                 ||
             thing_is_food(it)                   ||
             thing_is_door(it)                   ||
-            thing_is_generator(it)              ||
+            thing_is_cobweb(it)                 ||
+            thing_is_stickyslime(it)            ||
+            thing_is_mob_spawner(it)            ||
             thing_is_shield(it)                 ||
             thing_is_monst(it)) {
             /*
@@ -886,12 +888,25 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             return;
         }
 
-        /*
-         * Don't ket jesus hit players
-         */
-        if (owner_proj && thing_is_jesus(owner_proj)) {
-            if (thing_is_player(it)) {
-                return;
+        if (owner_proj) {
+            /*
+             * Don't let jesus hit players
+             */
+            if (thing_is_jesus(owner_proj)) {
+                if (thing_is_player(it)) {
+                    return;
+                }
+            }
+
+            /*
+             * Don't let monsters shoot their own mob spawners.
+             */
+            if (thing_is_mob_spawner(it) ||
+                thing_is_cobweb(it)      ||
+                thing_is_stickyslime(it)) {
+                if (thing_is_monst(me)) {
+                    return;
+                }
             }
         }
 
@@ -905,7 +920,12 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
                    thing_is_trap(it)            ||
                    thing_is_shield(it)          ||
                    thing_is_combustable(it)     ||
-                   thing_is_generator(it)) {
+                   thing_is_cobweb(it)          ||
+                   thing_is_stickyslime(it)     ||
+                   thing_is_mob_spawner(it)) {
+            /*
+             * Can projectiles hit these?
+             */
 //CON("%d %s %s",__LINE__,thing_logname(me), thing_logname(it));
             if (owner_me == it) {
                 /*
@@ -959,7 +979,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
 
         if (thing_is_monst(it)                  || 
             thing_is_player(it)                 ||
-            thing_is_generator(it)) {
+            thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator
              */
@@ -985,7 +1005,9 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
             /*
              * Don't hit walls. It's daft.
              */
-            thing_is_generator(it)) {
+            thing_is_cobweb(it)                 ||
+            thing_is_stickyslime(it)            ||
+            thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.
              */
@@ -1002,7 +1024,7 @@ LOG("add poss me %s hitter %s",thing_logname(me), thing_logname(it));
      */
     if (thing_is_shield(me)) {
         if (thing_is_monst(it) ||
-            thing_is_generator(it)) {
+            thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.
              */
@@ -1189,6 +1211,18 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                      */
                     continue;
                 }
+
+                if (thing_is_levitating(me)) {
+                    if (thing_is_acid(it)    ||
+                        thing_is_cobweb(it)  ||
+                        thing_is_lava(it)    ||
+                        thing_is_stickyslime(it)) {
+                        /*
+                         * Allow monsters to glide over these things:
+                         */
+                        continue;
+                    }
+                }
             }
 
             if (thing_is_projectile(me)                 ||
@@ -1295,6 +1329,13 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  */
                 if ((tp_to_id(t->tp) == THING_SPIDER1) ||
                     (tp_to_id(t->tp) == THING_SPIDER2)) {
+                    continue;
+                }
+
+                /*
+                 * Allow floating things to glide over
+                 */
+                if (thing_is_rrr17(t)) {
                     continue;
                 }
 
