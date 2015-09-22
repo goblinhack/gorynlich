@@ -270,7 +270,7 @@ void level_load_new (void)
     } else if ((global_config.server_level_pos.x == 7) && 
                (global_config.server_level_pos.y == 10)) {
         /*
-         * cthulu
+         * squidling
          */
         fixed = true;
     } else if ((global_config.server_level_pos.x == 4) && 

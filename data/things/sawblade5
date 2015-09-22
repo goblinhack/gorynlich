@@ -2,7 +2,7 @@
  short_name="sawblade"
  raw_name="saw"
  tooltip="saw"
- z_depth="obj"
+ z_depth="obj_top"
  is_hard
  speed=10
  scale=0.5

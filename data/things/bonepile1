@@ -17,9 +17,23 @@
  damage=1
  bonus_xp_on_death=10
  mob_spawn_delay_tenths=30
+ is_animated
  tiles={
   tile={
-   tile="bonepile1"
+   tile="bonepile2.1"
+   delay_ms=100
+  }
+  tile={
+   tile="bonepile2.2"
+   delay_ms=100
+  }
+  tile={
+   tile="bonepile2.3"
+   delay_ms=100
+  }
+  tile={
+   tile="bonepile2.4"
+   delay_ms=100
   }
  }
 }
