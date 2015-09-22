@@ -115,6 +115,39 @@ int dmap_distance_to_player (int source_x, int source_y)
     int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x][source_y]);
 
     if (distance >= not_preferred) {
+        /*
+         * Try bordering spaces. This works for say a rock that is a blocking 
+         * obstacle that we do not have a path too. One of the bordering cells
+         * might be reachable.
+         */
+        if (source_x > 0) {
+            int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x-1][source_y]);
+            if (distance < not_preferred) {
+                return (distance);
+            }
+        }
+
+        if (source_y > 0) {
+            int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x][source_y-1]);
+            if (distance < not_preferred) {
+                return (distance);
+            }
+        }
+
+        if (source_x < MAP_WIDTH - 1) {
+            int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x+1][source_y]);
+            if (distance < not_preferred) {
+                return (distance);
+            }
+        }
+
+        if (source_y < MAP_HEIGHT - 1) {
+            int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x][source_y+1]);
+            if (distance < not_preferred) {
+                return (distance);
+            }
+        }
+
         return (-1);
     }
 

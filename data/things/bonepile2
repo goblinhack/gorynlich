@@ -18,9 +18,23 @@
  bonus_xp_on_death=50
  mob_spawn_delay_tenths=30
  polymorph_on_death="bonepile1"
+ is_animated
  tiles={
   tile={
-   tile="bonepile2"
+   tile="bonepile2.1"
+   delay_ms=100
+  }
+  tile={
+   tile="bonepile2.2"
+   delay_ms=100
+  }
+  tile={
+   tile="bonepile2.3"
+   delay_ms=100
+  }
+  tile={
+   tile="bonepile2.4"
+   delay_ms=100
   }
  }
 }

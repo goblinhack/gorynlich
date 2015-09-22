@@ -6,9 +6,9 @@
  is_light_source
  is_candle_light
  light_tint="orange"
- is_animated
- can_walk_through
  light_radius=2.0
+ can_walk_through
+ is_animated
  tiles={
   tile={
    tile="brazier1"

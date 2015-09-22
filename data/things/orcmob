@@ -24,9 +24,19 @@
  bonus_xp_on_death=120
  mob_spawn_delay_tenths=50
  d10000_chance_of_appearing=300
+ is_animated
  tiles={
   tile={
-   tile="orcmob"
+   tile="orcmob.1"
+   delay_ms=500
+  }
+  tile={
+   tile="orcmob.2"
+   delay_ms=500
+  }
+  tile={
+   tile="orcmob.3"
+   delay_ms=500
   }
  }
 }

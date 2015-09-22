@@ -1,11 +1,6 @@
 
-- too many acid blobs made, ran out of ids
-- rings cannot be seen
-- crash
-00:00:18.580: ERROR: server: thing template [med_explosion] cannot be placed at -0.308593 44.805237
-00:00:18.581: FATAL ERROR: Failed assert
-00:00:18.581: ERROR: FATAL ERROR: Failed assert
-- wand shoot left right hits walls again
+- slimey ghost
+- no light around lava rocks
 - plant spawning does not work
 - floor tiles under rock wrong sometimes
 
@@ -61,7 +56,15 @@
 - thief, kill thief to recover items
 - magic gives health to other players
 
+Mon Sep 21 22:07:14 EDT 2015
+- ring light not centered
+- animate mobs
+
 Sat Sep 19 21:58:25 EDT 2015
+- rings cannot be seen
+- too many acid blobs made, ran out of ids
+- crash 00:00:18.580: ERROR: server: thing template [med_explosion] cannot be placed at -0.308593 44.805237
+- wand shoot left right hits walls again
 - player appears on top of stalacmites
 - tall rocks
 

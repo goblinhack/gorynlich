@@ -2,16 +2,14 @@
  short_name="ring cloud anim"
  raw_name="ring cloud anim"
  z_depth="obj"
- is_animated
  is_hidden_from_editor
  is_shield
  is_shield_carry_anim
  max_hp=30000
  hit_priority=100
  scale=0.35
- is_light_source
- light_radius=0.5
  is_ethereal
+ is_animated
  tiles={
   tile={
    tile="ring_cloud.1"
