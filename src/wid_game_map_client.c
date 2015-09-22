@@ -1021,7 +1021,7 @@ wid_game_map_client_replace_tile (widp w,
     thing_tilep thing_tile;
 
     /*
-     * Get the first anim tile.
+     * Get a random tile to start with.
      */
     thing_tile = (typeof(thing_tile)) thing_tile_random(thing_tiles);
 

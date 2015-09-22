@@ -2,14 +2,13 @@
  short_name="stickyslime"
  raw_name="stickyslime"
  tooltip="stickyslime"
- z_depth="obj_top"
+ z_depth="obj"
  max_hp=1
  hit_priority=9
  is_stickyslime
  scale=1.5
- bonus_xp_on_death=20
+ collision_radius=0.5
  d10000_chance_of_appearing=10
- is_collision_map_large
  tiles={
   tile={
    tile="stickyslime.1"

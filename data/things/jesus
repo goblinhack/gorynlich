@@ -12,6 +12,7 @@
  hit_delay_tenths=1
  sound_on_death="choir"
  is_monst
+is_levitating
  hit_priority=10
  is_jesus
  is_levitating

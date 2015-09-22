@@ -6,7 +6,7 @@
  z_depth="obj"
  max_hp=10
  is_mob_spawner
- is_generator
+ is_mob_spawner
  is_effect_pulse
  is_light_source
  light_radius=3.0
@@ -20,7 +20,6 @@
  mob_spawn_delay_tenths=30
  polymorph_on_death="bonepile3"
  is_animated
- scale=1.5
  tiles={
   tile={
    tile="bonepile4.1"
