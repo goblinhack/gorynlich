@@ -347,7 +347,6 @@ typedef struct tp_ {
     uint8_t is_blit_y_offset:1;
     uint8_t is_dirt:1;
     uint8_t is_dragon:1;
-    uint8_t is_generator:1;
     uint8_t is_water:1;
     uint8_t is_undead:1;
     uint8_t is_hidden:1;
@@ -942,11 +941,6 @@ static inline uint8_t tp_is_dirt (tpp t)
 static inline uint8_t tp_is_dragon (tpp t)
 {
     return (t->is_dragon);
-}
-
-static inline uint8_t tp_is_generator (tpp t)
-{
-    return (t->is_generator);
 }
 
 static inline uint8_t tp_is_water (tpp t)

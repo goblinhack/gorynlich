@@ -37,6 +37,8 @@ static pthread_cond_t dmap_thread2_cond = PTHREAD_COND_INITIALIZER;
  */
 static level_walls dmap_map_player_target_treat_doors_as_passable;
 static level_walls dmap_map_player_target_treat_doors_as_walls;
+static level_walls dmap_map_player_target_treat_levitating_over_and_doors_as_passable;
+static level_walls dmap_map_player_target_treat_levitating_over_and_doors_as_walls;
 static level_walls dmap_map_treasure_target_treat_doors_as_passable;
 static level_walls dmap_map_treasure_target_treat_doors_as_walls;
 
@@ -46,6 +48,8 @@ static level_walls dmap_map_treasure_target_treat_doors_as_walls;
  */
 static level_walls dmap_map_player_target_treat_doors_as_passable_scratchpad;
 static level_walls dmap_map_player_target_treat_doors_as_walls_scratchpad;
+static level_walls dmap_map_player_target_treat_levitating_over_and_doors_as_passable_scratchpad;
+static level_walls dmap_map_player_target_treat_levitating_over_and_doors_as_walls_scratchpad;
 static level_walls dmap_map_treasure_target_treat_doors_as_passable_scratchpad;
 static level_walls dmap_map_treasure_target_treat_doors_as_walls_scratchpad;
 
@@ -53,6 +57,7 @@ static level_walls dmap_map_treasure_target_treat_doors_as_walls_scratchpad;
  * For individual players. Updated each time we need it.
  */
 static level_walls dmap_map_player_target_treat_doors_as_walls_scratchpad;
+static level_walls dmap_map_player_target_treat_levitating_over_and_doors_as_walls_scratchpad;
 static level_walls dmap_map_treasure_target_treat_doors_as_walls_scratchpad;
 
 static int update_treasure_dmap;
@@ -112,7 +117,7 @@ int dmap_distance_to_player (int source_x, int source_y)
         return (-1);
     }
 
-    int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x][source_y]);
+    int distance = (dmap_map_player_target_treat_levitating_over_and_doors_as_walls.walls[source_x][source_y]);
 
     if (distance >= not_preferred) {
         /*
@@ -121,28 +126,28 @@ int dmap_distance_to_player (int source_x, int source_y)
          * might be reachable.
          */
         if (source_x > 0) {
-            int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x-1][source_y]);
+            int distance = (dmap_map_player_target_treat_levitating_over_and_doors_as_walls.walls[source_x-1][source_y]);
             if (distance < not_preferred) {
                 return (distance);
             }
         }
 
         if (source_y > 0) {
-            int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x][source_y-1]);
+            int distance = (dmap_map_player_target_treat_levitating_over_and_doors_as_walls.walls[source_x][source_y-1]);
             if (distance < not_preferred) {
                 return (distance);
             }
         }
 
         if (source_x < MAP_WIDTH - 1) {
-            int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x+1][source_y]);
+            int distance = (dmap_map_player_target_treat_levitating_over_and_doors_as_walls.walls[source_x+1][source_y]);
             if (distance < not_preferred) {
                 return (distance);
             }
         }
 
         if (source_y < MAP_HEIGHT - 1) {
-            int distance = (dmap_map_player_target_treat_doors_as_walls.walls[source_x][source_y+1]);
+            int distance = (dmap_map_player_target_treat_levitating_over_and_doors_as_walls.walls[source_x][source_y+1]);
             if (distance < not_preferred) {
                 return (distance);
             }
@@ -528,6 +533,10 @@ static void *dmap_thread1_func (void *context)
                          &dmap_map_player_target_treat_doors_as_passable);
             dmap_process(&dmap_map_player_target_treat_doors_as_walls_scratchpad,
                          &dmap_map_player_target_treat_doors_as_walls);
+            dmap_process(&dmap_map_player_target_treat_levitating_over_and_doors_as_passable_scratchpad,
+                         &dmap_map_player_target_treat_levitating_over_and_doors_as_passable);
+            dmap_process(&dmap_map_player_target_treat_levitating_over_and_doors_as_walls_scratchpad,
+                         &dmap_map_player_target_treat_levitating_over_and_doors_as_walls);
             update_player_dmap = false;
         }
 
@@ -575,6 +584,16 @@ static int dmap_generate_for_player_target (levelp level, int force)
               &level->map_player_target_treat_doors_as_walls);
     dmap_generate_for_player_target_set_goals(false /* test */,
                    &dmap_map_player_target_treat_doors_as_walls_scratchpad);
+
+    dmap_init(&dmap_map_player_target_treat_levitating_over_and_doors_as_passable_scratchpad,
+              &level->map_player_target_treat_levitating_over_and_doors_as_passable);
+    dmap_generate_for_player_target_set_goals(false /* test */,
+                   &dmap_map_player_target_treat_levitating_over_and_doors_as_passable_scratchpad);
+
+    dmap_init(&dmap_map_player_target_treat_levitating_over_and_doors_as_walls_scratchpad,
+              &level->map_player_target_treat_levitating_over_and_doors_as_walls);
+    dmap_generate_for_player_target_set_goals(false /* test */,
+                   &dmap_map_player_target_treat_levitating_over_and_doors_as_walls_scratchpad);
 
     return (1);
 }
@@ -1183,6 +1202,8 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
             }
         } else if (thing_is_treasure_eater(t)) {
             t->dmap = &dmap_map_treasure_target_treat_doors_as_passable;
+        } else if (thing_is_levitating(t)) {
+            t->dmap = &dmap_map_player_target_treat_levitating_over_and_doors_as_passable;
         } else {
             t->dmap = &dmap_map_player_target_treat_doors_as_passable;
         }
@@ -1221,10 +1242,18 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
             t->dmap = &dmap_map_treasure_target_treat_doors_as_passable;
         }
     } else {
-        if (t->dmap == &dmap_map_player_target_treat_doors_as_passable) {
-            t->dmap = &dmap_map_player_target_treat_doors_as_walls;
+        if (thing_is_levitating(t)) {
+            if (t->dmap == &dmap_map_player_target_treat_levitating_over_and_doors_as_passable) {
+                t->dmap = &dmap_map_player_target_treat_levitating_over_and_doors_as_walls;
+            } else {
+                t->dmap = &dmap_map_player_target_treat_levitating_over_and_doors_as_passable;
+            }
         } else {
-            t->dmap = &dmap_map_player_target_treat_doors_as_passable;
+            if (t->dmap == &dmap_map_player_target_treat_doors_as_passable) {
+                t->dmap = &dmap_map_player_target_treat_doors_as_walls;
+            } else {
+                t->dmap = &dmap_map_player_target_treat_doors_as_passable;
+            }
         }
     }
 

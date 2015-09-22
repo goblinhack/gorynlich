@@ -12,6 +12,7 @@
  sound_on_death="urgh"
  is_undead
  is_monst
+is_levitating
  hit_priority=10
  is_cats_eyes
  is_collision_map_medium

@@ -5,7 +5,7 @@
  mob_spawn={ 1000 "eyebawl" }
  z_depth="obj"
  is_mob_spawner
- is_generator
+ is_mob_spawner
  is_effect_pulse
  is_light_source
  light_radius=1.0

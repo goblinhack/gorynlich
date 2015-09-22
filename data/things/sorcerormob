@@ -5,7 +5,7 @@
  mob_spawn={ 1000 "sorceror" }
  z_depth="obj"
  is_mob_spawner
- is_generator
+ is_mob_spawner
  is_effect_pulse
  bonus_xp_on_death=750
  max_hp=200

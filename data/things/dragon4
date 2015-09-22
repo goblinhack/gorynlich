@@ -13,6 +13,7 @@
  sound_on_death="urgh2"
  is_lava_proof
  is_monst
+is_levitating
  is_shadow_caster
  is_shadow_caster_soft
  scale=3.5
