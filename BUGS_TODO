@@ -1,12 +1,6 @@
 
-- ghosts shoudl float over lava
-- still too many lava rocks
 - bombs do not explode
-- sticky slime attacked bonepile
-- cannot kill stickyslime
 - death comes not quite so quickly
-- slime that sticks players
-- slimey ghost
 - no light around lava rocks
 - plant spawning does not work
 - floor tiles under rock wrong sometimes
@@ -59,12 +53,18 @@
 - minor: colision map tiny not used
 
 --------------------------------------- plan for dec --------------------------------------
+- still too many lava rocks
+- cannot kill stickyslime
 - multi player
 - backpack drop on death
 - thief, kill thief to recover items
 - magic gives health to other players
 
 Tue Sep 22 08:07:01 EDT 2015
+- ghosts should float over lava
+- sticky slime attacked bonepile
+- slime that sticks players
+- slimey ghost
 - added slimeball
 - make brazier tall
 

@@ -358,7 +358,7 @@ tpp random_rock (void)
             continue;
         }
 
-        if (!tp_is_light_source(tp)) {
+        if (tp_is_light_source(tp)) {
             continue;
         }
 
