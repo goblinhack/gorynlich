@@ -9,7 +9,7 @@
  max_hp=5
  is_undead
  is_monst
- hit_priority=10
+ hit_priority=8
  mob_spawn_delay_tenths=200
  is_single_mob_spawner
  is_mob_spawner
