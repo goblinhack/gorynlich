@@ -1,4 +1,5 @@
 
+- slime spawns under walls!
 - bombs do not explode
 - death comes not quite so quickly
 - no light around lava rocks
@@ -53,12 +54,16 @@
 - minor: colision map tiny not used
 
 --------------------------------------- plan for dec --------------------------------------
-- still too many lava rocks
-- cannot kill stickyslime
 - multi player
 - backpack drop on death
 - thief, kill thief to recover items
 - magic gives health to other players
+
+
+Wed Sep 23 09:00:34 EDT 2015
+- centered scaled graphics at last
+- still too many lava rocks
+- cannot kill stickyslime
 
 Tue Sep 22 08:07:01 EDT 2015
 - ghosts should float over lava
