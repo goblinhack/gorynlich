@@ -5,7 +5,7 @@
  z_depth="obj"
  speed=15
  max_hp=1
- damage=2
+ damage=1
  bonus_xp_on_death=5
  vision_distance=10
  hit_delay_tenths=5

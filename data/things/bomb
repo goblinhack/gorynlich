@@ -16,87 +16,91 @@
  d10000_chance_of_appearing=70
  tiles={
   tile={
-   delay_ms=250
-   tile="bomb1a"
+   delay_ms=300
+   tile="bomb.1"
    is_sleeping
   }
   tile={
-   delay_ms=250
-   tile="bomb1b"
+   delay_ms=300
+   tile="bomb.2"
   }
   tile={
-   delay_ms=250
-   tile="bomb2a"
+   delay_ms=300
+   tile="bomb.3"
   }
   tile={
-   delay_ms=250
-   tile="bomb2b"
+   delay_ms=300
+   tile="bomb.4"
   }
   tile={
-   delay_ms=250
-   tile="bomb3a"
+   delay_ms=300
+   tile="bomb.5"
   }
   tile={
-   delay_ms=250
-   tile="bomb3b"
+   delay_ms=300
+   tile="bomb.6"
   }
   tile={
-   delay_ms=250
-   tile="bomb4a"
+   delay_ms=300
+   tile="bomb.7"
   }
   tile={
-   delay_ms=250
-   tile="bomb4b"
+   delay_ms=300
+   tile="bomb.8"
   }
   tile={
-   delay_ms=250
-   tile="bomb5a"
+   delay_ms=300
+   tile="bomb.9"
   }
   tile={
-   delay_ms=250
-   tile="bomb5b"
+   delay_ms=300
+   tile="bomb.10"
   }
   tile={
-   delay_ms=250
-   tile="bomb6a"
+   delay_ms=300
+   tile="bomb.11"
   }
   tile={
-   delay_ms=250
-   tile="bomb6b"
+   delay_ms=300
+   tile="bomb.12"
   }
   tile={
-   delay_ms=250
-   tile="bomb7a"
+   delay_ms=300
+   tile="bomb.13"
   }
   tile={
-   delay_ms=250
-   tile="bomb7b"
+   delay_ms=300
+   tile="bomb.14"
   }
   tile={
-   delay_ms=250
-   tile="bomb8a"
+   delay_ms=300
+   tile="bomb.15"
   }
   tile={
-   delay_ms=250
-   tile="bomb8b"
+   delay_ms=300
+   tile="bomb.16"
   }
   tile={
-   delay_ms=250
-   tile="bomb9a"
+   delay_ms=300
+   tile="bomb.17"
   }
   tile={
-   delay_ms=250
-   tile="bomb9b"
+   delay_ms=300
+   tile="bomb.18"
   }
   tile={
-   delay_ms=250
-   tile="bomb10a"
+   delay_ms=300
+   tile="bomb.19"
   }
   tile={
-   delay_ms=250
-   tile="bomb10b"
+   delay_ms=500
+   tile="bomb.20"
+  }
+  tile={
+   delay_ms=500
+   tile="bomb.21"
    is_end_of_anim
-   is_dead_on_end_of_anim_on_server_only
+   is_dead_on_end_of_anim
   }
  }
 }
