@@ -1,7 +1,7 @@
 {
- short_name="large bone pile"
+ short_name="epic bone pile"
  raw_name="bonepile4"
- tooltip="large bone pile"
+ tooltip="epic bone pile"
  mob_spawn={ 1000 "ghost4" }
  z_depth="obj"
  max_hp=10

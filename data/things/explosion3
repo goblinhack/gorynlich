@@ -11,7 +11,7 @@
  is_light_source
  explosion_radius=4.0
  light_radius=4.0
- scale=0.8
+ scale=1.0
  damage=5
  sound_on_creation="boom"
  hit_delay_tenths=1
