@@ -11,10 +11,10 @@
  is_light_source
  explosion_radius=1.0
  light_radius=1.0
- scale=0.6
+ scale=1.0
  damage=5
- hit_delay_tenths=1
  sound_on_creation="boom"
+ hit_delay_tenths=1
  tiles={
   tile={
    tile="explosion1.1"

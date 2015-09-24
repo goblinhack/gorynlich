@@ -1,7 +1,5 @@
 
-- slime spawns under walls!
 - bombs do not explode
-- death comes not quite so quickly
 - no light around lava rocks
 - plant spawning does not work
 - floor tiles under rock wrong sometimes
@@ -20,7 +18,6 @@
 - mushmen need less anim frames
 - fixed levels need floors changed
 - pushable blocks and fix up moving walls
-- green super ghost like slimer?
 - duck of doom bomb?
 
 --------------------------------------- plan for oct --------------------------------------
@@ -61,6 +58,9 @@
 
 
 Wed Sep 23 09:00:34 EDT 2015
+- green super ghost like slimer?
+- death comes not quite so quickly
+- slime spawns under walls!
 - centered scaled graphics at last
 - still too many lava rocks
 - cannot kill stickyslime

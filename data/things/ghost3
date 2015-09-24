@@ -5,7 +5,7 @@
  z_depth="obj"
  speed=15
  max_hp=1
- damage=6
+ damage=3
  polymorph_on_death="ghost2"
  bonus_xp_on_death=25
  vision_distance=15
