@@ -16,7 +16,7 @@ is_levitating
  hit_priority=10
  is_jesus
  is_levitating
- scale=0.08
+ scale=0.2
  collision_radius=2.0
  is_light_source
  light_radius=2.0
