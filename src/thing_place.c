@@ -35,8 +35,8 @@ static widp thing_place_ (thingp t,
         thing_round(t, &x, &y);
 
         /*
-        * Try to place in front of the player.
-        */
+         * Try to place in front of the player.
+         */
         widp grid = wid_game_map_server_grid_container;
         if (!grid) {
             ERR("cannot place thing, no grid map");
@@ -68,6 +68,9 @@ static widp thing_place_ (thingp t,
         dy *= -1.0;
     }
 
+    dx /= 2.0;
+    dy /= 2.0;
+
     double x = t->x + dx;
     double y = t->y + dy;
 
@@ -81,6 +84,27 @@ static widp thing_place_ (thingp t,
         ERR("cannot place thing, no grid map");
     }
 
+    if (!thing_hit_any_obstacle(grid, t, x, y)) {
+        widp w = wid_game_map_server_replace_tile(grid, x, y,
+                                                  0, /* thing */
+                                                  tp,
+                                                  0 /* tpp_data */,
+                                                  &item,
+                                                  0 /* stats */);
+        return (w);
+    }
+
+    dx *= 2.0;
+    dy *= 2.0;
+
+    x = t->x + dx;
+    y = t->y + dy;
+
+    thing_round(t, &x, &y);
+
+    /*
+     * Try to place in front of the player.
+     */
     if (!thing_hit_any_obstacle(grid, t, x, y)) {
         widp w = wid_game_map_server_replace_tile(grid, x, y,
                                                   0, /* thing */

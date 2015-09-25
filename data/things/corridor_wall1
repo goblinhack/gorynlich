@@ -2,7 +2,7 @@
  short_name="corridor_wall"
  raw_name="corridor_wall1"
  tooltip="corridor_wall"
- z_depth="obj"
+ z_depth="wall"
  is_hard
  is_inactive
  is_wall
