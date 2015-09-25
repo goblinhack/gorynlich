@@ -1,5 +1,9 @@
 
+- bomb animation in backpack looks nuts
 - bombs do not explode
+- bomb not killed on client
+- explosion range
+- add more food
 - no light around lava rocks
 - plant spawning does not work
 - floor tiles under rock wrong sometimes
@@ -10,7 +14,6 @@
 - glass blocks to move and once moving keep moving, like ice ?
 - others that become juggernauts? and maybe some that push and explode?
 - light source on edges of acid and lava only
-- bomb animation in backpack looks nuts
 - stats font too large
 - spinning in stats window needs centered
 - plant and seeds
