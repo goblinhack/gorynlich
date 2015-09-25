@@ -26,18 +26,14 @@ void wid_animate (widp w)
         return;
     }
 
-    thingp t = wid_get_thing(w);
-
     thing_tilep tile;
     tree_rootp tiles;
 
     /*
      * Things like bombs do not tick in the backpack
      */
-    if (t) {
-        if (thing_is_not_animated_in_item_bar(t)) {
-            return;
-        }
+    if (tp_is_not_animated_in_item_bar(tp)) {
+        return;
     }
 
     tile = w->current_tile;
@@ -75,6 +71,8 @@ void wid_animate (widp w)
      */
     uint32_t size = tree_root_size(tiles);
     uint32_t tries = 0;
+
+    thingp t = wid_get_thing(w);
 
     while (tries < size) {
         tries++;
