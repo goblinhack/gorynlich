@@ -12,6 +12,7 @@
  is_animated
  is_valid_for_action_bar
  is_given_randomly_at_start
+ is_not_animated_in_item_bar
  explodes_as="explosion3"
  d10000_chance_of_appearing=70
  tiles={

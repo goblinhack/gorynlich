@@ -316,7 +316,7 @@ typedef struct tp_ {
     uint8_t is_rrr12:1;
     uint8_t is_rrr13:1;
     uint8_t is_rrr14:1;
-    uint8_t is_rrr15:1;
+    uint8_t is_not_animated_in_item_bar:1;
     uint8_t is_rrr16:1;
     uint8_t is_rrr17:1;
     uint8_t is_stickyslime:1;
@@ -788,9 +788,9 @@ static inline uint8_t tp_is_rrr14 (tpp t)
     return (t->is_rrr14);
 }
 
-static inline uint8_t tp_is_rrr15 (tpp t)
+static inline uint8_t tp_is_not_animated_in_item_bar (tpp t)
 {
-    return (t->is_rrr15);
+    return (t->is_not_animated_in_item_bar);
 }
 
 static inline uint8_t tp_is_rrr16 (tpp t)
