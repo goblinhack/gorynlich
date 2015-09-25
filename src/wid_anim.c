@@ -31,6 +31,15 @@ void wid_animate (widp w)
     thing_tilep tile;
     tree_rootp tiles;
 
+    /*
+     * Things like bombs do not tick in the backpack
+     */
+    if (t) {
+        if (thing_is_not_animated_in_item_bar(t)) {
+            return;
+        }
+    }
+
     tile = w->current_tile;
 
     if (tile) {

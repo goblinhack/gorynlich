@@ -1461,11 +1461,11 @@ static inline uint8_t thing_is_rrr14 (thingp t)
     return (tp_is_rrr14(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr15 (thingp t)
+static inline uint8_t thing_is_not_animated_in_item_bar (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr15(thing_tp(t)));
+    return (tp_is_not_animated_in_item_bar(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_rrr16 (thingp t)
@@ -2427,9 +2427,9 @@ static inline uint8_t thing_is_rrr14_noverify (thingp t)
     return (t->tp->is_rrr14);
 }
 
-static inline uint8_t thing_is_rrr15_noverify (thingp t)
+static inline uint8_t thing_is_not_animated_in_item_bar_noverify (thingp t)
 {
-    return (t->tp->is_rrr15);
+    return (t->tp->is_not_animated_in_item_bar);
 }
 
 static inline uint8_t thing_is_rrr16_noverify (thingp t)
