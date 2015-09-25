@@ -674,7 +674,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_not_animated_in_item_bar", t->is_not_animated_in_item_bar);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
         GET_OPT_NAMED_BITFIELD(ctx, "is_stickyslime", t->is_stickyslime);
@@ -956,7 +956,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
     PUT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
     PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
+    PUT_NAMED_BITFIELD(ctx, "is_not_animated_in_item_bar", t->is_not_animated_in_item_bar);
     PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
     PUT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
     PUT_NAMED_BITFIELD(ctx, "is_stickyslime", t->is_stickyslime);
