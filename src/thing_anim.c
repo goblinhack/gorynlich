@@ -47,12 +47,15 @@ void thing_animate (thingp t)
          */
         if (thing_tile_is_end_of_anim(tile)) {
             if (t->on_server) {
-                if (thing_tile_is_dead_on_end_of_anim(tile)) {
+                if (thing_tile_is_dead_on_end_of_anim(tile) ||
+                    thing_tile_is_dead_on_end_of_anim_on_server_only(tile)) {
                     thing_dead(t, 0, "end of anim");
                 }
             } else {
                 if (thing_tile_is_dead_on_end_of_anim(tile)) {
-                    thing_dead(t, 0, "end of anim");
+                    if (!thing_tile_is_dead_on_end_of_anim_on_server_only(tile)) {
+                        thing_dead(t, 0, "end of anim");
+                    }
                 }
             }
 
