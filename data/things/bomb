@@ -97,10 +97,10 @@
    tile="bomb.20"
   }
   tile={
-   delay_ms=500
+   delay_ms=2000
    tile="bomb.21"
    is_end_of_anim
-   is_dead_on_end_of_anim
+   is_dead_on_end_of_anim_on_server_only
   }
  }
 }

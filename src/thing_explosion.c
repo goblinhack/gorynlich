@@ -69,7 +69,7 @@ void level_place_explosion_at (levelp level,
         destroy_in = 100;
         jitter = 10;
     } else {
-        destroy_in = 7000;
+        destroy_in = 200;
         jitter = 100;
     }
 
@@ -369,7 +369,7 @@ static void level_place_explosion_ (levelp level,
 
             double dx, dy;
 
-            if (radius == 1) {
+            if ((radius == 1) || (density == 1.0)) {
                 va_start(args, nargs);
                 (void) level_place_explosion_at(level, 
                                                 owner,
@@ -454,7 +454,7 @@ void level_place_explosion (levelp level,
                                ox, oy,
                                x, y,
                                explosion_radius,
-                               0.5, // density
+                               1.0, // density
                                explodes_as,
                                4, // nargs
                                "explosion1",
@@ -474,7 +474,7 @@ void level_place_explosion (levelp level,
                                ox, oy,
                                x, y,
                                explosion_radius,
-                               0.5, // density
+                               1.0, // density
                                explodes_as,
                                4, // nargs
                                "small_explosion1",
@@ -514,7 +514,7 @@ void level_place_explosion (levelp level,
                                ox, oy,
                                x, y,
                                explosion_radius,
-                               0.5, // density
+                               1.0, // density
                                explodes_as,
                                4, // nargs
                                "fireburst1",

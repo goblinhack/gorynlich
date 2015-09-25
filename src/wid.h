@@ -950,7 +950,36 @@ tree_wid_compare_func (const tree_node *a, const tree_node *b)
     return (0);
 }
 
+/*
+ * Used for tree grid widgets
+ */
+static inline int8_t 
+tree_wid_compare_func_fast (const tree_node *a, const tree_node *b)
+{
+    widp A = (typeof(A))a;
+    widp B = (typeof(B))b;
+
+    if (A->tree.br.y > B->tree.br.y) {
+        return (-1);
+    }
+
+    if (A->tree.br.y < B->tree.br.y) {
+        return (1);
+    }
+
+    if (A->tree.key < B->tree.key) {
+        return (-1);
+    }
+
+    if (A->tree.key > B->tree.key) {
+        return (1);
+    }
+
+    return (0);
+}
+
 TREE_PREV_INLINE(tree_wid_compare_func) 
+TREE_PREV_INLINE(tree_wid_compare_func_fast) 
 
 extern widp wid_mouse_template;
 

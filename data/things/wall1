@@ -2,7 +2,7 @@
  short_name="wall"
  raw_name="wall1"
  tooltip="wall1"
- z_depth="obj"
+ z_depth="wall"
  is_hard
  is_inactive
  is_wall
