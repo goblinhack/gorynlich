@@ -167,6 +167,7 @@ uint32_t thing_is_carrying_thing_count(thingp, tp_is);
  * thing_ai.c
  */
 int dmap_distance_to_player(int source_x, int source_y);
+int dmap_light_and_sound_distance_to_player(int source_x, int source_y);
 int dmap_distance_between_points(int target_x, int target_y, int source_x, int source_y);
 uint8_t thing_find_nexthop(thingp t, int32_t *x, int32_t *y);
 void dmap_process_init(void);
