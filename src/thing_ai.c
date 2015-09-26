@@ -121,11 +121,6 @@ int dmap_distance_to_player (int source_x, int source_y)
 
     if (distance >= not_preferred) {
         /*
-         * Don't do this, it allows light to leak when you are close to a wall
-         * and light up things behind the walls.
-         */
-
-        /*
          * Try bordering spaces. This works for say a rock that is a blocking 
          * obstacle that we do not have a path too. One of the bordering cells
          * might be reachable.
@@ -158,31 +153,6 @@ int dmap_distance_to_player (int source_x, int source_y)
             }
         }
 
-        return (-1);
-    }
-
-    return (distance);
-}
-
-/*
- * Non straight line distance to player, avoiding walls.
- *
- * Is updated each player move to a new cell. Does not look at neighboring 
- * cells that allow light to leak
- */
-int dmap_light_and_sound_distance_to_player (int source_x, int source_y)
-{
-    if ((source_x >= MAP_WIDTH) || (source_x < 0)) {
-        return (-1);
-    }
-
-    if ((source_y >= MAP_HEIGHT) || (source_y < 0)) {
-        return (-1);
-    }
-
-    int distance = (dmap_map_player_target_treat_levitating_over_and_doors_as_walls.walls[source_x][source_y]);
-
-    if (distance >= not_preferred) {
         return (-1);
     }
 
