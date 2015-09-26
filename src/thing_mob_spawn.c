@@ -32,9 +32,11 @@ uint8_t thing_mob_spawn (thingp t)
     uint32_t tries = 10;
 
     while (tries-- > 0) {
-        double x = t->x;
-        double y = t->y;
+        double x;
+        double y;
         uint32_t r = myrand() % 100;
+
+        thing_real_to_fmap(t, &x, &y);
 
         if (r < 12) {
             x -= 1.0;
@@ -69,8 +71,7 @@ uint8_t thing_mob_spawn (thingp t)
                 map_is_acid_at(server_level, x, y)   ||
                 map_is_exit_at(server_level, x, y)) {
 
-                x = t->x;
-                y = t->y;
+                thing_real_to_fmap(t, &x, &y);
 
                 uint32_t r = myrand() % 100;
 
@@ -112,8 +113,7 @@ uint8_t thing_mob_spawn (thingp t)
 
                 uint32_t r = myrand() % 100;
 
-                x = t->x;
-                y = t->y;
+                thing_real_to_fmap(t, &x, &y);
 
                 if (r < 12) {
                     x -= 1.0;
@@ -173,8 +173,7 @@ uint8_t thing_mob_spawn (thingp t)
          * Flames on lava pits spawn on the lava.
          */
         if (tp_is_spawns_under(what)) {
-            x = t->x;
-            y = t->y;
+            thing_real_to_fmap(t, &x, &y);
         }
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
@@ -214,9 +213,11 @@ thingp thing_mob_spawn_on_death (thingp t)
     uint8_t first = 1;
 
     while (tries-- > 0) {
-        double x = t->x;
-        double y = t->y;
+        double x;
+        double y;
         uint32_t r = myrand() % 100;
+
+        thing_real_to_fmap(t, &x, &y);
 
         if (r < 25) {
             x -= 1.0;
@@ -242,8 +243,7 @@ thingp thing_mob_spawn_on_death (thingp t)
         }
 
         if (first) {
-            x = t->x;
-            y = t->y;
+            thing_real_to_fmap(t, &x, &y);
             first = 0;
         }
 
@@ -260,8 +260,7 @@ thingp thing_mob_spawn_on_death (thingp t)
          * Flames on lava pits spawn on the lava.
          */
         if (tp_is_spawns_under(what)) {
-            x = t->x;
-            y = t->y;
+            thing_real_to_fmap(t, &x, &y);
         }
 
         if (tp_is_cobweb(what) || tp_is_stickyslime(what)) {
