@@ -56,6 +56,9 @@
 - magic gives health to other players
 
 
+Sat Sep 26 12:42:29 EDT 2015
+- added debug dmap in real time
+- fixed light leaking through walls finally
 
 Fri Sep 25 19:55:53 EDT 2015
 - explosion range

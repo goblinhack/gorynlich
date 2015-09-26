@@ -29,10 +29,10 @@ static widp thing_place_ (thingp t,
     }
 
     if (t && under) {
-        double x = t->x;
-        double y = t->y;
+        double x;
+        double y;
 
-        thing_round(t, &x, &y);
+        thing_real_to_fmap(t, &x, &y);
 
         /*
          * Try to place in front of the player.
@@ -71,10 +71,11 @@ static widp thing_place_ (thingp t,
     dx /= 2.0;
     dy /= 2.0;
 
-    double x = t->x + dx;
-    double y = t->y + dy;
-
-    thing_round(t, &x, &y);
+    double x;
+    double y;
+    thing_real_to_fmap(t, &x, &y);
+    x += dx;
+    y += dy;
 
     /*
      * Try to place in front of the player.
@@ -97,10 +98,10 @@ static widp thing_place_ (thingp t,
     dx *= 2.0;
     dy *= 2.0;
 
-    x = t->x + dx;
-    y = t->y + dy;
+    thing_real_to_fmap(t, &x, &y);
 
-    thing_round(t, &x, &y);
+    x += dx;
+    y += dy;
 
     /*
      * Try to place in front of the player.
@@ -124,10 +125,11 @@ static widp thing_place_ (thingp t,
                 continue;
             }
 
-            double x = t->x + dx;
-            double y = t->y + dy;
-
-            thing_round(t, &x, &y);
+            double x;
+            double y;
+            thing_real_to_fmap(t, &x, &y);
+            x += dx;
+            y += dy;
 
             if (map_find_wall_at(server_level, x, y, 0) ||
                 map_find_door_at(server_level, x, y, 0) ||
@@ -157,10 +159,11 @@ static widp thing_place_ (thingp t,
                 continue;
             }
 
-            double x = t->x + dx;
-            double y = t->y + dy;
-
-            thing_round(t, &x, &y);
+            double x;
+            double y;
+            thing_real_to_fmap(t, &x, &y);
+            x += dx;
+            y += dy;
 
             if (map_find_wall_at(server_level, x, y, 0) ||
                 map_find_door_at(server_level, x, y, 0) ||
@@ -179,10 +182,7 @@ static widp thing_place_ (thingp t,
         }
     }
 
-    x = t->x;
-    y = t->y;
-
-    thing_round(t, &x, &y);
+    thing_real_to_fmap(t, &x, &y);
 
     /*
      * Last resort, just place on the player.
