@@ -3421,8 +3421,8 @@ void socket_tx_enqueue (gsocketp s, UDPpacket **packet_in)
         }
     }
 
-    if (s->tx_queue_size >= MAX_SOCKET_QUEUE_SIZE / 4) {
-        ERR("Socket congested %s", socket_get_remote_logname(s));
+    if (s->tx_queue_size >= (MAX_SOCKET_QUEUE_SIZE / 4) * 3) {
+        ERR("Socket 75%% congested %s", socket_get_remote_logname(s));
     }
 
     s->tx_queue_size++;

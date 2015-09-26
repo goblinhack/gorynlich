@@ -1,5 +1,5 @@
 {
- short_name="rock7a"
+ short_name="rock"
  raw_name="rock7a"
  tooltip="rock7a"
  mob_spawn={ 100 "lava1" 900 "flames1" }
