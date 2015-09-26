@@ -164,7 +164,7 @@ void sound_play_at (const char *name_alias, double x, double y)
         int sx = rintf(x);
         int sy = rintf(y);
 
-        int distance = dmap_distance_to_player(sx, sy);
+        int distance = dmap_light_and_sound_distance_to_player(sx, sy);
         if (distance == -1) {
             return;
         }
