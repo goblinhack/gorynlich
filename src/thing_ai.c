@@ -218,11 +218,10 @@ static void dmap_thing_print (thingp t,
         fp = fopen("map.txt", "w");
     }
 
-    int8_t tx;
-    int8_t ty;
+    int tx;
+    int ty;
 
-    tx = rintf(t->x);
-    ty = rintf(t->y);
+    thing_real_to_map(t, &tx, &ty);
 
     for (y = 0; y < MAP_HEIGHT; y++) {
         for (x = 0; x < MAP_WIDTH; x++) {
@@ -425,8 +424,8 @@ static uint32_t dmap_generate_for_player_target_set_goals (uint8_t test, level_w
 {
     uint32_t checksum = 0;
     thingp thing_it;
-    int8_t x;
-    int8_t y;
+    int x;
+    int y;
 
     { TREE_OFFSET_WALK_UNSAFE(server_player_things, thing_it) {
         /*
@@ -446,8 +445,7 @@ static uint32_t dmap_generate_for_player_target_set_goals (uint8_t test, level_w
         /*
          * Aim for center of tile.
          */
-        x = rintf(thing_it->x);
-        y = rintf(thing_it->y);
+        thing_real_to_map(thing_it, &x, &y);
 
         if (!test) {
             dmap->walls[x][y] = 0;
@@ -467,8 +465,8 @@ static uint32_t dmap_generate_for_treasure_target_set_goals (uint8_t test, level
 {
     uint32_t checksum = 0;
     thingp thing_it;
-    int8_t x;
-    int8_t y;
+    int x;
+    int y;
 
     { TREE_OFFSET_WALK_UNSAFE(server_boring_things, thing_it) {
         /*
@@ -481,8 +479,7 @@ static uint32_t dmap_generate_for_treasure_target_set_goals (uint8_t test, level
         /*
          * Aim for center of tile.
          */
-        x = rintf(thing_it->x);
-        y = rintf(thing_it->y);
+        thing_real_to_map(thing_it, &x, &y);
 
         if (!test) {
             dmap->walls[x][y] = 0;
@@ -801,11 +798,10 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
                                         int32_t *nexthop_x, 
                                         int32_t *nexthop_y)
 {
-    int8_t x;
-    int8_t y;
+    int x;
+    int y;
 
-    x = rintf(t->x);
-    y = rintf(t->y);
+    thing_real_to_map(t, &x, &y);
 
     int8_t a;
     int8_t b;

@@ -3254,18 +3254,6 @@ static inline int thing_has_ability_perma_rage (const thingp t)
 }
 
 /*
- * Only a certain resolution of thing can be represented on the client.
- * Convert a floating point value to client rounded value.
- */
-static inline void thing_round (thingp t, double *x, double *y)
-{
-    const double scale = 256.0;
-
-    *x = round(*x * scale) / scale;
-    *y = round(*y * scale) / scale;
-}
-
-/*
  * thing.c
  */
 void thing_move(thingp t, double x, double y);
@@ -3515,3 +3503,39 @@ void thing_reached_teleport(thingp t, thingp teleport);
  * thing_exit.c
  */
 void thing_reached_exit(thingp t, thingp exit);
+
+/*
+ * Only a certain resolution of thing can be represented on the client.
+ * Convert a floating point value to client rounded value.
+ */
+static inline void thing_round (thingp t, double *x, double *y)
+{
+    const double scale = 256.0;
+
+    *x = round(*x * scale) / scale;
+    *y = round(*y * scale) / scale;
+}
+
+/*
+ * round the thing coords and find out what floor tile we are really on.
+ * we use the bottom of the tile as that is where the 'feet' commonly are
+ */
+static inline void thing_real_to_map (thingp t, int *x, int *y)
+{
+    *x = (t->x + 0.5);
+    *y = (t->y + 0.9);
+}
+
+static inline void thing_real_to_fmap (thingp t, double *x, double *y)
+{
+    *x = (t->x + 0.5);
+    *y = (t->y + 0.9);
+
+    thing_round(t, x, y);
+}
+
+static inline void real_to_map (double ix, double iy, int *x, int *y)
+{
+    *x = (ix + 0.5);
+    *y = (iy + 0.9);
+}

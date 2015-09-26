@@ -157,8 +157,12 @@ static void thing_fire_at_target_xy (thingp t, double target_x, double target_y)
 
     fpoint p1;
 
-    p1.x = target_x - t->x;
-    p1.y = target_y - t->y;
+    double x, y;
+
+    thing_real_to_fmap(t, &x, &y);
+
+    p1.x = target_x - x;
+    p1.y = target_y - y;
 
     double d = 10.0;
     double angle = anglerot(p1);
@@ -342,9 +346,10 @@ void thing_server_fire (thingp t,
      * Fire from the player position plus the initial delta so it looks like 
      * it comes from outside of the body.
      */
-    double x = t->x;
-    double y = t->y;
+    double x;
+    double y;
 
+    thing_real_to_fmap(t, &x, &y);
     x += dx;
     y += dy;
 
