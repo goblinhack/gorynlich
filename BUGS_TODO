@@ -1,8 +1,4 @@
 
-- bomb animation in backpack looks nuts
-- bombs do not explode
-- bomb not killed on client
-- explosion range
 - add more food
 - no light around lava rocks
 - plant spawning does not work
@@ -59,6 +55,13 @@
 - thief, kill thief to recover items
 - magic gives health to other players
 
+
+
+Fri Sep 25 19:55:53 EDT 2015
+- explosion range
+- bomb animation in backpack looks nuts
+- bombs do not explode
+- bomb not killed on client
 
 Wed Sep 23 09:00:34 EDT 2015
 - green super ghost like slimer?

@@ -70,7 +70,7 @@ void level_place_explosion_at (levelp level,
         jitter = 10;
     } else {
         destroy_in = 200;
-        jitter = 100;
+        jitter = 10;
     }
 
     thing_place_and_destroy_timed(level,
