@@ -13,7 +13,7 @@
  is_light_source
  light_radius=0.5
  is_fire
- is_collision_map_medium
+ is_collision_map_small
  sound_on_creation="fireball1"
  explodes_as="small_explosion1"
  is_fire

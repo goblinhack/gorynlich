@@ -573,8 +573,9 @@ int shop_inside (thingp t)
     for (dx = -2; dx <= 2; dx++) {
         for (dy = -2; dy <= 2; dy++) {
 
-            x = t->x + dx;
-            y = t->y + dy;
+            thing_real_to_map(t, &x, &y);
+            x += dx;
+            y += dy;
 
             thing_map_cell *cell = &map->cells[x][y];
 
