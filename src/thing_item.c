@@ -260,10 +260,19 @@ void thing_used (thingp t, tpp tp)
         MSG_SERVER_SHOUT_AT(SOUND, t, t->x, t->y, "bite");
     }
 
+    if (id == THING_SPAM) {
+        thing_stats_modify_speed(t, -1);
+    }
+
     thing_stats_modify_hp(t, bonus_hp);
 
     /*
      * Need to allow magic items to override this.
+     */
+#if 0
+    /*
+     * I think it's nicer to go over max hp and then fall back to
+     * the maximum slowly
      */
     if (thing_stats_get_hp(t) > thing_stats_get_max_hp(t)) {
         if (tp_is_magical(tp)) {
@@ -274,6 +283,7 @@ void thing_used (thingp t, tpp tp)
             thing_stats_set_hp(t, thing_stats_get_max_hp(t));
         }
     }
+#endif
 
     if (thing_stats_get_hp(t) <= 0) {
         if (tp_is_life_saving(tp)) {
