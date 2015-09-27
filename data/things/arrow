@@ -10,7 +10,7 @@
  is_fragile
  is_projectile
  is_animated
- is_collision_map_medium
+ is_collision_map_small
  sound_on_creation="arrow"
  tiles={
   tile={
