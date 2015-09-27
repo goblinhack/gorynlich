@@ -1,0 +1,22 @@
+{
+ short_name="pizza"
+ raw_name="pizza"
+ tooltip="cheesy pizza"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=250
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=80
+ message_on_use="%%fg=yellow$not enough toppings"
+ tiles={
+  tile={
+   tile="pizza"
+  }
+ }
+}
