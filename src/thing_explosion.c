@@ -514,7 +514,7 @@ void level_place_explosion (levelp level,
                                ox, oy,
                                x, y,
                                explosion_radius,
-                               1.0, // density
+                               0.25, // density
                                explodes_as,
                                4, // nargs
                                "fireburst1",
