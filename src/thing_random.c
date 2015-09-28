@@ -433,15 +433,15 @@ tpp random_monst (int depth)
             continue;
         }
 
-        if (any) {
-            return (tp);
-        }
-
         /*
          * Unique? like death?
          */
         if (!tp_get_d10000_chance_of_appearing(tp)) {
             continue;
+        }
+
+        if (any) {
+            return (tp);
         }
 
         if (depth < tp_get_min_appear_depth(tp)) {
