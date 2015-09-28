@@ -75,6 +75,9 @@ extern DECLSPEC int32_t SDLCALL SDL_iPhoneKeyboardToggle(SDL_Window * window);
 #endif /* } */
 
 static int sdl_get_mouse(void);
+static void sdl_screenshot_(void);
+static int sdl_do_screenshot;
+
 uint8_t sdl_main_loop_running;
 uint8_t sdl_shift_held;
 int32_t sdl_init_video;
@@ -1584,6 +1587,11 @@ void sdl_loop (void)
 
         blit_flush();
 
+        if (sdl_do_screenshot) {
+            sdl_do_screenshot = 0;
+            sdl_screenshot_();
+        }
+
         /*
          * Flip
          */
@@ -1616,6 +1624,11 @@ void sdl_hide_keyboard (void)
 }
 
 void sdl_screenshot (void)
+{
+    sdl_do_screenshot = 1;
+}
+
+static void sdl_screenshot_ (void)
 {
     FILE *fp;
     uint32_t w = global_config.video_pix_width;
