@@ -1,8 +1,7 @@
 
+- slime is appearing over doors, redraw things on light source
+- deaths did not directly attack if sitting still
 - dragon breath attack looks lame
-- no light around lava rocks
-- plant spawning does not work
-- slime is appearing over doors
 - floor tiles under rock wrong sometimes
 
 --------------------------------------- plan for sep --------------------------------------
@@ -56,6 +55,10 @@
 - thief, kill thief to recover items
 - magic gives health to other players
 
+Mon Sep 28 08:21:06 EDT 2015
+- press 1 for screenshot in game
+- no light around lava rocks
+- plant spawning does not work
 
 Sat Sep 26 12:42:29 EDT 2015
 - pizza and speed impacting spam
