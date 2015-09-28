@@ -383,10 +383,10 @@ static void thing_fire_conical_at (thingp t, thingp target)
 
     double angle = anglerot(p1);
     double spread = RAD_360 / 20.0;
-    double density = 5.0;
+    double density = 20.0;
 
     double d;
-    for (d = 3.0; d < distance * 2.0; d += 0.5) {
+    for (d = 3.0; d < distance * 2.0; d += 1.0) {
 
         double a;
         for (a = -spread; a <= spread; a += spread / density) {
