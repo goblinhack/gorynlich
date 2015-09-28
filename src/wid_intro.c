@@ -55,7 +55,7 @@ static void wid_intro_menu_destroy(void);
 static int intro_effect_delay = 500;
 static int intro_effect_delay_zoom = 1000;
 
-static int saved_focus = 3;
+static int saved_focus = 0;
 
 uint8_t wid_intro_init (void)
 {
@@ -584,15 +584,15 @@ static void wid_intro_menu_create (void)
                  saved_focus, /* focus */
                  7, /* items */
 
-                 (int) 'e', "Editor", wid_menu_level_editor_selected,
-
-                 (int) 'c', "Credits", wid_menu_credits_selected,
-
-                 (int) 'S', "Settings", wid_menu_settings_selected,
+                 (int) 's', "Quick start", wid_menu_quick_start_selected,
 
                  (int) ' ', "Play game", wid_menu_play_game_selected,
 
-                 (int) 's', "Quick start", wid_menu_quick_start_selected,
+                 (int) 'S', "Settings", wid_menu_settings_selected,
+
+                 (int) 'e', "Editor", wid_menu_level_editor_selected,
+
+                 (int) 'c', "Credits", wid_menu_credits_selected,
 
                  (int) 'h', "Hiscores", wid_menu_past_legends_selected,
 
