@@ -8,8 +8,8 @@
  damage=80
  bonus_xp_on_death=10000
  is_effect_rotate_2way
- vision_distance=15
- hit_delay_tenths=6
+ vision_distance=20
+ hit_delay_tenths=3
  sound_on_death="urgh2"
  is_lava_proof
  is_monst
