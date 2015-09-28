@@ -3521,6 +3521,13 @@ static int socket_rx_queue_receive_packets (gsocketp s)
     int count = 0;
     int waittime = 0;
 
+    if (!s) {
+        return (0);
+    }
+    if (!socket_get_socklist(s)) {
+        return (0);
+    }
+
     int numready = SDLNet_CheckSockets(socket_get_socklist(s), waittime);
     if (numready <= 0) {
         return (count);
