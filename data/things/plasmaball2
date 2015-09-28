@@ -14,8 +14,8 @@
  light_radius=2.0
  is_effect_pulse
  is_variable_size
- scale=3.0
- collision_radius=0.5
+ scale=2.0
+ collision_radius=1.0
  tiles={
   tile={
    tile="plasmaball1-1"
