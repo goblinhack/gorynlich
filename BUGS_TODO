@@ -1,5 +1,4 @@
 
-- deaths did not directly attack if sitting still
 - floor tiles under rock wrong sometimes
 
 --------------------------------------- plan for sep --------------------------------------
@@ -54,6 +53,7 @@
 - magic gives health to other players
 
 Mon Sep 28 08:21:06 EDT 2015
+- deaths did not directly attack if sitting still
 - dragon breath attack looks lame
 - backward player sptires
 - slime is appearing over doors, redraw things on light source
