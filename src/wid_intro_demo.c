@@ -486,7 +486,7 @@ int wid_intro_story1_create (void)
 
     {
         widp w;
-        wid_text1 = w = wid_tooltip_transient("For millenia, the dwarves of old", 3 * ONESEC);
+        wid_text1 = w = wid_tooltip_transient("For millennia, the dwarves of old", 3 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.1);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, ONESEC * 6);
         wid_destroy_in(w, ONESEC * 6);

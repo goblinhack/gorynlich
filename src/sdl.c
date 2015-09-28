@@ -31,6 +31,7 @@
 #include "term.h"
 #include "timer.h"
 #include "socket_util.h"
+#include "string_util.h"
 
 #if defined WIN32 || defined __CYGWIN__
 #include <windows.h>
@@ -1612,4 +1613,38 @@ void sdl_hide_keyboard (void)
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED /* { */
     SDL_iPhoneKeyboardHide(window);
 #endif /* } */
+}
+
+void sdl_screenshot (void)
+{
+    FILE *fp;
+    uint32_t w = global_config.video_pix_width;
+    uint32_t h = global_config.video_pix_height;
+
+    static int count;
+    char *filename = dynprintf("screenshot.%d.ppm", ++count);
+    unsigned char * pixels = mymalloc(w*h*4, "screenshot"); // 4 bytes for RGBA
+
+    fp = fopen(filename, "w");
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadBuffer(GL_BACK_LEFT);
+
+    glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+    fprintf(fp, "P6\n%d %d\n255\n",w,h);
+
+    for (int j=h-1;j>=0;j--) {
+        for (int i=0;i<w;i++) {
+            fputc(pixels[3*j*w+3*i+0], fp);
+            fputc(pixels[3*j*w+3*i+1], fp);
+            fputc(pixels[3*j*w+3*i+2], fp);
+        }
+    }
+
+    CON("screenshot: %s", filename);
+
+    fclose(fp);
+    myfree(filename);
+    myfree(pixels);
 }
