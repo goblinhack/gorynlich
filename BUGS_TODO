@@ -1,12 +1,12 @@
 
 --------------------------------------- plan for oct --------------------------------------
+- plant and seeds
+- add plants, plants stuck in mid growth, no random tile
 - hit shopkeeper should make him mad
 - acid and lava should damage armor first
 - squidlings and water
 - glass blocks to move and once moving keep moving, like ice ?
 - others that become juggernauts? and maybe some that push and explode?
-- plant and seeds
-- add plants, plants stuck in mid growth, no random tile
 - mushmen need less anim frames
 - fixed levels need floors changed
 - pushable blocks and fix up moving walls
@@ -14,7 +14,6 @@
 - reverse swing ability was unlocked at start of game!
 - damage stuff in shop should also make him mad
 - add more fragmens then remove if 0 check in map_jigsaw.c
-- spam, filling but slows you down (same speed things as slime)
 - slimes eat items in backpack if not eaten quickly
 - mushpeople use fire/gas attacks, leave slime to make you slow
 - giant mushroom generator
@@ -46,6 +45,7 @@
 - magic gives health to other players
 
 Mon Sep 28 08:21:06 EDT 2015
+- spam, filling but slows you down
 - stats font too large
 - light source on edges of acid and lava only
 - spinning in stats window needs centered
