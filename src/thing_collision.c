@@ -416,7 +416,6 @@ static uint8_t things_overlap (const thingp A,
         Bpy2 = collision_map_large_y2;
     }
 
-
     /*
      * We really only care about collision radius for large objects like 
      * sawblades. If we use walls here then because of the granularity of
@@ -1191,6 +1190,14 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                      * If the monst has a weapon do not walk into the player 
                      * like a bite attack.
                      */
+                    double dist = DISTANCE(me->x, me->y, it->x, it->y);
+                    if (dist > 0.5) {
+                        /*
+                         * Get close, enough to hit but not too close.
+                         */
+                        continue;
+                    }
+
                 } else if (thing_is_player(it)                 ||
                            thing_can_walk_through(it)          ||
                            thing_is_carryable(it)              ||
@@ -1335,7 +1342,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow floating things to glide over
                  */
-                if (thing_is_rrr17(t)) {
+                if (thing_is_levitating(t)) {
                     continue;
                 }
 
