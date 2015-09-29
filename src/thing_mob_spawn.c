@@ -209,7 +209,7 @@ thingp thing_mob_spawn_on_death (thingp t)
         return (0);
     }
 
-    uint32_t tries = 20;
+    uint32_t tries = 100;
     uint8_t first = 1;
 
     while (tries-- > 0) {
@@ -300,6 +300,8 @@ thingp thing_mob_spawn_on_death (thingp t)
 
         return (wid_get_thing(w));
     }
+
+    THING_ERR(t, "failed to place %s on death", mob_spawn);
 
     return (0);
 }
