@@ -1,6 +1,4 @@
-
 - dragon not attacking in corridors
-- death can't seem to get too close
 
 --------------------------------------- plan for oct --------------------------------------
 - make windows version
@@ -46,6 +44,7 @@
 - magic gives health to other players
 
 Mon Sep 28 08:21:06 EDT 2015
+- death can't seem to get too close
 - death walking through walls
 - seedpods not spawning
 - spam, filling but slows you down
