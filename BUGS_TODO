@@ -43,6 +43,10 @@
 - thief, kill thief to recover items
 - magic gives health to other players
 
+
+Tue Sep 29 07:33:57 EDT 2015
+- editor not making empty levels correctly
+
 Mon Sep 28 08:21:06 EDT 2015
 - death can't seem to get too close
 - death walking through walls
