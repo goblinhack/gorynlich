@@ -15,17 +15,13 @@
  sound_on_death="urgh"
  is_undead
  is_monst
-is_levitating
  is_shadow_caster
  hit_priority=10
  is_combustable
- is_death
- is_levitating
  scale=1.0
  collision_radius=1.0
  is_light_source
  light_radius=2.0
- is_ethereal
  d10000_chance_of_appearing=0
  can_be_hit_chance=10
  explodes_as="explosion1"
