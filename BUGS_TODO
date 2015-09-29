@@ -1,26 +1,27 @@
 
+- dragon not attacking in corridors
+- death can't seem to get too close
+
 --------------------------------------- plan for oct --------------------------------------
-- plant and seeds
-- add plants, plants stuck in mid growth, no random tile
+- make windows version
+- reverse swing ability was unlocked at start of game!
 - hit shopkeeper should make him mad
+- damage stuff in shop should also make him mad
+- mushmen need less anim frames
+- mushpeople use fire/gas attacks, leave slime to make you slow
+- giant mushroom generator
+- slimes eat items in backpack if not eaten quickly
 - acid and lava should damage armor first
 - squidlings and water
 - glass blocks to move and once moving keep moving, like ice ?
-- others that become juggernauts? and maybe some that push and explode?
-- mushmen need less anim frames
-- fixed levels need floors changed
-- pushable blocks and fix up moving walls
-- duck of doom bomb?
-- reverse swing ability was unlocked at start of game!
-- damage stuff in shop should also make him mad
-- add more fragmens then remove if 0 check in map_jigsaw.c
-- slimes eat items in backpack if not eaten quickly
-- mushpeople use fire/gas attacks, leave slime to make you slow
-- giant mushroom generator
 - sword of life sucking, steals hp and gives to you
 - statues and rocks that do not shoot ?
+- fixed levels need floors changed
 
 --------------------------------------- plan for nov --------------------------------------
+- duck of doom bomb?
+- others that become juggernauts? and maybe some that push and explode?
+- pushable blocks and fix up moving walls
 - consult desktopbackground for more levels
 - move triggers do not seem to work on rocks
 - portion of teleport
@@ -45,6 +46,8 @@
 - magic gives health to other players
 
 Mon Sep 28 08:21:06 EDT 2015
+- death walking through walls
+- seedpods not spawning
 - spam, filling but slows you down
 - stats font too large
 - light source on edges of acid and lava only
