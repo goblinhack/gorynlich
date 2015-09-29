@@ -6,7 +6,7 @@
     "scythe1"
  }
  z_depth="obj"
- speed=8
+ speed=10
  max_hp=200
  damage=30
  bonus_xp_on_death=2000
@@ -15,17 +15,17 @@
  sound_on_death="urgh"
  is_undead
  is_monst
+ is_levitating
  is_shadow_caster
  hit_priority=10
  is_combustable
- scale=1.0
- collision_radius=1.0
- is_light_source
- light_radius=2.0
- d10000_chance_of_appearing=0
+ is_collision_map_medium
  can_be_hit_chance=10
  explodes_as="explosion1"
  is_animated
+ d10000_chance_of_appearing=50
+ min_appear_depth=1
+ max_appear_depth=100
  tiles={
   tile={
    delay_ms=200
