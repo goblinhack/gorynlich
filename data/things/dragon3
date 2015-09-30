@@ -13,11 +13,10 @@
  sound_on_death="urgh2"
  is_lava_proof
  is_monst
-is_levitating
  is_shadow_caster
  is_shadow_caster_soft
  scale=1.3
- collision_radius=0.1
+ collision_radius=1.0
  hit_priority=10
  is_levitating
  is_animated
