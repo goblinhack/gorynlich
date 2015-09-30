@@ -1,8 +1,6 @@
-- dragon not attacking in corridors
 
 --------------------------------------- plan for oct --------------------------------------
 - make windows version
-- reverse swing ability was unlocked at start of game!
 - hit shopkeeper should make him mad
 - damage stuff in shop should also make him mad
 - mushmen need less anim frames
@@ -11,6 +9,7 @@
 - slimes eat items in backpack if not eaten quickly
 - acid and lava should damage armor first
 - squidlings and water
+- reverse swing ability was unlocked at start of game!
 - glass blocks to move and once moving keep moving, like ice ?
 - sword of life sucking, steals hp and gives to you
 - statues and rocks that do not shoot ?
@@ -43,6 +42,9 @@
 - thief, kill thief to recover items
 - magic gives health to other players
 
+Wed Sep 30 19:00:28 EDT 2015
+- dragon not attacking in corridors
+- better dragon breath
 
 Tue Sep 29 07:33:57 EDT 2015
 - editor not making empty levels correctly

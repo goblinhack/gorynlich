@@ -425,10 +425,10 @@ static uint8_t things_overlap (const thingp A,
      * calculations. Easier just to save radial collisions for monsters and 
      * the like.
      */
-    if (!thing_is_wall(A) && !thing_is_door(A) && !thing_is_action(A) && !thing_is_action_trigger(A) &&
-        !thing_is_wall(B) && !thing_is_door(B) && !thing_is_action(B) && !thing_is_action_trigger(B)) { 
+    if ((thing_collision_radius(A) > 0.0) || (thing_collision_radius(B) > 0.0)) {
 
-        if ((thing_collision_radius(A) > 0.0) || (thing_collision_radius(B) > 0.0)) {
+        if (!thing_is_wall(A) && !thing_is_door(A) && !thing_is_action(A) && !thing_is_action_trigger(A) &&
+            !thing_is_wall(B) && !thing_is_door(B) && !thing_is_action(B) && !thing_is_action_trigger(B)) { 
 
             if (Aw->first_tile) {
                 Ax += ((Aw->first_tile->px1 + Aw->first_tile->px2) / 2.0);
@@ -1346,6 +1346,9 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     continue;
                 }
 
+                /*
+                 * Else be sticky
+                 */
                 if (dist_then < dist_now) {
                     continue;
                 } else {
