@@ -374,21 +374,27 @@ void thing_server_fire (thingp t,
 
 static void thing_fire_conical_at (thingp t, thingp target)
 {
-    double distance = DISTANCE(t->x, t->y, target->x, target->y);
+    double target_x, target_y;
+    thing_real_to_fmap(target, &target_x, &target_y);
+
+    double distance = DISTANCE(t->x, t->y, target_x, target_y);
 
     fpoint p1;
 
-    p1.x = target->x - t->x;
-    p1.y = target->y - t->y;
+    p1.x = target_x - t->x;
+    p1.y = target_y - t->y;
 
     double angle = anglerot(p1);
-    double spread = RAD_360 / 20.0;
+    double spread = RAD_360 / 360.0;
     double density = 20.0;
 
     double d;
     for (d = 3.0; d < distance * 2.0; d += 1.0) {
 
         double a;
+
+        spread += RAD_360 / 360.0;
+
         for (a = -spread; a <= spread; a += spread / density) {
             double x = t->x + fcos(a + angle) * d;
             double y = t->y + fsin(a + angle) * d;
@@ -430,14 +436,18 @@ static void thing_fire_at (thingp t, thingp target)
         projectile = tp_fires(t->tp);
     }
 
+    double target_x, target_y;
+    thing_real_to_fmap(target, &target_x, &target_y);
+
     if (!projectile) {
         /*
          * Might be a sword, so don't swing if too far from the target else it 
          * just looks daft.
          */
-        double distance = DISTANCE(t->x, t->y, target->x, target->y);
-        double dx = (target->x - t->x) / distance;
-        double dy = (target->y - t->y) / distance;
+
+        double distance = DISTANCE(t->x, t->y, target_x, target_y);
+        double dx = (target_x - t->x) / distance;
+        double dy = (target_y - t->y) / distance;
 
         if (distance > 2.0) {
             return;
@@ -450,7 +460,7 @@ static void thing_fire_at (thingp t, thingp target)
         return;
     }
 
-    thing_fire_at_target_xy(t, target->x, target->y);
+    thing_fire_at_target_xy(t, target_x, target_y);
 }
 
 /*
@@ -459,7 +469,10 @@ static void thing_fire_at (thingp t, thingp target)
 static void 
 thing_possible_hit_add (thingp me, thingp target)
 {
-    if (!can_see(server_level, me->x, me->y, target->x, target->y)) {
+    double target_x, target_y;
+    thing_real_to_fmap(target, &target_x, &target_y);
+
+    if (!can_see(server_level, me->x, me->y, target_x, target_y)) {
         return;
     }
 
