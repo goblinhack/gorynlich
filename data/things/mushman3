@@ -11,7 +11,9 @@
  vision_distance=5
  hit_delay_tenths=10
  sound_on_death="urgh"
+ speed=1
  is_monst
+ is_fires_cone
  is_shadow_caster
  is_shadow_caster_soft
  is_variable_size
@@ -20,45 +22,46 @@
  is_collision_map_medium
  is_animated
  is_mob_spawner
- mob_spawn_delay_tenths=300
- d10000_chance_of_appearing=50
+ mob_spawn_delay_tenths=500
+ d10000_chance_of_appearing=500
  min_appear_depth=1
  max_appear_depth=100
  fires="cloudkill1"
  weapon_fire_delay_hundredths=200
  sound_on_death="squelch"
+ jump_speed=10
  tiles={
-  tile={ delay_ms=50 tile="mushman3-1" }
-  tile={ delay_ms=50 tile="mushman3-2" }
-  tile={ delay_ms=50 tile="mushman3-3" }
-  tile={ delay_ms=50 tile="mushman3-4" }
-  tile={ delay_ms=50 tile="mushman3-5" }
-  tile={ delay_ms=50 tile="mushman3-6" }
-  tile={ delay_ms=50 tile="mushman3-7" }
-  tile={ delay_ms=50 tile="mushman3-8" }
-  tile={ delay_ms=50 tile="mushman3-9" }
-  tile={ delay_ms=50 tile="mushman3-10" }
-  tile={ delay_ms=50 tile="mushman3-11" }
-  tile={ delay_ms=50 tile="mushman3-12" }
-  tile={ delay_ms=50 tile="mushman3-13" }
-  tile={ delay_ms=50 tile="mushman3-14" }
-  tile={ delay_ms=50 tile="mushman3-15" }
-  tile={ delay_ms=50 tile="mushman3-16" }
-  tile={ delay_ms=50 tile="mushman3-17" }
-  tile={ delay_ms=50 tile="mushman3-18" }
-  tile={ delay_ms=50 tile="mushman3-19" }
-  tile={ delay_ms=50 tile="mushman3-20" }
-  tile={ delay_ms=50 tile="mushman3-21" }
-  tile={ delay_ms=50 tile="mushman3-22" }
-  tile={ delay_ms=50 tile="mushman3-23" }
-  tile={ delay_ms=50 tile="mushman3-24" }
-  tile={ delay_ms=50 tile="mushman3-25" }
-  tile={ delay_ms=50 tile="mushman3-26" }
-  tile={ delay_ms=50 tile="mushman3-27" }
-  tile={ delay_ms=50 tile="mushman3-28" }
-  tile={ delay_ms=50 tile="mushman3-29" }
-  tile={ delay_ms=50 tile="mushman3-30" }
-  tile={ delay_ms=50 tile="mushman3-31" }
-  tile={ delay_ms=50 tile="mushman3-32" }
+  tile={ delay_ms=500 tile="mushman3-1" }
+  tile={ delay_ms=500 tile="mushman3-2" }
+  tile={ delay_ms=500 tile="mushman3-3" }
+  tile={ delay_ms=500 tile="mushman3-4" }
+  tile={ delay_ms=500 tile="mushman3-5" }
+  tile={ delay_ms=500 tile="mushman3-6" begin_jump is_jumping }
+  tile={ delay_ms=500 tile="mushman3-7" }
+  tile={ delay_ms=500 tile="mushman3-8" }
+  tile={ delay_ms=500 tile="mushman3-9" }
+  tile={ delay_ms=500 tile="mushman3-10" }
+  tile={ delay_ms=500 tile="mushman3-11" }
+  tile={ delay_ms=500 tile="mushman3-12" }
+  tile={ delay_ms=500 tile="mushman3-13" }
+  tile={ delay_ms=500 tile="mushman3-14" }
+  tile={ delay_ms=500 tile="mushman3-15" }
+  tile={ delay_ms=500 tile="mushman3-16" }
+  tile={ delay_ms=500 tile="mushman3-17" }
+  tile={ delay_ms=500 tile="mushman3-18" begin_jump is_jumping }
+  tile={ delay_ms=500 tile="mushman3-19" }
+  tile={ delay_ms=500 tile="mushman3-20" }
+  tile={ delay_ms=500 tile="mushman3-21" }
+  tile={ delay_ms=500 tile="mushman3-22" }
+  tile={ delay_ms=500 tile="mushman3-23" }
+  tile={ delay_ms=500 tile="mushman3-24" }
+  tile={ delay_ms=500 tile="mushman3-25" }
+  tile={ delay_ms=500 tile="mushman3-26" }
+  tile={ delay_ms=500 tile="mushman3-27" }
+  tile={ delay_ms=500 tile="mushman3-28" }
+  tile={ delay_ms=500 tile="mushman3-29" begin_jump is_jumping }
+  tile={ delay_ms=500 tile="mushman3-30" }
+  tile={ delay_ms=500 tile="mushman3-31" }
+  tile={ delay_ms=500 tile="mushman3-32" begin_jump is_jumping }
  }
 }
