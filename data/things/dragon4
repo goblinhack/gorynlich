@@ -16,7 +16,8 @@
 is_levitating
  is_shadow_caster
  is_shadow_caster_soft
- scale=3.5
+ is_fires_cone
+ scale=2.5
  collision_radius=2.0
  hit_priority=10
  is_levitating
@@ -34,21 +35,21 @@ is_levitating
  light_radius=3.5
  spawn_on_death="exit1"
  tiles={
-  tile={ delay_ms=100 tile="dragon1-1" }
-  tile={ delay_ms=100 tile="dragon1-2" }
-  tile={ delay_ms=100 tile="dragon1-3" }
-  tile={ delay_ms=100 tile="dragon1-4" }
-  tile={ delay_ms=100 tile="dragon1-5" }
-  tile={ delay_ms=100 tile="dragon1-6" }
-  tile={ delay_ms=100 tile="dragon1-7" }
-  tile={ delay_ms=100 tile="dragon1-8" }
-  tile={ delay_ms=100 tile="dragon1-9" }
-  tile={ delay_ms=100 tile="dragon1-10" }
-  tile={ delay_ms=100 tile="dragon1-11" }
-  tile={ delay_ms=100 tile="dragon1-12" }
-  tile={ delay_ms=100 tile="dragon1-13" }
-  tile={ delay_ms=100 tile="dragon1-14" }
-  tile={ delay_ms=100 tile="dragon1-15" }
-  tile={ delay_ms=100 tile="dragon1-16" }
+  tile={ delay_ms=100 tile="dragon4-1" }
+  tile={ delay_ms=100 tile="dragon4-2" }
+  tile={ delay_ms=100 tile="dragon4-3" }
+  tile={ delay_ms=100 tile="dragon4-4" }
+  tile={ delay_ms=100 tile="dragon4-5" }
+  tile={ delay_ms=100 tile="dragon4-6" }
+  tile={ delay_ms=100 tile="dragon4-7" }
+  tile={ delay_ms=100 tile="dragon4-8" }
+  tile={ delay_ms=100 tile="dragon4-9" }
+  tile={ delay_ms=100 tile="dragon4-10" }
+  tile={ delay_ms=100 tile="dragon4-11" }
+  tile={ delay_ms=100 tile="dragon4-12" }
+  tile={ delay_ms=100 tile="dragon4-13" }
+  tile={ delay_ms=100 tile="dragon4-14" }
+  tile={ delay_ms=100 tile="dragon4-15" }
+  tile={ delay_ms=100 tile="dragon4-16" }
  }
 }

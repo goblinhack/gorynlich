@@ -1470,11 +1470,11 @@ static inline uint8_t thing_is_not_animated_in_item_bar (thingp t)
     return (tp_is_not_animated_in_item_bar(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr16 (thingp t)
+static inline uint8_t thing_is_fires_cone (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr16(thing_tp(t)));
+    return (tp_is_fires_cone(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_rrr17 (thingp t)
@@ -2434,9 +2434,9 @@ static inline uint8_t thing_is_not_animated_in_item_bar_noverify (thingp t)
     return (t->tp->is_not_animated_in_item_bar);
 }
 
-static inline uint8_t thing_is_rrr16_noverify (thingp t)
+static inline uint8_t thing_is_fires_cone_noverify (thingp t)
 {
-    return (t->tp->is_rrr16);
+    return (t->tp->is_fires_cone);
 }
 
 static inline uint8_t thing_is_rrr17_noverify (thingp t)
