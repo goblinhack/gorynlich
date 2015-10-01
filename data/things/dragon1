@@ -15,6 +15,7 @@
  is_monst
  is_shadow_caster
  is_shadow_caster_soft
+ is_fires_cone
  scale=1.5
  collision_radius=1.0
  hit_priority=10

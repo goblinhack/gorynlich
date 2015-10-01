@@ -101,6 +101,12 @@ static void thing_fire_at_target_xy_ (thingp t,
     p->damage = thing_stats_get_total_damage(t);
 
     /*
+     * If firing a component of an explosion, make sure the server sends it to 
+     * the client. As we don't send explosion fragments, only the center.
+     */
+    p->is_epicenter = true;
+
+    /*
      * Round up say -0.7 to -1.0
      */
     dx *= 10.0;
@@ -389,21 +395,42 @@ static void thing_fire_conical_at (thingp t, thingp target)
     double density = 1.0;
 
     double d;
-    for (d = 3.0; d < distance * 1.5; d += 1.0) {
 
-        double a;
+    if (thing_is_dragon(t)) {
+        for (d = 3.0; d < distance * 1.5; d += 1.0) {
 
-        spread += RAD_360 / 360.0;
-        density += 1.0;
+            double a;
 
-        for (a = -spread; a <= spread; a += spread / density) {
-            double x = t->x + fcos(a + angle) * d;
-            double y = t->y + fsin(a + angle) * d;
+            spread += RAD_360 / 360.0;
+            density += 1.0;
 
-            level_place_explosion(server_level, t, 
-                                  tp_fires(t->tp),
-                                  t->x, t->y,
-                                  x, y);
+            for (a = -spread; a <= spread; a += spread / density) {
+                double x = t->x + fcos(a + angle) * d;
+                double y = t->y + fsin(a + angle) * d;
+
+                level_place_explosion(server_level, t, 
+                                    tp_fires(t->tp),
+                                    t->x, t->y,
+                                    x, y);
+            }
+        }
+    } else {
+        for (d = 1.0; d < distance; d += 1.0) {
+
+            double a;
+
+            spread += RAD_360 / 360.0;
+            density += 1.0;
+
+            for (a = -spread; a <= spread; a += spread / density) {
+                double x = t->x + fcos(a + angle) * d;
+                double y = t->y + fsin(a + angle) * d;
+
+                level_place_explosion(server_level, t, 
+                                    tp_fires(t->tp),
+                                    t->x, t->y,
+                                    x, y);
+            }
         }
     }
 }
@@ -421,7 +448,7 @@ static void thing_fire_at (thingp t, thingp target)
         return;
     }
 
-    if (thing_is_dragon(t)) {
+    if (thing_is_fires_cone(t)) {
         thing_fire_conical_at(t, target);
         return;
     }

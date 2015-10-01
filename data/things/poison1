@@ -8,8 +8,8 @@
  is_cloud_effect
  is_animated_no_dir
  is_poison
- scale=0.4
  explosion_radius=1.0
+ scale=0.5
  damage=10
  hit_delay_tenths=1
  sound_on_creation="acid"

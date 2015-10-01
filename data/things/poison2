@@ -8,7 +8,6 @@
  is_cloud_effect
  is_animated_no_dir
  is_poison
- scale=0.4
  explosion_radius=5.0
  damage=10
  hit_delay_tenths=1
