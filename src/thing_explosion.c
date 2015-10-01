@@ -535,8 +535,6 @@ void level_place_explosion (levelp level,
         return;
     }
 
-    level_explosion_flash_effect = 5;
-
     level_place_explosion_(level, 
                            owner,
                            ox, oy,
