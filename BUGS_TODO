@@ -1,11 +1,10 @@
 
 --------------------------------------- plan for oct --------------------------------------
+- mushpeople use fire/gas attacks, leave slime to make you slow
+- giant mushroom generator
 - hit shopkeeper should make him mad
 - damage stuff in shop should also make him mad
-- mushmen need less anim frames
-- mushpeople use fire/gas attacks, leave slime to make you slow
 - make windows version
-- giant mushroom generator
 - slimes eat items in backpack if not eaten quickly
 - acid and lava should damage armor first
 - squidlings and water
@@ -41,6 +40,10 @@
 - backpack drop on death
 - thief, kill thief to recover items
 - magic gives health to other players
+
+Thu Oct  1 22:42:01 EDT 2015
+- mushman breath attack
+- mushmen need less anim frames
 
 Wed Sep 30 19:00:28 EDT 2015
 - dragon not attacking in corridors
