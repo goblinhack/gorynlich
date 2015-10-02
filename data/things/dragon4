@@ -16,7 +16,7 @@
 is_levitating
  is_shadow_caster
  is_shadow_caster_soft
- is_fires_cone
+ is_conical_breath_attack
  scale=2.5
  collision_radius=2.0
  hit_priority=10
