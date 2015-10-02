@@ -448,7 +448,7 @@ static void thing_fire_at (thingp t, thingp target)
         return;
     }
 
-    if (thing_is_fires_cone(t)) {
+    if (thing_is_conical_breath_attack(t)) {
         thing_fire_conical_at(t, target);
         return;
     }
