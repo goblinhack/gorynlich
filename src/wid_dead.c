@@ -166,7 +166,7 @@ static void wid_dead_gravestone_appeared (void *context)
         "Pathetic",
         "Good try I suppose",
         "Well, that could have been worse",
-        "Don't play games as a career",
+        "This isn't pong you know?",
         "Are you paid to play this?",
         "Are you paid to play this? You shouldn't be",
         "Is that the best you could do?",
@@ -181,6 +181,16 @@ static void wid_dead_gravestone_appeared (void *context)
         "Believe in yourself more. Someone has to",
         "Don't give up. But please give up on this game",
         "Goodbye cruel world",
+        "Don't play games as a career",
+        "Try tetris instead?",
+        "Stick to knitting",
+        "Try firing next time",
+        "Try 3D Monster maze instead",
+        "Is this your first game. Ever?",
+        "Your mother was a hamster",
+        "Your father smelled of elderberries",
+        "Stick to sudoko",
+        "Congratulations, you died!",
     };
 
     wid_notify_flush();
