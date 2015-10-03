@@ -71,8 +71,8 @@ static void wid_intro_about_create (void)
                 0.55, /* x */
                 0.5, /* y */
                 2, /* columns */
-                6, /* focus */
-                8, /* items */
+                8, /* focus */
+                9, /* items */
 
                 /*
                  * Column widths
@@ -92,6 +92,11 @@ static void wid_intro_about_create (void)
                 (int) '0', 
                 "%%fmt=left$%%fg=gray$Music and Art",
                 "%%fg=purple$Charlotte McGill",
+                (void*) 0,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Art",
+                "%%fg=purple$neoguid@hotmail.com",
                 (void*) 0,
 
                 (int) '0', 
