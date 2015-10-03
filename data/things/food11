@@ -1,0 +1,22 @@
+{
+ short_name="apple with meaty decorations"
+ raw_name="food11"
+ tooltip="apple with meaty decorations"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=-20
+ message_on_use="%%fg=yellow$urgh, rotten meat"
+ tiles={
+  tile={
+   tile="food11"
+  }
+ }
+}

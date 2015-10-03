@@ -238,7 +238,7 @@
  * Maximum number of thing types. This cannot be exceeded without changing
  * the message format in tx updates.
  */
-#define THING_MAX                   512
+#define THING_MAX                   1024
 
 /*
  * We will not spawn any monsters above this limit; to keep the game fast.

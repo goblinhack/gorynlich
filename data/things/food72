@@ -1,0 +1,22 @@
+{
+ short_name="little jellied men"
+ raw_name="food72"
+ tooltip="little jellied men"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=20
+ message_on_use="%%fg=green$they wriggle but go down eventually"
+ tiles={
+  tile={
+   tile="food72"
+  }
+ }
+}

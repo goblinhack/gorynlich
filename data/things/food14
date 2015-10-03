@@ -1,0 +1,22 @@
+{
+ short_name="sponge cake"
+ raw_name="food14"
+ tooltip="sponge cake"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=5
+ message_on_use="%%fg=green$tastes spongy"
+ tiles={
+  tile={
+   tile="food14"
+  }
+ }
+}

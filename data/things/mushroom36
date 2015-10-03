@@ -8,7 +8,6 @@
  is_stackable
  hit_priority=5
  is_carryable
- is_given_randomly_at_start
  d10000_chance_of_appearing=500
  is_fragile
  sound_on_death="squelch"
