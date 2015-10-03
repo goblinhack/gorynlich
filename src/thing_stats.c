@@ -1114,6 +1114,13 @@ static void thing_stats_get_random_items (thing_statsp stats)
                 continue;
             }
 
+            /*
+             * No poison mushrooms at startup
+             */
+            if (tp_get_bonus_hp_on_use(t) < 0) {
+                continue;
+            }
+
             break;
         }
 
