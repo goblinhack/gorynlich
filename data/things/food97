@@ -1,0 +1,22 @@
+{
+ short_name="ice cream"
+ raw_name="food97"
+ tooltip="ice cream"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=20
+ message_on_use="%%fg=green$yum"
+ tiles={
+  tile={
+   tile="food97"
+  }
+ }
+}

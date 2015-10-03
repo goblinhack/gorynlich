@@ -1,0 +1,22 @@
+{
+ short_name="leg of some creature"
+ raw_name="food38"
+ tooltip="leg of some creature"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=-50
+ message_on_use="%%fg=yellow$tastes beyond awful. you vomit. and then vomit again"
+ tiles={
+  tile={
+   tile="food38"
+  }
+ }
+}

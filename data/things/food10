@@ -1,0 +1,22 @@
+{
+ short_name="tofu meatballs"
+ raw_name="food10"
+ tooltip="tofu meatballs"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=60
+ message_on_use="%%fg=green$deeply filling"
+ tiles={
+  tile={
+   tile="food10"
+  }
+ }
+}

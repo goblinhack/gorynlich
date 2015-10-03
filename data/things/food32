@@ -1,0 +1,22 @@
+{
+ short_name="chocolate jellies"
+ raw_name="food32"
+ tooltip="chocolate jellies"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=20
+ message_on_use="%%fg=green$tastes chocolatey"
+ tiles={
+  tile={
+   tile="food32"
+  }
+ }
+}
