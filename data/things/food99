@@ -1,0 +1,23 @@
+{
+ short_name="rotting dungeon meat"
+ raw_name="food99"
+ tooltip="rotting dungeon meat"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=-50
+ message_on_use="%%fg=red$tastes like you'd expect. you feel tougher"
+ stats_toughness=12
+ tiles={
+  tile={
+   tile="food98"
+  }
+ }
+}

@@ -1,0 +1,22 @@
+{
+ short_name="rocks covered in blood"
+ raw_name="food98"
+ tooltip="rocks covered in blood"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=100
+ message_on_use="%%fg=green$crunch, red apples"
+ tiles={
+  tile={
+   tile="food97"
+  }
+ }
+}

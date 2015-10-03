@@ -1,0 +1,22 @@
+{
+ short_name="fish"
+ raw_name="food58"
+ tooltip="fish"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=-50
+ message_on_use="%%fg=red$you ate fish from a dungeon. you feel faint with nausea"
+ tiles={
+  tile={
+   tile="food58"
+  }
+ }
+}

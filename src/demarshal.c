@@ -86,7 +86,7 @@ typedef struct tree_demarshal_node_ {
     union {
         float v_float;
         int64_t v_int;
-        char v_string[40];
+        char v_string[80];
         char v_name[40];
     } val;
 
