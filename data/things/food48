@@ -1,0 +1,22 @@
+{
+ short_name="veggie burgers"
+ raw_name="food48"
+ tooltip="veggie burgers"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=30
+ message_on_use="%%fg=green$nice, but are maggots vegetarian"
+ tiles={
+  tile={
+   tile="food48"
+  }
+ }
+}

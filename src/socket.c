@@ -1875,7 +1875,7 @@ static void socket_tx_client_shout_relay (gsocketp s,
     msg_client_shout msg = {0};
     msg.type = MSG_CLIENT_SHOUT;
     msg.level = level;
-    strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+    strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
     if (from && from->stats.pname[0]) {
         char *name = from->stats.pname;
@@ -1912,7 +1912,7 @@ void socket_tx_client_shout (gsocketp s,
     msg_client_shout msg = {0};
     msg.type = MSG_CLIENT_SHOUT;
     msg.level = level;
-    strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+    strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
     memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2093,7 +2093,7 @@ void socket_tx_server_shout_at_all_players (uint32_t level,
         msg.x = (int)x;
         msg.y = (int)y;
 
-        strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+        strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
         memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2141,16 +2141,14 @@ socket_tx_server_shout_over (uint32_t level,
         msg.x = x;
         msg.y = y;
 
-        strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+        strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
         memcpy(packet->data, &msg, sizeof(msg));
 
         packet->len = sizeof(msg);
 
-        if (!single_player_mode) {
-            LOG("Client: Tx Shout %s over \"%s\"", 
-                socket_get_remote_logname(sp), txt);
-        }
+        LOG("Client: Tx Shout %s over \"%s\"", 
+            socket_get_remote_logname(sp), txt);
 
         write_address(packet, socket_get_remote_ip(sp));
 
@@ -2201,7 +2199,7 @@ socket_tx_server_shout_at_all_players_except (gsocketp except,
             msg.thing_id = sp->player->thing->thing_id;
         }
 
-        strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+        strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
         memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2254,7 +2252,7 @@ void socket_tx_server_shout_only_to (gsocketp target,
             msg.thing_id = sp->player->thing->thing_id;
         }
 
-        strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+        strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
         memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2318,7 +2316,7 @@ void socket_tx_tell (gsocketp s,
 
     strncpy(msg.from, from, min(sizeof(msg.from) - 1, strlen(from))); 
     strncpy(msg.to, to, min(sizeof(msg.to) - 1, strlen(to))); 
-    strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+    strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
     memcpy(packet->data, &msg, sizeof(msg));
 

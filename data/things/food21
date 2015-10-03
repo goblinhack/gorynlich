@@ -1,0 +1,22 @@
+{
+ short_name="odd smelling milk"
+ raw_name="food21"
+ tooltip="odd smelling milk"
+ z_depth="obj"
+ is_inactive
+ is_food
+ is_stackable
+ hit_priority=5
+ is_carryable
+ is_given_randomly_at_start
+ d10000_chance_of_appearing=50
+ is_fragile
+ sound_on_death="squelch"
+ bonus_hp_on_use=-20
+ message_on_use="%%fg=yellow$urgh. tastes like vomit. did you even read what I said this was?"
+ tiles={
+  tile={
+   tile="food21"
+  }
+ }
+}
