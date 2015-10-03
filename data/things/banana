@@ -9,7 +9,7 @@
  hit_priority=5
  is_carryable
  is_given_randomly_at_start
- d10000_chance_of_appearing=200
+ d10000_chance_of_appearing=100
  sound_on_death="squelch"
  is_fragile
  bonus_hp_on_use=25
