@@ -13,9 +13,9 @@
  is_light_source
  is_fire
  light_radius=3.0
+ is_collision_map_small
  is_effect_pulse
  is_variable_size
- is_collision_map_small
  sound_on_creation="fireball3"
  tiles={
   tile={

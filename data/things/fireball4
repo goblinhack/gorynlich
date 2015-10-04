@@ -13,7 +13,6 @@
  is_light_source
  is_fire
  light_radius=5.0
- scale=0.2
  is_collision_map_small
  is_effect_pulse
  is_variable_size
