@@ -47,21 +47,5 @@
   tile={ delay_ms=500 tile="mushman1-14" }
   tile={ delay_ms=500 tile="mushman1-15" }
   tile={ delay_ms=500 tile="mushman1-16" }
-  tile={ delay_ms=500 tile="mushman1-17" }
-  tile={ delay_ms=500 tile="mushman1-18" }
-  tile={ delay_ms=500 tile="mushman1-19" }
-  tile={ delay_ms=500 tile="mushman1-20" }
-  tile={ delay_ms=500 tile="mushman1-21" }
-  tile={ delay_ms=500 tile="mushman1-22" }
-  tile={ delay_ms=500 tile="mushman1-23" }
-  tile={ delay_ms=500 tile="mushman1-24" }
-  tile={ delay_ms=500 tile="mushman1-25" }
-  tile={ delay_ms=500 tile="mushman1-26" }
-  tile={ delay_ms=500 tile="mushman1-27" }
-  tile={ delay_ms=500 tile="mushman1-28" }
-  tile={ delay_ms=500 tile="mushman1-29" }
-  tile={ delay_ms=500 tile="mushman1-30" begin_jump is_jumping }
-  tile={ delay_ms=500 tile="mushman1-31" }
-  tile={ delay_ms=500 tile="mushman1-32" begin_jump is_jumping }
  }
 }

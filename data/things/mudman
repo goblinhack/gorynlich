@@ -1,7 +1,7 @@
 {
- short_name="mudman1"
+ short_name="mudpack thing"
  raw_name="mudman1"
- tooltip="mudman1"
+ tooltip="mudpack thing"
  z_depth="obj"
  speed=1
  max_hp=10

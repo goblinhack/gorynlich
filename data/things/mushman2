@@ -1,7 +1,7 @@
 {
- short_name="poison mushman"
+ short_name="orbagloop"
  raw_name="mushman2"
- tooltip="poison mushman"
+ tooltip="orbagloop"
  mob_spawn={ 1000 "mushman2" }
  z_depth="obj"
  max_hp=5
@@ -47,21 +47,5 @@
   tile={ delay_ms=500 tile="mushman2-14" }
   tile={ delay_ms=500 tile="mushman2-15" }
   tile={ delay_ms=500 tile="mushman2-16" }
-  tile={ delay_ms=500 tile="mushman2-17" }
-  tile={ delay_ms=500 tile="mushman2-18" }
-  tile={ delay_ms=500 tile="mushman2-19" }
-  tile={ delay_ms=500 tile="mushman2-20" }
-  tile={ delay_ms=500 tile="mushman2-21" }
-  tile={ delay_ms=500 tile="mushman2-22" }
-  tile={ delay_ms=500 tile="mushman2-23" }
-  tile={ delay_ms=500 tile="mushman2-24" }
-  tile={ delay_ms=500 tile="mushman2-25" }
-  tile={ delay_ms=500 tile="mushman2-26" }
-  tile={ delay_ms=500 tile="mushman2-27" begin_jump is_jumping }
-  tile={ delay_ms=500 tile="mushman2-28" }
-  tile={ delay_ms=500 tile="mushman2-29" }
-  tile={ delay_ms=500 tile="mushman2-30" }
-  tile={ delay_ms=500 tile="mushman2-31" }
-  tile={ delay_ms=500 tile="mushman2-32" begin_jump is_jumping }
  }
 }

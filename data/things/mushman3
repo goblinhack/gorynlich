@@ -1,7 +1,7 @@
 {
- short_name="deathly mushman"
+ short_name="deathly sploob"
  raw_name="mushman3"
- tooltip="deathly mushman"
+ tooltip="deathly sploob"
  mob_spawn={ 1000 "mushman3" }
  z_depth="obj"
  max_hp=5
@@ -47,21 +47,5 @@
   tile={ delay_ms=500 tile="mushman3-14" }
   tile={ delay_ms=500 tile="mushman3-15" }
   tile={ delay_ms=500 tile="mushman3-16" }
-  tile={ delay_ms=500 tile="mushman3-17" }
-  tile={ delay_ms=500 tile="mushman3-18" begin_jump is_jumping }
-  tile={ delay_ms=500 tile="mushman3-19" }
-  tile={ delay_ms=500 tile="mushman3-20" }
-  tile={ delay_ms=500 tile="mushman3-21" }
-  tile={ delay_ms=500 tile="mushman3-22" }
-  tile={ delay_ms=500 tile="mushman3-23" }
-  tile={ delay_ms=500 tile="mushman3-24" }
-  tile={ delay_ms=500 tile="mushman3-25" }
-  tile={ delay_ms=500 tile="mushman3-26" }
-  tile={ delay_ms=500 tile="mushman3-27" }
-  tile={ delay_ms=500 tile="mushman3-28" }
-  tile={ delay_ms=500 tile="mushman3-29" begin_jump is_jumping }
-  tile={ delay_ms=500 tile="mushman3-30" }
-  tile={ delay_ms=500 tile="mushman3-31" }
-  tile={ delay_ms=500 tile="mushman3-32" begin_jump is_jumping }
  }
 }
