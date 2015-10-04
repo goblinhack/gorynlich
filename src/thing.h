@@ -635,6 +635,7 @@ enum {
     THING_EYEBAWL,
     THING_SPIDER1,
     THING_SPIDER2,
+    THING_MUDMAN,
     THING_JESUS,
     THING_DEATH,
     THING_BABY_DEATH,
@@ -807,6 +808,7 @@ enum {
     THING_PLASMABALL1,
     THING_PLASMABALL2,
     THING_SILKBALL,
+    THING_MUD,
     THING_COBWEB,
     THING_STICKYSLIME,
     THING_BOOTS1,
@@ -1620,11 +1622,11 @@ static inline uint8_t thing_is_rrr13 (thingp t)
     return (tp_is_rrr13(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr14 (thingp t)
+static inline uint8_t thing_is_mud (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr14(thing_tp(t)));
+    return (tp_is_mud(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_not_animated_in_item_bar (thingp t)
@@ -2588,9 +2590,9 @@ static inline uint8_t thing_is_rrr13_noverify (thingp t)
     return (t->tp->is_rrr13);
 }
 
-static inline uint8_t thing_is_rrr14_noverify (thingp t)
+static inline uint8_t thing_is_mud_noverify (thingp t)
 {
-    return (t->tp->is_rrr14);
+    return (t->tp->is_mud);
 }
 
 static inline uint8_t thing_is_not_animated_in_item_bar_noverify (thingp t)

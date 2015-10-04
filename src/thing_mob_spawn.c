@@ -263,7 +263,17 @@ thingp thing_mob_spawn_on_death (thingp t)
             thing_real_to_fmap(t, &x, &y);
         }
 
-        if (tp_is_cobweb(what) || tp_is_stickyslime(what)) {
+        /*
+         * Not too many mudmen
+         */
+        if (thing_is_mud(t)) {
+            if (map_is_monst_at(server_level, x, y)) {
+                continue;
+            }
+        }
+
+        if (tp_is_cobweb(what) || 
+            tp_is_stickyslime(what)) {
             /*
              * Don't want too many sticky things in the same place.
              */
@@ -301,7 +311,7 @@ thingp thing_mob_spawn_on_death (thingp t)
         return (wid_get_thing(w));
     }
 
-    THING_ERR(t, "failed to place %s on death", mob_spawn);
+    THING_LOG(t, "failed to place %s on death", mob_spawn);
 
     return (0);
 }

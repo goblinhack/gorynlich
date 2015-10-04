@@ -1,0 +1,28 @@
+{
+ short_name="mud"
+ raw_name="mud"
+ tooltip="mud"
+ is_hidden_from_editor
+ z_depth="explosion"
+ speed=60
+ hit_delay_tenths=1
+ is_fragile
+ is_projectile
+ is_animated
+ is_effect_pulse
+ is_mud
+ is_variable_size
+ scale=0.2
+ spawn_on_death="mudman"
+ tiles={
+  tile={
+   tile="mud1"
+  }
+  tile={
+   tile="mud2"
+  }
+  tile={
+   tile="mud3"
+  }
+ }
+}
