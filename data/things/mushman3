@@ -23,8 +23,8 @@
  is_animated
  is_mob_spawner
  mob_spawn_delay_tenths=500
- d10000_chance_of_appearing=500
- min_appear_depth=1
+ d10000_chance_of_appearing=50
+ min_appear_depth=50
  max_appear_depth=100
  fires="cloudkill1"
  weapon_fire_delay_hundredths=200
