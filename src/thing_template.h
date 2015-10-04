@@ -104,11 +104,6 @@ typedef struct tp_ {
     color light_color;
 
     /*
-     * What to spawn when you die. Usually a generator or grave.
-     */
-    char *spawn_on_death;
-
-    /*
      * For potions and monster death.
      */
     char *explodes_as;
@@ -158,6 +153,13 @@ typedef struct tp_ {
     char *mob_spawn_what[MAX_MOB_SPAWN];
     int mob_spawn_chance_d1000[MAX_MOB_SPAWN];
     int mob_spawn_count;
+
+    /*
+     * What to spawn when you die. Usually a generator or grave.
+     */
+    char *spawn_on_death_what[MAX_MOB_SPAWN];
+    int spawn_on_death_chance_d1000[MAX_MOB_SPAWN];
+    int spawn_on_death_count;
 
     /*
      * How many and of what we are carrying. This is the base items a thing

@@ -2,6 +2,7 @@
  short_name="gorynlich"
  raw_name="dragon4"
  tooltip="gorynlich"
+ spawn_on_death={ 1000 "exit1" }
  z_depth="explosion"
  speed=25
  max_hp=1250
@@ -33,7 +34,6 @@ is_levitating
  is_light_source
  is_dragon
  light_radius=3.5
- spawn_on_death="exit1"
  tiles={
   tile={ delay_ms=100 tile="dragon4-1" }
   tile={ delay_ms=100 tile="dragon4-2" }
