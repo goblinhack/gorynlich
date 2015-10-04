@@ -12,7 +12,7 @@
  hit_priority=9
  max_hp=100
  damage=5
- can_be_hit_chance=500000
+ can_be_hit_chance=200
  is_sawblade
  is_animated
  is_trap

@@ -263,10 +263,6 @@ static void tp_destroy_internal (tpp t)
         myfree(t->light_tint);
     }
 
-    if (t->spawn_on_death) {
-        myfree(t->spawn_on_death);
-    }
-
     if (t->explodes_as) {
         myfree(t->explodes_as);
     }
@@ -315,6 +311,12 @@ static void tp_destroy_internal (tpp t)
     for (i = 0; i < t->mob_spawn_count; i++) {
         if (t->mob_spawn_what[i]) {
             myfree(t->mob_spawn_what[i]);
+        }
+    }
+
+    for (i = 0; i < t->spawn_on_death_count; i++) {
+        if (t->spawn_on_death_what[i]) {
+            myfree(t->spawn_on_death_what[i]);
         }
     }
 }
@@ -484,6 +486,36 @@ static void demarshal_thing_mob_spawn (demarshal_p ctx, tpp t)
     GET_KET(ctx);
 }
 
+static void demarshal_thing_spawn_on_death (demarshal_p ctx, tpp t)
+{
+    if (!GET_PEEK_NAME(ctx, "spawn_on_death")) {
+        return;
+    }
+
+    GET_NAME(ctx, "spawn_on_death");
+
+    GET_BRA(ctx);
+
+    (void) demarshal_gotone(ctx);
+
+    while (GET_PEEK_UINT32(ctx)) {
+        int chance;
+        GET_INT32(ctx, chance);
+
+        char *v;
+        GET_STRING(ctx, v);
+
+        if (t->spawn_on_death_count == MAX_MOB_SPAWN) {
+            DIE("thing %s has too many mob spawn on death values", v);
+        }
+
+        t->spawn_on_death_what[t->spawn_on_death_count] = v;
+        t->spawn_on_death_chance_d1000[t->spawn_on_death_count++] = chance;
+    } while (demarshal_gotone(ctx));
+
+    GET_KET(ctx);
+}
+
 ENUM_DEF_C(MAP_DEPTH, map_depth)
 
 void demarshal_thing_template (demarshal_p ctx, tpp t)
@@ -499,6 +531,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
 
     demarshal_thing_carrying(ctx, t);
     demarshal_thing_mob_spawn(ctx, t);
+    demarshal_thing_spawn_on_death(ctx, t);
 
     (void) demarshal_gotone(ctx);
 
@@ -517,7 +550,6 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
         GET_OPT_NAMED_STRING(ctx, "carried_as", t->carried_as);
         GET_OPT_NAMED_STRING(ctx, "light_tint", t->light_tint);
-        GET_OPT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
         GET_OPT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
         GET_OPT_NAMED_STRING(ctx, "sound_on_creation", t->sound_on_creation);
         GET_OPT_NAMED_STRING(ctx, "sound_on_hitting_something", t->sound_on_hitting_something);
@@ -846,7 +878,6 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
     PUT_NAMED_STRING(ctx, "carried_as", t->carried_as);
     PUT_NAMED_STRING(ctx, "light_tint", t->light_tint);
-    PUT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
     PUT_NAMED_STRING(ctx, "explodes_as", t->explodes_as);
     PUT_NAMED_STRING(ctx, "sound_on_creation", t->sound_on_creation);
     PUT_NAMED_STRING(ctx, "sound_on_hitting_something", t->sound_on_hitting_something);
@@ -1118,11 +1149,6 @@ color tp_light_color (tpp t)
     return (t->light_color);
 }
 
-const char *tp_spawn_on_death (tpp t)
-{
-    return (t->spawn_on_death);
-}
-
 const char *tp_explodes_as (tpp t)
 {
     return (t->explodes_as);
@@ -1184,7 +1210,31 @@ const char *tp_mob_spawn (tpp t)
         int r = myrand() % 1000;
 
         if (r < t->mob_spawn_chance_d1000[i]) {
+            if (!t->mob_spawn_what[i][0]) {
+                return (0);
+            }
+
             return (t->mob_spawn_what[i]);
+        }
+    }
+}
+
+const char *tp_spawn_on_death (tpp t)
+{
+    if (!t->spawn_on_death_count) {
+        return (0);
+    }
+
+    for (;;) {
+        int i = myrand() % t->spawn_on_death_count;
+        int r = myrand() % 1000;
+
+        if (r < t->spawn_on_death_chance_d1000[i]) {
+            if (!t->spawn_on_death_what[i][0]) {
+                return (0);
+            }
+
+            return (t->spawn_on_death_what[i]);
         }
     }
 }

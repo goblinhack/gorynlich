@@ -9,6 +9,7 @@
     1000 "zombie4"
     1000 "zombie5"
  }
+ spawn_on_death={ 1000 "zombie_corpse3" }
  mob_spawn_delay_tenths=200
  is_mob_spawner
  z_depth="obj"
@@ -30,7 +31,6 @@
  d10000_chance_of_appearing=30
  min_appear_depth=1
  max_appear_depth=100
- spawn_on_death="zombie_corpse3"
  sound_on_hitting_something="zombie"
  sound_random="urgh"
  sound_random_delay_secs=20

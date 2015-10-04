@@ -15,7 +15,7 @@
  d10000_chance_of_appearing=75
  sound_on_collect="potion"
  is_fragile
- bonus_hp_on_use=50
+ bonus_hp_on_use=100
  tiles={
   tile={
    tile="potion_life"
