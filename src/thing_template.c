@@ -673,7 +673,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_mud", t->is_mud);
         GET_OPT_NAMED_BITFIELD(ctx, "is_not_animated_in_item_bar", t->is_not_animated_in_item_bar);
         GET_OPT_NAMED_BITFIELD(ctx, "is_conical_breath_attack", t->is_conical_breath_attack);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
@@ -955,7 +955,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
     PUT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
     PUT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
+    PUT_NAMED_BITFIELD(ctx, "is_mud", t->is_mud);
     PUT_NAMED_BITFIELD(ctx, "is_not_animated_in_item_bar", t->is_not_animated_in_item_bar);
     PUT_NAMED_BITFIELD(ctx, "is_conical_breath_attack", t->is_conical_breath_attack);
     PUT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
