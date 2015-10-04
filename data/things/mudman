@@ -1,0 +1,30 @@
+{
+ short_name="mudman1"
+ raw_name="mudman1"
+ tooltip="mudman1"
+ z_depth="obj"
+ speed=1
+ max_hp=10
+ damage=5
+ bonus_xp_on_death=100
+ jump_speed=20
+ vision_distance=5
+ hit_delay_tenths=10
+ is_warm_blooded
+ sound_on_death="urgh"
+ is_monst
+ is_variable_size
+ hit_priority=10
+ is_animated
+ fires="mud"
+ weapon_fire_delay_hundredths=500
+ d10000_chance_of_appearing=600
+ min_appear_depth=1
+ max_appear_depth=100
+ sound_on_death="squelch"
+ tiles={
+  tile={ delay_ms=200 tile="mudman1" }
+  tile={ delay_ms=200 tile="mudman2" }
+  tile={ delay_ms=200 tile="mudman3" }
+ }
+}
