@@ -199,7 +199,6 @@ thingp thing_mob_spawn_on_death (thingp t)
 {
     const char *mob_spawn = tp_spawn_on_death(t->tp);
     if (!mob_spawn) {
-        THING_ERR(t, "nothing to spawn on death");
         return (0);
     }
 

@@ -2,6 +2,7 @@
  short_name="slimeball"
  raw_name="slimeball"
  tooltip="slimeball"
+ spawn_on_death={ 1000 "stickyslime" }
  is_hidden_from_editor
  z_depth="explosion"
  speed=60
@@ -12,7 +13,6 @@
  is_effect_pulse
  is_variable_size
  scale=0.2
- spawn_on_death="stickyslime"
  tiles={
   tile={
    tile="stickyslime.1"
