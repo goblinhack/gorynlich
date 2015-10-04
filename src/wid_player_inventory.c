@@ -310,15 +310,20 @@ void wid_player_inventory_button_style (widp w,
          * HP bonus. Don't show negative gains, i.e. curses
          */
         if (tp_get_bonus_hp_on_use(tp) > 0) {
-            char *tmp2 = dynprintf(
-                            "%%%%fmt=left$"
-                            "HP gain on use: %d\n", 
-                            tp_get_bonus_hp_on_use(tp));
+            /*
+             * Let the player guess/learn about food.
+             */
+            if (!tp_is_food(tp)) {
+                char *tmp2 = dynprintf(
+                                "%%%%fmt=left$"
+                                "HP gain on use: %d\n", 
+                                tp_get_bonus_hp_on_use(tp));
 
-            char *old = tmp;
-            tmp = strappend(old, tmp2);
-            myfree(old);
-            myfree(tmp2);
+                char *old = tmp;
+                tmp = strappend(old, tmp2);
+                myfree(old);
+                myfree(tmp2);
+            }
         }
 
         /*
