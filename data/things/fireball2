@@ -11,11 +11,11 @@
  is_projectile
  is_animated
  is_light_source
- light_radius=2.0
  is_fire
+ light_radius=2.0
+ is_collision_map_small
  is_effect_pulse
  is_variable_size
- is_collision_map_small
  sound_on_creation="fireball2"
  tiles={
   tile={
