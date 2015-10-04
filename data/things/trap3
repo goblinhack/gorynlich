@@ -18,7 +18,7 @@
  is_effect_fade_in_out
  is_animated
  fires="energy1"
- weapon_fire_delay_hundredths=10
+ weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=20
  has_ability_triple_shot
  tiles={
