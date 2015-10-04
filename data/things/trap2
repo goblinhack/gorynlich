@@ -17,7 +17,7 @@
  scale=1.0
  is_animated
  fires="energy1"
- weapon_fire_delay_hundredths=30
+ weapon_fire_delay_hundredths=50
  d10000_chance_of_appearing=50
  has_ability_double_shot
  tiles={
