@@ -17,6 +17,7 @@
  hit_priority=10
  is_animated
  fires="mud"
+ is_effect_rotate_2way
  weapon_fire_delay_hundredths=500
  d10000_chance_of_appearing=600
  min_appear_depth=1

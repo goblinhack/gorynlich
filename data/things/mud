@@ -2,6 +2,7 @@
  short_name="mud"
  raw_name="mud"
  tooltip="mud"
+ spawn_on_death={ 500 "mudman" }
  is_hidden_from_editor
  z_depth="explosion"
  speed=60
@@ -13,7 +14,6 @@
  is_mud
  is_variable_size
  scale=0.2
- spawn_on_death="mudman"
  tiles={
   tile={
    tile="mud1"

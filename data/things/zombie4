@@ -2,6 +2,7 @@
  short_name="zombie farmer"
  raw_name="zombie4"
  tooltip="amateur zombie"
+ spawn_on_death={ 1000 "zombie_corpse4" }
  z_depth="obj"
  speed=5
  max_hp=1
@@ -21,7 +22,6 @@
  d10000_chance_of_appearing=100
  min_appear_depth=1
  max_appear_depth=100
- spawn_on_death="zombie_corpse4"
  sound_on_hitting_something="zombie"
  sound_random="urgh"
  sound_random_delay_secs=20
