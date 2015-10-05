@@ -64,8 +64,6 @@ foreach $f (@files) {
     #
     if ( `uname` =~ /.*MING.*/) {
         print OUT ".incbin \"../$file\"\n";
-    } elsif ( `uname` =~ /.*MSYS.*/) {
-        print OUT ".incbin \"../$file\"\n";
     } else {
         print OUT ".incbin \"$PWD/$file\"\n";
     }
