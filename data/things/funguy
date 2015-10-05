@@ -1,0 +1,50 @@
+{
+ short_name="firey funguy"
+ raw_name="funguy"
+ tooltip="firey funguy"
+ mob_spawn={ 1000 "funguy" }
+ z_depth="obj"
+ max_hp=5
+ damage=1
+ is_effect_rotate_2way
+ bonus_xp_on_death=500
+ vision_distance=5
+ hit_delay_tenths=10
+ sound_on_death="urgh"
+ speed=1
+ is_monst
+ is_conical_breath_attack
+ is_shadow_caster
+ is_shadow_caster_soft
+ is_variable_size
+ hit_priority=10
+ is_collision_map_medium
+ is_animated
+ is_mob_spawner
+ mob_spawn_delay_tenths=500
+ d10000_chance_of_appearing=50
+ min_appear_depth=20
+ max_appear_depth=100
+ fires="med_explosion1"
+ weapon_fire_delay_hundredths=200
+ sound_on_death="squelch"
+ jump_speed=10
+ tiles={
+  tile={ delay_ms=500 tile="funguy-1" }
+  tile={ delay_ms=500 tile="funguy-2" }
+  tile={ delay_ms=500 tile="funguy-3" }
+  tile={ delay_ms=500 tile="funguy-4" }
+  tile={ delay_ms=500 tile="funguy-5" }
+  tile={ delay_ms=500 tile="funguy-6" }
+  tile={ delay_ms=500 tile="funguy-7" }
+  tile={ delay_ms=500 tile="funguy-8" }
+  tile={ delay_ms=500 tile="funguy-9" }
+  tile={ delay_ms=500 tile="funguy-10" begin_jump is_jumping }
+  tile={ delay_ms=500 tile="funguy-11" }
+  tile={ delay_ms=500 tile="funguy-12" }
+  tile={ delay_ms=500 tile="funguy-13" }
+  tile={ delay_ms=500 tile="funguy-14" }
+  tile={ delay_ms=500 tile="funguy-15" }
+  tile={ delay_ms=500 tile="funguy-16" }
+ }
+}
