@@ -1,0 +1,50 @@
+{
+ short_name="deathly sploob"
+ raw_name="sploob"
+ tooltip="deathly sploob"
+ mob_spawn={ 1000 "sploob" }
+ z_depth="obj"
+ max_hp=5
+ damage=1
+ is_effect_rotate_2way
+ bonus_xp_on_death=100
+ vision_distance=5
+ hit_delay_tenths=10
+ sound_on_death="urgh"
+ speed=1
+ is_monst
+ is_conical_breath_attack
+ is_shadow_caster
+ is_shadow_caster_soft
+ is_variable_size
+ hit_priority=10
+ is_collision_map_medium
+ is_animated
+ is_mob_spawner
+ mob_spawn_delay_tenths=500
+ d10000_chance_of_appearing=50
+ min_appear_depth=50
+ max_appear_depth=100
+ fires="cloudkill1"
+ weapon_fire_delay_hundredths=200
+ sound_on_death="squelch"
+ jump_speed=10
+ tiles={
+  tile={ delay_ms=500 tile="sploob-1" }
+  tile={ delay_ms=500 tile="sploob-2" }
+  tile={ delay_ms=500 tile="sploob-3" }
+  tile={ delay_ms=500 tile="sploob-4" }
+  tile={ delay_ms=500 tile="sploob-5" }
+  tile={ delay_ms=500 tile="sploob-6" begin_jump is_jumping }
+  tile={ delay_ms=500 tile="sploob-7" }
+  tile={ delay_ms=500 tile="sploob-8" }
+  tile={ delay_ms=500 tile="sploob-9" }
+  tile={ delay_ms=500 tile="sploob-10" }
+  tile={ delay_ms=500 tile="sploob-11" }
+  tile={ delay_ms=500 tile="sploob-12" }
+  tile={ delay_ms=500 tile="sploob-13" }
+  tile={ delay_ms=500 tile="sploob-14" }
+  tile={ delay_ms=500 tile="sploob-15" }
+  tile={ delay_ms=500 tile="sploob-16" }
+ }
+}
