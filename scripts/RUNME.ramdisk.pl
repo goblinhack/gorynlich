@@ -42,6 +42,9 @@ my $PWD = `pwd`;
 
 chomp($PWD);
 
+my $cnt = 1;
+my $max_cnt = 10;
+
 foreach $f (@files) {
 
     my $file = "$f";
@@ -50,12 +53,44 @@ foreach $f (@files) {
     $struct =~ s/\//_/g;
     $struct =~ s/\./_/g;
 
-    my $size = $sizes{$f};
-    my $orig_size = $orig_sizes{$f};
+    my $size = -s $f;
 
-    print "Generating src/asm/ramdisk_" . $struct . ".S\n";
+    if (!defined $file_size{$cnt}) {
+        $file_size{$cnt} = $size;
+    } else {
+        my $looped = 1;
 
-    open(OUT, ">", "src/asm/ramdisk_" . $struct . ".S");
+        while ($file_size{$cnt} + $size > 1000 * 1000 * 100) {
+            $cnt++;
+            if ($cnt >= $max_cnt) {
+                $cnt = 1;
+                if (!$looped) {
+                    break;
+                }
+                $looped++;
+            }
+        }
+
+        $file_size{$cnt} += $size
+    }
+
+    $file_deps{$cnt} .= "../" . $file . " ";
+
+    if (!defined $done{$cnt}) {
+        print "Generating src/asm/ramdisk_" . $cnt . ".S (size " . int ($file_size{$cnt}  / (1024 * 1024)) . "Mb)\n";
+
+        open(OUT, ">", "src/asm/ramdisk_" . $cnt . ".S");
+
+        $done{$cnt} = 1;
+    } else {
+        open(OUT, ">>", "src/asm/ramdisk_" . $cnt . ".S");
+    }
+
+    $cnt++;
+    if ($cnt >= $max_cnt) {
+        $cnt = 1;
+    }
+
     print OUT ".globl ${struct}_start_\n";
     print OUT "${struct}_start_:\n";
 
@@ -77,13 +112,15 @@ foreach $f (@files) {
     close(OUT);
 }
 
+for ($cnt = 1; $cnt < $max_cnt; $cnt++) {
+    print "Created src/asm/ramdisk_" . $cnt . ".S (size " . int ($file_size{$cnt}  / (1024 * 1024)) . "Mb)\n";
+}
+
 close(OUT);
 
 open(OUT, ">", "src/Makefile.ramdisk");
 
-foreach $f (@files) {
-
-    my $file = "$f";
+for ($cnt = 1; $cnt < $max_cnt; $cnt++) {
 
     my $struct = $f;
     $struct =~ s/\//_/g;
@@ -92,13 +129,16 @@ foreach $f (@files) {
     my $size = $sizes{$f};
     my $orig_size = $orig_sizes{$f};
 
-    print OUT ".o/ramdisk_" . $struct . ".o: ";
-    print OUT "asm/ramdisk_" . $struct . ".S ";
-    print OUT "../$file\n";
+    print OUT ".o/ramdisk_" . $cnt . ".o: ";
+    print OUT "asm/ramdisk_" . $cnt . ".S ";
+
+    my $file = $file_deps{$cnt};
+
+    print OUT "$file\n";
     print OUT "\tgcc -c ";
-    print OUT "asm/ramdisk_" . $struct . ".S ";
+    print OUT "asm/ramdisk_" . $cnt . ".S ";
     print OUT "-o ";
-    print OUT ".o/ramdisk_" . $struct . ".o\n";
+    print OUT ".o/ramdisk_" . $cnt . ".o\n";
     print OUT "\n";
 }
 
@@ -108,7 +148,7 @@ open(OUT, ">", "src/Makefile.ramdisk.deps");
 
 print OUT "RAMDISK_OBJ=";
 
-foreach $f (@files) {
+for ($cnt = 1; $cnt < $max_cnt; $cnt++) {
 
     my $file = "$f";
 
@@ -116,10 +156,7 @@ foreach $f (@files) {
     $struct =~ s/\//_/g;
     $struct =~ s/\./_/g;
 
-    my $size = $sizes{$f};
-    my $orig_size = $orig_sizes{$f};
-
-    print OUT ".o/ramdisk_" . $struct . ".o ";
+    print OUT ".o/ramdisk_" . $cnt . ".o ";
 }
 
 #print OUT "\n\nall: \$(RAMDISK_OBJ)\n";
