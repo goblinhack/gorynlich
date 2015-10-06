@@ -1,4 +1,5 @@
 
+- fireball too small collision map
 - quest completed on level editor end!
 --------------------------------------- plan for oct --------------------------------------
 - mushpeople use fire/gas attacks, leave slime to make you slow
@@ -41,6 +42,10 @@
 - backpack drop on death
 - thief, kill thief to recover items
 - magic gives health to other players
+
+Tue Oct  6 09:45:52 EDT 2015
+- msys2 port begins
+- changed to fixed number of ramdisk files for msys
 
 Sat Oct  3 14:13:05 EDT 2015
 - spawn on death has options
