@@ -95,7 +95,7 @@ typedef struct tree_demarshal_node_ {
     int16_t line;
 } tree_demarshal_node;
 
-#define MAX_NODES 180000
+#define MAX_NODES 250000
 
 typedef struct tree_demarshal_ {
     tree_demarshal_node node[MAX_NODES];
