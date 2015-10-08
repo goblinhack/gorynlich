@@ -35,13 +35,14 @@ typedef struct {
 } __attribute__ ((packed)) level_pos_t;
 
 typedef struct item_t_ {
-    uint16_t id:12;
+    uint16_t id;
 
     uint8_t quantity:5;
     uint8_t quality:3;
 
     uint8_t enchanted:3;
     uint8_t cursed:1;
+    uint8_t unused:4;
 } __attribute__ ((packed)) item_t;
 
 int item_push(itemp dst, item_t src);
