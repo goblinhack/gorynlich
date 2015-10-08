@@ -102,10 +102,12 @@ static void gl_init_fbo_ (
     /*
      * Create a render buffer object.
      */
+#ifdef _WIN32
     if (!glFramebufferTexture2D_EXT) {
         SDL_MSG_BOX("glGenRenderbuffers_EXT is not present; fatal");
         DIE("glGenRenderbuffers_EXT is not present; fatal");
     }
+#endif
 
     glGenRenderbuffers_EXT(1, render_buf_id);
     glBindRenderbuffer_EXT(GL_RENDERBUFFER, *render_buf_id);
