@@ -308,15 +308,15 @@ int thing_stats_diff (const thing_statsp old_stats,
                 char *ib = item2str(b);
 
                 if (ia && ib) {
-                    LOG("%sInv Item %d changed, %s to %s", indent,
+                    LOG("%sInv Item %d changed, [%s] to [%s]", indent,
                         i, ia, ib);
                     myfree(ia);
                     myfree(ib);
                 } else if (ia) {
-                    LOG("%sInv Item %d removed, %s", indent, i, ia);
+                    LOG("%sInv Item %d removed, [%s]", indent, i, ia);
                     myfree(ia);
                 } else if (ib) {
-                    LOG("%sInv Item %d added, %s", indent, i, ib);
+                    LOG("%sInv Item %d added, [%s]", indent, i, ib);
                     myfree(ib);
                 }
             }
