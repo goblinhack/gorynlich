@@ -1,0 +1,360 @@
+#!/bin/sh
+# 
+# Copyright (C) 2014 Neil McGill
+#
+# This game is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This game is distributed in the hope that it will be fun,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this game; if not, write to the Free
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+. ./scripts/common.sh
+
+cat <<%%
+
+     .d8888b.                                     888 d8b          888      
+    d88P  Y88b                                    888 Y8P          888      
+    888    888                                    888              888      
+    888         .d88b.  888d888 888  888 88888b.  888 888  .d8888b 88888b.  
+    888  88888 d88""88b 888P"   888  888 888 "88b 888 888 d88P"    888 "88b 
+    888    888 888  888 888     888  888 888  888 888 888 888      888  888 
+    Y88b  d88P Y88..88P 888     Y88b 888 888  888 888 888 Y88b.    888  888 
+     "Y8888P88  "Y88P"  888      "Y88888 888  888 888 888  "Y8888P 888  888 
+                                     888                                    
+                                Y8b d88P                                    
+                                 "Y88P"                                     
+
+%%
+
+/bin/rm -f data/gorynlich-hiscore.txt data/gorynlich-config.txt
+
+#
+# Make the ramdisk
+#
+RAMDISK_FILES=.ramdisk_files
+
+log_info "Creating ramdisk filelist"
+
+find data -type f | grep -v Resources | grep -v DS_Store | grep -v "\.ttf$" | grep -v "xcf" | grep -v "mp3" | grep -v "\.session" | grep -v "^\." > $RAMDISK_FILES
+if [ ! -s $ramdisk_files ]
+then
+    cd src
+    log_die "Failed to build list of ramdisk files"
+fi
+
+mkdir -p src/asm
+scripts/RUNME.ramdisk.pl $RAMDISK_FILES
+if [ $? -ne 0 ]
+then
+    log_die "Failed to make ramdisk files"
+fi
+
+/bin/rm -f $RAMDISK_FILES
+
+#
+# Make the makefile
+#
+cd src
+
+rm Makefile
+cat Makefile.base | sed '/DO NOT DELETE/,$d' > Makefile.tmp
+mv Makefile.tmp Makefile
+
+if [ -x ../makedepend ]
+then
+    ../makedepend *.c -p .o/ 2>/dev/null
+else
+    makedepend *.c -p .o/ 2>/dev/null
+fi
+
+if [ $? -ne 0 ]
+then
+    log_warn "Is makedepend installed? If not:"
+    log_warn "  For ubuntu do: sudo apt-get install xutils-dev"
+    log_warn "  For MAC    do: sudo port install makedepend"
+    log_warn "  For MingW  do: look in third-party for Win32 binary"
+    echo
+    log_warn "If you still can't find it, I have the source in third-party"
+    log_warn "  cd third-party"
+    log_warn "  tar xvf makedepend-1.0.5.tar.gz"
+    log_warn "  cd makedepend-1.0.5"
+    log_warn "  ./configure"
+    log_warn "Hit enter to continue"
+    read dummy
+
+    cd src
+    makedepend *.c -p .o/ 2>/dev/null
+fi
+
+cd ..
+
+for i in \
+    /opt/local/bin/sdl2-config \
+    /usr/bin/sdl2-config \
+    /mingw/bin/sdl2-config \
+    /mingw64/bin/sdl2-config
+do
+    if [ -x $i ]
+    then
+        SDL2_CONFIG=$i
+        break
+    fi
+done
+
+for i in \
+    /opt/local/bin/sdl2-config \
+    /usr/bin/sdl2-config \
+    /usr/local/bin/sdl-config \
+    /usr/bin/sdl-config \
+    /mingw/bin/sdl2-config \
+    /mingw/bin/sdl-config \
+    /mingw64/bin/sdl2-config \
+    /mingw64/bin/sdl-config
+do
+    if [ -x $i ]
+    then
+        SDL_CONFIG=$i
+        break
+    fi
+done
+
+if [ "$SDL_CONFIG" = "" ]
+then
+    log_warn "Is SDL 1.2 or 1.3 installed? If not:"
+    log_warn "  For ubuntu SDL2 do: "
+    log_warn "   sudo apt-get install libsdl2.0-dev"
+    log_warn "   sudo apt-get install libsdl-mixer1.2-dev"
+    log_warn "   sudo apt-get install libsdl-net1.2-dev"
+    log_warn "  For ubuntu SDL1.2 do: "
+    log_warn "   sudo apt-get install libsdl1.2-dev"
+    log_warn "   sudo apt-get install libsdl-mixer1.2-dev"
+    log_warn "   sudo apt-get install libsdl-net1.2-dev"
+    log_warn "  For macos, install Mac ports and then do: "
+    log_warn "   sudo port install libsdl2"
+    log_warn "   sudo port install libsdl2_image"
+    log_warn "   sudo port install libsdl2_mixer"
+    log_warn "   sudo port install libsdl2_net"
+    log_warn "   sudo port install libsdl2_ttf"
+    exit 1
+fi
+
+#
+# Gives warings at runtime on MACOS
+#
+SDL_LIBS=`$SDL_CONFIG --static-libs`
+
+if [ $? -ne 0 ]
+then
+    log_err "Please install SDL 1.2 or 1.3. $SDL_CONFIG failed."
+    log_err "SDL-1.2.14.tar.gz is in support/"
+    exit 1
+fi
+
+C_FLAGS=`$SDL_CONFIG --cflags`
+if [ $? -ne 0 ]
+then
+    log_err "Please install SDL 1.2 or 1.3. $SDL_CONFIG failed."
+    log_err "SDL-1.2.14.tar.gz is in support/"
+    exit 1
+fi
+
+log_info "SDL version:" `$SDL_CONFIG --version`
+log_info "  ($SDL_CONFIG)"
+
+#
+# -funwind-tables and -rdynamic for backtrace info on linux.
+# But it seemed to help little.
+#
+LDLIBS="$SDL_LIBS"
+
+if [ "$SDL2_CONFIG" != "" ]
+then
+#    LDLIBS="$LDLIBS -lSDL2_ttf"
+    LDLIBS="$LDLIBS -lSDL2_mixer"
+    LDLIBS="$LDLIBS -lSDL2_net"
+else
+#    LDLIBS="$LDLIBS -lSDL_ttf"
+    LDLIBS="$LDLIBS -lSDL_mixer"
+    LDLIBS="$LDLIBS -lSDL_net"
+fi
+
+#
+# for backtraces, but it doesn't help much
+#
+case `uname` in
+    *MSYS*)
+        PATH=/mingw64/bin:$PATH
+        export PATH
+
+	EXE=".exe"
+        C_FLAGS="$C_FLAGS -mwin32"
+        C_FLAGS="$C_FLAGS -I/mingw64/x86_64-w64-mingw32/include"
+        LDLIBS="$LDLIBS -L/mingw64/x86_64-w64-mingw32/lib/"
+	LDLIBS=`echo $LDLIBS | sed -e 's/-lmingw32 //g'`
+	LDLIBS="$LDLIBS -lopengl32"
+        ;;
+    *MINGW*)
+	EXE=".exe"
+	LDLIBS=`echo $LDLIBS | sed -e 's/-XCClinker//g'`
+	LDLIBS="$LDLIBS -funwind-tables"
+	#LDLIBS="$LDLIBS -lglew32"
+	LDLIBS="$LDLIBS -lopengl32"
+        #
+        # For __imp warnings in pthread
+        #
+        #C_FLAGS="$C_FLAGS -DPTW32_STATIC_LIB -DGLEW_STATIC"
+        C_FLAGS="$C_FLAGS -DPTW32_STATIC_LIB "
+
+	#
+	# As sdl2-config may be configured for /usr/local
+	#
+        C_FLAGS="$C_FLAGS -I/c/MinGW/include/SDL2"
+        WERROR=""
+        COMPILER_WARN=""
+	;;
+    *Darwin*)
+	EXE=""
+	LDLIBS="$LDLIBS -funwind-tables"
+	LDLIBS="$LDLIBS -rdynamic"
+	DSYM="dsymutil ../gorynlich"
+        WERROR="-Werror"
+        COMPILER_WARN="-Wmissing-prototypes"
+	;;
+    *)
+	EXE=""
+	LDLIBS="$LDLIBS -funwind-tables"
+	LDLIBS="$LDLIBS -rdynamic"
+	LDLIBS="$LDLIBS -lGL"
+        WERROR="-Werror"
+        COMPILER_WARN="-Wmissing-prototypes"
+	;;
+esac
+
+LDLIBS="$LDLIBS -lpthread"
+
+cd src
+
+echo "COMPILER_FLAGS=$WERROR -g -ggdb3 -O0 $C_FLAGS # AUTOGEN" >> .Makefile
+echo "COMPILER_FLAGS=$WERROR -g -ggdb3 -O2 $C_FLAGS # AUTOGEN" > .Makefile
+echo "    " >> .Makefile
+echo "CLANG_COMPILER_WARNINGS=-Wall -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -Wno-trigraphs $COMPILER_WARN -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-sign-conversion # AUTOGEN" >> .Makefile
+echo "GCC_COMPILER_WARNINGS=-Wall -fmessage-length=0 -Wno-trigraphs $COMPILER_WARN -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value # AUTOGEN" >> .Makefile
+echo "GXX_COMPILER_WARNINGS=-Wall -fmessage-length=0 -Wno-trigraphs -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value # AUTOGEN" >> .Makefile
+
+`clang --version >/dev/null 2>/dev/null`
+if [ $? -eq 0 ]
+then
+    echo "COMPILER_WARNINGS=\$(GCC_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+    echo "COMPILER_WARNINGS=\$(GXX_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+    echo "COMPILER_WARNINGS=\$(CLANG_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+    echo "CC=clang # AUTOGEN" >> .Makefile
+    echo "# CC=gcc # AUTOGEN" >> .Makefile
+    echo "# CC=cc # AUTOGEN" >> .Makefile
+    echo "# CC=g++ # AUTOGEN" >> .Makefile
+else
+    `gcc --version >/dev/null 2>/dev/null`
+    if [ $? -eq 0 ]
+    then
+        echo "COMPILER_WARNINGS=\$(CLANG_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+        echo "COMPILER_WARNINGS=\$(GXX_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+        echo "COMPILER_WARNINGS=\$(GCC_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+	echo "# CC=clang # AUTOGEN" >> .Makefile
+	echo "CC=gcc # AUTOGEN" >> .Makefile
+	echo "# CC=cc # AUTOGEN" >> .Makefile
+	echo "# CC=g++ # AUTOGEN" >> .Makefile
+    else
+	`g++ --version >/dev/null 2>/dev/null`
+	if [ $? -eq 0 ]
+	then
+            echo "COMPILER_WARNINGS=\$(CLANG_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+            echo "COMPILER_WARNINGS=\$(GCC_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+            echo "COMPILER_WARNINGS=\$(GXX_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+	    echo "# CC=clang # AUTOGEN" >> .Makefile
+	    echo "# CC=gcc # AUTOGEN" >> .Makefile
+	    echo "# CC=cc # AUTOGEN" >> .Makefile
+	    echo "CC=g++ # AUTOGEN" >> .Makefile
+	else
+            echo "COMPILER_WARNINGS=\$(CLANG_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+            echo "COMPILER_WARNINGS=\$(GXX_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+            echo "COMPILER_WARNINGS=\$(GCC_COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+	    echo "# CC=clang # AUTOGEN" >> .Makefile
+	    echo "# CC=gcc # AUTOGEN" >> .Makefile
+	    echo "# CC=cc # AUTOGEN" >> .Makefile
+	    echo "CC=g++ # AUTOGEN" >> .Makefile
+	fi
+    fi
+fi
+
+echo "    " >> .Makefile
+echo "EXE=$EXE # AUTOGEN" >> .Makefile
+echo "DSYM=$DSYM # AUTOGEN" >> .Makefile
+echo "LDLIBS=$LDLIBS # AUTOGEN" >> .Makefile
+echo "CFLAGS=\$(COMPILER_FLAGS) \$(COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
+
+case `uname` in
+    *MSYS*)
+        echo "CC=/mingw64/bin/x86_64-w64-mingw32-gcc.exe # AUTOGEN" >> .Makefile
+
+        LDLIBS="$LIDLIB -lmingw32 -lSDL2main -lSDL2 -mwindows /mingw64/lib/libSDL2main.a -L/mingw64/lib -lSDL2main -lSDL2"
+    ;;
+esac
+
+cat Makefile | grep -v AUTOGEN | grep -v "^    $" >> .Makefile
+
+if [ -s .Makefile ]
+then
+    mv .Makefile Makefile
+    if [ ! -f Makefile ]
+    then
+	log_err "No makefile?!"
+	exit 1
+    fi
+else 
+    log_err "Makefile create fail?!"
+    exit 1
+fi
+
+log_info "Cleaning"
+make clobber | sed 's/^/  /g'
+
+CORES=""
+
+case `uname` in
+    *Darwin*)
+	CORES=`/usr/sbin/system_profiler -detailLevel full SPHardwareDataType  | grep Cores | sed 's/.*: //g'`
+    ;;
+
+    *inux*)
+	CORES=`cat /proc/cpuinfo | grep "cpu cores" | head -1 | awk '{print $4}'`
+    ;;
+esac
+
+if [ "$CORES" != "" ]
+then
+    CORES="-j $CORES"
+fi
+
+log_info "Compiling"
+make $CORES $* all
+
+if [ $? -eq 0 ]
+then
+    echo
+    log_info "Run gorynlich to start"
+
+    rm -f Makefile.bak
+else
+    cd ..
+    log_die "Build failed"
+fi
+
+cd ..
