@@ -18,8 +18,9 @@ To build:
     MacOS+Xcode:
         ./RUNME.Xcode-OSX
 
-    Windows+MingW: (also install msys + mingw + cygwin + pthreads32)
-        ./RUNME.mingw
+    Windows+MSYS2:
+        ./RUNME.windows.msys2
+
 
 
      .d8888b.                                     888 d8b          888      
