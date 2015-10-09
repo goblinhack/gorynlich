@@ -4,7 +4,7 @@
  * See the README file for license.
  */
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <execinfo.h>
 #endif
 #include <stdlib.h>
