@@ -191,6 +191,17 @@ fi
 # for backtraces, but it doesn't help much
 #
 case `uname` in
+    *MSYS*)
+        PATH=/mingw64/bin:$PATH
+        export PATH
+
+	EXE=".exe"
+        C_FLAGS="$C_FLAGS -mwin32"
+        C_FLAGS="$C_FLAGS -I/mingw64/x86_64-w64-mingw32/include"
+        LDLIBS="$LDLIBS -L/mingw64/x86_64-w64-mingw32/lib/"
+	LDLIBS=`echo $LDLIBS | sed -e 's/-lmingw32 //g'`
+	LDLIBS="$LDLIBS -lopengl32"
+        ;;
     *MINGW*)
 	EXE=".exe"
 	LDLIBS=`echo $LDLIBS | sed -e 's/-XCClinker//g'`
@@ -207,18 +218,24 @@ case `uname` in
 	# As sdl2-config may be configured for /usr/local
 	#
         C_FLAGS="$C_FLAGS -I/c/MinGW/include/SDL2"
+        WERROR=""
+        COMPILER_WARN=""
 	;;
     *Darwin*)
 	EXE=""
 	LDLIBS="$LDLIBS -funwind-tables"
 	LDLIBS="$LDLIBS -rdynamic"
 	DSYM="dsymutil ../gorynlich"
+        WERROR="-Werror"
+        COMPILER_WARN="-Wmissing-prototypes"
 	;;
     *)
 	EXE=""
 	LDLIBS="$LDLIBS -funwind-tables"
 	LDLIBS="$LDLIBS -rdynamic"
 	LDLIBS="$LDLIBS -lGL"
+        WERROR="-Werror"
+        COMPILER_WARN="-Wmissing-prototypes"
 	;;
 esac
 
@@ -226,11 +243,11 @@ LDLIBS="$LDLIBS -lpthread"
 
 cd src
 
-echo "COMPILER_FLAGS=-Werror -g -ggdb3 -O0 $C_FLAGS # AUTOGEN" >> .Makefile
-echo "COMPILER_FLAGS=-Werror -g -ggdb3 -O2 $C_FLAGS # AUTOGEN" > .Makefile
+echo "COMPILER_FLAGS=$WERROR -g -ggdb3 -O0 $C_FLAGS # AUTOGEN" >> .Makefile
+echo "COMPILER_FLAGS=$WERROR -g -ggdb3 -O2 $C_FLAGS # AUTOGEN" > .Makefile
 echo "    " >> .Makefile
-echo "CLANG_COMPILER_WARNINGS=-Wall -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -Wno-trigraphs -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-sign-conversion # AUTOGEN" >> .Makefile
-echo "GCC_COMPILER_WARNINGS=-Wall -fmessage-length=0 -Wno-trigraphs -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value # AUTOGEN" >> .Makefile
+echo "CLANG_COMPILER_WARNINGS=-Wall -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -Wno-trigraphs $COMPILER_WARN -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-sign-conversion # AUTOGEN" >> .Makefile
+echo "GCC_COMPILER_WARNINGS=-Wall -fmessage-length=0 -Wno-trigraphs $COMPILER_WARN -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value # AUTOGEN" >> .Makefile
 echo "GXX_COMPILER_WARNINGS=-Wall -fmessage-length=0 -Wno-trigraphs -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value # AUTOGEN" >> .Makefile
 
 `clang --version >/dev/null 2>/dev/null`
@@ -276,6 +293,14 @@ else
 	fi
     fi
 fi
+
+case `uname` in
+    *MSYS*)
+        echo "CC=/mingw64/bin/x86_64-w64-mingw32-gcc.exe # AUTOGEN" >> .Makefile
+
+        LDLIBS="$LDLIBS -lmingw32 -lSDL2main -lSDL2 -mwindows /mingw64/lib/libSDL2main.a -L/mingw64/lib -lSDL2main -lSDL2"
+    ;;
+esac
 
 echo "    " >> .Makefile
 echo "EXE=$EXE # AUTOGEN" >> .Makefile
