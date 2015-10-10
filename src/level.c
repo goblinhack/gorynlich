@@ -752,6 +752,8 @@ static void level_finished (levelp level)
     level->end_level_second_phase_destroy_timer = 0;
     level->end_level_first_phase_fade_out_timer = 0;
 
+    verify(level);
+
     /*
      * Is this needed ? Kind of obvious and overlaps with spending points 
      * update often.
@@ -789,7 +791,11 @@ static void level_finished (levelp level)
     socket_server_tx_map_update(0, server_active_things,
                                 "level destroy active things");
 
+    int game_over = level->game_over;
+
     wid_game_map_server_wid_destroy(true /* keep players */);
+
+    level = 0;
 
     { TREE_WALK(server_active_things, t) {
         if (!thing_is_player_or_owned_by_player(t)) {
@@ -799,7 +805,11 @@ static void level_finished (levelp level)
         }
     } }
 
-    if (level->game_over) {
+    /*
+     * LEVEL CAN BE NULL HERE
+     */
+
+    if (game_over) {
         return;
     }
 
@@ -845,6 +855,8 @@ void level_server_tick (levelp level)
     if (!level) {
         return;
     }
+
+    verify(level);
 
     static uint32_t ts;
 
