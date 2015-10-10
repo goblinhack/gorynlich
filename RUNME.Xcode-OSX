@@ -83,7 +83,8 @@ log_info "Package $APP"
 
 /bin/rm -f $DMG_TMP
 
-hdiutil create -srcfolder "$XCODE_APP" -volname "$NAME" -fs HFS+ -fsargs '-c c=64,a=16,e=16' -format UDRW -size 300m $DMG_TMP
+log "hdiutil create -srcfolder "$XCODE_APP" -volname "$NAME" -fs HFS+ -fsargs '-c c=64,a=16,e=16' -format UDRW -size 500m $DMG_TMP"
+hdiutil create -srcfolder "$XCODE_APP" -volname "$NAME" -fs HFS+ -fsargs '-c c=64,a=16,e=16' -format UDRW -size 500m $DMG_TMP
 if [ $? -ne 0 ]
 then
     log_err "Failed to create $DMG_TMP"
@@ -95,6 +96,7 @@ fi
 #
 log_info "Mounting $DMG_TMP"
 
+log "hdiutil attach -readwrite -noverify -noautoopen $DMG_TMP > .tmp 2>&1"
 hdiutil attach -readwrite -noverify -noautoopen $DMG_TMP > .tmp 2>&1
 if [ $? -ne 0 ]
 then
