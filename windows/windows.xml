@@ -4,7 +4,7 @@
     <version>0.01</version>
     <installerFilename></installerFilename>
     <licenseFile>C:/msys64/home/benten/gorynlich/doc/LICENSE</licenseFile>
-    <logoImage>C:/msys64/home/benten/gorynlich/data/gfx/title_small.tga</logoImage>
+    <logoImage>C:/msys64/home/benten/gorynlich/data/gfx/title_small.png</logoImage>
     <splashImage>C:/msys64/home/benten/gorynlich/windows/titleflashingslow.gif</splashImage>
     <componentList>
         <component>
