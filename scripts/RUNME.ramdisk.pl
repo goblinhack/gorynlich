@@ -77,7 +77,7 @@ foreach $f (@files) {
     $file_deps{$cnt} .= "../" . $file . " ";
 
     if (!defined $done{$cnt}) {
-        print "Generating src/asm/ramdisk_" . $cnt . ".S (size " . int ($file_size{$cnt}  / (1024 * 1024)) . "Mb)\n";
+        print "Generating src/asm/ramdisk_" . $cnt . ".S\n";
 
         open(OUT, ">", "src/asm/ramdisk_" . $cnt . ".S");
 

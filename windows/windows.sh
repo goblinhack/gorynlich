@@ -1,7 +1,8 @@
-"/c/Program Files (x86)/BitRock InstallBuilder Enterprise 9.5.3/bin/builder-cli.exe" build windows.xml 
 
-cp /c/Users/nmcgill/Documents/InstallBuilder/output/gorynlich-0.01-windows-installer.exe ../gorynlich-installer.exe
+"/c/Program Files (x86)/BitRock InstallBuilder Enterprise 15.9.0/bin/builder-cli.exe" build windows.xml 
 
-if [ -d /c/Users/nmcgill/Google\ Drive/ ]; then
-    cp ../gorynlich-installer.exe  /c/Users/nmcgill/Google\ Drive/
+cp /c/Users/benten/Documents/InstallBuilder/output/gorynlich-0.01-windows-installer.exe ../gorynlich-installer.exe
+
+if [ -d /c/Users/benten/Google\ Drive/ ]; then
+    cp ../gorynlich-installer.exe  /c/Users/benten/Google\ Drive/
 fi

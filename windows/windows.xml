@@ -3,9 +3,9 @@
     <fullName>gorynlich</fullName>
     <version>0.01</version>
     <installerFilename></installerFilename>
-    <licenseFile>C:/msys/1.0/home/nmcgill/gorynlich/doc/LICENSE</licenseFile>
-    <logoImage>C:\msys\1.0\home\nmcgill\gorynlich\data\gfx\title_small.png</logoImage>
-    <splashImage>C:/msys/1.0/home/nmcgill/gorynlich/windows/titleflashingslow.gif</splashImage>
+    <licenseFile>C:/msys64/home/benten/gorynlich/doc/LICENSE</licenseFile>
+    <logoImage>C:/msys64/home/benten/gorynlich/data/gfx/title_small.tga</logoImage>
+    <splashImage>C:/msys64/home/benten/gorynlich/windows/titleflashingslow.gif</splashImage>
     <componentList>
         <component>
             <name>default</name>
@@ -65,40 +65,40 @@
                     <platforms>windows</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/SDL2.dll</origin>
+                            <origin>C:/msys64/mingw64/bin/SDL2.dll</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/SDL2_net.dll</origin>
+                            <origin>C:/msys64/mingw64/bin/SDL2_net.dll</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/SDL2_mixer.dll</origin>
+                            <origin>C:/msys64/mingw64/bin/SDL2_mixer.dll</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/libvorbisfile-3.dll</origin>
+                            <origin>C:/msys64/mingw64/bin/libvorbisfile-3.dll</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/libFLAC-8.dll</origin>
+                            <origin>C:/msys64/mingw64/bin/libFLAC-8.dll</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/libmodplug-1.dll</origin>
+                            <origin>C:/msys64/mingw64/bin/libmodplug-1.dll</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/libogg-0.dll</origin>
+                            <origin>C:/msys64/mingw64/bin/libogg-0.dll</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/libvorbis-0.dll</origin>
+                            <origin>C:/msys64/mingw64/bin/libvorbis-0.dll</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/gorynlich.exe</origin>
+                            <origin>C:/msys64/home/benten/gorynlich/gorynlich.exe</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/windows/ghack.ico</origin>
+                            <origin>C:/msys64/home/benten/gorynlich/windows/ghack.ico</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/windows/titleflashingslow.gif</origin>
+                            <origin>C:/msys64/home/benten/gorynlich/windows/titleflashingslow.gif</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/windows/ghack2.ico</origin>
+                            <origin>C:/msys64/home/benten/gorynlich/windows/ghack2.ico</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
@@ -135,6 +135,7 @@
     </componentList>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
+    <vendor>goblinhack</vendor>
     <parameterList>
         <directoryParameter>
             <name>installdir</name>

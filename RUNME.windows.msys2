@@ -36,11 +36,13 @@ cat <<%%
                                 Y8b d88P                                    
                                  "Y88P"                                     
 
-On MSYS2!
+
+Gorynlich needs the MINGW64 packages from MSYS2. Please download a minimal 
+MSYS2 system before running this sript!
+
+I will try an install the packages I think I need.
 
 %%
-
-log_info "Will try to install the third party stuff I need first for MSYS2"
 
 for i in /mingw64
 do
@@ -57,8 +59,10 @@ then
 	exit 1
 fi
 
-log_info "MSYS2 install dir $MSYS2_DIR"
- 
+log_info "MSYS2 MING64 install dir $MSYS2_DIR"
+
+pacman -S tar mingw-w64-x86_64-SDL mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_mixer mingw-w64-x86_64-SDL2_net mingw-w64-x86_64-binutils mingw-w64-x86_64-bzip2 mingw-w64-x86_64-crt-git mingw-w64-x86_64-expat mingw-w64-x86_64-flac mingw-w64-x86_64-fluidsynth mingw-w64-x86_64-gcc mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-gdb mingw-w64-x86_64-gdbm mingw-w64-x86_64-gettext mingw-w64-x86_64-giflib mingw-w64-x86_64-glib2 mingw-w64-x86_64-gmp mingw-w64-x86_64-headers-git mingw-w64-x86_64-isl mingw-w64-x86_64-libffi mingw-w64-x86_64-libiconv mingw-w64-x86_64-libjpeg-turbo mingw-w64-x86_64-libmodplug mingw-w64-x86_64-libogg mingw-w64-x86_64-libpng mingw-w64-x86_64-libsndfile mingw-w64-x86_64-libsystre mingw-w64-x86_64-libtiff mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libvorbis mingw-w64-x86_64-libwebp mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-mpc mingw-w64-x86_64-mpfr mingw-w64-x86_64-ncurses mingw-w64-x86_64-openssl mingw-w64-x86_64-portaudio mingw-w64-x86_64-python2 mingw-w64-x86_64-readline mingw-w64-x86_64-smpeg2 mingw-w64-x86_64-speex mingw-w64-x86_64-speexdsp mingw-w64-x86_64-tcl mingw-w64-x86_64-termcap mingw-w64-x86_64-tk mingw-w64-x86_64-windows-default-manifest mingw-w64-x86_64-winpthreads-git mingw-w64-x86_64-xz mingw-w64-x86_64-zlib
+
 if [ ! -d $TP_DIR ]
 then
 	log_err "Could not find third party dir"
@@ -96,31 +100,6 @@ mycp()
 
 	popd >/dev/null
 )
-
-#mycp "third-party/SDL-2.0.4-9174/include/*" $MSYS2_DIR/include/SDL2/
-#mycp "third-party/SDL-2.0.4-9174/sdl2-config" $MSYS2_DIR/bin
-#mycp "third-party/SDL-2.0.4-9174/build/.libs/*.a" $MSYS2_DIR/lib
-#mycp "third-party/SDL-2.0.4-9174/build/.libs/*.dll" $MSYS2_DIR/bin
-#mycp "third-party/SDL-2.0.4-9174/build/.libs/*.dll" $TOP_DIR
-
-#mycp "third-party/SDL-2.0.4-9799/include/*" $MSYS2_DIR/include/SDL2/
-#mycp "third-party/SDL-2.0.4-9799/sdl2-config" $MSYS2_DIR/bin
-#mycp "third-party/SDL-2.0.4-9799/build/.libs/*.a" $MSYS2_DIR/lib
-#mycp "third-party/SDL-2.0.4-9799/build/.libs/*.dll" $MSYS2_DIR/bin
-#mycp "third-party/SDL-2.0.4-9799/build/.libs/*.dll" $TOP_DIR
-#
-#mycp "third-party/SDL2_net-2.0.0/*.h" $MSYS2_DIR/include/SDL2/
-#mycp "third-party/SDL2_net-2.0.0/.libs/*.a" $MSYS2_DIR/lib/
-#mycp "third-party/SDL2_net-2.0.0/.libs/*.dll" $MSYS2_DIR/bin/
-#mycp "third-party/SDL2_net-2.0.0/.libs/*.dll" $TOP_DIR
-#
-#mycp "third-party/SDL2_mixer-2.0.0/*.h" $MSYS2_DIR/include/SDL2/
-#mycp "third-party/SDL2_mixer-2.0.0/build/.libs/*.a" $MSYS2_DIR/lib
-#mycp "third-party/SDL2_mixer-2.0.0/build/.libs/*.dll" $MSYS2_DIR/bin
-#mycp "third-party/SDL2_mixer-2.0.0/build/.libs/*.dll" $TOP_DIR
-#
-#mycp "third-party/SDL2_mixer-2.0.0/i686-w64-MSYS232/bin/*.dll" $MSYS2_DIR/bin
-#mycp "third-party/SDL2_mixer-2.0.0/i686-w64-MSYS232/bin/*.dll" $TOP_DIR
 
 mycp "third-party/makedepend-1.0.5/*.exe" $MSYS2_DIR/bin/
 mycp "third-party/makedepend-1.0.5/*.exe" $TOP_DIR

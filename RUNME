@@ -1,4 +1,4 @@
-#!/bin/sh
+/!/bin/sh
 # 
 # Copyright (C) 2014 Neil McGill
 #
@@ -65,7 +65,7 @@ fi
 #
 cd src
 
-rm Makefile
+rm -f Makefile
 cat Makefile.base | sed '/DO NOT DELETE/,$d' > Makefile.tmp
 mv Makefile.tmp Makefile
 
