@@ -310,7 +310,7 @@ int32_t snprintf_realloc (char **str,
 
     if (!*str) {
         if (!*size) {
-            *size = 16;
+            *size = 128;
         }
 
         if (used) {
@@ -332,17 +332,22 @@ int32_t snprintf_realloc (char **str,
         usedspace = *used;
     }
 
+    char add[MAXSTR];
+    va_start(ap, fmt);
+    vsnprintf(add, sizeof(add) - 1, fmt, ap);
+    va_end(ap);
+    add[MAXSTR-1] = '\0';
+
+    needspace = strlen(add);
+
     for (;;) {
         freespace = *size - usedspace;
-
-        va_start(ap, fmt);
-        needspace = vsnprintf(*str + usedspace, freespace, fmt, ap);
-        va_end(ap);
 
         if (needspace < freespace) {
             if (used) {
                 *used += needspace;
             }
+            strcat(*str, add);
 
             return (0);
         }
