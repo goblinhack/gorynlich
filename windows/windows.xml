@@ -74,6 +74,18 @@
                             <origin>C:/msys64/mingw64/bin/SDL2_mixer.dll</origin>
                         </distributionFile>
                         <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libiconv-2.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libintl-8.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libglib-2.0-0.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libfluidsynth-1.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
                             <origin>C:/msys64/mingw64/bin/libvorbisfile-3.dll</origin>
                         </distributionFile>
                         <distributionFile>
@@ -99,6 +111,45 @@
                         </distributionFile>
                         <distributionFile>
                             <origin>C:/msys64/home/benten/gorynlich/windows/ghack2.ico</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libogg-0.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libwinpthread-1.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libportaudio-2.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libsndfile-1.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libspeexdsp-1.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libspeex-1.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libvorbisfile-3.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libvorbis-0.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libvorbisenc-2.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libstdc++-6.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libgdbm-4.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/libgcc_s_seh-1.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>C:/msys64/mingw64/bin/smpeg2.dll</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
