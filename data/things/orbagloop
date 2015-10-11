@@ -18,7 +18,7 @@
  is_shadow_caster_soft
  is_variable_size
  hit_priority=10
- is_collision_map_medium
+ is_collision_map_player_sized
  is_animated
  is_mob_spawner
  mob_spawn_delay_tenths=500

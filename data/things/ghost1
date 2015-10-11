@@ -15,7 +15,7 @@
  is_levitating
  hit_priority=10
  is_cats_eyes
- is_collision_map_medium
+ is_collision_map_player_sized
  is_animated
  is_fragile
  d10000_chance_of_appearing=1000

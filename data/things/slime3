@@ -19,7 +19,7 @@
  is_variable_size
  hit_priority=10
  is_cats_eyes
- is_collision_map_medium
+ is_collision_map_player_sized
  explodes_as="med_explosion1"
  is_animated
  d10000_chance_of_appearing=10

@@ -17,7 +17,7 @@
  damage=30
  swing_distance_from_player=5
  is_wearable
- is_collision_map_medium
+ is_collision_map_player_sized
  is_animated
  is_valid_for_action_bar
  d10000_chance_of_appearing=15

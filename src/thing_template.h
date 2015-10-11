@@ -423,9 +423,7 @@ typedef struct tp_ {
     uint8_t is_hidden_from_editor:1;
     uint8_t is_animated:1;
     uint8_t is_collision_map_large:1;
-    uint8_t is_collision_map_small:1;
-    uint8_t is_collision_map_medium:1;
-    uint8_t is_collision_map_tiny:1;
+    uint8_t is_collision_map_player_sized:1;
     uint8_t is_combustable:1;
     uint8_t is_projectile:1;
     uint8_t is_inactive:1;
@@ -1310,19 +1308,9 @@ static inline uint8_t tp_is_animated (tpp t)
     return (t->is_animated);
 }
 
-static inline uint8_t tp_is_collision_map_tiny (tpp t)
+static inline uint8_t tp_is_collision_map_player_sized (tpp t)
 {
-    return (t->is_collision_map_tiny);
-}
-
-static inline uint8_t tp_is_collision_map_medium (tpp t)
-{
-    return (t->is_collision_map_medium);
-}
-
-static inline uint8_t tp_is_collision_map_small (tpp t)
-{
-    return (t->is_collision_map_small);
+    return (t->is_collision_map_player_sized);
 }
 
 static inline uint8_t tp_is_combustable (tpp t)

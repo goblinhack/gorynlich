@@ -18,7 +18,7 @@
  light_tint="green"
  is_candle_light
  hit_priority=22
- is_collision_map_medium
+ is_collision_map_player_sized
  damage=1
  bonus_xp_on_death=120
  mob_spawn_delay_tenths=50

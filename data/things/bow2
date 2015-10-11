@@ -21,7 +21,7 @@
  d10000_chance_of_breaking=10
  is_valid_for_action_bar
  is_wearable
- is_collision_map_medium
+ is_collision_map_player_sized
  weapon_carry_anim="bow1_anim"
  weapon_swing_anim="weapon_swing1"
  tiles={

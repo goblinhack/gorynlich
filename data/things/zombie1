@@ -17,7 +17,7 @@
  is_shadow_caster
  is_shadow_caster_soft
  hit_priority=10
- is_collision_map_medium
+ is_collision_map_player_sized
  is_animated
  d10000_chance_of_appearing=200
  min_appear_depth=1

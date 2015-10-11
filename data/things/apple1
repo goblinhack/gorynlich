@@ -12,6 +12,7 @@
  d10000_chance_of_appearing=50
  sound_on_death="squelch"
  is_fragile
+ scale=0.5
  bonus_hp_on_use=15
  message_on_use="%%fg=green$crunch"
  tiles={

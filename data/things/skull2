@@ -20,7 +20,7 @@ is_levitating
  hit_priority=10
  is_cats_eyes
  has_ability_double_shot
- is_collision_map_medium
+ is_collision_map_player_sized
  is_animated
  fires="energy1"
  weapon_fire_delay_hundredths=200

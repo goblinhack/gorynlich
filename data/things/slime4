@@ -22,7 +22,7 @@
  is_poison
  hit_priority=10
  is_cats_eyes
- is_collision_map_medium
+ is_collision_map_player_sized
  is_animated
  d10000_chance_of_appearing=5 
  min_appear_depth=3

@@ -191,18 +191,10 @@ static uint8_t things_overlap (const thingp A,
     static double collision_map_large_x2;
     static double collision_map_large_y1;
     static double collision_map_large_y2;
-    static double collision_map_medium_x1;
-    static double collision_map_medium_x2;
-    static double collision_map_medium_y1;
-    static double collision_map_medium_y2;
-    static double collision_map_small_x1;
-    static double collision_map_small_x2;
-    static double collision_map_small_y1;
-    static double collision_map_small_y2;
-    static double collision_map_tiny_x1;
-    static double collision_map_tiny_x2;
-    static double collision_map_tiny_y1;
-    static double collision_map_tiny_y2;
+    static double collision_map_player_sized_x1;
+    static double collision_map_player_sized_x2;
+    static double collision_map_player_sized_y1;
+    static double collision_map_player_sized_y2;
 
     /*
      * Find out the position of the thing on the client. On the server we move 
@@ -254,30 +246,10 @@ static uint8_t things_overlap (const thingp A,
             ERR("no tile for collisions");
         }
 
-        collision_map_medium_x1 = tile->px1;
-        collision_map_medium_x2 = tile->px2;
-        collision_map_medium_y1 = tile->py1;
-        collision_map_medium_y2 = tile->py2;
-
-        tile = tile_find("small-collision-map");
-        if (!tile) {
-            ERR("no tile for collisions");
-        }
-
-        collision_map_small_x1 = tile->px1;
-        collision_map_small_x2 = tile->px2;
-        collision_map_small_y1 = tile->py1;
-        collision_map_small_y2 = tile->py2;
-
-        tile = tile_find("tiny-collision-map");
-        if (!tile) {
-            ERR("no tile for collisions");
-        }
-
-        collision_map_tiny_x1 = tile->px1;
-        collision_map_tiny_x2 = tile->px2;
-        collision_map_tiny_y1 = tile->py1;
-        collision_map_tiny_y2 = tile->py2;
+        collision_map_player_sized_x1 = tile->px1;
+        collision_map_player_sized_x2 = tile->px2;
+        collision_map_player_sized_y1 = tile->py1;
+        collision_map_player_sized_y2 = tile->py2;
     }
 
     double Apx1;
@@ -312,21 +284,11 @@ static uint8_t things_overlap (const thingp A,
         Apx2 = collision_map_large_x2;
         Apy1 = collision_map_large_y1;
         Apy2 = collision_map_large_y2;
-    } else if (thing_is_collision_map_medium(A)) {
-        Apx1 = collision_map_medium_x1;
-        Apx2 = collision_map_medium_x2;
-        Apy1 = collision_map_medium_y1;
-        Apy2 = collision_map_medium_y2;
-    } else if (thing_is_collision_map_small(A)) {
-        Apx1 = collision_map_small_x1;
-        Apx2 = collision_map_small_x2;
-        Apy1 = collision_map_small_y1;
-        Apy2 = collision_map_small_y2;
-    } else if (thing_is_collision_map_tiny(A)) {
-        Apx1 = collision_map_tiny_x1;
-        Apx2 = collision_map_tiny_x2;
-        Apy1 = collision_map_tiny_y1;
-        Apy2 = collision_map_tiny_y2;
+    } else if (thing_is_collision_map_player_sized(A)) {
+        Apx1 = collision_map_player_sized_x1;
+        Apx2 = collision_map_player_sized_x2;
+        Apy1 = collision_map_player_sized_y1;
+        Apy2 = collision_map_player_sized_y2;
     } else {
         /*
          * Just use pixel and alpha values.
@@ -358,21 +320,11 @@ static uint8_t things_overlap (const thingp A,
         Bpx2 = collision_map_large_x2;
         Bpy1 = collision_map_large_y1;
         Bpy2 = collision_map_large_y2;
-    } else if (thing_is_collision_map_medium(B)) {
-        Bpx1 = collision_map_medium_x1;
-        Bpx2 = collision_map_medium_x2;
-        Bpy1 = collision_map_medium_y1;
-        Bpy2 = collision_map_medium_y2;
-    } else if (thing_is_collision_map_small(B)) {
-        Bpx1 = collision_map_small_x1;
-        Bpx2 = collision_map_small_x2;
-        Bpy1 = collision_map_small_y1;
-        Bpy2 = collision_map_small_y2;
-    } else if (thing_is_collision_map_tiny(B)) {
-        Bpx1 = collision_map_tiny_x1;
-        Bpx2 = collision_map_tiny_x2;
-        Bpy1 = collision_map_tiny_y1;
-        Bpy2 = collision_map_tiny_y2;
+    } else if (thing_is_collision_map_player_sized(B)) {
+        Bpx1 = collision_map_player_sized_x1;
+        Bpx2 = collision_map_player_sized_x2;
+        Bpy1 = collision_map_player_sized_y1;
+        Bpy2 = collision_map_player_sized_y2;
     } else {
         /*
          * Just use pixel and alpha values.

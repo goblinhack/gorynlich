@@ -14,7 +14,7 @@
  light_tint="red"
  is_candle_light
  hit_priority=22
- is_collision_map_medium
+ is_collision_map_player_sized
  damage=20
  is_animated
  d10000_chance_of_appearing=5 

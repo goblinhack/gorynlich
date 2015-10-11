@@ -25,7 +25,7 @@
  is_combustable
  explodes_as="explosion1"
  is_wearable
- is_collision_map_medium
+ is_collision_map_player_sized
  is_animated
  is_valid_for_action_bar
  weapon_carry_anim="wand2_anim"

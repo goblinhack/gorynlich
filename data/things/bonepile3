@@ -13,7 +13,7 @@
  light_tint="red"
  is_candle_light
  hit_priority=22
- is_collision_map_medium
+ is_collision_map_player_sized
  d10000_chance_of_appearing=600
  damage=1
  bonus_xp_on_death=80

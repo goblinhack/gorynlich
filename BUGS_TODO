@@ -4,8 +4,6 @@ BUGS and TODO
 
 - why do arrows light up
 - player lights walls above them?
-- fireball too small collision map
-- quest completed on level editor end!
 --------------------------------------- plan for oct --------------------------------------
 - giant mushroom generator
 - hit shopkeeper should make him mad
@@ -52,6 +50,10 @@ DONE
 ----
 
 Sun Oct 11 08:41:25 EDT 2015
+- got rid of tiny and small collision maps
+- increase size of fireball collision map
+- show spending points as lesser message to not overlap on other more importants ones
+- remove quest completed in hiscore on level editor end
 - more intense light sources
 - demons were too hard, moving through walls
 - crystals glow more

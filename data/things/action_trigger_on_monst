@@ -2,7 +2,7 @@
  short_name="action_trigger_on_monst"
  raw_name="action_trigger_on_monst"
  tooltip="triggers on monster step"
- is_collision_map_small
+ is_collision_map_player_sized
  z_depth="actions"
  is_action
  is_visible_on_debug_only

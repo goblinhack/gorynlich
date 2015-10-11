@@ -8537,6 +8537,16 @@ static void wid_lighting_render (widp w,
 
     double len_bright = 0.7;
 
+
+    /*
+     * Draw the light in three stages. 
+     *
+     * 1. Central core of light as a fan
+     * 2. Strip of dimmer light at the edges
+     * 3. Strip of flickering even dimmer light
+     */
+
+
     /*
      * Now blit to the FBO, drawing the central core of the light rays
      */

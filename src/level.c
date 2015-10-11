@@ -1409,6 +1409,13 @@ void level_set_exit_has_been_reached (levelp level, uint8_t val)
         level->game_over = true;
         thingp t;
         { TREE_WALK(server_active_things, t) {
+            if (level->is_test_level) {
+                /*
+                 * No hiscores in the test level!
+                 */
+                continue;
+            }
+
             if (level->game_over) {
                 if (thing_is_player(t)) {
                     thing_game_over(t);
