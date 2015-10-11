@@ -1,8 +1,7 @@
 
-BUGS and TODO
--------------
+FUTURE IDEAS
+------------
 
---------------------------------------- plan for oct --------------------------------------
 - giant mushroom generator
 - slimes eat items in backpack if not eaten quickly
 - acid and lava should damage armor first
@@ -12,8 +11,6 @@ BUGS and TODO
 - statues and rocks that do not shoot ?
 - floor overlays
 - rhino juggernaut creature?
-
---------------------------------------- plan for nov --------------------------------------
 - duck of doom bomb?
 - others that become juggernauts? and maybe some that push and explode?
 - pushable blocks and fix up moving walls
@@ -32,9 +29,6 @@ BUGS and TODO
 - pop bouncing "help!" and arrow over player to give them a clue what to do
 - mirror traps that bounce back weapon fire?
 - teletrap monster
-
---------------------------------------- plan for dec --------------------------------------
-- multi player
 - backpack drop on death
 - thief, kill thief to recover items
 - magic gives health to other players
