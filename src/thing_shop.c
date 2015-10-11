@@ -374,6 +374,47 @@ void shop_steal_message (thingp t)
     MSG_SERVER_SHOUT_AT(SOUND, t, t->x, t->y, "thief");
 }
 
+void shop_attack_message (thingp t)
+{
+    static const char *messages[] = {
+        "You attack me, I break your legs!",
+        "You attack me, I break your antennae!",
+        "You attack me, I break your tentacles!",
+        "You attack me, I break your probiscus!",
+        "You attack me, I break your horns!",
+        "You attack me, I break your long nose!",
+        "You attack me, I break your arms!",
+        "You attack me, I break your pinkies!",
+        "You attack me, I break your wand!",
+        "You attack me, I break your sword!",
+        "You think you can take me, fool!",
+        "I've beaten tougher than you!",
+        "You try to rob me?",
+        "You want a piece of me?",
+        "You want to play with me",
+        "I invite you in and you attack me!",
+        "Oh good, another adventurer to crush!",
+        "You dare?",
+    };
+
+    thingp shopkeeper = thing_server_find(t->in_shop_owned_by_thing_id);
+    if (!shopkeeper) {
+        MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0, "%%%%fg=red$%s", "This shop is spooky");
+        return;
+    }
+
+    if (thing_is_dead(shopkeeper)) {
+        MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0, "%%%%fg=red$%s", "You're sick...");
+        return;
+    }
+
+    MSG_SERVER_SHOUT_AT(POPUP, t, 0, 0, "%%%%fg=red$%s", messages[myrand() % ARRAY_SIZE(messages)]);
+
+    MSG_SERVER_SHOUT_AT(SOUND, t, t->x, t->y, "thief");
+
+    thing_set_is_angry(shopkeeper, true);
+}
+
 void shop_break_message (thingp t, thingp shopkeeper)
 {
     if (!thing_is_player(t)) {

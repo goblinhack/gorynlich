@@ -2341,6 +2341,15 @@ int thing_hit (thingp t, thingp hitter, uint32_t damage)
     }
 
     /*
+     * Attack a shopkeeper? Not a wise move...
+     */
+    if (thing_is_shopkeeper(t)) {
+        if (hitter && thing_is_player(hitter)) {
+            shop_attack_message(hitter);
+        }
+    }
+
+    /*
      * Allow no more hits than x per second by the hitter.
      */
     if (orig_hitter) {

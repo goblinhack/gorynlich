@@ -3,7 +3,6 @@ BUGS and TODO
 -------------
 
 --------------------------------------- plan for oct --------------------------------------
-- hit shopkeeper should make him mad
 - giant mushroom generator
 - slimes eat items in backpack if not eaten quickly
 - acid and lava should damage armor first
@@ -46,6 +45,7 @@ DONE
 ----
 
 Sun Oct 11 08:41:25 EDT 2015
+- hit shopkeeper should make him mad
 - damage stuff in shop should make shopkeeper mad
 - stop players lighting walls above them
 - got rid of tiny and small collision maps

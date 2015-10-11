@@ -578,15 +578,22 @@ static void wid_menu_tick (widp w)
     static int delta = 1;
     static int step = 2;
 
-    val += delta * step;
-
-    if (val > 255) {
-        val = 255;
+    if (val > 250) {
+        val = 250;
         delta = -1;
     }
-    if (val < 200) {
-        val = 200;
+
+    if (val < 100) {
+        val = 100;
         delta = 1;
+    }
+
+    static uint32_t ts;
+
+    if (time_have_x_hundredths_passed_since(1, ts)) {
+        ts = time_get_time_ms();
+
+        val += delta * step;
     }
 
     int i;
@@ -630,6 +637,15 @@ static void wid_menu_tick (widp w)
     }
 
 #ifdef ENABLE_FLICKER
+    {
+    static uint32_t ts;
+
+    if (!time_have_x_tenths_passed_since(11, ts)) {
+        return;
+    }
+
+    ts = time_get_time_ms();
+
     /*
      * Make the background flicker.
      */
@@ -641,7 +657,7 @@ static void wid_menu_tick (widp w)
     static double ng;
     static double nb;
 
-    if (!(myrand() % 10)) {
+    if (!(myrand() % 100)) {
         static int cnt = 0;
 	static color cols[1000] = {
         };
@@ -923,16 +939,17 @@ static void wid_menu_tick (widp w)
      * And then I decided to dump all the red stuff above and just make it 
      * fade in and out. Oh well.
      */
-    c.r = 0;
-    c.g = 0;
-    c.b = 0;
-    c.a = r;
+    c.r = r;
+    c.g = g;
+    c.b = b;
+    c.a = rand() % 50;
 
     {
         widp w = ctx->w;
         wid_set_color(w, WID_COLOR_BG, c);
         wid_set_color(w, WID_COLOR_TL, c);
         wid_set_color(w, WID_COLOR_BR, c);
+    }
     }
 #endif
 }
