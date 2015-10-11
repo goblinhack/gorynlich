@@ -2,12 +2,9 @@
 BUGS and TODO
 -------------
 
-- why do arrows light up
-- player lights walls above them?
 --------------------------------------- plan for oct --------------------------------------
-- giant mushroom generator
 - hit shopkeeper should make him mad
-- damage stuff in shop should also make him mad
+- giant mushroom generator
 - slimes eat items in backpack if not eaten quickly
 - acid and lava should damage armor first
 - squidlings and water
@@ -37,7 +34,6 @@ BUGS and TODO
 - pop bouncing "help!" and arrow over player to give them a clue what to do
 - mirror traps that bounce back weapon fire?
 - teletrap monster
-- minor: colision map tiny not used
 
 --------------------------------------- plan for dec --------------------------------------
 - multi player
@@ -50,6 +46,8 @@ DONE
 ----
 
 Sun Oct 11 08:41:25 EDT 2015
+- damage stuff in shop should make shopkeeper mad
+- stop players lighting walls above them
 - got rid of tiny and small collision maps
 - increase size of fireball collision map
 - show spending points as lesser message to not overlap on other more importants ones

@@ -96,6 +96,11 @@ static void thing_collect (thingp t,
         i.quantity = 1;
         i.id = tp_to_id(what);
 
+        /*
+         * Take this line out and shopkeepers will kill on key collection 8)
+         */
+        it->is_collected = true;
+
         for (count = 0; count < quantity; count++) {
             thing_collect(t, 
                           0,
@@ -178,15 +183,15 @@ static void thing_collect (thingp t,
         thing_wield(t, tp);
     }
 
-    if (it) {
-        it->is_collected = true;
-    }
-
     if (thing_is_player(t)) {
         const char *sound = tp_sound_on_collect(tp);
         if (sound) {
             MSG_SERVER_SHOUT_AT(SOUND_GLOBAL, t, t->x, t->y, "%s", sound);
         }
+    }
+
+    if (it) {
+        it->is_collected = true;
     }
 }
 

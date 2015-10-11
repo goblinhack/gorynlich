@@ -1714,9 +1714,7 @@ CON("  %s real_killer ",thing_logname(real_killer));
 
             /*
              * Breaking stuff in a shop? bad idea.
-             * 
-             * Not sure about this as things like keys are not collected
-             *
+             */
             if (thing_is_treasure(t)) {
                 if (owner && thing_is_shopkeeper(owner)) {
                     if (thing_is_player(real_killer)) {
@@ -1726,8 +1724,6 @@ CON("  %s real_killer ",thing_logname(real_killer));
                     }
                 }
             }
-             *
-             */
         } else {
             /*
              * Collecting a thing?
