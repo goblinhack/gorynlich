@@ -1,4 +1,9 @@
 
+BUGS and TODO
+-------------
+
+- why do arrows light up
+- player lights walls above them?
 - fireball too small collision map
 - quest completed on level editor end!
 --------------------------------------- plan for oct --------------------------------------
@@ -43,10 +48,17 @@
 - magic gives health to other players
 
 
+DONE
+----
 
-
+Sun Oct 11 08:41:25 EDT 2015
+- more intense light sources
+- demons were too hard, moving through walls
+- crystals glow more
+- light sources still buggy
 
 Sat Oct 10 23:13:09 EDT 2015 (version 0.0.3)
+- sawblades too noisy
 - map editor previews too large
 - teleports not working?
 - click during intro doesn't stop it 

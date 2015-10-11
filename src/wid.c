@@ -7657,6 +7657,8 @@ static void wid_light_add (widp w, fpoint at, double strength, color c)
 {
     thingp t = wid_get_thing(w);
 
+    c.a = 255;
+
     /*
      * Do a quick dmap check so that lights that are enclosed in a room do not 
      * shine
@@ -7678,7 +7680,7 @@ static void wid_light_add (widp w, fpoint at, double strength, color c)
         /*
          * Cheap effect, make the light fade away with distance.
          */
-        double scale = (256.0 - (((double)distance) * 8.0)) / 256.0;
+        double scale = (256.0 - (((double)distance) * 6.0)) / 256.0;
         if (scale <= 0.1) {
             return;
         }
@@ -7686,6 +7688,7 @@ static void wid_light_add (widp w, fpoint at, double strength, color c)
         c.r = (uint8_t) (((double)c.r) * scale);
         c.g = (uint8_t) (((double)c.g) * scale);
         c.b = (uint8_t) (((double)c.b) * scale);
+        c.a = (uint8_t) (((double)c.a) * scale);
     }
 
     if (wid_light_count >= MAX_LIGHTS) {
@@ -8533,6 +8536,7 @@ static void wid_lighting_render (widp w,
     float red   = ((float)c.r) / 255.0;
     float green = ((float)c.g) / 255.0;
     float blue  = ((float)c.b) / 255.0;
+    float alpha = ((float)c.a) / 255.0;
 
     /*
      * Now blit to the FBO, drawing the central core of the light rays
@@ -8547,7 +8551,58 @@ static void wid_lighting_render (widp w,
         /*
          * Walk the light rays in a circle.
          */
-        push_point(light_pos.x, light_pos.y, red, green, blue, 0.35);
+        push_point(light_pos.x, light_pos.y, red, green, blue, 1.00 * alpha);
+
+        for (i = 0; i < max_light_rays; i++, r += dr) {
+            double p1_len = ray_depth[i][light_level];
+            if (p1_len == 0) {
+                p1_len = light_radius;
+            }
+
+            p1_len *= 0.7;
+
+            double cosr = fcos(r);
+            double sinr = fsin(r);
+            double p1x = light_pos.x + cosr * p1_len;
+            double p1y = light_pos.y + sinr * p1_len;
+
+            push_point(p1x, p1y, red, green, blue, 0.70 * alpha);
+        }
+
+        /*
+         * Complete the circle with the first point again.
+         */
+        r = 0;
+        i = 0; {
+            double p1_len = ray_depth[i][light_level];
+            if (p1_len == 0) {
+                p1_len = light_radius;
+            }
+
+            p1_len *= 0.7;
+
+            double cosr = fcos(r);
+            double sinr = fsin(r);
+            double p1x = light_pos.x + cosr * p1_len;
+            double p1y = light_pos.y + sinr * p1_len;
+
+            push_point(p1x, p1y, red, green, blue, 0.70 * alpha);
+        }
+    }
+
+    blit_flush_triangle_fan();
+
+    blit_init();
+
+    {
+        double r = 0;
+        double dr = RAD_360 / (double)max_light_rays;
+        int i;
+
+        /*
+         * Walk the light rays in a circle.
+         */
+        push_point(light_pos.x, light_pos.y, red, green, blue, 1.0 * alpha);
 
         for (i = 0; i < max_light_rays; i++, r += dr) {
             double p1_len = ray_depth[i][light_level];
@@ -8560,7 +8615,7 @@ static void wid_lighting_render (widp w,
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.35);
+            push_point(p1x, p1y, red, green, blue, 0.35 * alpha);
         }
 
         /*
@@ -8578,7 +8633,7 @@ static void wid_lighting_render (widp w,
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.35);
+            push_point(p1x, p1y, red, green, blue, 0.35 * alpha);
         }
     }
 
@@ -8626,7 +8681,7 @@ static void wid_lighting_render (widp w,
             double p3x = light_pos.x + cosr * p3_len;
             double p3y = light_pos.y + sinr * p3_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.35);
+            push_point(p1x, p1y, red, green, blue, 0.35 * alpha);
             push_point(p3x, p3y, red, green, blue, 0);
         }
 
@@ -8652,7 +8707,7 @@ static void wid_lighting_render (widp w,
             double p3x = light_pos.x + cosr * p3_len;
             double p3y = light_pos.y + sinr * p3_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.35);
+            push_point(p1x, p1y, red, green, blue, 0.35 * alpha);
             push_point(p3x, p3y, red, green, blue, 0);
         }
     }
@@ -9491,7 +9546,13 @@ static void wid_display (widp w,
                                         lit = 1;
                                     }
 
-                                    if (player && !thing_is_player_or_owned_by_player(t)) {
+#if 0
+                                    if (thing_is_monst(t)       ||
+                                        thing_is_lava(t)        ||
+                                        thing_is_projectile(t)  ||
+                                        thing_is_teleport(t)    ||
+                                        thing_is_torch(t)       ||
+                                        thing_is_acid(t)) {
                                         int sx, sy;
                                         thing_real_to_map(t, &sx, &sy);
 
@@ -9500,6 +9561,7 @@ static void wid_display (widp w,
                                             lit = 1;
                                         }
                                     }
+#endif
                                 } else if ((t->lit == 0) && 
                                     (t->torch_light_radius == 0) &&
                                     thing_is_cats_eyes_noverify(t)) {

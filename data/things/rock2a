@@ -17,7 +17,7 @@
  d10000_chance_of_appearing=1000
  is_blit_y_offset
  is_light_source
- light_radius=2.0
+ light_radius=3.0
  light_tint="red"
  is_candle_light
  tiles={

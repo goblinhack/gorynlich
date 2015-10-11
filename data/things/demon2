@@ -19,7 +19,6 @@ is_levitating
  is_shadow_caster_soft
  scale=2.0
  hit_priority=10
- is_ethereal
  is_levitating
  is_cats_eyes
  is_animated
