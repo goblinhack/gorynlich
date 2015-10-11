@@ -406,27 +406,27 @@ static void wid_intro_story_destroy (void)
     done = true;
 
     if (wid_intro_story1) {
-        wid_destroy(&wid_intro_story1);
+        wid_destroy_nodelay(&wid_intro_story1);
     }
 
     if (wid_intro_story2) {
-        wid_destroy(&wid_intro_story2);
+        wid_destroy_nodelay(&wid_intro_story2);
     }
 
     if (wid_intro_story) {
-        wid_destroy(&wid_intro_story);
+        wid_destroy_nodelay(&wid_intro_story);
     }
 
     if (wid_text1) {
-        wid_destroy(&wid_text1);
+        wid_destroy_nodelay(&wid_text1);
     }
 
     if (wid_text2) {
-        wid_destroy(&wid_text2);
+        wid_destroy_nodelay(&wid_text2);
     }
 
     if (wid_text3) {
-        wid_destroy(&wid_text3);
+        wid_destroy_nodelay(&wid_text3);
     }
 }
 
@@ -438,16 +438,8 @@ static uint8_t wid_intro_story_mouse_down (widp w, int32_t x, int32_t y, uint32_
 
 static uint8_t wid_intro_story_key_down (widp w, const SDL_KEYSYM *key)
 {
-    switch (key->sym) {
-        case SDLK_BACKSPACE:
-        case SDLK_ESCAPE:
-            wid_intro_story_destroy();
-            return (true);
-        default:
-            break;
-    }
-
-    return (false);
+    wid_intro_story_destroy();
+    return (true);
 }
 
 int wid_intro_story1_create (void)
