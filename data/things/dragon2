@@ -26,7 +26,7 @@
  fires="cloudkill1"
  weapon_fire_delay_hundredths=400
  d10000_chance_of_appearing=2
- min_appear_depth=10
+ min_appear_depth=15
  max_appear_depth=100
  light_tint="red"
  is_light_source
