@@ -38,7 +38,7 @@ void thing_reached_teleport (thingp t, thingp teleport)
         for (y = 0; y < MAP_HEIGHT; y++) {
 
             level_map_tile *tile = 
-                &server_level->map_grid.tile[x][y][MAP_DEPTH_EXPLOSION_TOP];
+                &server_level->map_grid.tile[x][y][MAP_DEPTH_EXPLOSION];
 
             tpp it = tile->tp;
             if (!it) {
