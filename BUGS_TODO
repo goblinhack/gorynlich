@@ -1,5 +1,5 @@
 
-- click during intro doesn't stop it 
+- map editor previews too large
 - teleports not working?
 - fireball too small collision map
 - quest completed on level editor end!
@@ -46,6 +46,7 @@
 
 
 Sat Oct 10 17:42:50 EDT 2015
+- click during intro doesn't stop it 
 - windows crashes fixed
 - clean up third party dir
 - shrunk git size

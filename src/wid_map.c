@@ -1119,8 +1119,8 @@ static void wid_map_preview_do (int thumbnail)
         fpoint tl;
         fpoint br;
 
-        double dx = 0.008;
-        double dy = 0.008;
+        double dx = 0.004;
+        double dy = 0.004;
 
         if (thumbnail) {
             dx /= 2.0;
@@ -1134,19 +1134,19 @@ static void wid_map_preview_do (int thumbnail)
 
 
         if (ctx->focusx > LEVELS_ACROSS / 2) {
-            tl.x -= ((double)80) * dx;
-            br.x -= ((double)80) * dx;
+            tl.x -= ((double)160) * dx;
+            br.x -= ((double)160) * dx;
         } else {
-            tl.x += ((double)10) * dx;
-            br.x += ((double)10) * dx;
+            tl.x += ((double)20) * dx;
+            br.x += ((double)20) * dx;
         }
 
         if (ctx->focusy > LEVELS_DOWN / 2) {
-            tl.y -= ((double)80) * dy;
-            br.y -= ((double)80) * dy;
+            tl.y -= ((double)160) * dy;
+            br.y -= ((double)160) * dy;
         } else {
-            tl.y += ((double)10) * dy;
-            br.y += ((double)10) * dy;
+            tl.y += ((double)20) * dy;
+            br.y += ((double)20) * dy;
         }
 
         tl.x *= (double) global_config.video_gl_width;
@@ -1205,7 +1205,7 @@ static void wid_map_preview_small (widp b, fpoint tl, fpoint br)
     double dy = (br.y - tl.y) / (double)MAP_HEIGHT;
 
     int x, y, z;
-    int step = 2;
+    int step = 4;
 
     glcolor(WHITE);
 
@@ -1254,8 +1254,8 @@ static void wid_map_preview_small (widp b, fpoint tl, fpoint br)
         tl2.x = tl.x + (dx * (double)x);
         tl2.y = tl.y + (dy * (double)y);
 
-        br2.x = tl.x + (dx * ((double)x) + ((double)step)+2.5);
-        br2.y = tl.y + (dy * ((double)y) + ((double)step)+2.5);
+        br2.x = tl.x + (dx * ((double)x) + ((double)step)+3.0);
+        br2.y = tl.y + (dy * ((double)y) + ((double)step)+3.0);
 
         if (br2.x > br.x) {
             br2.x = br.x;
