@@ -7680,7 +7680,7 @@ static void wid_light_add (widp w, fpoint at, double strength, color c)
         /*
          * Cheap effect, make the light fade away with distance.
          */
-        double scale = (256.0 - (((double)distance) * 6.0)) / 256.0;
+        double scale = (256.0 - (((double)distance) * 8.0)) / 256.0;
         if (scale <= 0.1) {
             return;
         }
@@ -7816,15 +7816,12 @@ static void wid_display_fast (widp w,
         int light_source = false;
 
         if (t) {
+            /*
+             * Only light lava at edges for speed
+             */
             if (thing_is_lava(t) || thing_is_acid(t)) {
                 if (t->join_index != IS_JOIN_BLOCK) {
                     light_source = true;
-                } else {
-#if 0
-                    if ((myrand() % 100) < 10) {
-                        light_source = true;
-                    }
-#endif
                 }
             } else {
                 if (thing_is_light_source_noverify(t)) {
@@ -8538,6 +8535,8 @@ static void wid_lighting_render (widp w,
     float blue  = ((float)c.b) / 255.0;
     float alpha = ((float)c.a) / 255.0;
 
+    double len_bright = 0.7;
+
     /*
      * Now blit to the FBO, drawing the central core of the light rays
      */
@@ -8551,7 +8550,7 @@ static void wid_lighting_render (widp w,
         /*
          * Walk the light rays in a circle.
          */
-        push_point(light_pos.x, light_pos.y, red, green, blue, 1.00 * alpha);
+        push_point(light_pos.x, light_pos.y, red, green, blue, alpha);
 
         for (i = 0; i < max_light_rays; i++, r += dr) {
             double p1_len = ray_depth[i][light_level];
@@ -8559,14 +8558,14 @@ static void wid_lighting_render (widp w,
                 p1_len = light_radius;
             }
 
-            p1_len *= 0.7;
+            p1_len *= len_bright;
 
             double cosr = fcos(r);
             double sinr = fsin(r);
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.70 * alpha);
+            push_point(p1x, p1y, red, green, blue, len_bright * alpha);
         }
 
         /*
@@ -8579,19 +8578,25 @@ static void wid_lighting_render (widp w,
                 p1_len = light_radius;
             }
 
-            p1_len *= 0.7;
+            p1_len *= len_bright;
 
             double cosr = fcos(r);
             double sinr = fsin(r);
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.70 * alpha);
+            push_point(p1x, p1y, red, green, blue, len_bright * alpha);
         }
     }
 
     blit_flush_triangle_fan();
 
+
+
+
+    /*
+     * Draw dimmer light
+     */
     blit_init();
 
     {
@@ -8602,42 +8607,66 @@ static void wid_lighting_render (widp w,
         /*
          * Walk the light rays in a circle.
          */
-        push_point(light_pos.x, light_pos.y, red, green, blue, 1.0 * alpha);
-
         for (i = 0; i < max_light_rays; i++, r += dr) {
             double p1_len = ray_depth[i][light_level];
+            double p3_len;
             if (p1_len == 0) {
                 p1_len = light_radius;
             }
 
+            p3_len = p1_len;
+            p1_len *= len_bright;
+
             double cosr = fcos(r);
             double sinr = fsin(r);
+
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.35 * alpha);
+            double p3x = light_pos.x + cosr * p3_len;
+            double p3y = light_pos.y + sinr * p3_len;
+
+            push_point(p1x, p1y, red, green, blue, len_bright * alpha);
+            push_point(p3x, p3y, red, green, blue, len_bright * alpha * 0.35);
         }
 
         /*
-         * Complete the circle with the first point again.
+         * Complete the strip with 1.5 triangles.
          */
         r = 0;
         i = 0; {
             double p1_len = ray_depth[i][light_level];
+            double p3_len;
             if (p1_len == 0) {
                 p1_len = light_radius;
             }
 
+            p3_len = p1_len;
+            p1_len *= len_bright;
+
             double cosr = fcos(r);
             double sinr = fsin(r);
+
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.35 * alpha);
+            double p3x = light_pos.x + cosr * p3_len;
+            double p3y = light_pos.y + sinr * p3_len;
+
+            push_point(p1x, p1y, red, green, blue, len_bright * alpha);
+            push_point(p3x, p3y, red, green, blue, len_bright * alpha * 0.35);
         }
     }
 
-    blit_flush_triangle_fan();
+    /*
+     * Flush non shaded triangles.
+     */
+    blit_flush_triangle_strip();
+
+
+
+
+
 
     /*
      * Now draw the fuzzy edge of the light as a trigangle strip.
@@ -8681,7 +8710,7 @@ static void wid_lighting_render (widp w,
             double p3x = light_pos.x + cosr * p3_len;
             double p3y = light_pos.y + sinr * p3_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.35 * alpha);
+            push_point(p1x, p1y, red, green, blue, len_bright * alpha * 0.35);
             push_point(p3x, p3y, red, green, blue, 0);
         }
 
@@ -8707,7 +8736,7 @@ static void wid_lighting_render (widp w,
             double p3x = light_pos.x + cosr * p3_len;
             double p3y = light_pos.y + sinr * p3_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.35 * alpha);
+            push_point(p1x, p1y, red, green, blue, len_bright * alpha * 0.35);
             push_point(p3x, p3y, red, green, blue, 0);
         }
     }
