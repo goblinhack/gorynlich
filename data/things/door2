@@ -8,7 +8,7 @@
  is_shadow_caster
  hit_priority=11
  is_joinable
- can_be_hit_chance=100
+ can_be_hit_chance=20
  tiles={
   tile={
    tile="door_2_0"

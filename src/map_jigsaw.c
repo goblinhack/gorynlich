@@ -1345,7 +1345,7 @@ static void jigpiece_add_frag (dungeon_t *dg)
 
         int f = myrand() % dg->frag_cnt;
 
-        if ((myrand() % 100) < 30) {
+        if ((myrand() % 100) < 5) {
             continue;
         }
 
