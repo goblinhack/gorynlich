@@ -17,6 +17,7 @@
 #include "wid_tooltip.h"
 #include "time_util.h"
 #include "music.h"
+#include "timer.h"
 
 #define MAX_DEMO_PLAYERS 20
 static int demo_player_count;
@@ -44,13 +45,27 @@ static void wid_intro_story_destroy(void);
  *************************************************************************************/
 static widp wid_intro_story6;
 
+static void wid_intro_make_visible (void *context)
+{
+    LOG("Begin intro");
+
+    wid_intro_visible();
+}
+
 static void wid_intro_story6_destroy_done (widp w)
 {
     if (!done) {
         wid_intro_story_destroy();
         sdl_intro_demo_tick(0);
     } else {
-        wid_intro_visible();
+        action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_intro_make_visible,
+            (action_timer_destroy_callback)0,
+            0, /* context */
+            "init game",
+            500,
+            0 /* jitter */);
     }
 }
 
@@ -116,6 +131,8 @@ static widp wid_intro_story5;
 
 static void wid_intro_story5_destroy_done (widp w)
 {
+    wid_intro_story5 = 0;
+
     if (!done) {
         wid_intro_story6_create();
     } else {
@@ -185,6 +202,8 @@ static widp wid_intro_story4;
 
 static void wid_intro_story4_destroy_done (widp w)
 {
+    wid_intro_story4 = 0;
+
     if (!done) {
         wid_intro_story5_create();
     } else {
@@ -254,6 +273,8 @@ static widp wid_intro_story3;
 
 static void wid_intro_story3_destroy_done (widp w)
 {
+    wid_intro_story3 = 0;
+
     if (!done) {
         wid_intro_story4_create();
     } else {
@@ -323,6 +344,8 @@ static widp wid_intro_story2;
 
 static void wid_intro_story2_destroy_done (widp w)
 {
+    wid_intro_story2 = 0;
+
     if (!done) {
         wid_intro_story3_create();
     } else {
@@ -392,6 +415,8 @@ static widp wid_intro_story1;
 
 static void wid_intro_story1_destroy_done (widp w)
 {
+    wid_intro_story1 = 0;
+
     if (!done) {
         wid_intro_story2_create();
     } else {
@@ -406,39 +431,33 @@ static void wid_intro_story_destroy (void)
     done = true;
 
     if (wid_intro_story1) {
-        wid_destroy_nodelay(&wid_intro_story1);
+        wid_destroy(&wid_intro_story1);
     }
 
     if (wid_intro_story2) {
-        wid_destroy_nodelay(&wid_intro_story2);
+        wid_destroy(&wid_intro_story2);
     }
 
     if (wid_intro_story) {
-        wid_destroy_nodelay(&wid_intro_story);
-    }
-
-    if (wid_text1) {
-        wid_destroy_nodelay(&wid_text1);
-    }
-
-    if (wid_text2) {
-        wid_destroy_nodelay(&wid_text2);
-    }
-
-    if (wid_text3) {
-        wid_destroy_nodelay(&wid_text3);
+        wid_destroy(&wid_intro_story);
     }
 }
 
 static uint8_t wid_intro_story_mouse_down (widp w, int32_t x, int32_t y, uint32_t button)
 {
     wid_intro_story_destroy();
+
+    wid_gc_all_force();
+
     return (true);
 }
 
 static uint8_t wid_intro_story_key_down (widp w, const SDL_KEYSYM *key)
 {
     wid_intro_story_destroy();
+
+    wid_gc_all_force();
+
     return (true);
 }
 

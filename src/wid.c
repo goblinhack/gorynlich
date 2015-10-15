@@ -7629,6 +7629,25 @@ static void wid_gc (widp w)
     }
 }
 
+static void wid_gc_force (widp w)
+{
+    verify(w);
+
+    /*
+     * Delayed destroy?
+     */
+    if (w->destroy_when) {
+        fast_verify(w);
+
+        if (w->destroy_ptr) {
+            *(w->destroy_ptr) = 0;
+            w->destroy_ptr = 0;
+        }
+
+        wid_destroy(&w);
+    }
+}
+
 #define LIGHT_LEVELS 2
 static const double MAX_LIGHT_STRENGTH = 1000.0;
 static double ray_depth[MAX_LIGHT_RAYS][LIGHT_LEVELS];
@@ -9748,6 +9767,15 @@ void wid_gc_all (void)
 
     { TREE_OFFSET_WALK(wid_top_level4, w, tree4_wids_being_destroyed) {
         wid_gc(w);
+    } }
+}
+
+void wid_gc_all_force (void)
+{
+    widp w;
+
+    { TREE_OFFSET_WALK(wid_top_level4, w, tree4_wids_being_destroyed) {
+        wid_gc_force(w);
     } }
 }
 

@@ -85,6 +85,7 @@ void wid_update_mouse(void);
 void wid_tick_all(void);
 void wid_move_all(void);
 void wid_gc_all(void);
+void wid_gc_all_force(void);
 void wid_display_all(void);
 uint8_t wid_ignore_for_events(widp);
 uint8_t wid_ignore_for_focus(widp);
