@@ -132,7 +132,7 @@ static void wid_intro_help_create (void)
 
                 (int) '0', 
                 "%%fmt=left$%%fg=gray$Console",
-                "%%fg=purple$Escape",
+                "%%fg=purple$` (backtick)",
                 (void*) 0,
 
                 (int) 'b', 
