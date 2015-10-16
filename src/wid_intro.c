@@ -57,6 +57,93 @@ static int intro_effect_delay_zoom = 1000;
 
 static int saved_focus = 0;
 
+
+static widp wid_intro_help;
+static void wid_intro_help_create(void);
+
+static void wid_intro_help_destroy (void)
+{
+    wid_destroy(&wid_intro_help);
+}
+
+static void wid_intro_help_hide (void)
+{
+    wid_intro_help_destroy();
+
+    wid_intro_visible();
+}
+
+static void wid_intro_help_visible (void)
+{
+    wid_intro_help_create();
+}
+
+static void wid_intro_help_callback_close (widp wid)
+{
+    wid_intro_help_hide();
+}
+
+static void wid_intro_help_create (void)
+{
+    if (wid_intro_help) {
+        return;
+    }
+
+    wid_intro_help = 
+        wid_menu(0,
+                vlarge_font,
+                large_font,
+                0, // on_update
+                0.55, /* x */
+                0.5, /* y */
+                2, /* columns */
+                5, /* focus */
+                7, /* items */
+
+                /*
+                 * Column widths
+                 */
+                (double) 0.25, (double) 0.75,
+
+                (int) '0',
+                "%%fmt=left$%%fg=gray$Space",
+                "%%fg=cyan$Fire",
+                (void*) 0,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Movement",
+                "%%fg=white$Cursor keys", 
+                (void*) 0,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Drop item",
+                "%%fg=red$d",
+                (void*) 0,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Inventoruy",
+                "%%fg=purple$TAB",
+                (void*) 0,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$0-9",
+                "%%fg=cyan$Use item",
+                (void*) 0,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Console",
+                "%%fg=purple$Escape",
+                (void*) 0,
+
+                (int) 'b', 
+                "%%fmt=left$Back", 
+                (char*) 0,
+                wid_intro_help_callback_close);
+}
+
+
+
+
 uint8_t wid_intro_init (void)
 {
     if (!wid_intro_init_done) {
@@ -517,6 +604,16 @@ static uint8_t wid_menu_past_legends_selected (widp w,
     return (true);
 }
 
+static uint8_t wid_menu_help_selected (widp w,
+                                       int32_t x, int32_t y,
+                                       uint32_t button)
+{
+    wid_intro_menu_destroy();
+    wid_intro_help_visible();
+
+    return (true);
+}
+
 static uint8_t wid_menu_credits_selected (widp w,
                                           int32_t x, int32_t y,
                                           uint32_t button)
@@ -582,7 +679,7 @@ static void wid_intro_menu_create (void)
                  0.6, /* y */
                  1, /* columns */
                  saved_focus, /* focus */
-                 7, /* items */
+                 8, /* items */
 
                  (int) 's', "Quick start", wid_menu_quick_start_selected,
 
@@ -596,11 +693,13 @@ static void wid_intro_menu_create (void)
 
                  (int) 'h', "Hiscores", wid_menu_past_legends_selected,
 
+                 (int) '?', "Help me!", wid_menu_help_selected,
+
                  (int) 'q', "Quit", wid_intro_quit_selected);
 
     {
         widp w = wid_popup(
-                  "Version 0.0.3 uber alpha",
+                  "Version 0.0.4 hopeless chicken",
                   "",               /* title */
                   0.9f, 0.90f,      /* x,y postition in percent */
                   0,                /* title font */
