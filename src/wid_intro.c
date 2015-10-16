@@ -98,7 +98,7 @@ static void wid_intro_help_create (void)
                 0.5, /* y */
                 2, /* columns */
                 5, /* focus */
-                7, /* items */
+                9, /* items */
 
                 /*
                  * Column widths
@@ -107,31 +107,41 @@ static void wid_intro_help_create (void)
 
                 (int) '0',
                 "%%fmt=left$%%fg=gray$Space",
-                "%%fg=cyan$Fire",
+                "%%fg=gray$Fire",
                 (void*) 0,
 
                 (int) '0', 
-                "%%fmt=left$%%fg=gray$Movement",
-                "%%fg=white$Cursor keys", 
+                "%%fmt=left$%%fg=purple$Movement",
+                "%%fg=purple$Cursor keys", 
                 (void*) 0,
 
                 (int) '0', 
                 "%%fmt=left$%%fg=gray$Drop item",
-                "%%fg=red$d",
+                "%%fg=gray$d",
                 (void*) 0,
 
                 (int) '0', 
-                "%%fmt=left$%%fg=gray$Inventoruy",
+                "%%fmt=left$%%fg=purple$Inventoruy",
                 "%%fg=purple$TAB",
                 (void*) 0,
 
                 (int) '0', 
-                "%%fmt=left$%%fg=gray$0-9",
-                "%%fg=cyan$Use item",
+                "%%fmt=left$%%fg=gray$Spend points",
+                "%%fg=gray$s",
                 (void*) 0,
 
                 (int) '0', 
-                "%%fmt=left$%%fg=gray$Console",
+                "%%fmt=left$%%fg=purple$Pay in shop",
+                "%%fg=purple$p",
+                (void*) 0,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$0-9",
+                "%%fg=gray$Use item",
+                (void*) 0,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=purple$Console",
                 "%%fg=purple$` (backtick)",
                 (void*) 0,
 
