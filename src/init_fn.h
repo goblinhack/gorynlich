@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011-2015 goblinhack@gmail.com
  *
- * See the README file.
+ * See the README file for license info.
  */
 typedef uint8_t (*action_init_fn_callback)(void *);
 #pragma once

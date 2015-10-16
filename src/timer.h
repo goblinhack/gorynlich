@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011-2015 goblinhack@gmail.com
  *
- * See the README file.
+ * See the README file for license info.
  */
 typedef void (*action_timer_callback)(void *);
 typedef void (*action_timer_destroy_callback)(void *);

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011-2015 goblinhack@gmail.com
  *
- * See the README file for license.
+ * See the README file for license info for license.
  */
 
 #ifndef _WIN32

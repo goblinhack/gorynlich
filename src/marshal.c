@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011-2015 goblinhack@gmail.com
  *
- * See the README file for license.
+ * See the README file for license info for license.
  *
  * Routines to allow the dumping of structures to streams, files and then
  * reading back in from a (zipped) file. e.g format:
