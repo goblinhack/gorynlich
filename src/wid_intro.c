@@ -662,6 +662,20 @@ static void wid_intro_create (void)
     wid_intro_menu_create();
 }
 
+static void wid_version_make_visible (void *context)
+{
+        widp w = wid_popup(
+                  "%%fg=green$goblinhack@gmail.com, -- version 0.0.4 hopeless chicken",
+                  "",               /* title */
+                  0.8f, 0.95f,      /* x,y postition in percent */
+                  0,                /* title font */
+                  vsmall_font,      /* body font */
+                  0,                /* button font */
+                  0);               /* number args */
+        wid_set_no_shape(w);
+        wid_destroy_in(w, 60000);
+}
+
 static void wid_intro_menu_create (void)
 {
     wid_destroy_delay_ms = 500;
@@ -698,16 +712,14 @@ static void wid_intro_menu_create (void)
                  (int) 'q', "Quit", wid_intro_quit_selected);
 
     {
-        widp w = wid_popup(
-                  "Version 0.0.4 hopeless chicken",
-                  "",               /* title */
-                  0.9f, 0.90f,      /* x,y postition in percent */
-                  0,                /* title font */
-                  vsmall_font,      /* body font */
-                  0,                /* button font */
-                  0);               /* number args */
-        wid_set_no_shape(w);
-        wid_destroy_in(w, 60000);
+        action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_version_make_visible,
+            (action_timer_destroy_callback)0,
+            0, /* context */
+            "init game version",
+            500,
+            0 /* jitter */);
     }
 }
 
