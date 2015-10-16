@@ -234,10 +234,18 @@ case `uname` in
 	LDLIBS="$LDLIBS -funwind-tables"
 	LDLIBS="$LDLIBS -rdynamic"
 	LDLIBS="$LDLIBS -lGL"
+        #
+        # Better to leave off for production
+        #
         WERROR="-Werror"
         COMPILER_WARN="-Wmissing-prototypes"
 	;;
 esac
+
+#
+# Better to leave off for production
+#
+WERROR=""
 
 LDLIBS="$LDLIBS -lpthread"
 
