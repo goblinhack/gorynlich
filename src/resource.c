@@ -187,7 +187,10 @@ static uint8_t resource_init_22 (void *context)
 
 static uint8_t resource_init_23 (void *context)
 {
-    return (true);
+    return (tex_load_tiled_black_and_white("data/gfx/sprites2.tga",
+                                           "sprites2",
+                                           "sprites2_black_and_white",
+                                           TILE_WIDTH, TILE_HEIGHT) != 0);
 }
 
 static uint8_t resource_init_24 (void *context)
@@ -4546,7 +4549,14 @@ static uint8_t resource_init_last (void *context)
         0,
         0,
         0,
-        // --------------------------------------------------------------------
+    };
+
+    tile_load_arr("sprites", 
+                  "sprites_black_and_white",
+                  TILE_WIDTH, TILE_HEIGHT,
+                  ARRAY_SIZE(small_tiles), small_tiles);
+
+    static const char *small_tiles2[] = {
         "weapon_swing1.12",
         "weapon_swing1.11",
         "weapon_swing1.10",
@@ -5409,11 +5419,10 @@ static uint8_t resource_init_last (void *context)
         // --------------------------------------------------------------------
     };
 
-    tile_load_arr("sprites", 
-                  "sprites_black_and_white",
+    tile_load_arr("sprites2", 
+                  "sprites2_black_and_white",
                   TILE_WIDTH, TILE_HEIGHT,
-                  ARRAY_SIZE(small_tiles), small_tiles);
-
+                  ARRAY_SIZE(small_tiles2), small_tiles2);
 
     static const char *large_tiles[] = {
         "spider-down.1",

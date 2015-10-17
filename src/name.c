@@ -607,7 +607,6 @@ const char *name_random (const char *pclass)
             "Lady Sleek",
             "Lady Slink",
             "Lady Sly",
-            "Lady Spanksalot",
             "Lady Stoker",
             "Lady Stuart",
             "Lady Swordheart",

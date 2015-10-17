@@ -40,6 +40,9 @@ FUTURE IDEAS
 DONE
 ----
 
+Sat Oct 17 17:03:19 EDT 2015
+- split main sprites into 2 files to be power of two in height
+
 Thu Oct 15 20:54:00 EDT 2015
 - add help screen
 
