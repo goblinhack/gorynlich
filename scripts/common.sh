@@ -87,8 +87,10 @@ log_warn() {
 }
 
 log_die() {
+    echo
     echo "gorynlich: ${RED}FATAL ERROR: $*${RESET}"
     echo "Mail goblinhack@gmail.com for help"
+    echo
     exit 1
 }
 
