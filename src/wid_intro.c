@@ -98,7 +98,7 @@ static void wid_intro_help_create (void)
                 0.5, /* y */
                 2, /* columns */
                 5, /* focus */
-                9, /* items */
+                10, /* items */
 
                 /*
                  * Column widths
@@ -141,8 +141,13 @@ static void wid_intro_help_create (void)
                 (void*) 0,
 
                 (int) '0', 
-                "%%fmt=left$%%fg=purple$Console",
-                "%%fg=purple$` (backtick)",
+                "%%fmt=left$%%fg=purple$Quit when in game",
+                "%%fg=purple$q",
+                (void*) 0,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=grey$Console",
+                "%%fg=grey$` (backtick)",
                 (void*) 0,
 
                 (int) 'b', 
