@@ -32,15 +32,15 @@ tech_support()
         echo system install details
         echo ===================================================
         date
-        apt --installed list | grep -i SDL
-        apt --installed list | grep gcc
-        apt --installed list | grep clang
+        (apt --installed list | grep -i SDL) 2>/dev/null
+        (apt --installed list | grep gcc) 2>/dev/null
+        (apt --installed list | grep clang) 2>/dev/null
 
         echo
         echo compilers
         echo ===================================================
-        clang --version 
-        gcc --version 
+        clang --version  2>/dev/null
+        gcc --version  2>/dev/null
         uname -a 
     ) >> $LOG 2>&1
 }
