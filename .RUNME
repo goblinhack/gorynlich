@@ -127,8 +127,8 @@ do
     fi
 done
 
-if [ "$SDL_CONFIG" = "" ]
-then
+sdl_help()
+{
     log_warn "Is SDL 1.2 or 1.3 installed? If not:"
     log_warn "  For ubuntu SDL2 do: "
     log_warn "   sudo apt-get install libsdl2.0-dev"
@@ -144,6 +144,11 @@ then
     log_warn "   sudo port install libsdl2_mixer"
     log_warn "   sudo port install libsdl2_net"
     log_warn "   sudo port install libsdl2_ttf"
+}
+
+if [ "$SDL_CONFIG" = "" ]
+then
+    sdl_help
     exit 1
 fi
 
@@ -363,6 +368,7 @@ then
 else
     cd ..
     log_die "Build failed"
+    sdl_help
     exit 1
 fi
 
