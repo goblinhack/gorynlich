@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # 
 # Copyright (C) 2014 Neil McGill
 #
@@ -128,14 +128,16 @@ log_info "SDL1 mixer.h     : $SDL1_MIXER"
 log_info "SDL1 net.h       : $SDL1_NET"
 log_info "SDL1 score       : $SDL1_SCORE"
 
-log_info "SDL2 config      : $SDL2_CONFIG"
-log_info "SDL2 version     : "`$SDL2_CONFIG --version`
-log_info "SDL2 include path: $SDL2_INC_PATH"
-log_info "SDL2 mixer.h     : $SDL2_MIXER"
-log_info "SDL2 net.h       : $SDL2_NET"
-log_info "SDL2 score       : $SDL2_SCORE"
+if [[ "$SDL2_CONFIG" != "" ]]; then
+    log_info "SDL2 config      : $SDL2_CONFIG"
+    log_info "SDL2 version     : "`$SDL2_CONFIG --version`
+    log_info "SDL2 include path: $SDL2_INC_PATH"
+    log_info "SDL2 mixer.h     : $SDL2_MIXER"
+    log_info "SDL2 net.h       : $SDL2_NET"
+    log_info "SDL2 score       : $SDL2_SCORE"
+fi
 
-if [[ $SDL_SCORE = "0" ]]; then
+if [[ $SDL1_SCORE = "0" ]]; then
     if [[ $SDL2_SCORE = "0" ]]; then
         sdl_help
         log_err "I need SDL1 or SDL2 and SDL net and SDL mixer"
@@ -144,7 +146,7 @@ if [[ $SDL_SCORE = "0" ]]; then
         SDL_CONFIG=$SDL2_CONFIG
     fi
 elif [[ $SDL2_SCORE = "0" ]]; then
-    if [[ $SDL2_SCORE = "0" ]]; then
+    if [[ $SDL1_SCORE = "0" ]]; then
         sdl_help
         log_err "I need SDL1 or SDL2 and SDL net and SDL mixer"
         exit 1
@@ -152,7 +154,7 @@ elif [[ $SDL2_SCORE = "0" ]]; then
         SDL_CONFIG=$SDL1_CONFIG
     fi
 else
-    if [[ $SDL2_SCORE -ge $SDL_SCORE ]]; then
+    if [[ $SDL2_SCORE -ge $SDL1_SCORE ]]; then
         log_info "Prefer SDL2 as it has more headers"
         SDL_CONFIG=$SDL2_CONFIG
     else
