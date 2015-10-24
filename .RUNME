@@ -110,11 +110,14 @@ do
     fi
 done
 
+#
+# Prefer SDL over SDL2 as it seems more common
+#
 for i in \
-    /opt/local/bin/sdl2-config \
-    /usr/bin/sdl2-config \
     /usr/local/bin/sdl-config \
     /usr/bin/sdl-config \
+    /opt/local/bin/sdl2-config \
+    /usr/bin/sdl2-config \
     /mingw/bin/sdl2-config \
     /mingw/bin/sdl-config \
     /mingw64/bin/sdl2-config \
