@@ -1351,6 +1351,10 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
         int32_t x = (int32_t)nx + dx;
         int32_t y = (int32_t)ny + dy;
 
+        if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_HEIGHT)) {
+            continue;
+        }
+
         wid_it = wid_grid_find_first(grid, x, y, z);
         while (wid_it) {
             verify(wid_it);

@@ -618,6 +618,20 @@ int shop_inside (thingp t)
             x += dx;
             y += dy;
 
+            if (x < 0) {
+                continue;
+            }
+            if (y < 0) {
+                continue;
+            }
+
+            if (x >= MAP_WIDTH) {
+                continue;
+            }
+            if (y >= MAP_HEIGHT) {
+                continue;
+            }
+
             thing_map_cell *cell = &map->cells[x][y];
 
             uint32_t i;

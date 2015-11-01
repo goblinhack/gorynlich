@@ -1,44 +1,6 @@
 
-FUTURE IDEAS
-------------
-
-- giant mushroom generator
-- slimes eat items in backpack if not eaten quickly
-- squidlings and water
-- glass blocks to move and once moving keep moving, like ice ?
-- sword of life sucking, steals hp and gives to you
-- statues and rocks that do not shoot ?
-- floor overlays
-- rhino juggernaut creature?
-- duck of doom bomb?
-- others that become juggernauts? and maybe some that push and explode?
-- pushable blocks and fix up moving walls
-- consult desktopbackground for more levels
-- move triggers do not seem to work on rocks
-- portion of teleport
-- money/xp doubler ring
-- cheese bomb turns enemies into cheese
-- cheese, lots of
-- rubber duck?
-- more slime molds? chocolate / vampiric etc?
-- imp that teleports and steals
-- ring of power attack, divert defense to attack
-- hulks for charlotte from goblin hack
-- possession ghost, cursed weapon, hit self
-- pop bouncing "help!" and arrow over player to give them a clue what to do
-- mirror traps that bounce back weapon fire?
-- teletrap monster
-- backpack drop on death
-- thief, kill thief to recover items
-- magic gives health to other players
-- add sledgehammer for dwarve?
-- death drops scythe on death
-- night vision goggles
-- crafting...
-
-
-DONE
-----
+Sun Nov  1 07:39:34 EST 2015 (version 0.0.4)
+- fixed crash if you reached edge of level
 
 Sat Oct 17 17:03:19 EDT 2015
 - split main sprites into 2 files to be power of two in height
@@ -1145,3 +1107,41 @@ Mon Jan 12 21:38:13 EST 2015
 Sin Jan 11 13:32:20 EST 2015
 - sending stats to server now
 - health randomly dropping
+
+FUTURE IDEAS
+------------
+
+- giant mushroom generator
+- slimes eat items in backpack if not eaten quickly
+- squidlings and water
+- glass blocks to move and once moving keep moving, like ice ?
+- sword of life sucking, steals hp and gives to you
+- statues and rocks that do not shoot ?
+- floor overlays
+- rhino juggernaut creature?
+- duck of doom bomb?
+- others that become juggernauts? and maybe some that push and explode?
+- pushable blocks and fix up moving walls
+- consult desktopbackground for more levels
+- move triggers do not seem to work on rocks
+- portion of teleport
+- money/xp doubler ring
+- cheese bomb turns enemies into cheese
+- cheese, lots of
+- rubber duck?
+- more slime molds? chocolate / vampiric etc?
+- imp that teleports and steals
+- ring of power attack, divert defense to attack
+- hulks for charlotte from goblin hack
+- possession ghost, cursed weapon, hit self
+- pop bouncing "help!" and arrow over player to give them a clue what to do
+- mirror traps that bounce back weapon fire?
+- teletrap monster
+- backpack drop on death
+- thief, kill thief to recover items
+- magic gives health to other players
+- add sledgehammer for dwarve?
+- death drops scythe on death
+- night vision goggles
+- crafting...
+

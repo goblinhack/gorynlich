@@ -241,6 +241,20 @@ static void level_place_explosion_ (levelp level,
                 tx = x + dx;
                 ty = y + dy;
 
+                if (tx < 0) {
+                    continue;
+                }
+                if (ty < 0) {
+                    continue;
+                }
+
+                if (tx >= MAP_WIDTH) {
+                    continue;
+                }
+                if (ty >= MAP_HEIGHT) {
+                    continue;
+                }
+
                 if (map_find_wall_at(level, tx, ty, 0) ||
                     map_find_door_at(level, tx, ty, 0) ||
                     map_find_rock_at(level, tx, ty, 0)) {

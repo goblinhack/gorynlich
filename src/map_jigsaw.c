@@ -3722,6 +3722,26 @@ void map_jigsaw_generate (levelp level, widp wid, int depth, grid_wid_replace_t 
                                 depth,
                                 shop_floor,
                                 &wall, &wall2, &door, &floor, &floor2, &floor3, &rock, &gen);
+            if (!rock) {
+                rock = random_rock();
+            }
+
+            /*
+             * Ensure rock border
+             */
+            if (x < 4) {
+                tp = rock;
+            }
+            if (x >= MAP_WIDTH - 4) {
+                tp = rock;
+            }
+            if (y < 4) {
+                tp = rock;
+            }
+            if (y >= MAP_HEIGHT - 4) {
+                tp = rock;
+            }
+
             if (tp) {
                 map_tp[x][y][tp_get_z_depth(tp)] = tp;
             }
