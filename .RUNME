@@ -35,6 +35,132 @@ cat <<%%
 
 %%
 
+for i in \
+    /opt/local/bin/sdl2-config \
+    /usr/local/bin/sdl2-config \
+    /usr/bin/sdl2-config \
+    /mingw/bin/sdl2-config \
+    /mingw64/bin/sdl2-config
+do
+    if [ -x $i ]
+    then
+        SDL2_CONFIG=$i
+        break
+    fi
+done
+
+#
+# Prefer SDL over SDL2 as it seems more common
+#
+for i in \
+    /opt/local/bin/sdl-config \
+    /usr/local/bin/sdl-config \
+    /usr/bin/sdl-config \
+    /mingw/bin/sdl-config \
+    /mingw64/bin/sdl-config
+do
+    if [ -x $i ]
+    then
+        SDL1_CONFIG=$i
+        break
+    fi
+done
+
+sdl_help()
+{
+    log_warn "Is SDL 1.2 or 1.3 installed? If not:"
+    log_warn "  For ubuntu SDL2 do: "
+    log_warn "   sudo apt-get install libsdl2.0-dev"
+    log_warn "   sudo apt-get install libsdl-mixer2.0-dev"
+    log_warn "   sudo apt-get install libsdl-net2.0-dev"
+    log_warn "  For ubuntu SDL1.2 do: "
+    log_warn "   sudo apt-get install libsdl1.2-dev"
+    log_warn "   sudo apt-get install libsdl-mixer1.2-dev"
+    log_warn "   sudo apt-get install libsdl-net1.2-dev"
+    log_warn "  For macos, install Mac ports and then do: "
+    log_warn "   sudo port install libsdl2"
+    log_warn "   sudo port install libsdl2_image"
+    log_warn "   sudo port install libsdl2_mixer"
+    log_warn "   sudo port install libsdl2_net"
+    log_warn "   sudo port install libsdl2_ttf"
+}
+
+SDL1_SCORE=0
+SDL2_SCORE=0
+
+if [ "$SDL1_CONFIG" != "" ]; then
+    SDL1_INC_PATH=`$SDL1_CONFIG --cflags | sed 's/.*-I\([a-zA-Z\/_0-9:\.]*\) .*/\1/g'`
+
+    find $SDL1_INC_PATH | grep -q SDL_mixer.h
+    if [ $? -eq 0 ]; then
+        SDL1_SCORE=`expr $SDL1_SCORE + 1`
+        SDL1_MIXER=`find $SDL1_INC_PATH -name SDL_mixer.h`
+    fi
+
+    find $SDL1_INC_PATH | grep -q SDL_net.h
+    if [ $? -eq 0 ]; then
+        SDL1_SCORE=`expr $SDL1_SCORE + 1`
+        SDL1_NET=`find $SDL1_INC_PATH -name SDL_net.h`
+    fi
+fi
+
+if [ "$SDL2_CONFIG" != "" ]; then
+    SDL2_INC_PATH=`$SDL2_CONFIG --cflags | sed 's/.*-I\([a-zA-Z\/_0-9:\.]*\) .*/\1/g'`
+
+    find $SDL2_INC_PATH | grep -q SDL_mixer.h
+    if [ $? -eq 0 ]; then
+        SDL2_SCORE=`expr $SDL2_SCORE + 1`
+        SDL2_MIXER=`find $SDL2_INC_PATH -name SDL_mixer.h`
+    fi
+
+    find $SDL2_INC_PATH | grep -q SDL_net.h
+    if [ $? -eq 0 ]; then
+        SDL2_SCORE=`expr $SDL2_SCORE + 1`
+        SDL2_NET=`find $SDL2_INC_PATH -name SDL_net.h`
+    fi
+fi
+
+
+log_info "SDL1 config      : $SDL1_CONFIG"
+log_info "SDL1 version     : "`$SDL1_CONFIG --version`
+log_info "SDL1 include path: $SDL1_INC_PATH"
+log_info "SDL1 mixer.h     : $SDL1_MIXER"
+log_info "SDL1 net.h       : $SDL1_NET"
+log_info "SDL1 score       : $SDL1_SCORE"
+
+log_info "SDL2 config      : $SDL2_CONFIG"
+log_info "SDL2 version     : "`$SDL2_CONFIG --version`
+log_info "SDL2 include path: $SDL2_INC_PATH"
+log_info "SDL2 mixer.h     : $SDL2_MIXER"
+log_info "SDL2 net.h       : $SDL2_NET"
+log_info "SDL2 score       : $SDL2_SCORE"
+
+if [[ $SDL_SCORE = "0" ]]; then
+    if [[ $SDL2_SCORE = "0" ]]; then
+        sdl_help
+        log_err "I need SDL1 or SDL2 and SDL net and SDL mixer"
+        exit 1
+    else
+        SDL_CONFIG=$SDL2_CONFIG
+    fi
+elif [[ $SDL2_SCORE = "0" ]]; then
+    if [[ $SDL2_SCORE = "0" ]]; then
+        sdl_help
+        log_err "I need SDL1 or SDL2 and SDL net and SDL mixer"
+        exit 1
+    else
+        SDL_CONFIG=$SDL1_CONFIG
+    fi
+else
+    if [[ $SDL2_SCORE -ge $SDL_SCORE ]]; then
+        log_info "Prefer SDL2 as it has more headers"
+        SDL_CONFIG=$SDL2_CONFIG
+    else
+        log_info "Prefer SDL1 as it has more headers"
+        SDL_CONFIG=$SDL1_CONFIG
+    fi
+fi
+
 /bin/rm -f data/gorynlich-hiscore.txt data/gorynlich-config.txt
 
 #
@@ -96,64 +222,6 @@ then
 fi
 
 cd ..
-
-for i in \
-    /opt/local/bin/sdl2-config \
-    /usr/bin/sdl2-config \
-    /mingw/bin/sdl2-config \
-    /mingw64/bin/sdl2-config
-do
-    if [ -x $i ]
-    then
-        SDL2_CONFIG=$i
-        break
-    fi
-done
-
-#
-# Prefer SDL over SDL2 as it seems more common
-#
-for i in \
-    /usr/local/bin/sdl-config \
-    /usr/bin/sdl-config \
-    /opt/local/bin/sdl2-config \
-    /usr/bin/sdl2-config \
-    /mingw/bin/sdl2-config \
-    /mingw/bin/sdl-config \
-    /mingw64/bin/sdl2-config \
-    /mingw64/bin/sdl-config
-do
-    if [ -x $i ]
-    then
-        SDL_CONFIG=$i
-        break
-    fi
-done
-
-sdl_help()
-{
-    log_warn "Is SDL 1.2 or 1.3 installed? If not:"
-    log_warn "  For ubuntu SDL2 do: "
-    log_warn "   sudo apt-get install libsdl2.0-dev"
-    log_warn "   sudo apt-get install libsdl-mixer2.0-dev"
-    log_warn "   sudo apt-get install libsdl-net2.0-dev"
-    log_warn "  For ubuntu SDL1.2 do: "
-    log_warn "   sudo apt-get install libsdl1.2-dev"
-    log_warn "   sudo apt-get install libsdl-mixer1.2-dev"
-    log_warn "   sudo apt-get install libsdl-net1.2-dev"
-    log_warn "  For macos, install Mac ports and then do: "
-    log_warn "   sudo port install libsdl2"
-    log_warn "   sudo port install libsdl2_image"
-    log_warn "   sudo port install libsdl2_mixer"
-    log_warn "   sudo port install libsdl2_net"
-    log_warn "   sudo port install libsdl2_ttf"
-}
-
-if [ "$SDL_CONFIG" = "" ]
-then
-    sdl_help
-    exit 1
-fi
 
 #
 # Gives warings at runtime on MACOS
