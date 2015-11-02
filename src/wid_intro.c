@@ -680,7 +680,7 @@ static void wid_intro_create (void)
 static void wid_version_make_visible (void *context)
 {
         widp w = wid_popup(
-                  "%%fg=green$goblinhack@gmail.com, -- version 0.0.5 broken borders",
+                  "%%fg=green$goblinhack@gmail.com, -- version 0.0.6",
                   "",               /* title */
                   0.8f, 0.95f,      /* x,y postition in percent */
                   0,                /* title font */

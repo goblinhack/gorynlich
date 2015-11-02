@@ -1,3 +1,5 @@
+Sun Nov  1 21:29:39 EST 2015 (version 0.0.6)
+- adapt to SDL version 1 ot 2 installed
 
 Sun Nov  1 07:39:34 EST 2015 (version 0.0.4)
 - fixed crash if you reached edge of level
