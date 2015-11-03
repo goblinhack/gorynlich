@@ -137,6 +137,9 @@ if [[ "$SDL2_CONFIG" != "" ]]; then
     log_info "SDL2 score       : $SDL2_SCORE"
 fi
 
+USE_SDL1=0
+USE_SDL2=0
+
 if [[ $SDL1_SCORE = "0" ]]; then
     if [[ $SDL2_SCORE = "0" ]]; then
         sdl_help
@@ -144,6 +147,7 @@ if [[ $SDL1_SCORE = "0" ]]; then
         exit 1
     else
         SDL_CONFIG=$SDL2_CONFIG
+        USE_SDL2=1
     fi
 elif [[ $SDL2_SCORE = "0" ]]; then
     if [[ $SDL1_SCORE = "0" ]]; then
@@ -152,14 +156,17 @@ elif [[ $SDL2_SCORE = "0" ]]; then
         exit 1
     else
         SDL_CONFIG=$SDL1_CONFIG
+        USE_SDL1=1
     fi
 else
     if [[ $SDL2_SCORE -ge $SDL1_SCORE ]]; then
         log_info "Prefer SDL2 as it has more headers"
         SDL_CONFIG=$SDL2_CONFIG
+        USE_SDL2=1
     else
         log_info "Prefer SDL1 as it has more headers"
         SDL_CONFIG=$SDL1_CONFIG
+        USE_SDL1=1
     fi
 fi
 
@@ -254,7 +261,7 @@ log_info "  ($SDL_CONFIG)"
 #
 LDLIBS="$SDL_LIBS"
 
-if [ "$SDL2_CONFIG" != "" ]
+if [ "$USE_SDL2" = "1" ]
 then
 #    LDLIBS="$LDLIBS -lSDL2_ttf"
     LDLIBS="$LDLIBS -lSDL2_mixer"
