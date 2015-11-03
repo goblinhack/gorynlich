@@ -15,7 +15,7 @@
  */
 void thing_torch_update_count (thingp t, int force)
 {
-    if (force || time_have_x_secs_passed_since(60, t->timestamp_torch)) {
+    if (force || time_have_x_secs_passed_since(300, t->timestamp_torch)) {
         t->timestamp_torch = time_get_time_ms();
 
         /*
