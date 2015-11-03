@@ -12,7 +12,7 @@
  speed=30
  damage=50
  is_joinable
- can_be_hit_chance=500
+ can_be_hit_chance=5
  d10000_chance_of_appearing=200
  tiles={
   tile={
