@@ -8,7 +8,7 @@
  is_stackable
  hit_priority=5
  is_carryable
- d10000_chance_of_appearing=500
+ d10000_chance_of_appearing=100
  is_fragile
  sound_on_death="squelch"
  bonus_hp_on_use=30

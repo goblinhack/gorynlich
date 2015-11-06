@@ -13,7 +13,7 @@
  is_light_source
  light_radius=1.1
  is_joinable
- can_be_hit_chance=5
+ can_be_hit_chance=50
  tiles={
   tile={
    tile="wall1_0_0"

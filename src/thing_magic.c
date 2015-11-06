@@ -167,8 +167,8 @@ void thing_server_magic_fire (thingp t)
     double scale = 0.02 * (double) t->magic_powerup;
     p->scale = scale;
 
-    p->damage = t->magic_powerup;
-    p->stats.hp = t->magic_powerup;
+    p->damage = t->magic_powerup * 2;
+    p->stats.hp = t->magic_powerup * 2;
 
     t->magic_powerup = 0;
 

@@ -11,7 +11,7 @@
  hit_priority=20
  speed=20
  damage=50
- can_be_hit_chance=10
+ can_be_hit_chance=100
  d10000_chance_of_appearing=1000
  is_blit_y_offset
  tiles={
