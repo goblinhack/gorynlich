@@ -171,7 +171,7 @@ fi
 
 /bin/rm -rf $DMG_TMP
 
-cp -f $DMG ~/Desktop/
+#cp -f $DMG ~/Desktop/
 
 echo
 log_info "Launch $DMG to start"
