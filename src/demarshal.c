@@ -334,7 +334,7 @@ tree_demarshal *demarshal (const char *filename)
         return (0);
     }
 
-    ctx = (typeof(ctx)) mymalloc(sizeof(*ctx), "demarshal ctx");
+    ctx = (typeof(ctx)) myzalloc(sizeof(*ctx), "demarshal ctx");
 
     demarshal_buf_end = buf + size;
 
