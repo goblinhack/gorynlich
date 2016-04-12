@@ -1345,10 +1345,6 @@ static void jigpiece_add_frag (dungeon_t *dg)
 
         int f = myrand() % dg->frag_cnt;
 
-        if ((myrand() % 100) < 5) {
-            continue;
-        }
-
         /*
          * For each orientation of a frag.
          */
@@ -2566,6 +2562,10 @@ static void maze_convert_to_map (dungeon_t *dg)
     map_jigsaw_buffer_print_file(MY_STDOUT);
 
     jigpiece_add_frag(dg);
+    jigpiece_add_frag(dg);
+    jigpiece_add_frag(dg);
+    jigpiece_add_frag(dg);
+    jigpiece_add_frag(dg);
 
     LOG("Maze: Added fragments:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
@@ -3497,11 +3497,7 @@ static tpp map_char_to_tp (char c,
         break;
 
     case MAP_MONST_OR_MOB:
-        if ((myrand() % 100) < 20) {
-            /*
-             * Nothing
-             */
-        } else if ((myrand() % 100) < 75) {
+        if ((myrand() % 100) < 85) {
             tp = random_monst(depth); 
         } else {
             tp = random_mob(depth); 
