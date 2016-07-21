@@ -275,7 +275,7 @@ widp wid_notify (uint32_t level, const char *text)
     wid_notify_elem *e = &elems[nelems];
     e->created = timestamp_now;
     e->notify_box_wid = w;
-    strncpy(e->text, text, sizeof(e->text) - 1);
+    strlcpy(e->text, text, sizeof(e->text) - 1);
 
     nelems++;
 

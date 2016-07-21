@@ -495,7 +495,7 @@ uint8_t client_socket_set_name (const char *name)
      * Cater for overlapping pointers.
      */
     if (strcmp(global_config.stats.pname, name)) {
-        strncpy(global_config.stats.pname, name, 
+        strlcpy(global_config.stats.pname, name, 
                 sizeof(global_config.stats.pname) - 1);
 
         CON("Client name set to \"%s\"", name);
@@ -524,7 +524,7 @@ uint8_t client_socket_set_pclass (const char *pclass)
      * Cater for overlapping pointers.
      */
     if (strcmp(global_config.stats.pclass, pclass)) {
-        strncpy(global_config.stats.pclass, pclass, 
+        strlcpy(global_config.stats.pclass, pclass, 
                 sizeof(global_config.stats.pclass) - 1);
 
         CON("Client pclass set to \"%s\"", pclass);
@@ -571,7 +571,7 @@ uint8_t client_shout (tokens_t *tokens, void *context)
         return (false);
     }
 
-    strncpy(shout, tmp, sizeof(shout) - 1);
+    strlcpy(shout, tmp, sizeof(shout) - 1);
 
     uint8_t r = client_socket_shout(shout);
 
@@ -597,7 +597,7 @@ uint8_t client_tell (tokens_t *tokens, void *context)
         return (false);
     }
 
-    strncpy(to, s, sizeof(to) - 1);
+    strlcpy(to, s, sizeof(to) - 1);
 
     for (;;) {
         char *s = tokens->args[i++];

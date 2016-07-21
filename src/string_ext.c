@@ -172,7 +172,7 @@ tree_root *split (const char *text, uint32_t max_line_len)
                                         "TREE NODE: split");
         node->tree.key = key++;
         node->line = (char *)myzalloc(line_len + 1, "TREE KEY: split");
-        strncpy(node->line, line_start, line_len);
+        strlcpy(node->line, line_start, line_len);
 
         if (!tree_insert(root, &node->tree.node)) {
             ERR("insert split string %s fail", node->line);

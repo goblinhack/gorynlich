@@ -106,7 +106,7 @@ static void server_add (const server *s_in)
             s->avg_latency_rtt = socket_get_avg_latency_rtt(sp);
             s->min_latency_rtt = socket_get_min_latency_rtt(sp);
             s->max_latency_rtt = socket_get_max_latency_rtt(sp);
-            strncpy(s->name, socket_get_name(sp), sizeof(s->name) - 1);
+            strlcpy(s->name, socket_get_name(sp), sizeof(s->name) - 1);
         }
     }
 

@@ -154,7 +154,7 @@ static void wid_choose_pclass_callback (widp w)
          */
     }
 
-    strncpy(s->pclass, new_pclass, sizeof(s->pclass) - 1);
+    strlcpy(s->pclass, new_pclass, sizeof(s->pclass) - 1);
 
     wid_choose_pclass_hide();
     wid_choose_name_visible();

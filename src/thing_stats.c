@@ -1203,7 +1203,7 @@ void thing_stats_get_random (thing_statsp stats,
     LOG("Generate random character");
 
     if (!stats->pclass[0] || new_random_name_and_class) {
-        strncpy(stats->pclass, pclass_random(),
+        strlcpy(stats->pclass, pclass_random(),
                 sizeof(stats->pclass) - 1);
     }
 
@@ -1220,7 +1220,7 @@ void thing_stats_get_random (thing_statsp stats,
          * If no name of a force of a new name, make one up
          */
         if (!stats->pname[0] || new_random_name_and_class) {
-            strncpy(stats->pname, name_random(stats->pclass),
+            strlcpy(stats->pname, name_random(stats->pclass),
                     sizeof(stats->pname) - 1);
         }
     }

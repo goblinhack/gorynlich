@@ -568,7 +568,7 @@ uint8_t server_shout (tokens_t *tokens, void *context)
         return (false);
     }
 
-    strncpy(shout, tmp, sizeof(shout) - 1);
+    strlcpy(shout, tmp, sizeof(shout) - 1);
     MSG_SERVER_SHOUT_AT_ALL_PLAYERS(CHAT, 0, 0, "%s", shout);
     myfree(tmp);
 

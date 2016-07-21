@@ -422,7 +422,7 @@ static void wid_server_name_ok (widp w, const char *text)
     sn.name = (char *)text;
     sn.port = s->port;
 
-    strncpy(global_config.server_name, sn.name,
+    strlcpy(global_config.server_name, sn.name,
             sizeof(global_config.server_name));
 
     if (global_config.user_server_name[0]) {
@@ -567,7 +567,7 @@ static void wid_server_create_read (void)
 
     TREE_WALK_REVERSE(local_servers, s) {
 
-        strncpy(wid_server_create_button_sval
+        strlcpy(wid_server_create_button_sval
                     [WID_SERVER_CREATE_ROW_SERVER_NAME],
                 s->name,
                 sizeof(wid_server_create_button_sval
@@ -575,7 +575,7 @@ static void wid_server_create_read (void)
 
         {
             char *tmp = iprawporttodynstr(s->ip);
-            strncpy(wid_server_create_button_sval[WID_SERVER_CREATE_ROW_PORT],
+            strlcpy(wid_server_create_button_sval[WID_SERVER_CREATE_ROW_PORT],
                     tmp,
                     sizeof(wid_server_create_button_sval
                            [WID_SERVER_CREATE_ROW_PORT]));
@@ -584,7 +584,7 @@ static void wid_server_create_read (void)
 
         {
             char *tmp = dynprintf("%u", global_config.server_max_players);
-            strncpy(wid_server_create_button_sval
+            strlcpy(wid_server_create_button_sval
                         [WID_SERVER_CREATE_ROW_MAX_PLAYERS],
                     tmp,
                     sizeof(wid_server_create_button_sval

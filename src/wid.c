@@ -4046,7 +4046,7 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
             GET_BRA(ctx);
             char *text = 0;
             GET_NAMED_STRING(ctx, "text", text);
-            strncpy(data.text, text, sizeof(data.text) - 1);
+            strlcpy(data.text, text, sizeof(data.text) - 1);
             GET_KET(ctx);
             myfree(text);
             gotdata = true;

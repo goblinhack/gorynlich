@@ -1463,7 +1463,7 @@ static void wid_editor_text_selected (widp w, const char *text)
             thing_template_data *data = &tile->data;
 
             memset(data->text, 0, sizeof(data->text));
-            strncpy(data->text, text, sizeof(data->text) - 1);
+            strlcpy(data->text, text, sizeof(data->text) - 1);
 
             LOG("Set action text as [%s]",data->text);
         }

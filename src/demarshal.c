@@ -173,7 +173,7 @@ static tree_demarshal_node *demarshal_push_name (tree_demarshal *ctx,
         return (0);
     }
 
-    strncpy(node->val.v_name, val, sizeof(node->val.v_name) - 1);
+    strlcpy(node->val.v_name, val, sizeof(node->val.v_name) - 1);
 
     return (node);
 }
@@ -189,7 +189,7 @@ static tree_demarshal_node *demarshal_push_string (tree_demarshal *ctx,
         return (0);
     }
 
-    strncpy(node->val.v_string, val, sizeof(node->val.v_string) - 1);
+    strlcpy(node->val.v_string, val, sizeof(node->val.v_string) - 1);
 
     return (node);
 }

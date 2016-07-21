@@ -941,7 +941,7 @@ void socket_set_name (gsocketp s, const char *name)
     if (!name) {
         memset(s->stats.pname, 0, sizeof(s->stats.pname));
     } else {
-        strncpy(s->stats.pname, name, sizeof(s->stats.pname) - 1);
+        strlcpy(s->stats.pname, name, sizeof(s->stats.pname) - 1);
     }
 }
 
@@ -952,7 +952,7 @@ void socket_set_pclass (gsocketp s, const char *pclass)
     if (!pclass) {
         memset(s->stats.pclass, 0, sizeof(s->stats.pclass));
     } else {
-        strncpy(s->stats.pclass, pclass, sizeof(s->stats.pclass) - 1);
+        strlcpy(s->stats.pclass, pclass, sizeof(s->stats.pclass) - 1);
     }
 }
 
@@ -1332,11 +1332,11 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
     msg.ts = ts;
 
     if (global_config.user_server_name[0]) {
-        strncpy(msg.server_name, global_config.user_server_name,
+        strlcpy(msg.server_name, global_config.user_server_name,
                 min(sizeof(msg.server_name), 
                     strlen(global_config.user_server_name))); 
     } else {
-        strncpy(msg.server_name, global_config.server_name,
+        strlcpy(msg.server_name, global_config.server_name,
                 min(sizeof(msg.server_name), 
                     strlen(global_config.server_name))); 
     }
@@ -1352,7 +1352,7 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
             break;
         }
 
-        strncpy(msg.player_name[p], t->stats.pname,
+        strlcpy(msg.player_name[p], t->stats.pname,
                 min(sizeof(msg.player_name[p]), strlen(t->stats.pname) + 1)); 
         p++;
     }
@@ -1360,7 +1360,7 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
     if (server_level) {
         const char *title = level_get_title(server_level);
         if (title) {
-            strncpy(msg.level_name, title,
+            strlcpy(msg.level_name, title,
                     min(sizeof(msg.level_name), strlen(title) + 1)); 
         }
     }
@@ -1428,14 +1428,14 @@ void socket_rx_pong (gsocketp s, UDPpacket *packet, uint8_t *data)
     s->latency_rtt[seq % ARRAY_SIZE(s->latency_rtt)] = 
                     time_get_time_ms() - ts;
 
-    strncpy(s->server_name, msg->server_name,
+    strlcpy(s->server_name, msg->server_name,
             min(sizeof(s->server_name), 
                 strlen(msg->server_name) + 1)); 
 
     uint32_t p;
 
     for (p = 0; p < MAX_PLAYERS; p++) {
-        strncpy(s->player_name[p], msg->player_name[p],
+        strlcpy(s->player_name[p], msg->player_name[p],
                 min(sizeof(s->player_name[p]), 
                     strlen(msg->player_name[p]) + 1)); 
     }
@@ -1875,14 +1875,14 @@ static void socket_tx_client_shout_relay (gsocketp s,
     msg_client_shout msg = {0};
     msg.type = MSG_CLIENT_SHOUT;
     msg.level = level;
-    strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
+    strlcpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
     if (from && from->stats.pname[0]) {
         char *name = from->stats.pname;
-        strncpy(msg.from, name, min(sizeof(msg.from) - 1, strlen(name))); 
+        strlcpy(msg.from, name, min(sizeof(msg.from) - 1, strlen(name))); 
     } else {
         const char *name = "server";
-        strncpy(msg.from, name, min(sizeof(msg.from) - 1, strlen(name))); 
+        strlcpy(msg.from, name, min(sizeof(msg.from) - 1, strlen(name))); 
     }
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1912,7 +1912,7 @@ void socket_tx_client_shout (gsocketp s,
     msg_client_shout msg = {0};
     msg.type = MSG_CLIENT_SHOUT;
     msg.level = level;
-    strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
+    strlcpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
     memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2093,7 +2093,7 @@ void socket_tx_server_shout_at_all_players (uint32_t level,
         msg.x = (int)x;
         msg.y = (int)y;
 
-        strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
+        strlcpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
         memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2141,7 +2141,7 @@ socket_tx_server_shout_over (uint32_t level,
         msg.x = x;
         msg.y = y;
 
-        strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
+        strlcpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
         memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2199,7 +2199,7 @@ socket_tx_server_shout_at_all_players_except (gsocketp except,
             msg.thing_id = sp->player->thing->thing_id;
         }
 
-        strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
+        strlcpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
         memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2252,7 +2252,7 @@ void socket_tx_server_shout_only_to (gsocketp target,
             msg.thing_id = sp->player->thing->thing_id;
         }
 
-        strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
+        strlcpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
         memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2314,9 +2314,9 @@ void socket_tx_tell (gsocketp s,
     msg_tell msg = {0};
     msg.type = MSG_TELL;
 
-    strncpy(msg.from, from, min(sizeof(msg.from) - 1, strlen(from))); 
-    strncpy(msg.to, to, min(sizeof(msg.to) - 1, strlen(to))); 
-    strncpy(msg.txt, txt, sizeof(msg.txt) - 1);
+    strlcpy(msg.from, from, min(sizeof(msg.from) - 1, strlen(from))); 
+    strlcpy(msg.to, to, min(sizeof(msg.to) - 1, strlen(to))); 
+    strlcpy(msg.txt, txt, sizeof(msg.txt) - 1);
 
     memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2573,11 +2573,11 @@ void socket_tx_server_hiscore (gsocketp only,
 
             msg_player_hiscore *msg_tx = &msg.players[i + 1];
 
-            strncpy(msg_tx->player_name, h->player_name, 
+            strlcpy(msg_tx->player_name, h->player_name, 
                     min(sizeof(msg_tx->player_name),
                         strlen(h->player_name) + 1)); 
 
-            strncpy(msg_tx->death_reason, h->death_reason, 
+            strlcpy(msg_tx->death_reason, h->death_reason, 
                     min(sizeof(msg_tx->death_reason),
                         strlen(h->death_reason) + 1)); 
 
@@ -2591,10 +2591,10 @@ void socket_tx_server_hiscore (gsocketp only,
     {
         msg_player_hiscore *msg_tx = &msg.players[0];
 
-        strncpy(msg_tx->player_name, player_name, 
+        strlcpy(msg_tx->player_name, player_name, 
                 min(sizeof(msg_tx->player_name), strlen(player_name) + 1)); 
 
-        strncpy(msg_tx->death_reason, death_reason, 
+        strlcpy(msg_tx->death_reason, death_reason, 
                 min(sizeof(msg_tx->death_reason), strlen(death_reason) + 1)); 
 
         SDLNet_Write32(score, &msg_tx->score);

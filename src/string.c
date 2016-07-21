@@ -114,7 +114,7 @@ char *strsub (const char *in, const char *old, const char *replace_with)
     }
 
     *buf = '\0';
-    strncpy(buf, in, at - in);
+    strlcpy(buf, in, at - in);
     strcat(buf, replace_with);
     strcat(buf, at + oldlen);
 

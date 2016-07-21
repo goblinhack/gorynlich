@@ -52,7 +52,7 @@ static uint8_t demarshal_config (demarshal_p ctx, struct config *p)
     char *tmp = 0;
     GET_OPT_NAMED_STRING(ctx, "name", tmp);
     if (tmp) {
-        strncpy(p->stats.pname, tmp, sizeof(p->stats.pname) - 1);
+        strlcpy(p->stats.pname, tmp, sizeof(p->stats.pname) - 1);
         myfree(tmp);
         tmp = 0;
     }
@@ -60,7 +60,7 @@ static uint8_t demarshal_config (demarshal_p ctx, struct config *p)
     tmp = 0;
     GET_OPT_NAMED_STRING(ctx, "class", tmp);
     if (tmp) {
-        strncpy(p->stats.pclass, tmp, sizeof(p->stats.pclass) - 1);
+        strlcpy(p->stats.pclass, tmp, sizeof(p->stats.pclass) - 1);
         myfree(tmp);
         tmp = 0;
     }
@@ -68,7 +68,7 @@ static uint8_t demarshal_config (demarshal_p ctx, struct config *p)
     tmp = 0;
     GET_OPT_NAMED_STRING(ctx, "server_name", tmp);
     if (tmp) {
-        strncpy(p->server_name, tmp, sizeof(p->server_name) - 1);
+        strlcpy(p->server_name, tmp, sizeof(p->server_name) - 1);
         myfree(tmp);
     }
 
@@ -165,7 +165,7 @@ uint8_t config_load (void)
     global_config.deathmatch_monsters = 0;
 
     if (!global_config.server_name[0]) {
-        strncpy(global_config.server_name, "unnamed-server", 
+        strlcpy(global_config.server_name, "unnamed-server", 
                 sizeof(global_config.server_name) - 1);
     }
 

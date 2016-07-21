@@ -118,7 +118,7 @@ void wid_choose_name_visible (void)
 static void wid_keyboard_event_selected (widp w, const char *text)
 {
     thing_statsp s = &global_config.stats;
-    strncpy(s->pname, text, sizeof(s->pname) - 1);
+    strlcpy(s->pname, text, sizeof(s->pname) - 1);
 
     wid_choose_name_hide();
     wid_choose_stats_visible();
@@ -212,7 +212,7 @@ static void wid_choose_name_create (void)
      */
     thing_statsp s = &global_config.stats;
     if (!strlen(s->pname)) {
-        strncpy(s->pname, name_random(s->pclass), sizeof(s->pname) - 1);
+        strlcpy(s->pname, name_random(s->pclass), sizeof(s->pname) - 1);
     }
 
     /*

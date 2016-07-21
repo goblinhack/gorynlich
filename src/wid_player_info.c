@@ -128,7 +128,7 @@ static uint8_t wid_player_info_name_receive_input (widp w,
             wid_set_on_key_down(w, 0);
 
             if (!strlen(name)) {
-                strncpy(player_stats->pname, name_random(player_stats->pclass),
+                strlcpy(player_stats->pname, name_random(player_stats->pclass),
                         sizeof(player_stats->pname) - 1);
 
                 wid_set_text(w, player_stats->pname);
@@ -147,7 +147,7 @@ static uint8_t wid_player_info_name_receive_input (widp w,
 
     wid_player_info_set_name = true;
 
-    strncpy(player_stats->pname, name, sizeof(player_stats->pname) - 1);
+    strlcpy(player_stats->pname, name, sizeof(player_stats->pname) - 1);
 
     return (r);
 }

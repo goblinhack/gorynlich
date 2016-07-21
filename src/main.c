@@ -545,7 +545,7 @@ static void parse_args (int32_t argc, char *argv[])
             }
 
             i++;
-            strncpy(global_config.user_server_name, name, 
+            strlcpy(global_config.user_server_name, name, 
                     sizeof(global_config.user_server_name));
             continue;
         }
