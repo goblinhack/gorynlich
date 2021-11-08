@@ -17,36 +17,38 @@ You might also enjoy my other game (actively developed and work in progress)
 
 Screenshots
 -----------
-![Alt text](pics/Gorynlich0.jpg ?raw=true "")
-![Alt text](pics/Gorynlich1.png ?raw=true "")
-![Alt text](pics/Gorynlich11.png ?raw=true "")
-![Alt text](pics/Gorynlich12.png ?raw=true "")
-![Alt text](pics/Gorynlich2.png ?raw=true "")
-![Alt text](pics/Gorynlich7.png ?raw=true "")
-![Alt text](pics/Gorynlich8.png ?raw=true "")
+![Alt text](pics/Gorynlich0.jpg?raw=true "")
+![Alt text](pics/Gorynlich1.png?raw=true "")
+![Alt text](pics/Gorynlich11.png?raw=true "")
+![Alt text](pics/Gorynlich12.png?raw=true "")
+![Alt text](pics/Gorynlich2.png?raw=true "")
+![Alt text](pics/Gorynlich7.png?raw=true "")
+![Alt text](pics/Gorynlich8.png?raw=true "")
 
 To build:
+---------
 
+Code:
 <pre>
     git clone https://github.com/goblinhack/gorynlich.git
 </pre>
 
-    Linux:
+- Linux:
 <pre>
         ./RUNME
 </pre>
 
-    MacOS:
+- MacOS:
 <pre>
         ./RUNME
 </pre>
 
-    MacOS+Xcode:
+- MacOS+Xcode:
 <pre>
         ./RUNME.Xcode-OSX
 </pre>
 
-    Windows+MSYS2:
+- Windows+MSYS2:
 <pre>
         ./RUNME.windows.msys2
 </pre>
