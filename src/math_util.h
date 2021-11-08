@@ -23,54 +23,54 @@
                  SQUARED((yb)-(ya))+\
                  SQUARED((zb)-(za))))
 
-static inline fpoint fadd (const fpoint a, const fpoint b)
+static inline fpoint my_fadd (const fpoint a, const fpoint b)
 {
     fpoint r = {a.x + b.x, a.y + b.y};
     return (r);
 }
 
-static inline fpoint3d fadd3d (const fpoint3d a, const fpoint3d b)
+static inline fpoint3d my_fadd3d (const fpoint3d a, const fpoint3d b)
 {
     fpoint3d r = {a.x + b.x, a.y + b.y, a.z + b.z};
 
     return (r);
 }
 
-static inline fpoint fsub (const fpoint a, const fpoint b)
+static inline fpoint my_fsub (const fpoint a, const fpoint b)
 {
     fpoint r = {a.x - b.x, a.y - b.y};
     return (r);
 }
 
-static inline fpoint3d fsub3d (const fpoint3d a, const fpoint3d b)
+static inline fpoint3d my_fsub3d (const fpoint3d a, const fpoint3d b)
 {
     fpoint3d r = {a.x - b.x, a.y - b.y, a.z - b.z};
 
     return (r);
 }
 
-static inline fpoint fmul (double m, const fpoint b)
+static inline fpoint my_fmul (double m, const fpoint b)
 {
     fpoint r = {m * b.x, m * b.y};
 
     return (r);
 }
 
-static inline fpoint3d fmul3d (double m, const fpoint3d b)
+static inline fpoint3d my_fmul3d (double m, const fpoint3d b)
 {
     fpoint3d r = {m * b.x, m * b.y, m * b.z};
 
     return (r);
 }
 
-static inline fpoint fdiv (double m, const fpoint b)
+static inline fpoint my_fdiv (double m, const fpoint b)
 {
     fpoint r = {b.x / m, b.y / m};
 
     return (r);
 }
 
-static inline fpoint3d fdiv3d (const double m, const fpoint3d b)
+static inline fpoint3d my_fdiv3d (const double m, const fpoint3d b)
 {
     fpoint3d r = {b.x / m, b.y / m, b.z / m};
 

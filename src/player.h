@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <SDL_net.h>
+#include <SDL/SDL_net.h>
 
 #ifndef _PLAYER_H_
 #define _PLAYER_H_

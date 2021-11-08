@@ -31,8 +31,8 @@ triangle_line_intersect (const line ray,
      * too far in a direction and are outside the triangle. Finally if u + v > 
      * 1 then we've crossed the far edge again leaving the triangle. 
      */
-    fpoint3d u = fsub3d(triangle.V1, triangle.V0);
-    fpoint3d v = fsub3d(triangle.V2, triangle.V0);
+    fpoint3d u = my_fsub3d(triangle.V1, triangle.V0);
+    fpoint3d v = my_fsub3d(triangle.V2, triangle.V0);
 
     /*
      * Cross product for the plane of this triangle.
@@ -77,9 +77,9 @@ triangle_line_intersect (const line ray,
      */
     fpoint3d p0 = triangle.V0;
     fpoint3d l0 = ray.P0;
-    fpoint3d l = fsub3d(ray.P1, l0);
+    fpoint3d l = my_fsub3d(ray.P1, l0);
 
-    float numerator = fdot3d(fsub3d(p0, l0), n);
+    float numerator = fdot3d(my_fsub3d(p0, l0), n);
     float denominator = fdot3d(l, n);
 
     /*
@@ -123,7 +123,7 @@ triangle_line_intersect (const line ray,
     /*
      * Intersection point on the plane dl + l0.
      */
-    *intersection = fadd3d(fmul3d(d, l), l0);
+    *intersection = my_fadd3d(my_fmul3d(d, l), l0);
 
     /*
      * We hit the plane but are we in the triangle? This is a bit complex
@@ -135,7 +135,7 @@ triangle_line_intersect (const line ray,
     float uv = fdot3d(u,v);
     float vv = fdot3d(v,v);
 
-    fpoint3d w = fsub3d(*intersection, triangle.V0);
+    fpoint3d w = my_fsub3d(*intersection, triangle.V0);
 
     float wu = fdot3d(w,u);
     float wv = fdot3d(w,v);

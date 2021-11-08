@@ -8210,10 +8210,10 @@ static void wid_light_calculate_for_single_obstacle (widp w,
     P[3].y = ebry;
 
     fpoint edge[4];
-    edge[0] = fsub(P[1], P[0]);
-    edge[1] = fsub(P[2], P[1]);
-    edge[2] = fsub(P[3], P[2]);
-    edge[3] = fsub(P[0], P[3]);
+    edge[0] = my_fsub(P[1], P[0]);
+    edge[1] = my_fsub(P[2], P[1]);
+    edge[2] = my_fsub(P[3], P[2]);
+    edge[3] = my_fsub(P[0], P[3]);
 
     fpoint normal[4];
     normal[0].x = edge[0].y;
@@ -8236,7 +8236,7 @@ static void wid_light_calculate_for_single_obstacle (widp w,
     uint8_t k;
     for (k = 0; k<4; k++) {
 
-        fpoint light_dir = fsub(light_pos, P[k]);
+        fpoint light_dir = my_fsub(light_pos, P[k]);
 
         float dot = normal[k].x * light_dir.x + normal[k].y * light_dir.y;   
                 
@@ -8249,8 +8249,8 @@ static void wid_light_calculate_for_single_obstacle (widp w,
          */
         int l = (k + 1) % 4;
 
-        fpoint p1 = fsub(P[k], light_pos);
-        fpoint p2 = fsub(P[l], light_pos);
+        fpoint p1 = my_fsub(P[k], light_pos);
+        fpoint p2 = my_fsub(P[l], light_pos);
 
         /*
          * Start and end points of the face blocking the light.

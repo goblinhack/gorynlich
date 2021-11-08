@@ -1,67 +1,61 @@
+<pre>
+  ____                        _ _      _     
+ / ___| ___  _ __ _   _ _ __ | (_) ___| |__  
+| |  _ / _ \| '__| | | | '_ \| | |/ __| '_ \ 
+| |_| | (_) | |  | |_| | | | | | | (__| | | |
+ \____|\___/|_|   \__, |_| |_|_|_|\___|_| |_|
+                  |___/                      
+</pre>
 
-http://gorynlich.weebly.com/
+Rescue the all cheese from the deepest dungeon. Reap great rewards. Die often.
 
+This game is no longer actively developed, but I try to keep it compiling on latest ubuntu.
+As of writing, it compiles on Ubuntu 21.04.
 
-Gorynlich (aka Goblinhack v2) is a top-down dungeon romp with single and 
-multiplayer options.
+You might also enjoy my other game (actively developed and work in progress)
+[Zorbash](https://github.com/goblinhack/zorbash)
+
+Screenshots
+-----------
+![Alt text](pics/Gorynlich0.jpg ?raw=true "")
+![Alt text](pics/Gorynlich1.png ?raw=true "")
+![Alt text](pics/Gorynlich11.png ?raw=true "")
+![Alt text](pics/Gorynlich12.png ?raw=true "")
+![Alt text](pics/Gorynlich2.png ?raw=true "")
+![Alt text](pics/Gorynlich7.png ?raw=true "")
+![Alt text](pics/Gorynlich8.png ?raw=true "")
 
 To build:
 
+<pre>
     git clone https://github.com/goblinhack/gorynlich.git
+</pre>
 
     Linux:
+<pre>
         ./RUNME
+</pre>
 
     MacOS:
+<pre>
         ./RUNME
+</pre>
 
     MacOS+Xcode:
+<pre>
         ./RUNME.Xcode-OSX
+</pre>
 
     Windows+MSYS2:
+<pre>
         ./RUNME.windows.msys2
+</pre>
 
+- Art is used with permission from
 
-
-     .d8888b.                                     888 d8b          888      
-    d88P  Y88b                                    888 Y8P          888      
-    888    888                                    888              888      
-    888         .d88b.  888d888 888  888 88888b.  888 888  .d8888b 88888b.  
-    888  88888 d88""88b 888P"   888  888 888 "88b 888 888 d88P"    888 "88b 
-    888    888 888  888 888     888  888 888  888 888 888 888      888  888 
-    Y88b  d88P Y88..88P 888     Y88b 888 888  888 888 888 Y88b.    888  888 
-     "Y8888P88  "Y88P"  888      "Y88888 888  888 888 888  "Y8888P 888  888 
-                                     888                                    
-                                Y8b d88P                                    
-                                 "Y88P"                                     
-
-
-
- 
- Copyright (C) 2014-2015 Neil McGill
-
- This game is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
-
- This game is distributed in the hope that it will be fun,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
-
- You should have received a copy of the GNU Library General Public
- License along with this game; if not, write to the Free
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- goblinhack@gmail.com
-
- Art is used with permission from
-
-    Charlotte McGill, 
+    Charlotte McGill,
     neoguid@hotmail.com
 
- Music is used with permission from
+- Music is used with permission from
 
     Deceased Senior Technician (nosoapradio.us)
-
